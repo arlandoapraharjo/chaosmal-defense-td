@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dd0y0kofkh7s7"
-path.s3tc="res://.godot/imported/displacement_texture.png-a97552ebbb7cca4f7bdc8c57e8392953.s3tc.ctex"
+uid="uid://dxnjntdls2570"
+path="res://.godot/imported/grass_thin.png-7274e81d6e46b46139209a68647821f6.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Textures/displacement_texture.png"
-dest_files=["res://.godot/imported/displacement_texture.png-a97552ebbb7cca4f7bdc8c57e8392953.s3tc.ctex"]
+source_file="res://addons/Textures/grass_thin.png"
+dest_files=["res://.godot/imported/grass_thin.png-7274e81d6e46b46139209a68647821f6.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -24,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -38,4 +37,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

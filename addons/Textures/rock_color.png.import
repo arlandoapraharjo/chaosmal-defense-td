@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ct4q7vld4f3ec"
-path="res://.godot/imported/normal_map.png-c719735f9063fb0bfccca9a332491d46.ctex"
+uid="uid://dl0bd857tuccq"
+path="res://.godot/imported/rock_color.png-71c45262edcc203dfa8885391815f970.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/Textures/normal_map.png"
-dest_files=["res://.godot/imported/normal_map.png-c719735f9063fb0bfccca9a332491d46.ctex"]
+source_file="res://addons/Textures/rock_color.png"
+dest_files=["res://.godot/imported/rock_color.png-71c45262edcc203dfa8885391815f970.ctex"]
 
 [params]
 
