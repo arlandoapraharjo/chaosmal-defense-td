@@ -40,6 +40,16 @@ signal biome_changed(biome: BiomeData)
 @export var border_noise_type: FastNoiseLite.NoiseType = FastNoiseLite.TYPE_PERLIN
 @export var border_detail_frequency: float = 0.1 
 @export var border_detail_strength: float = 0.8
+
+@export_group("Grass Settings")
+@export var grass_y_offset: float = 0.3
+@export var grass_density_base: int = 15
+@export var grass_density_coastal: int = 8
+@export var grass_tilt_randomness: float = 0.3
+@export var grass_scale_y_min: float = 0.3
+@export var grass_scale_y_max: float = 1.0
+@export var grass_scale_xz_min: float = 0.5
+@export var grass_scale_xz_max: float = 1.0
 # Resolved from whichever BiomeData is active this run — populated by
 # _apply_biome() before generation starts. Nothing below this point
 # hardcodes a specific biome's assets.
@@ -52,11 +62,13 @@ var tree_model: PackedScene
 var tree_large_model: PackedScene
 var rock_model: PackedScene
 var bush_model: PackedScene
+var grass_model: PackedScene = preload("res://scenes/grass_single.tscn")
 var decoration_chance: float = 0.2
 var active_biome: BiomeData = null
+var is_grass_biome: bool = false
 
 ## Coastal
-var mm_border: MultiMeshInstance3D
+var mm_border: Node3D
 var mm_border_wall: MultiMeshInstance3D
 var mm_border_wall_outer: MultiMeshInstance3D
 var border_noise := FastNoiseLite.new()
@@ -73,13 +85,14 @@ var occupied_cells: Dictionary = {}
 var spawner_script = preload("res://scripts/Spawner.gd")
 
 # Batching containers for repeated static meshes
-var mm_base: MultiMeshInstance3D
-var mm_tree: MultiMeshInstance3D
-var mm_tree_large: MultiMeshInstance3D
-var mm_rock: MultiMeshInstance3D
+var mm_base: Node3D
+var mm_tree: Node3D
+var mm_tree_large: Node3D
+var mm_rock: Node3D
 # Bushes get several MultiMeshInstance3Ds, each with its own randomized wind
 # preset, so not every bush sways in perfect unison.
-var mm_bushes: Array[MultiMeshInstance3D] = []
+var mm_bushes: Array[Node3D] = []
+var mm_grass: Node3D
 
 func _ready():
 	randomize() # only need to seed the RNG once, not every generation
@@ -133,6 +146,7 @@ func _pick_biome() -> BiomeData:
 
 func _apply_biome(biome: BiomeData) -> void:
 	active_biome = biome
+	is_grass_biome = active_biome != null and "grass" in active_biome.resource_path.get_file().to_lower()
 	tile_base = biome.tile_base
 	tile_straight = biome.tile_straight
 	tile_corner = biome.tile_corner
@@ -353,6 +367,10 @@ func _build_map():
 	mm_tree_large = _make_multimesh_node("TreesLarge", tree_large_model)
 	mm_rock = _make_multimesh_node("Rocks", rock_model)
 	mm_bushes = _make_bush_variant_nodes(bush_model, BUSH_VARIANT_COUNT)
+	
+	if is_grass_biome:
+		mm_grass = _make_multimesh_node("GrassGen", grass_model)
+		_tint_node_materials(mm_base, Color.hex(0x1ab036ff))
 
 	var base_transforms: Array[Transform3D] = []
 	var tree_transforms: Array[Transform3D] = []
@@ -363,6 +381,8 @@ func _build_map():
 		var variant_list: Array[Transform3D] = []
 		bush_transforms.append(variant_list)
 
+	var grass_transforms: Array[Transform3D] = []
+
 	for x in range(MAP_SIZE):
 		for z in range(MAP_SIZE):
 			var pos = Vector2i(x, z)
@@ -372,6 +392,7 @@ func _build_map():
 			else:
 				var origin = Vector3(pos.x * TILE_SIZE, 0, pos.y * TILE_SIZE)
 				base_transforms.append(Transform3D(Basis(), origin))
+				_spawn_grass_tuft(grass_transforms, origin, grass_density_base)
 
 				if randf() < decoration_chance:
 					occupied_cells[pos] = true
@@ -397,19 +418,46 @@ func _build_map():
 						bush_transforms[variant_idx].append(bush_xform)
 
 	_apply_multimesh(mm_base, base_transforms)
-	_build_coastal_border()
+	_build_coastal_border(grass_transforms)
 	_apply_multimesh(mm_tree, tree_transforms)
 	_apply_multimesh(mm_tree_large, tree_large_transforms)
 	_apply_multimesh(mm_rock, rock_transforms)
 	for i in range(BUSH_VARIANT_COUNT):
 		_apply_multimesh(mm_bushes[i], bush_transforms[i])
+	if is_grass_biome:
+		_apply_multimesh(mm_grass, grass_transforms)
 
 # --- MultiMesh helpers -------------------------------------------------
 
-func _build_coastal_border():
+func _spawn_grass_tuft(grass_transforms: Array[Transform3D], origin: Vector3, density: int) -> void:
+	if not is_grass_biome: return
+	for i in range(density):
+		var rx = origin.x + randf_range(-0.4, 0.4) * TILE_SIZE
+		var rz = origin.z + randf_range(-0.4, 0.4) * TILE_SIZE
+		var pos = Vector3(rx, origin.y + grass_y_offset, rz)
+		
+		# orthogonal fluff: scaled up, randomly rotated on all axes for volume
+		var rot_y = randf() * TAU
+		var rot_x = randf_range(-grass_tilt_randomness, grass_tilt_randomness)
+		var rot_z = randf_range(-grass_tilt_randomness, grass_tilt_randomness)
+		var s_y = randf_range(grass_scale_y_min, grass_scale_y_max)
+		var s_xz = randf_range(grass_scale_xz_min, grass_scale_xz_max)
+		
+		var basis1 = Basis(Vector3.RIGHT, rot_x) * Basis(Vector3.FORWARD, rot_z) * Basis(Vector3.UP, rot_y)
+		basis1 = basis1.scaled(Vector3(s_xz, s_y, s_xz))
+		grass_transforms.append(Transform3D(basis1, pos))
+		
+		var basis2 = Basis(Vector3.RIGHT, rot_x) * Basis(Vector3.FORWARD, rot_z) * Basis(Vector3.UP, rot_y + PI/2.0)
+		basis2 = basis2.scaled(Vector3(s_xz, s_y, s_xz))
+		grass_transforms.append(Transform3D(basis2, pos))
+
+func _build_coastal_border(grass_transforms: Array[Transform3D]):
 	mm_border = _make_multimesh_node("CoastalBorder", tile_base)
 	mm_border_wall = _make_border_wall_node("CoastalBorderWalls")
 	mm_border_wall_outer = _make_border_wall_node("CoastalBorderWallsOuter", true)
+	
+	if is_grass_biome:
+		_tint_node_materials(mm_border, Color.hex(0x1ab036ff))
 
 	var border_transforms: Array[Transform3D] = []
 	var wall_transforms: Array[Transform3D] = []
@@ -455,6 +503,7 @@ func _build_coastal_border():
 
 			var origin = Vector3(x * TILE_SIZE, y, z * TILE_SIZE)
 			border_transforms.append(Transform3D(Basis(), origin))
+			_spawn_grass_tuft(grass_transforms, origin, grass_density_coastal)
 
 			# --- Extrusion ---------------------------------------------
 			# Only the outermost coastline band (close to this angle's own
@@ -483,54 +532,71 @@ func _build_coastal_border():
 	_apply_multimesh(mm_border_wall, wall_transforms)
 	_apply_multimesh(mm_border_wall_outer, wall_outer_transforms)
 
-func _extract_mesh_and_material(scene: PackedScene) -> Dictionary:
+func _extract_meshes_info(scene: PackedScene) -> Array:
 	var temp = scene.instantiate()
-	var mesh_instance: MeshInstance3D = null
-
-	if temp is MeshInstance3D:
-		mesh_instance = temp
-	else:
-		for child in temp.get_children():
-			if child is MeshInstance3D:
-				mesh_instance = child
-				break
-
-	var mesh: Mesh = null
-	var material: Material = null
-
-	if mesh_instance != null:
-		mesh = mesh_instance.mesh
-		# A custom ShaderMaterial (like the foliage shader) is usually set as
-		# a per-node surface override rather than baked into the mesh
-		# resource itself — MultiMeshInstance3D only sees the raw mesh, so
-		# without grabbing this explicitly, batched instances would render
-		# with no shader at all.
-		if mesh != null and mesh.get_surface_count() > 0:
-			material = mesh_instance.get_surface_override_material(0)
-			if material == null:
-				material = mesh.surface_get_material(0)
-
+	var mesh_instances = []
+	var is_glb = scene.resource_path.get_extension().to_lower() in ["glb", "gltf"]
+	
+	var stack = [temp]
+	var transforms = [Transform3D.IDENTITY]
+	
+	while stack.size() > 0:
+		var node = stack.pop_back()
+		var current_transform = transforms.pop_back()
+		
+		var node_transform = current_transform
+		if node is Node3D and node != temp:
+			if not is_glb:
+				node_transform = current_transform * node.transform
+			
+		if node is MeshInstance3D:
+			var material = null
+			if node.mesh != null and node.mesh.get_surface_count() > 0:
+				material = node.get_surface_override_material(0)
+				if material == null:
+					material = node.mesh.surface_get_material(0)
+			mesh_instances.append({
+				"mesh": node.mesh,
+				"material": material,
+				"transform": node_transform,
+				"cast_shadow": node.cast_shadow
+			})
+			
+		for child in node.get_children():
+			stack.append(child)
+			transforms.append(node_transform)
+			
 	temp.queue_free()
-	return {"mesh": mesh, "material": material}
+	# Reverse to maintain original order since we used pop_back
+	mesh_instances.reverse()
+	return mesh_instances
 
-func _make_multimesh_node(node_name: String, scene: PackedScene) -> MultiMeshInstance3D:
-	var mmi = MultiMeshInstance3D.new()
-	mmi.name = node_name
-	mmi.physics_interpolation_mode = 2 # Node.PHYSICS_INTERPOLATION_MODE_OFF
-	mmi.extra_cull_margin = 100.0
-	add_child(mmi)
+func _make_multimesh_node(node_name: String, scene: PackedScene) -> Node3D:
+	var root = Node3D.new()
+	root.name = node_name
+	add_child(root)
 
-	var extracted = _extract_mesh_and_material(scene)
+	var extracted_list = _extract_meshes_info(scene)
+	for i in range(extracted_list.size()):
+		var info = extracted_list[i]
+		var mmi = MultiMeshInstance3D.new()
+		mmi.name = "Mesh_%d" % i
+		mmi.physics_interpolation_mode = 2 # Node.PHYSICS_INTERPOLATION_MODE_OFF
+		mmi.extra_cull_margin = 100.0
+		mmi.set_meta("local_transform", info["transform"])
+		mmi.cast_shadow = info["cast_shadow"]
+		
+		var mm = MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = info["mesh"]
+		mmi.multimesh = mm
+		
+		if info["material"] != null:
+			mmi.material_override = info["material"]
+			
+		root.add_child(mmi)
 
-	var mm = MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.mesh = extracted["mesh"]
-	mmi.multimesh = mm
-
-	if extracted["material"] != null:
-		mmi.material_override = extracted["material"]
-
-	return mmi
+	return root
 
 func _make_border_wall_node(node_name: String, remove_texture: bool = false) -> MultiMeshInstance3D:
 	# A single cheap BoxMesh (12 tris), GPU-instanced via MultiMesh, reused
@@ -563,10 +629,13 @@ func _make_border_wall_node(node_name: String, remove_texture: bool = false) -> 
 	if border_wall_color_override.a > 0.0:
 		wall_mat.albedo_color = border_wall_color_override
 	else:
-		var extracted = _extract_mesh_and_material(tile_base)
-		var src_mat = extracted["material"]
-		if not remove_texture and src_mat is BaseMaterial3D and (src_mat as BaseMaterial3D).albedo_texture != null:
-			wall_mat.albedo_texture = (src_mat as BaseMaterial3D).albedo_texture
+		var extracted = _extract_meshes_info(tile_base)
+		if extracted.size() > 0:
+			var src_mat = extracted[0]["material"]
+			if not remove_texture and src_mat is BaseMaterial3D and (src_mat as BaseMaterial3D).albedo_texture != null:
+				wall_mat.albedo_texture = (src_mat as BaseMaterial3D).albedo_texture
+			else:
+				wall_mat.albedo_color = _resolve_border_wall_color()
 		else:
 			wall_mat.albedo_color = _resolve_border_wall_color()
 	mmi.material_override = wall_mat
@@ -649,79 +718,82 @@ func _resolve_border_wall_color() -> Color:
 	if border_wall_color_override.a > 0.0:
 		return border_wall_color_override
 
-	var extracted = _extract_mesh_and_material(tile_base)
-	var mat = extracted["material"]
-	if mat is BaseMaterial3D:
-		var tex: Texture2D = mat.albedo_texture
-		if tex != null:
-			var img := tex.get_image()
-			if img != null:
-				if img.is_compressed():
-					if img.decompress() != OK:
-						return BORDER_WALL_FALLBACK_COLOR
-				var w = img.get_width()
-				var h = img.get_height()
-				if w > 0 and h > 0:
-					var uv_rect = _get_tile_uv_rect(tile_base)
-					var start_x = int(uv_rect.position.x * w)
-					var start_y = int(uv_rect.position.y * h)
-					var end_x = int(uv_rect.end.x * w)
-					var end_y = int(uv_rect.end.y * h)
-					
-					var width_rect = end_x - start_x
-					var height_rect = end_y - start_y
-					
-					if width_rect > 0 and height_rect > 0:
-						var step_x = maxi(1, width_rect / 32)
-						var step_y = maxi(1, height_rect / 32)
-						var sum := Color(0.0, 0.0, 0.0)
-						var samples = 0
-						for yy in range(start_y, end_y, step_y):
-							for xx in range(start_x, end_x, step_x):
-								var px = img.get_pixel(xx, yy)
-								if px.a > 0.05: # skip transparent atlas padding so it doesn't drag the average toward black
-									sum += px
-									samples += 1
-						if samples > 0:
-							return Color(sum.r / samples, sum.g / samples, sum.b / samples, 1.0)
-		elif mat.albedo_color != null:
-			return mat.albedo_color
+	var extracted = _extract_meshes_info(tile_base)
+	if extracted.size() > 0:
+		var mat = extracted[0]["material"]
+		if mat is BaseMaterial3D:
+			var tex: Texture2D = mat.albedo_texture
+			if tex != null:
+				var img := tex.get_image()
+				if img != null:
+					if img.is_compressed():
+						if img.decompress() != OK:
+							return BORDER_WALL_FALLBACK_COLOR
+					var w = img.get_width()
+					var h = img.get_height()
+					if w > 0 and h > 0:
+						var uv_rect = _get_tile_uv_rect(tile_base)
+						var start_x = int(uv_rect.position.x * w)
+						var start_y = int(uv_rect.position.y * h)
+						var end_x = int(uv_rect.end.x * w)
+						var end_y = int(uv_rect.end.y * h)
+						
+						var width_rect = end_x - start_x
+						var height_rect = end_y - start_y
+						
+						if width_rect > 0 and height_rect > 0:
+							var step_x = maxi(1, width_rect / 32)
+							var step_y = maxi(1, height_rect / 32)
+							var sum := Color(0.0, 0.0, 0.0)
+							var samples = 0
+							for yy in range(start_y, end_y, step_y):
+								for xx in range(start_x, end_x, step_x):
+									var px = img.get_pixel(xx, yy)
+									if px.a > 0.05: # skip transparent atlas padding so it doesn't drag the average toward black
+										sum += px
+										samples += 1
+							if samples > 0:
+								return Color(sum.r / samples, sum.g / samples, sum.b / samples, 1.0)
+			elif mat.albedo_color != null:
+				return mat.albedo_color
 
 	return BORDER_WALL_FALLBACK_COLOR
 
-func _make_bush_variant_nodes(scene: PackedScene, count: int) -> Array[MultiMeshInstance3D]:
-	var extracted = _extract_mesh_and_material(scene)
-	var base_mesh: Mesh = extracted["mesh"]
-	var base_material: Material = extracted["material"]
-
-	var nodes: Array[MultiMeshInstance3D] = []
+func _make_bush_variant_nodes(scene: PackedScene, count: int) -> Array[Node3D]:
+	var extracted_list = _extract_meshes_info(scene)
+	var nodes: Array[Node3D] = []
 
 	for i in range(count):
-		var mmi = MultiMeshInstance3D.new()
-		mmi.name = "Bushes_Variant%d" % i
-		mmi.physics_interpolation_mode = 2 # Node.PHYSICS_INTERPOLATION_MODE_OFF
-		mmi.extra_cull_margin = 100.0
-		add_child(mmi)
+		var root = Node3D.new()
+		root.name = "Bushes_Variant%d" % i
+		add_child(root)
 
-		var mm = MultiMesh.new()
-		mm.transform_format = MultiMesh.TRANSFORM_3D
-		mm.mesh = base_mesh # geometry is identical across variants — only the material differs
-		mmi.multimesh = mm
+		for j in range(extracted_list.size()):
+			var info = extracted_list[j]
+			var mmi = MultiMeshInstance3D.new()
+			mmi.name = "Mesh_%d" % j
+			mmi.physics_interpolation_mode = 2 # Node.PHYSICS_INTERPOLATION_MODE_OFF
+			mmi.extra_cull_margin = 100.0
+			mmi.set_meta("local_transform", info["transform"])
 
-		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if not BUSH_CAST_SHADOWS else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
-		mmi.visibility_range_end = BUSH_VISIBILITY_END
-		mmi.visibility_range_end_margin = BUSH_VISIBILITY_FADE
-		mmi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+			var mm = MultiMesh.new()
+			mm.transform_format = MultiMesh.TRANSFORM_3D
+			mm.mesh = info["mesh"]
+			mmi.multimesh = mm
 
-		if base_material != null:
-			# .duplicate() gives each variant its own independent
-			# ShaderMaterial resource, so changing its uniforms below can't
-			# affect the other variants (or the original bush scene).
-			var variant_material: ShaderMaterial = base_material.duplicate()
-			_randomize_bush_wind(variant_material)
-			mmi.material_override = variant_material
+			mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if not BUSH_CAST_SHADOWS else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+			mmi.visibility_range_end = BUSH_VISIBILITY_END
+			mmi.visibility_range_end_margin = BUSH_VISIBILITY_FADE
+			mmi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 
-		nodes.append(mmi)
+			var base_material = info["material"]
+			if base_material != null:
+				var variant_material: ShaderMaterial = base_material.duplicate()
+				_randomize_bush_wind(variant_material)
+				mmi.material_override = variant_material
+
+			root.add_child(mmi)
+		nodes.append(root)
 
 	return nodes
 
@@ -737,11 +809,21 @@ func _randomize_bush_wind(mat: ShaderMaterial) -> void:
 	mat.set_shader_parameter("WiggleStrength", randf_range(0.06, 0.14))
 	mat.set_shader_parameter("WiggleFrequency", randf_range(2.0, 4.0))
 
-func _apply_multimesh(mmi: MultiMeshInstance3D, transforms: Array[Transform3D]) -> void:
-	var mm: MultiMesh = mmi.multimesh
-	mm.instance_count = transforms.size()
-	for i in range(transforms.size()):
-		mm.set_instance_transform(i, transforms[i])
+func _apply_multimesh(group: Node3D, transforms: Array[Transform3D]) -> void:
+	if group is MultiMeshInstance3D:
+		var mmi = group
+		var mm: MultiMesh = mmi.multimesh
+		mm.instance_count = transforms.size()
+		for i in range(transforms.size()):
+			mm.set_instance_transform(i, transforms[i])
+	else:
+		for child in group.get_children():
+			if child is MultiMeshInstance3D:
+				var local_transform: Transform3D = child.get_meta("local_transform", Transform3D.IDENTITY)
+				var mm: MultiMesh = child.multimesh
+				mm.instance_count = transforms.size()
+				for i in range(transforms.size()):
+					mm.set_instance_transform(i, transforms[i] * local_transform)
 
 # --- Path tiles (kept as individual instances — few of them, and each needs
 # its own type + rotation, so this is not worth batching) ---------------
@@ -808,6 +890,31 @@ func _find_mesh_instance_recursive(node: Node) -> MeshInstance3D:
 		if found != null:
 			return found
 	return null
+
+func _tint_node_materials(node: Node, color: Color) -> void:
+	if node is MeshInstance3D:
+		var mat = null
+		if node.material_override:
+			mat = node.material_override
+		elif node.mesh and node.mesh.get_surface_count() > 0:
+			mat = node.mesh.surface_get_material(0)
+			if not mat:
+				mat = node.get_surface_override_material(0)
+		if mat is BaseMaterial3D:
+			var new_mat = mat.duplicate() as BaseMaterial3D
+			if new_mat != null:
+				new_mat.albedo_color = color
+				node.material_override = new_mat
+	elif node is MultiMeshInstance3D:
+		var mat = node.material_override
+		if mat is BaseMaterial3D:
+			var new_mat = mat.duplicate() as BaseMaterial3D
+			if new_mat != null:
+				new_mat.albedo_color = color
+				node.material_override = new_mat
+
+	for child in node.get_children():
+		_tint_node_materials(child, color)
 
 func _get_rotation_from_dir(dir: Vector2i) -> float:
 	if dir == Vector2i(0, 1):

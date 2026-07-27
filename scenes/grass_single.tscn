@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://6703tir8bl2b"]
+
+[ext_resource type="ArrayMesh" uid="uid://dii43dejxwbal" path="res://addons/Mesh/grass_plane_mesh.res" id="1_tl3x3"]
+
+[node name="Grass" type="Node3D" unique_id=1935062957]
+
+[node name="Grass" type="MeshInstance3D" parent="." unique_id=749354147]
+mesh = ExtResource("1_tl3x3")

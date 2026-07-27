@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="IGI-dev:code-circus"
-run/main_scene="res://map.tscn"
+run/main_scene="res://scenes/map.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -32,9 +32,25 @@ wind_intensity={
 }
 wind_direction={
 "type": "vec3",
-"value": "Vector3(1, 0, 1)"
+"value": Vector3(0, 0, 1)
 }
 player_position={
 "type": "vec3",
 "value": "Vector3(0, 0, 0)"
+}
+wind_strength={
+"type": "float",
+"value": 0.4
+}
+wind_speed={
+"type": "float",
+"value": 0.075
+}
+wind_scale={
+"type": "float",
+"value": 0.025
+}
+wind_noise={
+"type": "sampler2D",
+"value": "res://addons/Textures/new_noise_texture_2d.tres"
 }
