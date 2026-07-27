@@ -17,7 +17,7 @@ signal turret_selected(index: int, scene: PackedScene, attack_range: float, extr
 		if is_node_ready(): _rebuild_hotbar()
 
 ## Width and height of each slot in pixels.
-@export_range(40, 200, 1) var slot_size: float = 50.0:
+@export_range(40, 200, 1) var slot_size: float = 72.0:
 	set(v):
 		slot_size = v
 		if is_node_ready(): _push_layout_to_slots()
@@ -277,29 +277,23 @@ var _biome_frames: Array[Texture2D] = []
 
 func _load_biome_frames() -> void:
 	_biome_frames.clear()
-	for i in range(2, 9):
-		var tex_path = "res://UI/%s/Sprite-000%d.png" % [current_biome_folder, i]
-		if ResourceLoader.exists(tex_path):
-			_biome_frames.append(load(tex_path))
-			
-	if is_node_ready() and border_overlay:
-		var border_path = "res://UI/%s/%s Border Trial 1.png" % [current_biome_folder, current_biome_folder]
-		if ResourceLoader.exists(border_path):
-			border_overlay.texture = load(border_path)
-			hotbar_panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-			# Optional: hide the title label if there's a custom pixel-art border
-			$HotbarPanel/VBox/TitleLabel.hide()
-		else:
-			border_overlay.texture = null
-			_apply_panel_style()
-			$HotbarPanel/VBox/TitleLabel.show()
+	var bg_path = ""
+	if current_biome_folder == "Ice":
+		bg_path = "res://UI/Ice/Snow Hotbar 2.png"
+	elif current_biome_folder == "Grass":
+		bg_path = "res://UI/Grass/Grass 1.png"
+	elif current_biome_folder == "Desert":
+		bg_path = "res://UI/Desert/Desert 7.png"
+		
+	if ResourceLoader.exists(bg_path):
+		_biome_frames.append(load(bg_path))
 			
 	if is_node_ready() and bg_overlay:
-		var bg_path = "res://UI/%s/%s Border BG Trial 1.png" % [current_biome_folder, current_biome_folder]
-		if ResourceLoader.exists(bg_path):
-			bg_overlay.texture = load(bg_path)
-		else:
-			bg_overlay.texture = null
+		bg_overlay.texture = null
+		if border_overlay: border_overlay.texture = null
+		_apply_panel_style()
+		if has_node("HotbarPanel/VBox/TitleLabel"):
+			$HotbarPanel/VBox/TitleLabel.hide()
 
 func _populate_slots() -> void:
 	if _biome_frames.is_empty():
@@ -313,18 +307,9 @@ func _populate_slots() -> void:
 # ── Style application ──────────────────────────────────────────────────────────
 
 func _apply_panel_style() -> void:
-	var style := StyleBoxFlat.new()
-	style.bg_color    = panel_bg_color
-	style.border_color = panel_border_color
-	style.set_border_width_all(2)
-	style.corner_radius_top_left     = panel_corner_radius
-	style.corner_radius_top_right    = panel_corner_radius
-	style.corner_radius_bottom_left  = 0
-	style.corner_radius_bottom_right = 0
-	style.shadow_color  = panel_shadow_color
-	style.shadow_size   = panel_shadow_size
-	style.shadow_offset = Vector2(0, -4)
-	hotbar_panel.add_theme_stylebox_override("panel", style)
+	hotbar_panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	if has_node("HotbarPanel/VBox/TitleLabel"):
+		$HotbarPanel/VBox/TitleLabel.hide()
 
 func _apply_slot_spacing() -> void:
 	slot_container.add_theme_constant_override("separation", slot_spacing)
@@ -410,19 +395,25 @@ func _on_biome_changed(biome: BiomeData) -> void:
 
 func _on_slot_clicked(index: int) -> void:
 	if _selected_index == index:
-		_slots[index].set_selected(false)
 		_selected_index = -1
+		_update_all_slots_selection()
 		var builder = get_tree().get_root().find_child("BuilderController", true, false)
 		if builder and builder.has_method("stop_building"):
 			builder.stop_building()
 		return
-	if _selected_index >= 0 and _selected_index < _slots.size():
-		_slots[_selected_index].set_selected(false)
+	_selected_index = index
+	_update_all_slots_selection()
 	var asset_dict = TURRET_ASSETS[index]
 	turret_selected.emit(index, asset_dict["scene"], asset_dict.get("attack_range", 1.5), asset_dict)
 
 func _on_building_stopped() -> void:
 	if _selected_index != -1 and _selected_index < _slots.size():
-		_slots[_selected_index].set_selected(false)
 		_selected_index = -1
+		_update_all_slots_selection()
 	_hide_hotbar()
+
+func _update_all_slots_selection() -> void:
+	for i in range(_slots.size()):
+		if is_instance_valid(_slots[i]):
+			if _slots[i].has_method("set_selection_state"):
+				_slots[i].set_selection_state(i == _selected_index, _selected_index != -1)

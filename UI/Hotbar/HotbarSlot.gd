@@ -58,8 +58,11 @@ signal slot_clicked(index: int)
 # ── Internal state ────────────────────────────────────────────────────────────
 
 var is_selected: bool = false
+var any_selected: bool = false
 var is_hovered: bool = false
 var _scale_tween: Tween = null
+var _opacity_tween: Tween = null
+var _icon_scale_tween: Tween = null
 var _rotate_tween: Tween = null
 var _turret_instance: Node3D = null
 
@@ -69,21 +72,22 @@ var bg_timer: float = 0.0
 
 @onready var bg_texture: TextureRect = $BgTexture
 
-@onready var sub_viewport: SubViewport        = $MarginContainer/SubViewportContainer/SubViewport
-@onready var preview_camera: Camera3D         = $MarginContainer/SubViewportContainer/SubViewport/PreviewScene/Camera3D
-@onready var turret_anchor: Node3D            = $MarginContainer/SubViewportContainer/SubViewport/PreviewScene/TurretAnchor
-@onready var tooltip_label: Label             = $TooltipLabel
+@onready var sub_viewport: SubViewport        = $MarginContainer/VBoxContainer/SubViewportContainer/SubViewport
+@onready var preview_camera: Camera3D         = $MarginContainer/VBoxContainer/SubViewportContainer/SubViewport/PreviewScene/Camera3D
+@onready var turret_anchor: Node3D            = $MarginContainer/VBoxContainer/SubViewportContainer/SubViewport/PreviewScene/TurretAnchor
+@onready var tooltip_label: Label             = $MarginContainer/VBoxContainer/TooltipLabel
 
 func _ready() -> void:
 	custom_minimum_size = Vector2(slot_size, slot_size)
+	pivot_offset = custom_minimum_size / 2.0
 	add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-	tooltip_label.hide()
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 	gui_input.connect(_on_gui_input)
 	sub_viewport.own_world_3d = true
 	if turret_scene != null:
 		_load_turret_preview()
+	_refresh_visual()
 
 # ── Style ─────────────────────────────────────────────────────────────────────
 
@@ -117,6 +121,8 @@ func apply_theme_config(cfg: Dictionary) -> void:
 func set_turret(p_scene: PackedScene, p_name: String) -> void:
 	turret_scene = p_scene
 	turret_name  = p_name
+	if tooltip_label:
+		tooltip_label.text = p_name
 	if is_inside_tree():
 		_load_turret_preview()
 
@@ -181,6 +187,11 @@ func set_selected(value: bool) -> void:
 	is_selected = value
 	_refresh_visual()
 
+func set_selection_state(p_selected: bool, p_any: bool) -> void:
+	is_selected = p_selected
+	any_selected = p_any
+	_refresh_visual()
+
 func set_bg_frames(frames: Array[Texture2D]) -> void:
 	bg_frames = frames
 	_refresh_visual()
@@ -206,12 +217,27 @@ func _refresh_visual() -> void:
 			bg_frame_index = 0
 			bg_timer = 0.0
 			
+	var target_opacity = 1.0
+	var icon_scale = 1.0
+	var card_scale = 1.0
+	
 	if is_selected:
-		_animate_scale(1.08)
+		icon_scale = 1.4
+		target_opacity = 1.0
+		card_scale = 79.0 / slot_size
 	elif is_hovered:
-		_animate_scale(1.03)
+		target_opacity = 1.0
+		card_scale = 0.92
 	else:
-		_animate_scale(1.0)
+		if any_selected:
+			target_opacity = 0.8
+		else:
+			target_opacity = 1.0
+		card_scale = 1.0
+		
+	_animate_scale(card_scale)
+	_animate_opacity(target_opacity)
+	_animate_icon_scale(icon_scale)
 
 func _animate_scale(target: float) -> void:
 	if _scale_tween:
@@ -221,19 +247,33 @@ func _animate_scale(target: float) -> void:
 	_scale_tween.set_trans(Tween.TRANS_BACK)
 	_scale_tween.tween_property(self, "scale", Vector2(target, target), 0.18)
 
+func _animate_opacity(target: float) -> void:
+	if _opacity_tween:
+		_opacity_tween.kill()
+	_opacity_tween = create_tween()
+	_opacity_tween.set_ease(Tween.EASE_OUT)
+	_opacity_tween.set_trans(Tween.TRANS_SINE)
+	_opacity_tween.tween_property(self, "modulate:a", target, 0.2)
+
+func _animate_icon_scale(target: float) -> void:
+	if not is_instance_valid(turret_anchor):
+		return
+	if _icon_scale_tween:
+		_icon_scale_tween.kill()
+	_icon_scale_tween = create_tween()
+	_icon_scale_tween.set_ease(Tween.EASE_OUT)
+	_icon_scale_tween.set_trans(Tween.TRANS_BACK)
+	_icon_scale_tween.tween_property(turret_anchor, "scale", Vector3(target, target, target), 0.25)
+
 # ── Input ──────────────────────────────────────────────────────────────────────
 
 func _on_mouse_entered() -> void:
 	is_hovered = true
 	_refresh_visual()
-	if turret_name != "":
-		tooltip_label.text = turret_name
-		tooltip_label.show()
 
 func _on_mouse_exited() -> void:
 	is_hovered = false
 	_refresh_visual()
-	tooltip_label.hide()
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
