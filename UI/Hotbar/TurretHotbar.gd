@@ -5,7 +5,7 @@ extends CanvasLayer
 ## All visual properties are @export — configure via Inspector, no hardcoding.
 ## Emits turret_selected(index) when a slot is clicked.
 
-signal turret_selected(index: int, scene: PackedScene, attack_range: float)
+signal turret_selected(index: int, scene: PackedScene, attack_range: float, extra_data: Dictionary)
 
 # ── Layout ────────────────────────────────────────────────────────────────────
 
@@ -83,27 +83,37 @@ const TURRET_ASSETS: Array[Dictionary] = [
 	{
 		"scene": preload("res://assets/Models/GLB format/desert/weapon-turret.glb"),
 		"name": "Turret",
-		"attack_range": 1.5
+		"attack_range": 3.0,
+		"weapon_type": "turret"
 	},
 	{
 		"scene": preload("res://assets/Models/GLB format/desert/weapon-cannon.glb"),
 		"name": "Cannon",
-		"attack_range": 1.5
+		"attack_range": 2.5,
+		"is_half_circle": true,
+		"weapon_type": "cannon"
 	},
 	{
 		"scene": preload("res://assets/Models/GLB format/desert/weapon-ballista.glb"),
 		"name": "Ballista",
-		"attack_range": 2.5
+		"attack_range": 5.5,
+		"weapon_type": "ballista"
 	},
 	{
 		"scene": preload("res://assets/Models/GLB format/desert/weapon-catapult.glb"),
 		"name": "Catapult",
-		"attack_range": 2.0
+		"attack_range": 10.0,
+		"min_attack_range": 3.0,
+		"is_aoe": true,
+		"weapon_type": "catapult"
 	},
 	{
 		"scene": preload("res://assets/Models/GLB format/weapon-turret.glb"),
 		"name": "Heavy Turret",
-		"attack_range": 2.5
+		"attack_range": 4.0,
+		"footprint_size": Vector2i(2, 2),
+		"mesh_scale": Vector3(2.0, 2.0, 2.0),
+		"weapon_type": "turret"
 	},
 ]
 
@@ -408,9 +418,8 @@ func _on_slot_clicked(index: int) -> void:
 		return
 	if _selected_index >= 0 and _selected_index < _slots.size():
 		_slots[_selected_index].set_selected(false)
-	_selected_index = index
-	_slots[index].set_selected(true)
-	turret_selected.emit(index, TURRET_ASSETS[index]["scene"], TURRET_ASSETS[index].get("attack_range", 1.5))
+	var asset_dict = TURRET_ASSETS[index]
+	turret_selected.emit(index, asset_dict["scene"], asset_dict.get("attack_range", 1.5), asset_dict)
 
 func _on_building_stopped() -> void:
 	if _selected_index != -1 and _selected_index < _slots.size():
