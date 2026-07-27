@@ -1,87 +1,88 @@
 extends Node3D
 
-# Turret base class handling targeting, attack types, cooldowns, and placeholder visuals.
+# Turret base class handling targeting, attack types, cooldowns, and animated 3D ammo projectiles.
 
 # Exported configurable properties
 @export_range(0.0, 20.0, 0.1) var attack_range: float = 1.5
+@export_range(0.0, 20.0, 0.1) var min_attack_range: float = 0.0
 @export var is_aoe: bool = false
+@export var is_half_circle: bool = false
 @export_range(0.1, 10.0, 0.1) var cooldown: float = 1.0
 # How fast (deg/sec) the turret rotates to face its target
 @export_range(10.0, 720.0, 5.0) var rotation_speed: float = 180.0
+
+@export_enum("turret", "cannon", "ballista", "catapult") var weapon_type: String = "turret"
+@export_range(1.0, 50.0, 0.5) var projectile_speed: float = 12.0
+
+const AMMO_ASSETS: Dictionary = {
+	"turret": "res://assets/Models/GLB format/weapon-ammo-bullet.glb",
+	"cannon": "res://assets/Models/GLB format/weapon-ammo-cannonball.glb",
+	"ballista": "res://assets/Models/GLB format/weapon-ammo-arrow.glb",
+	"catapult": "res://assets/Models/GLB format/weapon-ammo-boulder.glb"
+}
 
 # Internal timer
 var _cooldown_timer: float = 0.0
 # Current locked target for rotation tracking
 var _current_target: Node3D = null
-
-# Placeholder visual nodes
-var _line_mesh_instance: MeshInstance3D = null
-var _line_mesh: ImmediateMesh = null
-var _aoe_marker: MeshInstance3D = null
-var _hide_timer: Timer = null
+# Initial forward direction upon placement (for 180-degree half-circle restriction)
+var _initial_facing_dir: Vector3 = Vector3.FORWARD
 
 func _ready() -> void:
-	# Single-target line placeholder using ImmediateMesh (Godot 4)
-	_line_mesh = ImmediateMesh.new()
-	_line_mesh_instance = MeshInstance3D.new()
-	_line_mesh_instance.mesh = _line_mesh
-	_line_mesh_instance.name = "single_target_line"
-	_line_mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var line_mat = StandardMaterial3D.new()
-	# Bright neon yellow — bold and high contrast
-	line_mat.albedo_color = Color(1.0, 1.0, 0.0)
-	line_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	line_mat.no_depth_test = true
-	line_mat.render_priority = 2
-	_line_mesh_instance.material_override = line_mat
-	add_child(_line_mesh_instance)
+	_auto_detect_weapon_type()
+	call_deferred("_capture_initial_facing")
 
-	# AoE marker — flat cylinder disc on the ground, bold red
-	_aoe_marker = MeshInstance3D.new()
-	_aoe_marker.name = "aoe_marker"
-	var disc = CylinderMesh.new()
-	disc.top_radius = attack_range
-	disc.bottom_radius = attack_range
-	disc.height = 0.05
-	disc.radial_segments = 32
-	_aoe_marker.mesh = disc
-	var mat = StandardMaterial3D.new()
-	mat.albedo_color = Color(1.0, 0.05, 0.05, 0.75)
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.no_depth_test = true
-	mat.render_priority = 2
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	_aoe_marker.material_override = mat
-	_aoe_marker.position = Vector3(0, 0.08, 0)
-	_aoe_marker.visible = false
-	add_child(_aoe_marker)
+func _capture_initial_facing() -> void:
+	_initial_facing_dir = -global_transform.basis.z.normalized()
+	_initial_facing_dir.y = 0.0
+	if _initial_facing_dir.length_squared() > 0.001:
+		_initial_facing_dir = _initial_facing_dir.normalized()
+	else:
+		_initial_facing_dir = Vector3.FORWARD
 
-	# Timer to hide visuals after a flash
-	_hide_timer = Timer.new()
-	_hide_timer.one_shot = true
-	_hide_timer.wait_time = 0.25
-	_hide_timer.connect("timeout", Callable(self, "_on_hide_timer_timeout"))
-	add_child(_hide_timer)
+func _auto_detect_weapon_type() -> void:
+	var path_or_name = scene_file_path.to_lower() if scene_file_path != "" else name.to_lower()
+	if path_or_name.find("cannon") != -1:
+		weapon_type = "cannon"
+		is_half_circle = true
+	elif path_or_name.find("ballista") != -1:
+		weapon_type = "ballista"
+	elif path_or_name.find("catapult") != -1:
+		weapon_type = "catapult"
+		is_aoe = true
+		if min_attack_range <= 0.0:
+			min_attack_range = 3.0
+	elif path_or_name.find("turret") != -1:
+		weapon_type = "turret"
 
 func _process(delta: float) -> void:
-	# --- Continuous rotation toward locked target (single-target only) ---
-	if not is_aoe and is_instance_valid(_current_target):
+	# --- Continuous rotation toward locked target ---
+	if is_instance_valid(_current_target):
 		_rotate_toward_target(_current_target, delta)
 
 	if _cooldown_timer > 0.0:
 		_cooldown_timer -= delta
 		return
 
-	var enemies = EnemyDetector.get_enemies_in_range(self, global_transform.origin, attack_range)
+	var enemies = EnemyDetector.get_enemies_in_range(self, global_transform.origin, attack_range, min_attack_range)
+	if is_half_circle:
+		var valid_enemies: Array[Node3D] = []
+		for enemy in enemies:
+			var dir = (enemy.global_transform.origin - global_transform.origin)
+			dir.y = 0.0
+			if dir.length_squared() > 0.0001 and dir.normalized().dot(_initial_facing_dir) >= -0.05:
+				valid_enemies.append(enemy)
+		enemies = valid_enemies
+
 	if enemies.is_empty():
 		_current_target = null
 		return
 
+	_current_target = enemies[0]
+
 	if is_aoe:
 		_trigger_aoe_attack(enemies)
 	else:
-		_current_target = enemies[0]
 		_trigger_single_target_attack(_current_target)
 
 	_cooldown_timer = cooldown
@@ -94,35 +95,78 @@ func _rotate_toward_target(target: Node3D, delta: float) -> void:
 	var dir = Vector3(target_pos.x - my_pos.x, 0.0, target_pos.z - my_pos.z)
 	if dir.length_squared() < 0.0001:
 		return
-	var target_basis = Basis.looking_at(dir.normalized(), Vector3.UP, true)
+	var current_scale = scale
+	# Extract pure rotation (no scale) for a clean slerp
+	var current_rot = global_transform.basis.orthonormalized()
+	var target_rot = Basis.looking_at(dir.normalized(), Vector3.UP, true)
 	# Slerp at rotation_speed degrees per second
 	var t = clampf(deg_to_rad(rotation_speed) * delta, 0.0, 1.0)
-	global_transform.basis = global_transform.basis.slerp(target_basis, t)
+	var new_rot = current_rot.slerp(target_rot, t)
+	# Reapply scale after rotation
+	global_transform.basis = new_rot.scaled(current_scale)
 
 func _trigger_single_target_attack(target: Node3D) -> void:
-	# Draw a bold neon line from turret origin to the target
-	_line_mesh.clear_surfaces()
-	_line_mesh.surface_begin(Mesh.PRIMITIVE_LINES)
-	# Draw 3 parallel lines (offset slightly) to simulate thickness
-	var local_target = to_local(target.global_transform.origin)
-	var offsets = [Vector3.ZERO, Vector3(0.04, 0, 0), Vector3(-0.04, 0, 0)]
-	for o in offsets:
-		_line_mesh.surface_add_vertex(Vector3.ZERO + o)
-		_line_mesh.surface_add_vertex(local_target + o)
-	_line_mesh.surface_end()
-	_hide_timer.start()
-	# Placeholder for damage logic
-	print("Turret (single) fired at ", target.name)
+	if is_instance_valid(target):
+		_spawn_ammo_projectile(target.global_transform.origin)
+	print("Turret (%s) fired at %s" % [weapon_type, target.name if is_instance_valid(target) else "target"])
 
 func _trigger_aoe_attack(targets: Array) -> void:
-	_aoe_marker.visible = true
-	_hide_timer.start()
-	# Placeholder for AoE damage logic
-	print("Turret (AoE) fired, affecting ", targets.size(), " enemies")
+	if not targets.is_empty() and is_instance_valid(targets[0]):
+		_spawn_ammo_projectile(targets[0].global_transform.origin)
+	print("Turret (%s AoE) fired, affecting %d enemies" % [weapon_type, targets.size()])
 
-func _on_hide_timer_timeout() -> void:
-	_line_mesh.clear_surfaces()
-	_aoe_marker.visible = false
+func _get_ammo_scene(type_name: String) -> PackedScene:
+	var primary_path: String = AMMO_ASSETS.get(type_name, AMMO_ASSETS["turret"])
+	if ResourceLoader.exists(primary_path):
+		return load(primary_path)
+	var desert_path = primary_path.replace("GLB format/", "GLB format/desert/")
+	if ResourceLoader.exists(desert_path):
+		return load(desert_path)
+	push_warning("Turret: Ammo scene for '%s' not found at %s" % [type_name, primary_path])
+	return null
+
+func _spawn_ammo_projectile(target_pos: Vector3) -> void:
+	var ammo_scene = _get_ammo_scene(weapon_type)
+	if ammo_scene == null:
+		return
+
+	var ammo_instance: Node3D = ammo_scene.instantiate()
+	var spawn_pos = global_transform.origin + Vector3(0, 0.4, 0)
+	
+	# Add to main scene root so ammo is independent of turret rotation
+	var scene_root = get_tree().current_scene
+	if scene_root:
+		scene_root.add_child(ammo_instance)
+	else:
+		get_parent().add_child(ammo_instance)
+
+	ammo_instance.global_position = spawn_pos
+	
+	var distance = spawn_pos.distance_to(target_pos)
+	var flight_time = clampf(distance / projectile_speed, 0.1, 2.0)
+	
+	if distance > 0.01:
+		ammo_instance.look_at(target_pos, Vector3.UP)
+
+	var tween = create_tween()
+	if weapon_type == "catapult":
+		# Parabolic arc trajectory for boulder ammo
+		var arc_height: float = maxf(1.0, distance * 0.5)
+		tween.tween_method(func(progress: float):
+			if is_instance_valid(ammo_instance):
+				var current_linear = spawn_pos.lerp(target_pos, progress)
+				var height_offset = Vector3.UP * sin(progress * PI) * arc_height
+				ammo_instance.global_position = current_linear + height_offset
+				ammo_instance.rotate_x(deg_to_rad(10.0))
+		, 0.0, 1.0, flight_time)
+	else:
+		# Direct straight line trajectory
+		tween.tween_property(ammo_instance, "global_position", target_pos, flight_time)
+
+	tween.tween_callback(func():
+		if is_instance_valid(ammo_instance):
+			ammo_instance.queue_free()
+	)
 
 func reset_cooldown() -> void:
 	_cooldown_timer = 0.0
