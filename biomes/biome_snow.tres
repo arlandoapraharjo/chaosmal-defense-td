@@ -10,8 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://wbdvkxhcbuxs" path="res://assets/Models/GLB format/snow/snow-tile-end-round.glb" id="7_4f7rl"]
 [ext_resource type="PackedScene" uid="uid://38nk5i8vrf66" path="res://assets/Models/GLB format/snow/snow-tile-straight.glb" id="7_wh0ca"]
 [ext_resource type="PackedScene" uid="uid://c58bkhmbqu1uq" path="res://assets/Models/GLB format/snow/snow-tile-tree-quad.glb" id="10_hl46c"]
-[ext_resource type="PackedScene" uid="uid://b45namaxsgl8f" path="res://assets/Models/GLB format/snow/snow-detail-tree.glb" id="11_wh0ca"]
-[ext_resource type="Resource" path="res://UI/Hotbar/hotbar_theme_snow.tres" id="12_snow"]
+[ext_resource type="Resource" uid="uid://boh0iknqrt5rd" path="res://UI/Hotbar/hotbar_theme_snow.tres" id="12_snow"]
+[ext_resource type="PackedScene" uid="uid://bp33u85pccjqh" path="res://scenes/foliage_snow_tree.tscn" id="12_wh0ca"]
 
 [resource]
 script = ExtResource("1_87pvo")
@@ -20,7 +20,7 @@ tile_straight = ExtResource("7_wh0ca")
 tile_corner = ExtResource("4_br14u")
 tile_spawn = ExtResource("5_vhchl")
 tile_end = ExtResource("7_4f7rl")
-tree_model = ExtResource("11_wh0ca")
+tree_model = ExtResource("12_wh0ca")
 tree_large_model = ExtResource("10_hl46c")
 rock_model = ExtResource("3_wh0ca")
 bush_model = ExtResource("1_4f7rl")

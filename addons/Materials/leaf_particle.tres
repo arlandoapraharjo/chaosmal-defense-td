@@ -1,0 +1,25 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dcdthcq7xigte"]
+
+[ext_resource type="Texture2D" uid="uid://odby0egwugk1" path="res://addons/Textures/leaf_particle.png" id="1_m50k2"]
+
+[resource]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
+depth_draw_mode = 2
+diffuse_mode = 1
+specular_mode = 2
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.3647059, 0.65882355, 0.1764706, 1)
+albedo_texture = ExtResource("1_m50k2")
+metallic_specular = 0.0
+roughness = 0.0
+backlight_enabled = true
+backlight = Color(1, 1, 1, 1)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+proximity_fade_distance = 6.0

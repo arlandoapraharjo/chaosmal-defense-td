@@ -1,16 +1,16 @@
 [gd_scene format=3 uid="uid://bpg8awe6kssxa"]
 
-[ext_resource type="Environment" uid="uid://eje2tefugyb2" path="res://addons/Shader/desert_env.tres" id="1_0t07s"]
-[ext_resource type="Script" uid="uid://vca8f7oohn30" path="res://scripts/MapGenerator.gd" id="1_e0an3"]
-[ext_resource type="Script" uid="uid://byp7p3p447u7h" path="res://scripts/CameraController.gd" id="2_p5pve"]
-[ext_resource type="Script" uid="uid://dt3mmbm7kd8rn" path="res://biomes/BiomeData.gd" id="2_urblq"]
-[ext_resource type="Resource" uid="uid://ub8ponw0r6f8" path="res://biomes/biome_snow.tres" id="3_iw27f"]
-[ext_resource type="Resource" uid="uid://cgsne48ch7k6g" path="res://biomes/biome_grass.tres" id="4_iw27f"]
-[ext_resource type="Resource" uid="uid://dkkpml6w0got6" path="res://biomes/biome_desert.tres" id="5_iw27f"]
-[ext_resource type="PackedScene" uid="uid://dc6dgdjoiagk6" path="res://UI/Hotbar/TurretHotbar.tscn" id="6_hotbar"]
-[ext_resource type="Shader" uid="uid://8haud4yhw01k" path="res://addons/Shader/sandstrom.gdshader" id="7_6qsgm"]
-[ext_resource type="Script" uid="uid://wguegcpphxbe" path="res://scripts/BuilderController.gd" id="7_builder"]
-[ext_resource type="Material" uid="uid://cr8yf6r3utjih" path="res://addons/Textures/water_mat.tres" id="10_oysan"]
+[ext_resource type="Environment" uid="uid://eje2tefugyb2" path="res://addons/Shader/desert_env.tres" id="1_mlgqr"]
+[ext_resource type="Script" uid="uid://vca8f7oohn30" path="res://scripts/MapGenerator.gd" id="2_wslke"]
+[ext_resource type="Script" uid="uid://dt3mmbm7kd8rn" path="res://biomes/BiomeData.gd" id="3_gw3fx"]
+[ext_resource type="Resource" uid="uid://ub8ponw0r6f8" path="res://biomes/biome_snow.tres" id="4_n1psn"]
+[ext_resource type="Resource" uid="uid://cgsne48ch7k6g" path="res://biomes/biome_grass.tres" id="5_c00ee"]
+[ext_resource type="Resource" uid="uid://dkkpml6w0got6" path="res://biomes/biome_desert.tres" id="6_p7tei"]
+[ext_resource type="Shader" uid="uid://8haud4yhw01k" path="res://addons/Shader/sandstrom.gdshader" id="7_c70he"]
+[ext_resource type="Script" uid="uid://byp7p3p447u7h" path="res://scripts/CameraController.gd" id="8_mo32q"]
+[ext_resource type="PackedScene" uid="uid://dc6dgdjoiagk6" path="res://UI/Hotbar/TurretHotbar.tscn" id="9_6k6j1"]
+[ext_resource type="Script" uid="uid://wguegcpphxbe" path="res://scripts/BuilderController.gd" id="10_m335s"]
+[ext_resource type="Material" uid="uid://cr8yf6r3utjih" path="res://addons/Textures/water_mat.tres" id="11_sq6bu"]
 
 [sub_resource type="Gradient" id="Gradient_ooc2g"]
 
@@ -24,7 +24,7 @@ noise = SubResource("FastNoiseLite_62yky")
 seamless = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2wwcf"]
-shader = ExtResource("7_6qsgm")
+shader = ExtResource("7_c70he")
 shader_parameter/noise_tex = SubResource("NoiseTexture2D_mm1bc")
 shader_parameter/noise_scale = 0.9999999747
 shader_parameter/flatness = 1.0
@@ -35,7 +35,7 @@ shader_parameter/fog_speed = 1.510000309225
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_m8r5s"]
 lightmap_size_hint = Vector2i(12, 12)
-material = ExtResource("10_oysan")
+material = ExtResource("11_sq6bu")
 subdivide_width = 20
 subdivide_depth = 20
 
@@ -49,12 +49,12 @@ material = SubResource("StandardMaterial3D_y6u0t")
 [node name="World" type="Node3D" unique_id=67285049]
 
 [node name="WorldEnvironment2" type="WorldEnvironment" parent="." unique_id=483959264]
-environment = ExtResource("1_0t07s")
+environment = ExtResource("1_mlgqr")
 
 [node name="Map" type="Node3D" parent="." unique_id=1197104861 node_paths=PackedStringArray("world_environment_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.90186214)
-script = ExtResource("1_e0an3")
-biomes = Array[ExtResource("2_urblq")]([ExtResource("3_iw27f"), ExtResource("4_iw27f"), ExtResource("5_iw27f")])
+script = ExtResource("2_wslke")
+biomes = Array[ExtResource("3_gw3fx")]([ExtResource("4_n1psn"), ExtResource("5_c00ee"), ExtResource("6_p7tei")])
 world_environment_node = NodePath("../WorldEnvironment2")
 
 [node name="FogVolume" type="FogVolume" parent="Map" unique_id=2108782402]
@@ -68,20 +68,20 @@ current = true
 fov = 66.80169
 size = 20.0
 far = 150.0
-script = ExtResource("2_p5pve")
+script = ExtResource("8_mo32q")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=240699733]
-transform = Transform3D(0.8660254, -0.28678823, 0.40957603, 0, 0.81915206, 0.57357645, -0.5, -0.49673176, 0.7094065, 23.904772, 26.098438, 32.629635)
+transform = Transform3D(0.86643666, -0.25530002, 0.4290798, 0.007557401, 0.8659924, 0.50000006, -0.49922985, -0.4299756, 0.7522571, 23.904772, 26.098438, 32.629635)
 shadow_enabled = true
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=1033910215]
 use_hdr_2d = true
 size = Vector2i(1152, 648)
 
-[node name="TurretHotbar" parent="." unique_id=730426218 instance=ExtResource("6_hotbar")]
+[node name="TurretHotbar" parent="." unique_id=730426218 instance=ExtResource("9_6k6j1")]
 
 [node name="BuilderController" type="Node" parent="." unique_id=1232673061 node_paths=PackedStringArray("map_generator")]
-script = ExtResource("7_builder")
+script = ExtResource("10_m335s")
 map_generator = NodePath("../Map")
 
 [node name="Ocean" type="MeshInstance3D" parent="." unique_id=321031919]

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwc65q0i1glpr"
-path.s3tc="res://.godot/imported/edge_ramp.png-fdf3e6f6f1c9c963953b4c20659a6d33.s3tc.ctex"
+uid="uid://dhmgn24w7eswr"
+path.s3tc="res://.godot/imported/flower.png-8288c1d77f60a212e14912c1bd223d00.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/Textures/edge_ramp.png"
-dest_files=["res://.godot/imported/edge_ramp.png-fdf3e6f6f1c9c963953b4c20659a6d33.s3tc.ctex"]
+source_file="res://addons/Textures/flower.png"
+dest_files=["res://.godot/imported/flower.png-8288c1d77f60a212e14912c1bd223d00.s3tc.ctex"]
 
 [params]
 
