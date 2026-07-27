@@ -14,7 +14,7 @@ shader_parameter/color_texture = ExtResource("5_s8oh0")
 shader_parameter/uv_scale = Vector2(5, 4)
 shader_parameter/outline_mask = 1.0
 
-[node name="Tree" type="Node3D" unique_id=324258896]
+[node name="Snow Tree" type="Node3D" unique_id=324258896]
 
 [node name="Leaves" type="MeshInstance3D" parent="." unique_id=199961188]
 transform = Transform3D(0.35, 0, 0, 0, -0.22497568, -0.26811555, 0, 0.26811555, -0.22497568, -0.20695174, 2.0002031, -0.021292686)
