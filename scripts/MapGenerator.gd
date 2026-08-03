@@ -83,6 +83,7 @@ var path_lookup: Dictionary = {}
 var occupied_cells: Dictionary = {}
 
 var spawner_script = preload("res://scripts/Spawner.gd")
+var pillar_script = preload("res://scripts/IncursionPillar.gd")
 
 # Batching containers for repeated static meshes
 var mm_base: Node3D
@@ -107,6 +108,7 @@ func _ready():
 	_generate_path()
 	_build_map()
 	_setup_spawner()
+	_setup_pillar()
 	
 	# Fade in transition
 	var canvas = CanvasLayer.new()
@@ -960,3 +962,20 @@ func _setup_spawner() -> void:
 	add_child(spawner)
 
 	spawner.setup(enemy_path)
+
+func _setup_pillar() -> void:
+	var old_pillar = get_node_or_null("IncursionPillar")
+	if old_pillar:
+		old_pillar.queue_free()
+
+	if enemy_path.is_empty():
+		return
+
+	var end_grid = enemy_path[-1]
+	var pillar = Node3D.new()
+	pillar.name = "IncursionPillar"
+	pillar.set_script(pillar_script)
+	add_child(pillar)
+
+	pillar.position = Vector3(end_grid.x * TILE_SIZE, 0, end_grid.y * TILE_SIZE)
+
