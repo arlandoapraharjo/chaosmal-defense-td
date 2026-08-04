@@ -105,14 +105,16 @@ func _rotate_toward_target(target: Node3D, delta: float) -> void:
 	# Reapply scale after rotation
 	global_transform.basis = new_rot.scaled(current_scale)
 
+@export var attack_damage: float = 35.0
+
 func _trigger_single_target_attack(target: Node3D) -> void:
 	if is_instance_valid(target):
-		_spawn_ammo_projectile(target.global_transform.origin)
+		_spawn_ammo_projectile(target.global_transform.origin, target)
 	print("Turret (%s) fired at %s" % [weapon_type, target.name if is_instance_valid(target) else "target"])
 
 func _trigger_aoe_attack(targets: Array) -> void:
 	if not targets.is_empty() and is_instance_valid(targets[0]):
-		_spawn_ammo_projectile(targets[0].global_transform.origin)
+		_spawn_ammo_projectile(targets[0].global_transform.origin, null, targets)
 	print("Turret (%s AoE) fired, affecting %d enemies" % [weapon_type, targets.size()])
 
 func _get_ammo_scene(type_name: String) -> PackedScene:
@@ -125,7 +127,7 @@ func _get_ammo_scene(type_name: String) -> PackedScene:
 	push_warning("Turret: Ammo scene for '%s' not found at %s" % [type_name, primary_path])
 	return null
 
-func _spawn_ammo_projectile(target_pos: Vector3) -> void:
+func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, aoe_enemies: Array = []) -> void:
 	var ammo_scene = _get_ammo_scene(weapon_type)
 	if ammo_scene == null:
 		return
@@ -164,6 +166,13 @@ func _spawn_ammo_projectile(target_pos: Vector3) -> void:
 		tween.tween_property(ammo_instance, "global_position", target_pos, flight_time)
 
 	tween.tween_callback(func():
+		if is_instance_valid(target_enemy) and target_enemy.has_method("take_damage"):
+			target_enemy.take_damage(attack_damage)
+		elif not aoe_enemies.is_empty():
+			for enemy in aoe_enemies:
+				if is_instance_valid(enemy) and enemy.has_method("take_damage"):
+					enemy.take_damage(attack_damage)
+
 		if is_instance_valid(ammo_instance):
 			ammo_instance.queue_free()
 	)

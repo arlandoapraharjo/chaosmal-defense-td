@@ -11,10 +11,16 @@ var _visual_node: Node3D = null
 ## How quickly the UFO turns to face the next waypoint (higher = snappier)
 @export var turn_smoothing: float = 8.0
 signal reached_end
+signal enemy_defeated
+
+@export var max_hp: float = 100.0
+var current_hp: float = 100.0
+
 func setup(waypoints: Array[Vector3]) -> void:
 	path_waypoints = waypoints
 	current_waypoint_index = 0
 	_is_done = false
+	current_hp = max_hp
 	_cache_visual_node()
 
 ## Cache the first child node to apply the spin rotation to,
@@ -26,12 +32,14 @@ func _cache_visual_node() -> void:
 		if child is Node3D:
 			_visual_node = child
 			break
+
 ## Re-initialize this enemy for reuse from the pool.
 ## Places it at the first waypoint and makes it visible/active.
 func reset(waypoints: Array[Vector3], new_speed: float) -> void:
 	path_waypoints = waypoints
 	current_waypoint_index = 0
 	_is_done = false
+	current_hp = max_hp
 	speed = new_speed
 	visible = true
 	set_physics_process(true)
@@ -111,3 +119,17 @@ func _physics_process(delta: float) -> void:
 		_is_done = true
 		reached_end.emit()
 		deactivate()
+
+func take_damage(amount: float) -> void:
+	if _is_done:
+		return
+	current_hp -= amount
+	if current_hp <= 0:
+		current_hp = 0
+		_is_done = true
+		enemy_defeated.emit()
+		if CurrencyManager.instance:
+			CurrencyManager.instance.add_currency(1)
+		reached_end.emit()
+		deactivate()
+
