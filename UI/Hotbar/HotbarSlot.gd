@@ -218,11 +218,11 @@ func _refresh_visual() -> void:
 			bg_timer = 0.0
 			
 	var target_opacity = 1.0
-	var icon_scale = 1.0
+	var icon_scale = 1.3
 	var card_scale = 1.0
 	
 	if is_selected:
-		icon_scale = 1.4
+		icon_scale = 1.8
 		target_opacity = 1.0
 		card_scale = 79.0 / slot_size
 	elif is_hovered:

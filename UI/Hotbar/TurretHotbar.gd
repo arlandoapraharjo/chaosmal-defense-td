@@ -182,6 +182,37 @@ func _setup_popup() -> void:
 	_toggle_btn.grow_horizontal = Control.GROW_DIRECTION_BOTH
 
 func _apply_toggle_style() -> void:
+	var tex_path := ""
+	if current_biome_folder == "Desert":
+		tex_path = "res://UI/desert/Desert Togle 2.png"
+	elif current_biome_folder == "Ice":
+		tex_path = "res://UI/Ice/Snow Toggle 1.png"
+	elif current_biome_folder == "Grass":
+		tex_path = "res://UI/Grass/Grass Toggle 1.png"
+		
+	if tex_path != "":
+		var tex = load(tex_path)
+		if tex:
+			var style_tex = StyleBoxTexture.new()
+			style_tex.texture = tex
+			_toggle_btn.add_theme_stylebox_override("normal", style_tex)
+			
+			var style_hover = StyleBoxTexture.new()
+			style_hover.texture = tex
+			style_hover.modulate_color = Color(1.2, 1.2, 1.2, 1.0)
+			_toggle_btn.add_theme_stylebox_override("hover", style_hover)
+			
+			var style_pressed = StyleBoxTexture.new()
+			style_pressed.texture = tex
+			style_pressed.modulate_color = Color(0.8, 0.8, 0.8, 1.0)
+			_toggle_btn.add_theme_stylebox_override("pressed", style_pressed)
+			
+			if _is_open:
+				_toggle_btn.text = "Close"
+			else:
+				_toggle_btn.text = "Turret"
+			return
+
 	var style_normal := StyleBoxFlat.new()
 	style_normal.bg_color = panel_bg_color
 	style_normal.border_color = panel_border_color
@@ -203,6 +234,11 @@ func _apply_toggle_style() -> void:
 
 	_toggle_btn.add_theme_color_override("font_color", panel_border_color)
 	_toggle_btn.add_theme_color_override("font_hover_color", Color(1, 1, 1, 1))
+	
+	if _is_open:
+		_toggle_btn.text = "Close"
+	else:
+		_toggle_btn.text = "Turret"
 
 func _toggle_hotbar() -> void:
 	if _is_open:
@@ -214,7 +250,7 @@ func _show_hotbar() -> void:
 	if _is_open:
 		return
 	_is_open = true
-	_toggle_btn.text = "▼ Close"
+	_toggle_btn.text = "Close"
 
 	if _panel_tween:
 		_panel_tween.kill()
@@ -230,7 +266,7 @@ func _hide_hotbar() -> void:
 	if not _is_open:
 		return
 	_is_open = false
-	_toggle_btn.text = "▲ Turrets"
+	_toggle_btn.text = "Turret"
 
 	if _panel_tween:
 		_panel_tween.kill()
