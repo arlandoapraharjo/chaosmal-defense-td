@@ -18,6 +18,11 @@ static func get_enemies_in_range(caller: Node, origin: Vector3, max_range: float
 			# Identify enemy nodes by checking their script path contains "Enemy".
 			var script = node.get_script()
 			if script != null and "Enemy" in script.get_path():
+				# Skip dead/deactivated enemies (invisible or _is_done)
+				if not node.visible:
+					continue
+				if node.get("_is_done") == true:
+					continue
 				var distance_sq = origin.distance_squared_to(node.global_transform.origin)
 				if distance_sq <= max_range_sq and distance_sq >= min_range_sq:
 					result.append(node as Node3D)
