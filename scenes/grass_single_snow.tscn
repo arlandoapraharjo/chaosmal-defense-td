@@ -1,7 +1,5 @@
 [gd_scene format=4 uid="uid://o8pcj11agsac"]
-
-[ext_resource type="Material" uid="uid://clh1vnkiu6l8n" path="res://addons/Materials/grass_billboard.tres" id="1_u470u"]
-
+[ext_resource type="Material" uid="uid://snowgrassmat123" path="res://addons/Materials/grass_billboard_snow.tres" id="1_u470u"]
 [sub_resource type="ArrayMesh" id="ArrayMesh_8ukpj"]
 _surfaces = [{
 "aabb": AABB(-0.25, 0, -1.0927847e-08, 0.5, 0.5, 1e-05),

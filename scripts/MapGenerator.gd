@@ -63,9 +63,11 @@ var tree_large_model: PackedScene
 var rock_model: PackedScene
 var bush_model: PackedScene
 var grass_model: PackedScene = preload("res://scenes/grass_single.tscn")
+var grass_model_snow: PackedScene = preload("res://scenes/grass_single_snow.tscn")
 var decoration_chance: float = 0.2
 var active_biome: BiomeData = null
 var is_grass_biome: bool = false
+var is_snow_biome: bool = false
 
 ## Coastal
 var mm_border: Node3D
@@ -149,6 +151,7 @@ func _pick_biome() -> BiomeData:
 func _apply_biome(biome: BiomeData) -> void:
 	active_biome = biome
 	is_grass_biome = active_biome != null and "grass" in active_biome.resource_path.get_file().to_lower()
+	is_snow_biome = active_biome != null and "snow" in active_biome.resource_path.get_file().to_lower()
 	tile_base = biome.tile_base
 	tile_straight = biome.tile_straight
 	tile_corner = biome.tile_corner
@@ -373,6 +376,9 @@ func _build_map():
 	if is_grass_biome:
 		mm_grass = _make_multimesh_node("GrassGen", grass_model)
 		_tint_node_materials(mm_base, Color.hex(0x1ab036ff))
+	elif is_snow_biome:
+		mm_grass = _make_multimesh_node("GrassGen", grass_model_snow)
+		_tint_node_materials(mm_base, Color.WHITE)
 
 	var base_transforms: Array[Transform3D] = []
 	var tree_transforms: Array[Transform3D] = []
@@ -426,13 +432,13 @@ func _build_map():
 	_apply_multimesh(mm_rock, rock_transforms)
 	for i in range(BUSH_VARIANT_COUNT):
 		_apply_multimesh(mm_bushes[i], bush_transforms[i])
-	if is_grass_biome:
+	if is_grass_biome or is_snow_biome:
 		_apply_multimesh(mm_grass, grass_transforms)
 
 # --- MultiMesh helpers -------------------------------------------------
 
 func _spawn_grass_tuft(grass_transforms: Array[Transform3D], origin: Vector3, density: int) -> void:
-	if not is_grass_biome: return
+	if not is_grass_biome and not is_snow_biome: return
 	for i in range(density):
 		var rx = origin.x + randf_range(-0.4, 0.4) * TILE_SIZE
 		var rz = origin.z + randf_range(-0.4, 0.4) * TILE_SIZE
@@ -460,6 +466,8 @@ func _build_coastal_border(grass_transforms: Array[Transform3D]):
 	
 	if is_grass_biome:
 		_tint_node_materials(mm_border, Color.hex(0x1ab036ff))
+	elif is_snow_biome:
+		_tint_node_materials(mm_border, Color.WHITE)
 
 	var border_transforms: Array[Transform3D] = []
 	var wall_transforms: Array[Transform3D] = []
