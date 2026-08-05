@@ -1,10 +1,20 @@
 [gd_scene format=3 uid="uid://bp33u85pccjqh"]
 
 [ext_resource type="ArrayMesh" uid="uid://22amrvklr8bg" path="res://addons/Mesh/stylized_leaves_Cube.res" id="1_qk0lu"]
-[ext_resource type="Material" uid="uid://b6hcjwe0eglcm" path="res://addons/Materials/leaves_mat.tres" id="2_0m26b"]
+[ext_resource type="Shader" uid="uid://cydngmu3tajlk" path="res://addons/Shader/tree_leaves.gdshader" id="2_0m26b"]
+[ext_resource type="Texture2D" uid="uid://bi7g3yhsyv6e6" path="res://addons/Textures/leaf_alpha.png" id="3_1c0d0"]
 [ext_resource type="ArrayMesh" uid="uid://gvspevu2ge3t" path="res://addons/Mesh/stylized_trunk_Cylinder_001.res" id="3_5xchx"]
 [ext_resource type="Shader" uid="uid://ctdrf8cp7568r" path="res://addons/Shader/trunk_shader.gdshader" id="4_1c0d0"]
 [ext_resource type="Texture2D" uid="uid://7264wnuxqqop" path="res://addons/Textures/tree_bark.png" id="5_s8oh0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s8oh0"]
+render_priority = 0
+shader = ExtResource("2_0m26b")
+shader_parameter/color = Color(0.9079417, 0.9079417, 0.90794164, 1)
+shader_parameter/alpha = ExtResource("3_1c0d0")
+shader_parameter/leaves_scale = 3.0
+shader_parameter/leaf_bend_amount = 2.0
+shader_parameter/light_steps = 6.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2p6rh"]
 render_priority = 0
@@ -19,7 +29,7 @@ shader_parameter/outline_mask = 1.0
 [node name="Leaves" type="MeshInstance3D" parent="." unique_id=199961188]
 transform = Transform3D(0.35, 0, 0, 0, -0.22497568, -0.26811555, 0, 0.26811555, -0.22497568, -0.20695174, 2.0002031, -0.021292686)
 mesh = ExtResource("1_qk0lu")
-surface_material_override/0 = ExtResource("2_0m26b")
+surface_material_override/0 = SubResource("ShaderMaterial_s8oh0")
 
 [node name="Trunk" type="MeshInstance3D" parent="." unique_id=2073415034]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.7303635, 0)

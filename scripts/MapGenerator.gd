@@ -43,7 +43,7 @@ signal biome_changed(biome: BiomeData)
 
 @export_group("Grass Settings")
 @export var grass_y_offset: float = 0.3
-@export var grass_density_base: int = 15
+@export var grass_density_base: int = 50
 @export var grass_density_coastal: int = 8
 @export var grass_tilt_randomness: float = 0.3
 @export var grass_scale_y_min: float = 0.3
@@ -902,18 +902,18 @@ func _tint_node_materials(node: Node, color: Color) -> void:
 			mat = node.mesh.surface_get_material(0)
 			if not mat:
 				mat = node.get_surface_override_material(0)
-		if mat is BaseMaterial3D:
-			var new_mat = mat.duplicate() as BaseMaterial3D
-			if new_mat != null:
-				new_mat.albedo_color = color
-				node.material_override = new_mat
+		var shader = preload("res://addons/Shader/ground_shader.gdshader")
+		var new_mat = ShaderMaterial.new()
+		new_mat.shader = shader
+		new_mat.set_shader_parameter("ground_color", color)
+		node.material_override = new_mat
 	elif node is MultiMeshInstance3D:
 		var mat = node.material_override
-		if mat is BaseMaterial3D:
-			var new_mat = mat.duplicate() as BaseMaterial3D
-			if new_mat != null:
-				new_mat.albedo_color = color
-				node.material_override = new_mat
+		var shader = preload("res://addons/Shader/ground_shader.gdshader")
+		var new_mat = ShaderMaterial.new()
+		new_mat.shader = shader
+		new_mat.set_shader_parameter("ground_color", color)
+		node.material_override = new_mat
 
 	for child in node.get_children():
 		_tint_node_materials(child, color)
@@ -978,4 +978,3 @@ func _setup_pillar() -> void:
 	add_child(pillar)
 
 	pillar.position = Vector3(end_grid.x * TILE_SIZE, 0, end_grid.y * TILE_SIZE)
-

@@ -11,8 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://dc6dgdjoiagk6" path="res://UI/Hotbar/TurretHotbar.tscn" id="9_6k6j1"]
 [ext_resource type="Script" uid="uid://wguegcpphxbe" path="res://scripts/BuilderController.gd" id="10_m335s"]
 [ext_resource type="Material" uid="uid://cr8yf6r3utjih" path="res://addons/Textures/water_mat.tres" id="11_sq6bu"]
-
-[ext_resource type="Script" uid="uid://currencymanagerscript" path="res://scripts/CurrencyManager.gd" id="12_curman"]
+[ext_resource type="Script" uid="uid://ccj7lf23ow2nh" path="res://scripts/CurrencyManager.gd" id="12_curman"]
 [ext_resource type="PackedScene" uid="uid://d2se7ia331gmq" path="res://UI/CurrencyUI.tscn" id="13_curui"]
 
 [sub_resource type="Gradient" id="Gradient_ooc2g"]
@@ -53,7 +52,6 @@ material = SubResource("StandardMaterial3D_y6u0t")
 
 [node name="CurrencyManager" type="Node" parent="." unique_id=98127391]
 script = ExtResource("12_curman")
-current_currency = 0
 
 [node name="CurrencyUI" parent="." unique_id=89237411 instance=ExtResource("13_curui")]
 

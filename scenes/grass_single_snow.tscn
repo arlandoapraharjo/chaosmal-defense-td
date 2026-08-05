@@ -1,0 +1,38 @@
+[gd_scene format=4 uid="uid://o8pcj11agsac"]
+
+[ext_resource type="Material" uid="uid://clh1vnkiu6l8n" path="res://addons/Materials/grass_billboard.tres" id="1_u470u"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_8ukpj"]
+_surfaces = [{
+"aabb": AABB(-0.25, 0, -1.0927847e-08, 0.5, 0.5, 1e-05),
+"format": 34359742465,
+"index_count": 6,
+"index_data": PackedByteArray("AAABAAIAAAADAAEA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AACAvgAAAAAuvTuyAACAPgAAAD8uvTsyAACAPgAAAAAuvTuyAACAvgAAAD8uvTsy")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_1qqop"]
+resource_name = "grass_plane_Plane"
+_surfaces = [{
+"aabb": AABB(-0.25, 0, -1.0927847e-08, 0.5, 0.5, 1e-05),
+"attribute_data": PackedByteArray("AAAAAAAAgD8AAIA/AAAAAAAAgD8AAIA/AAAAAAAAAAA="),
+"format": 34359742487,
+"index_count": 6,
+"index_data": PackedByteArray("AAABAAIAAAADAAEA"),
+"material": ExtResource("1_u470u"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AACAvgAAAAAuvTuyAACAPgAAAD8uvTsyAACAPgAAAAAuvTuyAACAvgAAAD8uvTsy/3///////z//f///////P/9///////8//3///////z8=")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_8ukpj")
+
+[node name="Grass" type="Node3D" unique_id=1935062957]
+
+[node name="Grass" type="MeshInstance3D" parent="." unique_id=749354147]
+mesh = SubResource("ArrayMesh_1qqop")
