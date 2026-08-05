@@ -149,6 +149,9 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 	
 	if distance > 0.01:
 		ammo_instance.look_at(target_pos, Vector3.UP)
+		# Fix ballista arrow model facing backwards — rotate 180° on Y axis
+		if weapon_type == "ballista":
+			ammo_instance.rotate_y(deg_to_rad(180.0))
 
 	var tween = create_tween()
 	if weapon_type == "catapult":
