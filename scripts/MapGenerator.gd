@@ -963,6 +963,11 @@ func _setup_spawner() -> void:
 
 	spawner.setup(enemy_path)
 
+	# Connect wave_started signal to WaveUI if it exists
+	var wave_ui = get_node_or_null("/root/World/WaveUI")
+	if wave_ui and wave_ui.has_method("update_wave"):
+		spawner.wave_started.connect(wave_ui.update_wave)
+
 func _setup_pillar() -> void:
 	var old_pillar = get_node_or_null("IncursionPillar")
 	if old_pillar:

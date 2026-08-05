@@ -16,6 +16,30 @@ signal enemy_defeated
 @export var max_hp: float = 100.0
 var current_hp: float = 100.0
 
+## Coin reward when this enemy is defeated — set by setup_enemy_type()
+var coin_value: int = 1
+## Index of the UFO model type (0-3), used to assign stats
+var enemy_type_index: int = 0
+
+# Stats per UFO type: [coin_value, max_hp]
+const ENEMY_TYPE_STATS: Array = [
+	[2, 80.0],    # UFO-A: cheap, fragile
+	[4, 120.0],   # UFO-B: moderate
+	[7, 180.0],   # UFO-C: tough
+	[10, 260.0],  # UFO-D: elite, tanky
+]
+
+## Assign coin_value and max_hp based on the UFO model type index.
+func setup_enemy_type(type_index: int) -> void:
+	enemy_type_index = type_index
+	if type_index >= 0 and type_index < ENEMY_TYPE_STATS.size():
+		coin_value = ENEMY_TYPE_STATS[type_index][0]
+		max_hp = ENEMY_TYPE_STATS[type_index][1]
+	else:
+		coin_value = 1
+		max_hp = 100.0
+	current_hp = max_hp
+
 func setup(waypoints: Array[Vector3]) -> void:
 	path_waypoints = waypoints
 	current_waypoint_index = 0
@@ -129,7 +153,7 @@ func take_damage(amount: float) -> void:
 		_is_done = true
 		enemy_defeated.emit()
 		if CurrencyManager.instance:
-			CurrencyManager.instance.add_currency(1)
+			CurrencyManager.instance.add_currency(coin_value)
 		reached_end.emit()
 		deactivate()
 
