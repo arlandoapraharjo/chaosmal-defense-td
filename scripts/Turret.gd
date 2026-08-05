@@ -56,6 +56,11 @@ func _auto_detect_weapon_type() -> void:
 		weapon_type = "turret"
 
 func _process(delta: float) -> void:
+	# --- Clear target if it's dead/deactivated ---
+	if _current_target != null:
+		if not is_instance_valid(_current_target) or not _current_target.visible or _current_target.get("_is_done") == true:
+			_current_target = null
+
 	# --- Continuous rotation toward locked target ---
 	if is_instance_valid(_current_target):
 		_rotate_toward_target(_current_target, delta)
@@ -149,6 +154,9 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 	
 	if distance > 0.01:
 		ammo_instance.look_at(target_pos, Vector3.UP)
+		# Fix ballista arrow model facing backwards — rotate 180° on Y axis
+		if weapon_type == "ballista":
+			ammo_instance.rotate_y(deg_to_rad(180.0))
 
 	var tween = create_tween()
 	if weapon_type == "catapult":

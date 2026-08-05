@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://beiea7nje0alg"]
+
+[ext_resource type="Script" path="res://UI/WaveUI.gd" id="1_wave_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wave"]
+bg_color = Color(0.1, 0.08, 0.18, 0.85)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6, 0.4, 1.0, 0.9)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 6
+
+[node name="WaveUI" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_wave_script")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 20.0
+offset_right = 100.0
+offset_bottom = 70.0
+grow_horizontal = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Control/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wave")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/MarginContainer/PanelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Icon" type="Label" parent="Control/MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.5, 1.0, 1)
+theme_override_font_sizes/font_size = 22
+text = "⚔️ "
+
+[node name="Label" type="Label" parent="Control/MarginContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "Wave 1"
