@@ -12,6 +12,14 @@ signal slot_clicked(index: int)
 @export var turret_name: String = ""
 @export var turret_scene: PackedScene = null
 
+## Cost in deployment points for this turret.
+var turret_cost: int = 0
+## Current placed count and the max allowed for this slot.
+var turret_count: int = 0
+var turret_max: int = 10
+## True when this slot is at its deployment cap.
+var _is_capped: bool = false
+
 # ── Layout ───────────────────────────────────────────────────────────────────
 
 @export_group("Layout")
@@ -76,6 +84,8 @@ var bg_timer: float = 0.0
 @onready var preview_camera: Camera3D         = $MarginContainer/VBoxContainer/SubViewportContainer/SubViewport/PreviewScene/Camera3D
 @onready var turret_anchor: Node3D            = $MarginContainer/VBoxContainer/SubViewportContainer/SubViewport/PreviewScene/TurretAnchor
 @onready var tooltip_label: Label             = $MarginContainer/VBoxContainer/TooltipLabel
+@onready var cost_label: Label                = $MarginContainer/VBoxContainer/CostLabel
+@onready var count_label: Label               = $MarginContainer/VBoxContainer/CountLabel
 
 func _ready() -> void:
 	custom_minimum_size = Vector2(slot_size, slot_size)
@@ -125,6 +135,34 @@ func set_turret(p_scene: PackedScene, p_name: String) -> void:
 		tooltip_label.text = p_name
 	if is_inside_tree():
 		_load_turret_preview()
+
+## Update the cost / count display on this slot.
+## Called by TurretHotbar whenever the count changes or max deployment grows.
+func set_cost_info(cost: int, count: int, max_count: int) -> void:
+	turret_cost  = cost
+	turret_count = count
+	turret_max   = max_count
+	_is_capped   = (count >= max_count)
+	_refresh_cost_labels()
+	_refresh_visual()
+
+func _refresh_cost_labels() -> void:
+	if not is_node_ready():
+		return
+	if cost_label:
+		cost_label.visible = is_hovered
+		if turret_cost > 0:
+			cost_label.text = "Cost: %d" % turret_cost
+		else:
+			cost_label.text = ""
+	if count_label:
+		count_label.visible = is_hovered
+		if turret_max > 0:
+			count_label.text = "%d / %d" % [turret_count, turret_max]
+		else:
+			count_label.text = ""
+	if tooltip_label:
+		tooltip_label.text = turret_name
 
 # ── Turret Preview ────────────────────────────────────────────────────────────
 
@@ -221,7 +259,11 @@ func _refresh_visual() -> void:
 	var icon_scale = 1.0
 	var card_scale = 1.0
 	
-	if is_selected:
+	# Grey out if at deployment cap
+	if _is_capped and not is_selected:
+		target_opacity = 0.45
+		card_scale = 0.95
+	elif is_selected:
 		icon_scale = 1.4
 		target_opacity = 1.0
 		card_scale = 79.0 / slot_size
@@ -269,16 +311,20 @@ func _animate_icon_scale(target: float) -> void:
 
 func _on_mouse_entered() -> void:
 	is_hovered = true
+	_refresh_cost_labels()  # show full tooltip with cost + count
 	_refresh_visual()
 
 func _on_mouse_exited() -> void:
 	is_hovered = false
+	_refresh_cost_labels()  # revert tooltip to just the name
 	_refresh_visual()
 
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
+				if _is_capped:
+					return  # Block click when at cap
 				slot_clicked.emit(slot_index)
 			else:
 				if not get_global_rect().has_point(get_global_mouse_position()):

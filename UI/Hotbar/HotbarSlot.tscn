@@ -16,6 +16,18 @@ font_color = Color(0.6, 0.88, 1, 1)
 outline_size = 2
 outline_color = Color(0, 0, 0, 0.8)
 
+[sub_resource type="LabelSettings" id="LabelSettings_cost"]
+font_size = 10
+font_color = Color(1.0, 0.85, 0.2, 1.0)
+outline_size = 2
+outline_color = Color(0, 0, 0, 0.85)
+
+[sub_resource type="LabelSettings" id="LabelSettings_count"]
+font_size = 9
+font_color = Color(0.6, 0.88, 1, 0.85)
+outline_size = 2
+outline_color = Color(0, 0, 0, 0.8)
+
 [node name="HotbarSlot" type="PanelContainer" unique_id=275498925]
 custom_minimum_size = Vector2(50, 50)
 theme_override_styles/panel = SubResource("StyleBoxEmpty_nmgbl")
@@ -76,3 +88,14 @@ layout_mode = 2
 label_settings = SubResource("LabelSettings_tooltip")
 horizontal_alignment = 1
 
+[node name="CostLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_cost")
+horizontal_alignment = 1
+text = ""
+
+[node name="CountLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_count")
+horizontal_alignment = 1
+text = ""

@@ -26,6 +26,7 @@ var enemy_script = preload("res://scripts/Enemy.gd")
 @export var spawn_delay_max: float = 3.0
 
 signal wave_started(wave_number: int)
+signal wave_completed(wave_number: int)
 
 # Wave state
 enum WaveState { WAITING_FOR_FIRST_WAVE, SPAWNING, WAVE_PAUSE }
@@ -41,6 +42,17 @@ var _first_wave_delay: float = 3.0  # Short delay before wave 1 starts
 
 var _waypoints: Array[Vector3] = []
 var _ready_to_spawn: bool = false
+
+# Speed multiplier — set by SpeedToggle
+var _speed_multiplier: float = 1.0
+
+## Applies the speed multiplier to all currently active enemies and stores
+## it for future spawns.
+func set_speed_multiplier(multiplier: float) -> void:
+	_speed_multiplier = multiplier
+	for enemy in _active_enemies:
+		if is_instance_valid(enemy) and enemy.has_method("set_speed_multiplier"):
+			enemy.set_speed_multiplier(_speed_multiplier)
 
 # Object pool — avoids allocation hitches during waves
 var _pool: Array[Node3D] = []
@@ -104,6 +116,7 @@ func _physics_process(delta: float) -> void:
 					# All enemies in this wave have been spawned, start pause
 					_state = WaveState.WAVE_PAUSE
 					_wave_pause_timer = randf_range(wave_delay_min, wave_delay_max)
+					wave_completed.emit(current_wave)
 				else:
 					# Random delay before the next individual spawn
 					_spawn_timer = randf_range(spawn_delay_min, spawn_delay_max)
@@ -143,6 +156,8 @@ func _spawn_enemy() -> void:
 	# Re-apply enemy type stats on each reset (the type was set on creation)
 	enemy.setup_enemy_type(enemy.enemy_type_index)
 	enemy.reset(_waypoints, enemy_speed)
+	if enemy.has_method("set_speed_multiplier"):
+		enemy.set_speed_multiplier(_speed_multiplier)
 	_active_enemies.append(enemy)
 
 func _on_enemy_reached_end(enemy: Node3D) -> void:

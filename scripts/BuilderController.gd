@@ -5,6 +5,14 @@ extends Node
 @export var map_generator: Node3D
 @export var turret_y_offset: float = 0.1
 
+@export_group("Deployment")
+@export var base_max_deployment: int = 10
+@export var deployment_increase_per_wave: int = 5
+
+var _current_deployment: int = 0
+var _max_deployment: int = 10
+var _turret_cost: int = 0
+
 var _is_building: bool = false
 var _turret_scene: PackedScene = null
 var _ghost_instance: Node3D = null
@@ -18,13 +26,24 @@ var _mesh_scale: Vector3 = Vector3(1.0, 1.0, 1.0)
 var _weapon_type: String = "turret"
 var _is_aoe: bool = false
 var _ghost_rotation_deg: float = 0.0
+var _current_slot_index: int = -1
+
+# All currently placed turret nodes — used to forward speed multiplier
+var _placed_turrets: Array[Node3D] = []
+var _speed_multiplier: float = 1.0
 
 signal building_stopped
+## Emitted when a turret is successfully placed. Carries the hotbar slot index.
+signal turret_placed(slot_index: int)
+signal total_deployment_updated(current: int, max: int)
 
 var COLOR_VALID = Color(0.2, 0.8, 1.0, 0.5)
 var COLOR_INVALID = Color(1.0, 0.2, 0.2, 0.5)
 
 func _ready() -> void:
+	_max_deployment = base_max_deployment
+	call_deferred("_connect_to_spawner")
+	
 	_ghost_material = ShaderMaterial.new()
 	var shader = preload("res://shaders/ghost_hologram.gdshader")
 	if shader:
@@ -34,6 +53,22 @@ func _ready() -> void:
 	_range_marker_node = Node3D.new()
 	_range_marker_node.name = "RangeMarker"
 	add_child(_range_marker_node)
+
+func _connect_to_spawner() -> void:
+	var spawner = get_tree().get_root().find_child("Spawner", true, false)
+	if spawner and spawner.has_signal("wave_completed"):
+		if not spawner.wave_completed.is_connected(_on_wave_completed):
+			spawner.wave_completed.connect(_on_wave_completed)
+
+func _on_wave_completed(_wave_number: int) -> void:
+	_max_deployment += deployment_increase_per_wave
+	total_deployment_updated.emit(_current_deployment, _max_deployment)
+
+func get_max_deployment() -> int:
+	return _max_deployment
+
+func get_current_deployment() -> int:
+	return _current_deployment
 
 func start_building(_index: int, turret_scene: PackedScene, attack_range: float = 0.0, extra_data: Dictionary = {}) -> void:
 	if not map_generator:
@@ -46,12 +81,14 @@ func start_building(_index: int, turret_scene: PackedScene, attack_range: float 
 	# Read configuration from extra_data
 	_turret_scene = turret_scene
 	_attack_range = attack_range
+	_current_slot_index = _index
 	_footprint_size = extra_data.get("footprint_size", Vector2i(1, 1))
 	_min_attack_range = extra_data.get("min_attack_range", 0.0)
 	_is_half_circle = extra_data.get("is_half_circle", false)
 	_mesh_scale = extra_data.get("mesh_scale", Vector3(1.0, 1.0, 1.0))
 	_weapon_type = extra_data.get("weapon_type", "turret")
 	_is_aoe = extra_data.get("is_aoe", false)
+	_turret_cost = extra_data.get("cost", 0)
 	_ghost_rotation_deg = 0.0
 
 	_is_building = true
@@ -176,29 +213,44 @@ func _build_range_marker(attack_range: float, min_attack_range: float = 0.0, is_
 	material.no_depth_test = true
 	material.render_priority = 1
 	
-	var mesh = QuadMesh.new()
-	mesh.size = Vector2(0.9, 0.9)
-	mesh.orientation = PlaneMesh.FACE_Y
+	var fp_mesh = QuadMesh.new()
+	fp_mesh.size = Vector2(footprint.x - 0.1, footprint.y - 0.1)
+	fp_mesh.orientation = PlaneMesh.FACE_Y
+	
+	# Draw the single footprint tile ALWAYS
+	var fp_mi = MeshInstance3D.new()
+	fp_mi.mesh = fp_mesh
+	fp_mi.material_override = material
+	fp_mi.position = Vector3(0, 0.15, 0)
+	_range_marker_node.add_child(fp_mi)
 	
 	var r = int(ceil(attack_range))
 	var r_sq = attack_range * attack_range
 	var min_r_sq = min_attack_range * min_attack_range
-	var center_offset = Vector3((footprint.x - 1) * 0.5, 0.0, (footprint.y - 1) * 0.5)
+	
+	var step_x = footprint.x
+	var step_y = footprint.y
+	var limit_x = (r / step_x + 1) * step_x
+	var limit_z = (r / step_y + 1) * step_y
 
-	for x in range(-r, r + footprint.x):
-		for z in range(-r, r + footprint.y):
-			var tile_pos = Vector3(x, 0.15, z)
-			var dist_sq = (tile_pos - center_offset).length_squared()
+	for x in range(-limit_x, limit_x + step_x, step_x):
+		for z in range(-limit_z, limit_z + step_y, step_y):
+			if x == 0 and z == 0:
+				continue # Already drawn as the footprint
+				
+			var rel = Vector3(x, 0, z)
+			var dist_sq = rel.x * rel.x + rel.z * rel.z
 			if dist_sq <= r_sq and dist_sq >= min_r_sq:
 				if is_half_circle:
-					var rel = tile_pos - center_offset
-					rel.y = 0.0
-					if rel.length_squared() > 0.01 and rel.normalized().dot(Vector3.FORWARD) < -0.1:
+					var forward_check = rel
+					forward_check.y = 0.0
+					if forward_check.length_squared() > 0.01 and forward_check.normalized().dot(Vector3.FORWARD) < -0.1:
 						continue
 				var mi = MeshInstance3D.new()
-				mi.mesh = mesh
+				mi.mesh = fp_mesh
 				mi.material_override = material
-				mi.position = tile_pos
+				mi.position = rel
+				mi.position.y = 0.15
 				_range_marker_node.add_child(mi)
 
 func _clear_range_marker() -> void:
@@ -218,6 +270,27 @@ func _try_place_turret() -> void:
 		grid_pos = Vector2i(int(round(local_ghost_pos.x)), int(round(local_ghost_pos.z)))
 	
 	if _is_footprint_buildable(grid_pos, _footprint_size):
+		if _current_deployment >= _max_deployment:
+			print("Max deployment reached!")
+			return
+			
+		var currency_manager = get_node_or_null("/root/World/CurrencyManager")
+		if not currency_manager and CurrencyManager.instance:
+			currency_manager = CurrencyManager.instance
+			
+		if currency_manager and currency_manager.get_currency() < _turret_cost:
+			print("Not enough currency!")
+			var wave_ui = get_node_or_null("/root/World/WaveUI")
+			if wave_ui and wave_ui.has_method("show_insufficient_funds"):
+				wave_ui.show_insufficient_funds()
+			return
+			
+		if currency_manager:
+			currency_manager.spend_currency(_turret_cost)
+			
+		_current_deployment += 1
+		total_deployment_updated.emit(_current_deployment, _max_deployment)
+		
 		# Valid placement!
 		var new_turret = _turret_scene.instantiate()
 		var turret_script = load("res://scripts/Turret.gd")
@@ -242,17 +315,30 @@ func _try_place_turret() -> void:
 
 		print("Placed turret: attack_range=", _attack_range, " footprint=", _footprint_size)
 		
+		# Apply current speed multiplier to the newly placed turret
+		if new_turret.has_method("set_speed_multiplier"):
+			new_turret.set_speed_multiplier(_speed_multiplier)
+		_placed_turrets.append(new_turret)
+		
 		if map_generator.has_method("occupy_cell"):
 			for dx in range(_footprint_size.x):
 				for dz in range(_footprint_size.y):
 					map_generator.occupy_cell(grid_pos + Vector2i(dx, dz))
 
+		turret_placed.emit(_current_slot_index)
 		_clear_range_marker()
 		_build_range_marker(_attack_range, _min_attack_range, _is_half_circle, _footprint_size)
 		# Do not call stop_building() here so the user can place multiple turrets
 	else:
 		# Invalid placement, maybe play a sound
 		pass
+
+## Apply speed multiplier to all currently placed turrets.
+func set_speed_multiplier(multiplier: float) -> void:
+	_speed_multiplier = multiplier
+	for turret in _placed_turrets:
+		if is_instance_valid(turret) and turret.has_method("set_speed_multiplier"):
+			turret.set_speed_multiplier(_speed_multiplier)
 
 func _disable_logic(node: Node) -> void:
 	# Disable processing, physics, and collisions for the ghost

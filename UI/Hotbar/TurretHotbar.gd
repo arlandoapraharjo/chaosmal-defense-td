@@ -84,20 +84,23 @@ const TURRET_ASSETS: Array[Dictionary] = [
 		"scene": preload("res://assets/Models/GLB format/desert/weapon-turret.glb"),
 		"name": "Turret",
 		"attack_range": 3.0,
-		"weapon_type": "turret"
+		"weapon_type": "turret",
+		"cost": 1,
 	},
 	{
 		"scene": preload("res://assets/Models/GLB format/desert/weapon-cannon.glb"),
 		"name": "Cannon",
 		"attack_range": 2.5,
 		"is_half_circle": true,
-		"weapon_type": "cannon"
+		"weapon_type": "cannon",
+		"cost": 3,
 	},
 	{
 		"scene": preload("res://assets/Models/GLB format/desert/weapon-ballista.glb"),
 		"name": "Ballista",
 		"attack_range": 5.5,
-		"weapon_type": "ballista"
+		"weapon_type": "ballista",
+		"cost": 5,
 	},
 	{
 		"scene": preload("res://assets/Models/GLB format/desert/weapon-catapult.glb"),
@@ -105,7 +108,8 @@ const TURRET_ASSETS: Array[Dictionary] = [
 		"attack_range": 10.0,
 		"min_attack_range": 3.0,
 		"is_aoe": true,
-		"weapon_type": "catapult"
+		"weapon_type": "catapult",
+		"cost": 5,
 	},
 	{
 		"scene": preload("res://assets/Models/GLB format/weapon-turret.glb"),
@@ -113,7 +117,8 @@ const TURRET_ASSETS: Array[Dictionary] = [
 		"attack_range": 4.0,
 		"footprint_size": Vector2i(2, 2),
 		"mesh_scale": Vector3(2.0, 2.0, 2.0),
-		"weapon_type": "turret"
+		"weapon_type": "turret",
+		"cost": 7,
 	},
 ]
 
@@ -125,6 +130,9 @@ var _is_open: bool = false
 var _toggle_btn: Button = null
 var _panel_tween: Tween = null
 var _panel_target_y: float = 0.0
+
+# Deployment tracking — count of placed turrets per slot index
+var _turret_counts: Dictionary = {}
 
 @onready var slot_container: HBoxContainer = $HotbarPanel/VBox/MarginContainer/SlotContainer
 @onready var hotbar_panel: PanelContainer  = $HotbarPanel
@@ -139,6 +147,23 @@ func _ready() -> void:
 	call_deferred("_setup_popup")
 	# Auto-connect to MapGenerator so theme swaps when the biome changes
 	call_deferred("_connect_to_map_generator")
+	# Connect to BuilderController for placement tracking
+	call_deferred("_connect_to_builder")
+
+func _connect_to_builder() -> void:
+	var builder = get_tree().get_root().find_child("BuilderController", true, false)
+	if builder:
+		if builder.has_signal("turret_placed") and not builder.turret_placed.is_connected(_on_turret_placed):
+			builder.turret_placed.connect(_on_turret_placed)
+		if builder.has_signal("total_deployment_updated") and not builder.total_deployment_updated.is_connected(_on_total_deployment_updated):
+			builder.total_deployment_updated.connect(_on_total_deployment_updated)
+
+func _on_total_deployment_updated(_current: int, _max: int) -> void:
+	_push_cost_info_to_slots()
+
+func _on_turret_placed(slot_index: int) -> void:
+	_turret_counts[slot_index] = _turret_counts.get(slot_index, 0) + 1
+	_push_cost_info_to_slots()
 
 func _connect_to_map_generator() -> void:
 	# MapGenerator lives as a sibling node named "Map" under the World root
@@ -331,6 +356,21 @@ func _populate_slots() -> void:
 		set_slot_turret(i, entry["scene"], entry["name"])
 		if _slots[i].has_method("set_bg_frames"):
 			_slots[i].set_bg_frames(_biome_frames)
+	_push_cost_info_to_slots()
+
+## Push cost/count/max info to all slots.
+func _push_cost_info_to_slots() -> void:
+	var max_dep = 10
+	var builder = get_tree().get_root().find_child("BuilderController", true, false)
+	if builder and builder.has_method("get_max_deployment"):
+		max_dep = builder.get_max_deployment()
+		
+	for i in range(min(TURRET_ASSETS.size(), _slots.size())):
+		var slot = _slots[i]
+		if is_instance_valid(slot) and slot.has_method("set_cost_info"):
+			var cost = TURRET_ASSETS[i].get("cost", 0)
+			var count = _turret_counts.get(i, 0)
+			slot.set_cost_info(cost, count, max_dep)
 
 # ── Style application ──────────────────────────────────────────────────────────
 

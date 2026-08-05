@@ -23,14 +23,21 @@ const AMMO_ASSETS: Dictionary = {
 
 # Internal timer
 var _cooldown_timer: float = 0.0
+# Base cooldown — speed multiplier divides this to fire faster
+var _base_cooldown: float = 1.0
 # Current locked target for rotation tracking
 var _current_target: Node3D = null
 # Initial forward direction upon placement (for 180-degree half-circle restriction)
 var _initial_facing_dir: Vector3 = Vector3.FORWARD
 
 func _ready() -> void:
+	_base_cooldown = cooldown
 	_auto_detect_weapon_type()
 	call_deferred("_capture_initial_facing")
+
+## Apply a global speed multiplier — faster speed = shorter cooldown = higher fire rate.
+func set_speed_multiplier(multiplier: float) -> void:
+	cooldown = _base_cooldown / max(multiplier, 0.1)
 
 func _capture_initial_facing() -> void:
 	_initial_facing_dir = -global_transform.basis.z.normalized()

@@ -8,6 +8,9 @@ var current_waypoint_index: int = 0
 var _is_done: bool = false
 var _spin_angle: float = 0.0
 var _visual_node: Node3D = null
+## Base speed set at reset time — speed multiplier is applied on top of this
+var _base_speed: float = 0.65
+var _speed_multiplier: float = 1.0
 ## How quickly the UFO turns to face the next waypoint (higher = snappier)
 @export var turn_smoothing: float = 8.0
 signal reached_end
@@ -57,6 +60,11 @@ func _cache_visual_node() -> void:
 			_visual_node = child
 			break
 
+## Apply a global speed multiplier (1.0 = normal, 2.0 = double, 4.0 = quad).
+func set_speed_multiplier(multiplier: float) -> void:
+	_speed_multiplier = multiplier
+	speed = _base_speed * _speed_multiplier
+
 ## Re-initialize this enemy for reuse from the pool.
 ## Places it at the first waypoint and makes it visible/active.
 func reset(waypoints: Array[Vector3], new_speed: float) -> void:
@@ -64,7 +72,8 @@ func reset(waypoints: Array[Vector3], new_speed: float) -> void:
 	current_waypoint_index = 0
 	_is_done = false
 	current_hp = max_hp
-	speed = new_speed
+	_base_speed = new_speed
+	speed = _base_speed * _speed_multiplier
 	visible = true
 	set_physics_process(true)
 	
