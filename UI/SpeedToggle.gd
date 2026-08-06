@@ -33,8 +33,8 @@ func _build_ui() -> void:
 	panel.anchor_bottom = 0.0
 	panel.offset_left   = 10
 	panel.offset_right  = 180
-	panel.offset_top    = 10
-	panel.offset_bottom = 46
+	panel.offset_top    = 56
+	panel.offset_bottom = 92
 
 	var panel_style := StyleBoxFlat.new()
 	panel_style.bg_color = Color(0.02, 0.05, 0.12, 0.90)

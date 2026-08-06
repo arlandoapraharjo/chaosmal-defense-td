@@ -12,6 +12,7 @@
 [ext_resource type="Shader" uid="uid://8haud4yhw01k" path="res://addons/Shader/sandstrom.gdshader" id="7_6qsgm"]
 [ext_resource type="Script" uid="uid://wguegcpphxbe" path="res://scripts/BuilderController.gd" id="7_builder"]
 [ext_resource type="Material" uid="uid://cr8yf6r3utjih" path="res://addons/Textures/water_mat.tres" id="10_oysan"]
+[ext_resource type="PackedScene" path="res://scenes/PauseOverlay.tscn" id="16_pause"]
 
 [sub_resource type="Gradient" id="Gradient_ooc2g"]
 
@@ -82,6 +83,8 @@ size = Vector2i(1152, 648)
 [node name="TurretHotbar" parent="." unique_id=730426218 instance=ExtResource("6_hotbar")]
 
 [node name="SpeedToggle" parent="." unique_id=812345001 instance=ExtResource("8_speedtoggle")]
+
+[node name="PauseOverlay" parent="." instance=ExtResource("16_pause")]
 
 [node name="BuilderController" type="Node" parent="." unique_id=1232673061 node_paths=PackedStringArray("map_generator")]
 script = ExtResource("7_builder")

@@ -3,7 +3,7 @@ class_name CurrencyManager
 
 signal currency_changed(new_amount: int)
 
-@export var current_currency: int = 5
+@export var current_currency: int = 200
 
 static var instance: CurrencyManager = null
 

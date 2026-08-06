@@ -143,6 +143,10 @@ func _ready() -> void:
 	_rebuild_hotbar()
 	_apply_panel_style()
 	_populate_slots()
+	
+	if Engine.is_editor_hint():
+		return
+		
 	# Create the toggle button and set up popup behavior
 	call_deferred("_setup_popup")
 	# Auto-connect to MapGenerator so theme swaps when the biome changes

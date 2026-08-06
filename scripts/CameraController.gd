@@ -25,6 +25,10 @@ func _ready():
 	target_ortho_size = max_ortho_size
 	size = max_ortho_size
 
+func reset_camera() -> void:
+	target_position = initial_position
+	target_ortho_size = max_ortho_size
+
 ## Position the camera so it looks directly at the map center.
 func _center_on_map():
 	var map_node = get_node_or_null("../Map")

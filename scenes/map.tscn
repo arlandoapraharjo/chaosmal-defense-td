@@ -14,6 +14,9 @@
 [ext_resource type="Script" uid="uid://ccj7lf23ow2nh" path="res://scripts/CurrencyManager.gd" id="12_curman"]
 [ext_resource type="PackedScene" uid="uid://d2se7ia331gmq" path="res://UI/CurrencyUI.tscn" id="13_curui"]
 [ext_resource type="PackedScene" uid="uid://beiea7nje0alg" path="res://UI/WaveUI.tscn" id="14_waveui"]
+[ext_resource type="Shader" uid="uid://cugpqtu17rfnm" path="res://shaders/pillar_shockwave.gdshader" id="15_c00ee"]
+[ext_resource type="PackedScene" path="res://scenes/PauseOverlay.tscn" id="16_pause"]
+[ext_resource type="PackedScene" path="res://UI/SpeedToggle.tscn" id="17_speed"]
 
 [sub_resource type="Gradient" id="Gradient_ooc2g"]
 
@@ -48,6 +51,14 @@ albedo_color = Color(0.36937502, 0.4625975, 0.30141243, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_eotfe"]
 material = SubResource("StandardMaterial3D_y6u0t")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p7tei"]
+shader = ExtResource("15_c00ee")
+shader_parameter/center = Vector2(0, 0.55)
+shader_parameter/force = 0.0
+shader_parameter/size = 0.245
+shader_parameter/thickness = 0.0
+shader_parameter/progress = 0.0
 
 [node name="World" type="Node3D" unique_id=67285049]
 
@@ -103,6 +114,23 @@ mesh = SubResource("PlaneMesh_m8r5s")
 [node name="OceanFloor" type="MeshInstance3D" parent="." unique_id=42007401]
 transform = Transform3D(70, 0, 0, 0, 70, 0, 0, 0, 70, 0, -2.860489, 0)
 mesh = SubResource("PlaneMesh_eotfe")
+
+[node name="PauseOverlay" parent="." instance=ExtResource("16_pause")]
+
+[node name="SpeedToggle" parent="." instance=ExtResource("17_speed")]
+
+[node name="PillarShockwave" type="CanvasLayer" parent="." unique_id=1489323577]
+
+[node name="ColorRect" type="ColorRect" parent="PillarShockwave" unique_id=1719083837]
+material = SubResource("ShaderMaterial_p7tei")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PillarShockwave" unique_id=1045597209]
 
 [connection signal="turret_selected" from="TurretHotbar" to="BuilderController" method="start_building"]
 [connection signal="building_stopped" from="BuilderController" to="TurretHotbar" method="_on_building_stopped"]

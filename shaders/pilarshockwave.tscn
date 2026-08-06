@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bgkc6w62c7pe5"]
+
+[ext_resource type="Shader" uid="uid://cugpqtu17rfnm" path="res://shaders/pillar_shockwave.gdshader" id="1_5m7uk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_62yky"]
+resource_local_to_scene = true
+shader = ExtResource("1_5m7uk")
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/force = 0.675
+shader_parameter/size = 0.2
+shader_parameter/thickness = 0.6
+shader_parameter/progress = 0.0
+
+[node name="TextureRect" type="TextureRect" unique_id=956392717]
+material = SubResource("ShaderMaterial_62yky")
+offset_right = 40.0
+offset_bottom = 40.0

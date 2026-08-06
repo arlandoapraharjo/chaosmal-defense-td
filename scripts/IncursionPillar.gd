@@ -157,23 +157,11 @@ func _on_upgraded() -> void:
 		_trigger_shockwave()
 
 func _trigger_shockwave() -> void:
-	# Expand shockwave ring
-	var shockwave_mesh = MeshInstance3D.new()
-	var torus = TorusMesh.new()
-	torus.inner_radius = 0.5
-	torus.outer_radius = 1.0
-	shockwave_mesh.mesh = torus
-
-	var mat = StandardMaterial3D.new()
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.albedo_color = Color(0.2, 1.0, 0.6, 0.8)
-	mat.emission_enabled = true
-	mat.emission = Color(0.3, 1.0, 0.7)
-	mat.emission_energy_multiplier = 3.0
-	shockwave_mesh.material_override = mat
-	add_child(shockwave_mesh)
-
-	var tween = create_tween()
-	tween.tween_property(shockwave_mesh, "scale", Vector3(15.0, 1.0, 15.0), 1.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.parallel().tween_property(mat, "albedo_color", Color(0.2, 1.0, 0.6, 0.0), 1.2)
-	tween.tween_callback(func(): shockwave_mesh.queue_free())
+	var shockwave_scene = load("res://scenes/PillarShockwave.tscn") as PackedScene
+	if shockwave_scene:
+		var shockwave = shockwave_scene.instantiate() as PillarShockwave
+		add_child(shockwave)
+		
+		var camera = get_viewport().get_camera_3d()
+		var screen_pos = camera.unproject_position(global_position) if camera else get_viewport().get_visible_rect().size / 2.0
+		shockwave.play_shockwave(screen_pos)
