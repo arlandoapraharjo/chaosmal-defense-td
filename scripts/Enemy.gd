@@ -3,6 +3,9 @@ extends Node3D
 @export var speed: float = 0.65
 ## Rotations per second for the UFO spin animation
 @export var spin_speed: float = 0.25
+
+var explosion_scene = preload("res://scenes/explosion.tscn")
+
 var path_waypoints: Array[Vector3] = []
 var current_waypoint_index: int = 0
 var _is_done: bool = false
@@ -76,6 +79,7 @@ func reset(waypoints: Array[Vector3], new_speed: float) -> void:
 	speed = _base_speed * _speed_multiplier
 	visible = true
 	set_physics_process(true)
+	EnemyDetector.register(self)
 	
 	# Pop-up animation
 	scale = Vector3.ZERO
@@ -94,6 +98,7 @@ func reset(waypoints: Array[Vector3], new_speed: float) -> void:
 ## Hide and stop processing — the Spawner will reclaim this node.
 func deactivate() -> void:
 	_is_done = true
+	EnemyDetector.unregister(self)
 	visible = false
 	set_physics_process(false)
 func _physics_process(delta: float) -> void:
@@ -160,9 +165,21 @@ func take_damage(amount: float) -> void:
 	if current_hp <= 0:
 		current_hp = 0
 		_is_done = true
+		
+		var explosion = explosion_scene.instantiate()
+		var scene_root = get_tree().current_scene
+		if scene_root:
+			scene_root.add_child(explosion)
+		else:
+			get_parent().add_child(explosion)
+		explosion.global_position = global_position
+		for child in explosion.get_children():
+			if child is GPUParticles3D:
+				child.emitting = true
+		get_tree().create_timer(2.0).timeout.connect(explosion.queue_free)
+		
 		enemy_defeated.emit()
 		if CurrencyManager.instance:
 			CurrencyManager.instance.add_currency(coin_value)
 		reached_end.emit()
 		deactivate()
-

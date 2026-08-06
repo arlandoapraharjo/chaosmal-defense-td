@@ -53,7 +53,7 @@ uniform float caustic_strength : hint_range(0.0, 1.0, 0.01) = 0.08;
 #ifdef SSR
 group_uniforms screen_space_reflections;
 uniform float ssr_mix_strength : hint_range(0.0, 1.0, 0.01) = 0.65;
-uniform float ssr_travel : hint_range(0.0, 300.0, 0.5) = 100.0;
+uniform float ssr_travel : hint_range(0.0, 300.0, 0.5) = 60.0;
 uniform float ssr_resolution_near : hint_range(0.1, 10.0, 0.1) = 1.0;
 uniform float ssr_resolution_far : hint_range(2.0, 20.0, 0.1) = 5.0;
 uniform float ssr_tolerance : hint_range(0.0, 2.0, 0.01) = 1.0;

@@ -14,12 +14,27 @@ extends Node3D
 @export_enum("turret", "cannon", "ballista", "catapult") var weapon_type: String = "turret"
 @export_range(1.0, 50.0, 0.5) var projectile_speed: float = 12.0
 
-const AMMO_ASSETS: Dictionary = {
-	"turret": "res://assets/Models/GLB format/weapon-ammo-bullet.glb",
-	"cannon": "res://assets/Models/GLB format/weapon-ammo-cannonball.glb",
-	"ballista": "res://assets/Models/GLB format/weapon-ammo-arrow.glb",
-	"catapult": "res://assets/Models/GLB format/weapon-ammo-boulder.glb"
-}
+# Ammo scenes — preloaded once at parse time, not load()'d per shot
+var _ammo_scenes: Dictionary = {}
+static var _ammo_cache: Dictionary = {}
+
+func _init() -> void:
+	if _ammo_cache.is_empty():
+		var paths = {
+			"turret": "res://assets/Models/GLB format/weapon-ammo-bullet.glb",
+			"cannon": "res://assets/Models/GLB format/weapon-ammo-cannonball.glb",
+			"ballista": "res://assets/Models/GLB format/weapon-ammo-arrow.glb",
+			"catapult": "res://assets/Models/GLB format/weapon-ammo-boulder.glb"
+		}
+		for key in paths:
+			if ResourceLoader.exists(paths[key]):
+				_ammo_cache[key] = load(paths[key])
+			else:
+				# Try desert variant path
+				var desert_path = paths[key].replace("GLB format/", "GLB format/desert/")
+				if ResourceLoader.exists(desert_path):
+					_ammo_cache[key] = load(desert_path)
+	_ammo_scenes = _ammo_cache
 
 # Internal timer
 var _cooldown_timer: float = 0.0
@@ -130,14 +145,7 @@ func _trigger_aoe_attack(targets: Array) -> void:
 	print("Turret (%s AoE) fired, affecting %d enemies" % [weapon_type, targets.size()])
 
 func _get_ammo_scene(type_name: String) -> PackedScene:
-	var primary_path: String = AMMO_ASSETS.get(type_name, AMMO_ASSETS["turret"])
-	if ResourceLoader.exists(primary_path):
-		return load(primary_path)
-	var desert_path = primary_path.replace("GLB format/", "GLB format/desert/")
-	if ResourceLoader.exists(desert_path):
-		return load(desert_path)
-	push_warning("Turret: Ammo scene for '%s' not found at %s" % [type_name, primary_path])
-	return null
+	return _ammo_scenes.get(type_name, _ammo_scenes.get("turret", null))
 
 func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, aoe_enemies: Array = []) -> void:
 	var ammo_scene = _get_ammo_scene(weapon_type)

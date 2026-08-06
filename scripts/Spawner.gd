@@ -82,7 +82,7 @@ func _create_enemy_node(type_index: int) -> Node3D:
 	# Pick a specific UFO model for this enemy
 	var model_scene = enemy_models[type_index]
 	var model_instance = model_scene.instantiate()
-	_set_extra_cull_margin_recursive(model_instance, 100.0)
+	_set_extra_cull_margin_recursive(model_instance, 2.0)
 	enemy_root.add_child(model_instance)
 
 	# Parent to the Map node

@@ -32,7 +32,7 @@ wind_intensity={
 }
 wind_direction={
 "type": "vec3",
-"value": Vector3(0, 0, 1)
+"value": Vector3(0, 0, 0.8)
 }
 player_position={
 "type": "vec3",

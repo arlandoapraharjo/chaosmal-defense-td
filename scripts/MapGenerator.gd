@@ -10,6 +10,8 @@ const BUSH_SCALE_MAX = 0.75 # largest random bush size
 const BUSH_CAST_SHADOWS = true # alpha-blended wind-animated shadows are expensive for how little bushes contribute visually
 const BUSH_VISIBILITY_END = 35.0 # bushes fully disappear past this distance
 const BUSH_VISIBILITY_FADE = 6.0 # distance over which they fade out, instead of popping
+const GRASS_VISIBILITY_END = 25.0 # grass fully disappears past this distance
+const GRASS_VISIBILITY_FADE = 5.0 # distance over which grass fades out
 const BORDER_WIDTH = 4 # ring coast
 const BORDER_HEIGHT_STEP = 0.15 # height down
 const OCEAN_FLOOR_Y = -5.0 # world Y the outermost coastline ring extrudes down to, so it seams cleanly into the ocean mesh with no visible gap
@@ -42,8 +44,8 @@ signal biome_changed(biome: BiomeData)
 @export var border_detail_strength: float = 0.8
 
 @export_group("Grass Settings")
-@export var grass_y_offset: float = 0.3
-@export var grass_density_base: int = 60
+@export var grass_y_offset: float = 0.2
+@export var grass_density_base: int = 30
 @export var grass_density_coastal: int = 8
 @export var grass_tilt_randomness: float = 0.3
 @export var grass_scale_y_min: float = 0.3
@@ -83,6 +85,12 @@ var path_lookup: Dictionary = {}
 
 # Tracks coordinates that contain decorations or turrets.
 var occupied_cells: Dictionary = {}
+
+# Caches mesh extraction results keyed by resource path — avoids
+# re-instantiating the same scene 8+ times during a single build.
+var _mesh_info_cache: Dictionary = {}
+# Cached border wall color — computed once, reused across calls.
+var _cached_border_wall_color: Color = Color(0, 0, 0, 0)
 
 var spawner_script = preload("res://scripts/Spawner.gd")
 var pillar_script = preload("res://scripts/IncursionPillar.gd")
@@ -375,9 +383,11 @@ func _build_map():
 	
 	if is_grass_biome:
 		mm_grass = _make_multimesh_node("GrassGen", grass_model)
+		_apply_grass_visibility_range(mm_grass)
 		_tint_node_materials(mm_base, Color.hex(0x1ab036ff))
 	elif is_snow_biome:
 		mm_grass = _make_multimesh_node("GrassGen", grass_model_snow)
+		_apply_grass_visibility_range(mm_grass)
 		_tint_node_materials(mm_base, Color.WHITE)
 
 	var base_transforms: Array[Transform3D] = []
@@ -458,6 +468,13 @@ func _spawn_grass_tuft(grass_transforms: Array[Transform3D], origin: Vector3, de
 		var basis2 = Basis(Vector3.RIGHT, rot_x) * Basis(Vector3.FORWARD, rot_z) * Basis(Vector3.UP, rot_y + PI/2.0)
 		basis2 = basis2.scaled(Vector3(s_xz, s_y, s_xz))
 		grass_transforms.append(Transform3D(basis2, pos))
+
+func _apply_grass_visibility_range(group: Node3D) -> void:
+	for child in group.get_children():
+		if child is MultiMeshInstance3D:
+			child.visibility_range_end = GRASS_VISIBILITY_END
+			child.visibility_range_end_margin = GRASS_VISIBILITY_FADE
+			child.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 
 func _build_coastal_border(grass_transforms: Array[Transform3D]):
 	mm_border = _make_multimesh_node("CoastalBorder", tile_base)
@@ -543,6 +560,11 @@ func _build_coastal_border(grass_transforms: Array[Transform3D]):
 	_apply_multimesh(mm_border_wall_outer, wall_outer_transforms)
 
 func _extract_meshes_info(scene: PackedScene) -> Array:
+	# Return cached result if we've already extracted this scene's meshes
+	var cache_key = scene.resource_path
+	if _mesh_info_cache.has(cache_key):
+		return _mesh_info_cache[cache_key]
+
 	var temp = scene.instantiate()
 	var mesh_instances = []
 	var is_glb = scene.resource_path.get_extension().to_lower() in ["glb", "gltf"]
@@ -579,6 +601,7 @@ func _extract_meshes_info(scene: PackedScene) -> Array:
 	temp.queue_free()
 	# Reverse to maintain original order since we used pop_back
 	mesh_instances.reverse()
+	_mesh_info_cache[cache_key] = mesh_instances
 	return mesh_instances
 
 func _make_multimesh_node(node_name: String, scene: PackedScene) -> Node3D:
@@ -592,7 +615,7 @@ func _make_multimesh_node(node_name: String, scene: PackedScene) -> Node3D:
 		var mmi = MultiMeshInstance3D.new()
 		mmi.name = "Mesh_%d" % i
 		mmi.physics_interpolation_mode = 2 # Node.PHYSICS_INTERPOLATION_MODE_OFF
-		mmi.extra_cull_margin = 100.0
+		mmi.extra_cull_margin = 2.0
 		mmi.set_meta("local_transform", info["transform"])
 		mmi.cast_shadow = info["cast_shadow"]
 		
@@ -617,7 +640,7 @@ func _make_border_wall_node(node_name: String, remove_texture: bool = false) -> 
 	mmi.name = node_name
 	mmi.physics_interpolation_mode = 2 # Node.PHYSICS_INTERPOLATION_MODE_OFF
 	mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if BORDER_WALL_CAST_SHADOWS else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	mmi.extra_cull_margin = 100.0
+	mmi.extra_cull_margin = 2.0
 	add_child(mmi)
 
 	var uv_rect := _get_tile_uv_rect(tile_base)
@@ -727,6 +750,9 @@ func _add_wall_quad(st: SurfaceTool, pts: Array, normal: Vector3, uv_rect: Rect2
 func _resolve_border_wall_color() -> Color:
 	if border_wall_color_override.a > 0.0:
 		return border_wall_color_override
+	# Return cached result if already computed
+	if _cached_border_wall_color.a > 0.0:
+		return _cached_border_wall_color
 
 	var extracted = _extract_meshes_info(tile_base)
 	if extracted.size() > 0:
@@ -763,7 +789,8 @@ func _resolve_border_wall_color() -> Color:
 										sum += px
 										samples += 1
 							if samples > 0:
-								return Color(sum.r / samples, sum.g / samples, sum.b / samples, 1.0)
+								_cached_border_wall_color = Color(sum.r / samples, sum.g / samples, sum.b / samples, 1.0)
+								return _cached_border_wall_color
 			elif mat.albedo_color != null:
 				return mat.albedo_color
 
@@ -783,7 +810,7 @@ func _make_bush_variant_nodes(scene: PackedScene, count: int) -> Array[Node3D]:
 			var mmi = MultiMeshInstance3D.new()
 			mmi.name = "Mesh_%d" % j
 			mmi.physics_interpolation_mode = 2 # Node.PHYSICS_INTERPOLATION_MODE_OFF
-			mmi.extra_cull_margin = 100.0
+			mmi.extra_cull_margin = 2.0
 			mmi.set_meta("local_transform", info["transform"])
 
 			var mm = MultiMesh.new()

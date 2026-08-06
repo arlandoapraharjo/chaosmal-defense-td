@@ -13,7 +13,7 @@
 [ext_resource type="Material" uid="uid://cr8yf6r3utjih" path="res://addons/Textures/water_mat.tres" id="11_sq6bu"]
 [ext_resource type="Script" uid="uid://ccj7lf23ow2nh" path="res://scripts/CurrencyManager.gd" id="12_curman"]
 [ext_resource type="PackedScene" uid="uid://d2se7ia331gmq" path="res://UI/CurrencyUI.tscn" id="13_curui"]
-[ext_resource type="PackedScene" uid="uid://cwaveuiscene01" path="res://UI/WaveUI.tscn" id="14_waveui"]
+[ext_resource type="PackedScene" uid="uid://beiea7nje0alg" path="res://UI/WaveUI.tscn" id="14_waveui"]
 
 [sub_resource type="Gradient" id="Gradient_ooc2g"]
 
@@ -56,7 +56,7 @@ script = ExtResource("12_curman")
 
 [node name="CurrencyUI" parent="." unique_id=89237411 instance=ExtResource("13_curui")]
 
-[node name="WaveUI" parent="." instance=ExtResource("14_waveui")]
+[node name="WaveUI" parent="." unique_id=251760514 instance=ExtResource("14_waveui")]
 
 [node name="WorldEnvironment2" type="WorldEnvironment" parent="." unique_id=483959264]
 environment = ExtResource("1_mlgqr")
