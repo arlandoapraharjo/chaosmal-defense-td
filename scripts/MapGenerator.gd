@@ -92,7 +92,7 @@ var _mesh_info_cache: Dictionary = {}
 # Cached border wall color — computed once, reused across calls.
 var _cached_border_wall_color: Color = Color(0, 0, 0, 0)
 
-var spawner_script = preload("res://scripts/Spawner.gd")
+var spawner_script = preload("res://scripts/WaveManager.gd")
 var pillar_script = preload("res://scripts/IncursionPillar.gd")
 
 # Batching containers for repeated static meshes
@@ -117,7 +117,7 @@ func _ready():
 	_apply_biome(_pick_biome())
 	_generate_path()
 	_build_map()
-	_setup_spawner()
+	_setup_wave_manager()
 	_setup_pillar()
 	
 	# Fade in transition
@@ -983,7 +983,7 @@ func _get_corner_rotation(dir_in: Vector2i, dir_out: Vector2i) -> float:
 
 	return 0.0
 
-func _setup_spawner() -> void:
+func _setup_wave_manager() -> void:
 	var old_spawner = get_node_or_null("Spawner")
 	if old_spawner:
 		old_spawner.queue_free()

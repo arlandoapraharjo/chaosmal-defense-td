@@ -85,6 +85,8 @@ const TURRET_ASSETS: Array[Dictionary] = [
 		"name": "Turret",
 		"attack_range": 3.0,
 		"weapon_type": "turret",
+		"attack_damage": 25.0,
+		"cooldown": 0.8,
 		"cost": 1,
 	},
 	{
@@ -93,6 +95,8 @@ const TURRET_ASSETS: Array[Dictionary] = [
 		"attack_range": 2.5,
 		"is_half_circle": true,
 		"weapon_type": "cannon",
+		"attack_damage": 60.0,
+		"cooldown": 1.5,
 		"cost": 3,
 	},
 	{
@@ -100,6 +104,8 @@ const TURRET_ASSETS: Array[Dictionary] = [
 		"name": "Ballista",
 		"attack_range": 5.5,
 		"weapon_type": "ballista",
+		"attack_damage": 45.0,
+		"cooldown": 1.2,
 		"cost": 5,
 	},
 	{
@@ -109,6 +115,8 @@ const TURRET_ASSETS: Array[Dictionary] = [
 		"min_attack_range": 3.0,
 		"is_aoe": true,
 		"weapon_type": "catapult",
+		"attack_damage": 35.0,
+		"cooldown": 2.0,
 		"cost": 5,
 	},
 	{
@@ -118,6 +126,8 @@ const TURRET_ASSETS: Array[Dictionary] = [
 		"footprint_size": Vector2i(2, 2),
 		"mesh_scale": Vector3(2.0, 2.0, 2.0),
 		"weapon_type": "turret",
+		"attack_damage": 50.0,
+		"cooldown": 1.0,
 		"cost": 7,
 	},
 ]

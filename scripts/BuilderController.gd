@@ -27,6 +27,8 @@ var _weapon_type: String = "turret"
 var _is_aoe: bool = false
 var _ghost_rotation_deg: float = 0.0
 var _current_slot_index: int = -1
+var _turret_damage: float = 35.0
+var _turret_cooldown: float = 1.0
 
 # All currently placed turret nodes — used to forward speed multiplier
 var _placed_turrets: Array[Node3D] = []
@@ -89,6 +91,8 @@ func start_building(_index: int, turret_scene: PackedScene, attack_range: float 
 	_weapon_type = extra_data.get("weapon_type", "turret")
 	_is_aoe = extra_data.get("is_aoe", false)
 	_turret_cost = extra_data.get("cost", 0)
+	_turret_damage = extra_data.get("attack_damage", 35.0)
+	_turret_cooldown = extra_data.get("cooldown", 1.0)
 	_ghost_rotation_deg = 0.0
 
 	_is_building = true
@@ -107,7 +111,8 @@ func start_building(_index: int, turret_scene: PackedScene, attack_range: float 
 		_ghost_instance.is_half_circle = _is_half_circle
 		_ghost_instance.is_aoe = _is_aoe
 		_ghost_instance.weapon_type = _weapon_type
-		_ghost_instance.cooldown = 1.0
+		_ghost_instance.attack_damage = extra_data.get("attack_damage", 35.0)
+		_ghost_instance.cooldown = extra_data.get("cooldown", 1.0)
 
 	# Disable ghost logic and apply ghost material
 	_disable_logic(_ghost_instance)
@@ -302,7 +307,8 @@ func _try_place_turret() -> void:
 			new_turret.is_aoe = _is_aoe
 			new_turret.weapon_type = _weapon_type
 			new_turret.scale = _mesh_scale
-			new_turret.cooldown = 1.0
+			new_turret.attack_damage = _turret_damage
+			new_turret.cooldown = _turret_cooldown
 			new_turret.rotation_degrees.y = _ghost_rotation_deg
 		else:
 			push_error("Turret.gd failed to load")

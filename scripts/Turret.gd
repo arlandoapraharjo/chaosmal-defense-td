@@ -47,12 +47,14 @@ var _initial_facing_dir: Vector3 = Vector3.FORWARD
 
 func _ready() -> void:
 	_base_cooldown = cooldown
+	_base_attack_damage = attack_damage
 	_auto_detect_weapon_type()
 	call_deferred("_capture_initial_facing")
 
 ## Apply a global speed multiplier — faster speed = shorter cooldown = higher fire rate.
 func set_speed_multiplier(multiplier: float) -> void:
-	cooldown = _base_cooldown / max(multiplier, 0.1)
+	var level_cooldown = _base_cooldown * (1.0 - (turret_level - 1) * 0.1)
+	cooldown = level_cooldown / max(multiplier, 0.1)
 
 func _capture_initial_facing() -> void:
 	_initial_facing_dir = -global_transform.basis.z.normalized()
@@ -132,7 +134,43 @@ func _rotate_toward_target(target: Node3D, delta: float) -> void:
 	# Reapply scale after rotation
 	global_transform.basis = new_rot.scaled(current_scale)
 
-@export var attack_damage: float = 35.0
+var attack_damage: float = 35.0
+var _base_attack_damage: float = 35.0
+var turret_level: int = 1
+
+func get_upgrade_cost() -> int:
+	if turret_level >= 3:
+		return 0
+	if TurretUpgradeManager.instance:
+		return TurretUpgradeManager.instance.UPGRADE_COSTS[turret_level - 1]
+	return 0
+
+func upgrade() -> bool:
+	if turret_level >= 3:
+		return false
+	turret_level += 1
+	_recalculate_stats()
+	
+	# Visual feedback for upgrade
+	var tween = create_tween()
+	var original_scale = scale
+	tween.tween_property(self, "scale", original_scale * 1.2, 0.15).set_trans(Tween.TRANS_BACK)
+	tween.tween_property(self, "scale", original_scale, 0.25)
+	
+	return true
+
+func _recalculate_stats() -> void:
+	attack_damage = _base_attack_damage * (1.0 + (turret_level - 1) * 0.4)
+	
+	# Current global speed multiplier
+	var current_multiplier = 1.0
+	var speed_toggle = get_node_or_null("/root/World/SpeedToggle")
+	if speed_toggle and speed_toggle.has_method("get_current_multiplier"):
+		current_multiplier = speed_toggle.get_current_multiplier()
+		
+	var level_cooldown = _base_cooldown * (1.0 - (turret_level - 1) * 0.1)
+	cooldown = level_cooldown / max(current_multiplier, 0.1)
+
 
 func _trigger_single_target_attack(target: Node3D) -> void:
 	if is_instance_valid(target):

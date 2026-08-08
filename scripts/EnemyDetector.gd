@@ -26,7 +26,7 @@ static func unregister(enemy: Node3D) -> void:
 			_active_enemies[idx] = _active_enemies[last]
 		_active_enemies.resize(last)
 
-static func get_enemies_in_range(caller: Node, origin: Vector3, max_range: float, min_range: float = 0.0) -> Array[Node3D]:
+static func get_enemies_in_range(_caller: Node, origin: Vector3, max_range: float, min_range: float = 0.0) -> Array[Node3D]:
 	var result: Array[Node3D] = []
 	var max_range_sq: float = max_range * max_range
 	var min_range_sq: float = min_range * min_range

@@ -35,15 +35,24 @@ const ENEMY_TYPE_STATS: Array = [
 	[10, 260.0],  # UFO-D: elite, tanky
 ]
 
-## Assign coin_value and max_hp based on the UFO model type index.
-func setup_enemy_type(type_index: int) -> void:
+## Assign coin_value and max_hp based on the UFO model type index and wave number.
+func setup_enemy_type(type_index: int, wave_number: int = 1) -> void:
 	enemy_type_index = type_index
+	
+	var base_coins = 1
+	var base_hp = 100.0
+	
 	if type_index >= 0 and type_index < ENEMY_TYPE_STATS.size():
-		coin_value = ENEMY_TYPE_STATS[type_index][0]
-		max_hp = ENEMY_TYPE_STATS[type_index][1]
-	else:
-		coin_value = 1
-		max_hp = 100.0
+		base_coins = ENEMY_TYPE_STATS[type_index][0]
+		base_hp = ENEMY_TYPE_STATS[type_index][1]
+		
+	# Apply wave scaling
+	# HP scales +15% per wave
+	max_hp = base_hp * (1.0 + (wave_number - 1) * 0.15)
+	
+	# Coins scale slower: base + 1 coin every 3 waves
+	coin_value = base_coins + int(wave_number / 3)
+	
 	current_hp = max_hp
 
 func setup(waypoints: Array[Vector3]) -> void:
