@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bawb2rbi6ehka"]
+
+[ext_resource type="Shader" uid="uid://cydngmu3tajlk" path="res://addons/Shader/tree_leaves.gdshader" id="1_2lbcp"]
+[ext_resource type="Texture2D" uid="uid://bi7g3yhsyv6e6" path="res://addons/Textures/leaf_alpha.png" id="2_6nubu"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_2lbcp")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/alpha = ExtResource("2_6nubu")
+shader_parameter/leaves_scale = 3.0
+shader_parameter/leaf_bend_amount = 2.0
+shader_parameter/light_steps = 6.0
