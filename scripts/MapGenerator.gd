@@ -825,8 +825,9 @@ func _make_bush_variant_nodes(scene: PackedScene, count: int) -> Array[Node3D]:
 
 			var base_material = info["material"]
 			if base_material != null:
-				var variant_material: ShaderMaterial = base_material.duplicate()
-				_randomize_bush_wind(variant_material)
+				var variant_material = base_material.duplicate()
+				if variant_material is ShaderMaterial:
+					_randomize_bush_wind(variant_material)
 				mmi.material_override = variant_material
 
 			root.add_child(mmi)
