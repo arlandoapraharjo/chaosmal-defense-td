@@ -258,15 +258,5 @@
     "mtime": 1783218098.149856,
     "ast_hash": "a16f2eed1b4496c4abf03d329708ba09",
     "semantic_hash": "a16f2eed1b4496c4abf03d329708ba09"
-  },
-  "docs/graphify_setup/install.ps1": {
-    "mtime": 1786368632.1258142,
-    "ast_hash": "f15d3da79089f2947e03128a2755fdb0",
-    "semantic_hash": ""
-  },
-  "docs/graphify_setup/req.txt": {
-    "mtime": 1786368640.4519973,
-    "ast_hash": "08ecdbd7e223c0f8ce09e1116055c35b",
-    "semantic_hash": ""
   }
 }

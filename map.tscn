@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bcmraav07xepf"]
+[gd_scene format=3 uid="uid://036csi2xfnk3"]
 
 [ext_resource type="Environment" uid="uid://eje2tefugyb2" path="res://addons/Shader/desert_env.tres" id="1_0t07s"]
 [ext_resource type="Script" uid="uid://vca8f7oohn30" path="res://scripts/MapGenerator.gd" id="1_e0an3"]
@@ -8,9 +8,9 @@
 [ext_resource type="Resource" uid="uid://cgsne48ch7k6g" path="res://biomes/biome_grass.tres" id="4_iw27f"]
 [ext_resource type="Resource" uid="uid://dkkpml6w0got6" path="res://biomes/biome_desert.tres" id="5_iw27f"]
 [ext_resource type="PackedScene" uid="uid://dc6dgdjoiagk6" path="res://UI/Hotbar/TurretHotbar.tscn" id="6_hotbar"]
-[ext_resource type="PackedScene" path="res://UI/SpeedToggle.tscn" id="8_speedtoggle"]
 [ext_resource type="Shader" uid="uid://8haud4yhw01k" path="res://addons/Shader/sandstrom.gdshader" id="7_6qsgm"]
 [ext_resource type="Script" uid="uid://wguegcpphxbe" path="res://scripts/BuilderController.gd" id="7_builder"]
+[ext_resource type="PackedScene" path="res://UI/SpeedToggle.tscn" id="8_speedtoggle"]
 [ext_resource type="Material" uid="uid://cr8yf6r3utjih" path="res://addons/Textures/water_mat.tres" id="10_oysan"]
 [ext_resource type="PackedScene" path="res://scenes/PauseOverlay.tscn" id="16_pause"]
 
@@ -84,7 +84,7 @@ size = Vector2i(1152, 648)
 
 [node name="SpeedToggle" parent="." unique_id=812345001 instance=ExtResource("8_speedtoggle")]
 
-[node name="PauseOverlay" parent="." instance=ExtResource("16_pause")]
+[node name="PauseOverlay" parent="." unique_id=166916916 instance=ExtResource("16_pause")]
 
 [node name="BuilderController" type="Node" parent="." unique_id=1232673061 node_paths=PackedStringArray("map_generator")]
 script = ExtResource("7_builder")
@@ -99,6 +99,5 @@ transform = Transform3D(70, 0, 0, 0, 70, 0, 0, 0, 70, 0, -2.860489, 0)
 mesh = SubResource("PlaneMesh_eotfe")
 
 [connection signal="turret_selected" from="TurretHotbar" to="BuilderController" method="start_building"]
-[connection signal="building_stopped" from="BuilderController" to="TurretHotbar" method="_on_building_stopped"]
 [connection signal="speed_changed" from="SpeedToggle" to="BuilderController" method="set_speed_multiplier"]
-[connection signal="speed_changed" from="SpeedToggle" to="Map/Spawner" method="set_speed_multiplier"]
+[connection signal="building_stopped" from="BuilderController" to="TurretHotbar" method="_on_building_stopped"]

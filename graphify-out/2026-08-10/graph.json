@@ -22,17 +22,6 @@
   },
   "nodes": [
     {
-      "label": "install.ps1",
-      "file_type": "code",
-      "source_file": "docs/graphify_setup/install.ps1",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "docs_graphify_setup_install",
-      "community": 11,
-      "community_name": "install.ps1",
-      "norm_label": "install.ps1"
-    },
-    {
       "label": "Graphify Rule Definition",
       "file_type": "document",
       "source_file": ".agents/rules/graphify.md",
@@ -41,11 +30,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "agents_rules_graphify_graphify_rule",
       "community": 5,
-      "community_name": "Graphify Rule Definition",
-      "norm_label": "graphify rule definition",
-      "_origin": "semantic",
-      "id": "agents_rules_graphify_graphify_rule"
+      "community_name": "Graphify Agent Rules",
+      "norm_label": "graphify rule definition"
     },
     {
       "label": "Knowledge Graph Query & Navigation",
@@ -56,11 +44,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "agents_rules_graphify_knowledge_graph_query",
       "community": 5,
-      "community_name": "Graphify Rule Definition",
-      "norm_label": "knowledge graph query & navigation",
-      "_origin": "semantic",
-      "id": "agents_rules_graphify_knowledge_graph_query"
+      "community_name": "Graphify Agent Rules",
+      "norm_label": "knowledge graph query & navigation"
     },
     {
       "label": "Graphify Workflow Command",
@@ -71,11 +58,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "agents_workflows_graphify_graphify_workflow",
       "community": 7,
-      "community_name": "Graphify Workflow Command",
-      "norm_label": "graphify workflow command",
-      "_origin": "semantic",
-      "id": "agents_workflows_graphify_graphify_workflow"
+      "community_name": "Graphify Workflow Automation",
+      "norm_label": "graphify workflow command"
     },
     {
       "label": "IGI Code Circus Project Overview",
@@ -86,11 +72,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "readme_project_readme",
       "community": 10,
-      "community_name": "IGI Code Circus Project Overview",
-      "norm_label": "igi code circus project overview",
-      "_origin": "semantic",
-      "id": "readme_project_readme"
+      "community_name": "Project Readme Documentation",
+      "norm_label": "igi code circus project overview"
     },
     {
       "label": "Asset License Terms",
@@ -101,11 +86,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "assets_license_license",
       "community": 8,
-      "community_name": "Asset License Terms",
-      "norm_label": "asset license terms",
-      "_origin": "semantic",
-      "id": "assets_license_license"
+      "community_name": "Asset Licensing & Legal",
+      "norm_label": "asset license terms"
     },
     {
       "label": "Biomes & Environments Documentation",
@@ -116,11 +100,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "biomes_readme_biomes_readme",
       "community": 9,
-      "community_name": "Biomes & Environments Documentation",
-      "norm_label": "biomes & environments documentation",
-      "_origin": "semantic",
-      "id": "biomes_readme_biomes_readme"
+      "community_name": "Biomes Documentation",
+      "norm_label": "biomes & environments documentation"
     },
     {
       "label": "Desert Visual Assets Theme",
@@ -131,11 +114,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_theme_desert",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "desert visual assets theme",
-      "_origin": "semantic",
-      "id": "ui_theme_desert"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "desert visual assets theme"
     },
     {
       "label": "Desert 7 Image Asset",
@@ -146,11 +128,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_desert_desert_7_desert_7",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "desert 7 image asset",
-      "_origin": "semantic",
-      "id": "ui_desert_desert_7_desert_7"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "desert 7 image asset"
     },
     {
       "label": "Desert Border BG Trial 1 Image Asset",
@@ -161,11 +142,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_desert_desert_border_bg_trial_1_desert_border_bg_trial_1",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "desert border bg trial 1 image asset",
-      "_origin": "semantic",
-      "id": "ui_desert_desert_border_bg_trial_1_desert_border_bg_trial_1"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "desert border bg trial 1 image asset"
     },
     {
       "label": "Desert Border Trial 1 Image Asset",
@@ -176,11 +156,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_desert_desert_border_trial_1_desert_border_trial_1",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "desert border trial 1 image asset",
-      "_origin": "semantic",
-      "id": "ui_desert_desert_border_trial_1_desert_border_trial_1"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "desert border trial 1 image asset"
     },
     {
       "label": "Desert Togle 3 Image Asset",
@@ -191,11 +170,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_desert_desert_togle_3_desert_togle_3",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "desert togle 3 image asset",
-      "_origin": "semantic",
-      "id": "ui_desert_desert_togle_3_desert_togle_3"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "desert togle 3 image asset"
     },
     {
       "label": "Sprite-0002 Image Asset",
@@ -206,11 +184,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_desert_sprite_0002_sprite_0002",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "sprite-0002 image asset",
-      "_origin": "semantic",
-      "id": "ui_desert_sprite_0002_sprite_0002"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "sprite-0002 image asset"
     },
     {
       "label": "Sprite-0003 Image Asset",
@@ -221,11 +198,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_desert_sprite_0003_sprite_0003",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "sprite-0003 image asset",
-      "_origin": "semantic",
-      "id": "ui_desert_sprite_0003_sprite_0003"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "sprite-0003 image asset"
     },
     {
       "label": "Sprite-0004 Image Asset",
@@ -236,11 +212,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_desert_sprite_0004_sprite_0004",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "sprite-0004 image asset",
-      "_origin": "semantic",
-      "id": "ui_desert_sprite_0004_sprite_0004"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "sprite-0004 image asset"
     },
     {
       "label": "Sprite-0005 Image Asset",
@@ -251,11 +226,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_desert_sprite_0005_sprite_0005",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "sprite-0005 image asset",
-      "_origin": "semantic",
-      "id": "ui_desert_sprite_0005_sprite_0005"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "sprite-0005 image asset"
     },
     {
       "label": "Sprite-0006 Image Asset",
@@ -266,11 +240,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_desert_sprite_0006_sprite_0006",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "sprite-0006 image asset",
-      "_origin": "semantic",
-      "id": "ui_desert_sprite_0006_sprite_0006"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "sprite-0006 image asset"
     },
     {
       "label": "Sprite-0007 Image Asset",
@@ -281,11 +254,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_desert_sprite_0007_sprite_0007",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "sprite-0007 image asset",
-      "_origin": "semantic",
-      "id": "ui_desert_sprite_0007_sprite_0007"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "sprite-0007 image asset"
     },
     {
       "label": "Sprite-0008 Image Asset",
@@ -296,11 +268,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_desert_sprite_0008_sprite_0008",
       "community": 1,
-      "community_name": "Desert Visual Assets Theme",
-      "norm_label": "sprite-0008 image asset",
-      "_origin": "semantic",
-      "id": "ui_desert_sprite_0008_sprite_0008"
+      "community_name": "Desert UI Theme Assets",
+      "norm_label": "sprite-0008 image asset"
     },
     {
       "label": "Grass Visual Assets Theme",
@@ -311,11 +282,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_theme_grass",
       "community": 2,
-      "community_name": "Grass Visual Assets Theme",
-      "norm_label": "grass visual assets theme",
-      "_origin": "semantic",
-      "id": "ui_theme_grass"
+      "community_name": "Grass UI Theme Assets",
+      "norm_label": "grass visual assets theme"
     },
     {
       "label": "Grass 1 Image Asset",
@@ -326,11 +296,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_grass_grass_1_grass_1",
       "community": 2,
-      "community_name": "Grass Visual Assets Theme",
-      "norm_label": "grass 1 image asset",
-      "_origin": "semantic",
-      "id": "ui_grass_grass_1_grass_1"
+      "community_name": "Grass UI Theme Assets",
+      "norm_label": "grass 1 image asset"
     },
     {
       "label": "Grass Toggle 3 Image Asset",
@@ -341,11 +310,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_grass_grass_toggle_3_grass_toggle_3",
       "community": 2,
-      "community_name": "Grass Visual Assets Theme",
-      "norm_label": "grass toggle 3 image asset",
-      "_origin": "semantic",
-      "id": "ui_grass_grass_toggle_3_grass_toggle_3"
+      "community_name": "Grass UI Theme Assets",
+      "norm_label": "grass toggle 3 image asset"
     },
     {
       "label": "Sprite-0002 Image Asset",
@@ -356,11 +324,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_grass_sprite_0002_sprite_0002",
       "community": 2,
-      "community_name": "Grass Visual Assets Theme",
-      "norm_label": "sprite-0002 image asset",
-      "_origin": "semantic",
-      "id": "ui_grass_sprite_0002_sprite_0002"
+      "community_name": "Grass UI Theme Assets",
+      "norm_label": "sprite-0002 image asset"
     },
     {
       "label": "Sprite-0003 Image Asset",
@@ -371,11 +338,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_grass_sprite_0003_sprite_0003",
       "community": 2,
-      "community_name": "Grass Visual Assets Theme",
-      "norm_label": "sprite-0003 image asset",
-      "_origin": "semantic",
-      "id": "ui_grass_sprite_0003_sprite_0003"
+      "community_name": "Grass UI Theme Assets",
+      "norm_label": "sprite-0003 image asset"
     },
     {
       "label": "Sprite-0004 Image Asset",
@@ -386,11 +352,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_grass_sprite_0004_sprite_0004",
       "community": 2,
-      "community_name": "Grass Visual Assets Theme",
-      "norm_label": "sprite-0004 image asset",
-      "_origin": "semantic",
-      "id": "ui_grass_sprite_0004_sprite_0004"
+      "community_name": "Grass UI Theme Assets",
+      "norm_label": "sprite-0004 image asset"
     },
     {
       "label": "Sprite-0005 Image Asset",
@@ -401,11 +366,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_grass_sprite_0005_sprite_0005",
       "community": 2,
-      "community_name": "Grass Visual Assets Theme",
-      "norm_label": "sprite-0005 image asset",
-      "_origin": "semantic",
-      "id": "ui_grass_sprite_0005_sprite_0005"
+      "community_name": "Grass UI Theme Assets",
+      "norm_label": "sprite-0005 image asset"
     },
     {
       "label": "Sprite-0006 Image Asset",
@@ -416,11 +380,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_grass_sprite_0006_sprite_0006",
       "community": 2,
-      "community_name": "Grass Visual Assets Theme",
-      "norm_label": "sprite-0006 image asset",
-      "_origin": "semantic",
-      "id": "ui_grass_sprite_0006_sprite_0006"
+      "community_name": "Grass UI Theme Assets",
+      "norm_label": "sprite-0006 image asset"
     },
     {
       "label": "Sprite-0007 Image Asset",
@@ -431,11 +394,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_grass_sprite_0007_sprite_0007",
       "community": 2,
-      "community_name": "Grass Visual Assets Theme",
-      "norm_label": "sprite-0007 image asset",
-      "_origin": "semantic",
-      "id": "ui_grass_sprite_0007_sprite_0007"
+      "community_name": "Grass UI Theme Assets",
+      "norm_label": "sprite-0007 image asset"
     },
     {
       "label": "Sprite-0008 Image Asset",
@@ -446,11 +408,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_grass_sprite_0008_sprite_0008",
       "community": 2,
-      "community_name": "Grass Visual Assets Theme",
-      "norm_label": "sprite-0008 image asset",
-      "_origin": "semantic",
-      "id": "ui_grass_sprite_0008_sprite_0008"
+      "community_name": "Grass UI Theme Assets",
+      "norm_label": "sprite-0008 image asset"
     },
     {
       "label": "Ice Visual Assets Theme",
@@ -461,11 +422,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_theme_ice",
       "community": 3,
-      "community_name": "Ice Visual Assets Theme",
-      "norm_label": "ice visual assets theme",
-      "_origin": "semantic",
-      "id": "ui_theme_ice"
+      "community_name": "Ice & Snow UI Theme Assets",
+      "norm_label": "ice visual assets theme"
     },
     {
       "label": "Snow Hotbar 2 Image Asset",
@@ -476,11 +436,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_ice_snow_hotbar_2_snow_hotbar_2",
       "community": 3,
-      "community_name": "Ice Visual Assets Theme",
-      "norm_label": "snow hotbar 2 image asset",
-      "_origin": "semantic",
-      "id": "ui_ice_snow_hotbar_2_snow_hotbar_2"
+      "community_name": "Ice & Snow UI Theme Assets",
+      "norm_label": "snow hotbar 2 image asset"
     },
     {
       "label": "Snow Toggle 2 Image Asset",
@@ -491,11 +450,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_ice_snow_toggle_2_snow_toggle_2",
       "community": 3,
-      "community_name": "Ice Visual Assets Theme",
-      "norm_label": "snow toggle 2 image asset",
-      "_origin": "semantic",
-      "id": "ui_ice_snow_toggle_2_snow_toggle_2"
+      "community_name": "Ice & Snow UI Theme Assets",
+      "norm_label": "snow toggle 2 image asset"
     },
     {
       "label": "Sprite-0002 Image Asset",
@@ -506,11 +464,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_ice_sprite_0002_sprite_0002",
       "community": 3,
-      "community_name": "Ice Visual Assets Theme",
-      "norm_label": "sprite-0002 image asset",
-      "_origin": "semantic",
-      "id": "ui_ice_sprite_0002_sprite_0002"
+      "community_name": "Ice & Snow UI Theme Assets",
+      "norm_label": "sprite-0002 image asset"
     },
     {
       "label": "Sprite-0003 Image Asset",
@@ -521,11 +478,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_ice_sprite_0003_sprite_0003",
       "community": 3,
-      "community_name": "Ice Visual Assets Theme",
-      "norm_label": "sprite-0003 image asset",
-      "_origin": "semantic",
-      "id": "ui_ice_sprite_0003_sprite_0003"
+      "community_name": "Ice & Snow UI Theme Assets",
+      "norm_label": "sprite-0003 image asset"
     },
     {
       "label": "Sprite-0004 Image Asset",
@@ -536,11 +492,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_ice_sprite_0004_sprite_0004",
       "community": 3,
-      "community_name": "Ice Visual Assets Theme",
-      "norm_label": "sprite-0004 image asset",
-      "_origin": "semantic",
-      "id": "ui_ice_sprite_0004_sprite_0004"
+      "community_name": "Ice & Snow UI Theme Assets",
+      "norm_label": "sprite-0004 image asset"
     },
     {
       "label": "Sprite-0005 Image Asset",
@@ -551,11 +506,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_ice_sprite_0005_sprite_0005",
       "community": 3,
-      "community_name": "Ice Visual Assets Theme",
-      "norm_label": "sprite-0005 image asset",
-      "_origin": "semantic",
-      "id": "ui_ice_sprite_0005_sprite_0005"
+      "community_name": "Ice & Snow UI Theme Assets",
+      "norm_label": "sprite-0005 image asset"
     },
     {
       "label": "Sprite-0006 Image Asset",
@@ -566,11 +520,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_ice_sprite_0006_sprite_0006",
       "community": 3,
-      "community_name": "Ice Visual Assets Theme",
-      "norm_label": "sprite-0006 image asset",
-      "_origin": "semantic",
-      "id": "ui_ice_sprite_0006_sprite_0006"
+      "community_name": "Ice & Snow UI Theme Assets",
+      "norm_label": "sprite-0006 image asset"
     },
     {
       "label": "Sprite-0007 Image Asset",
@@ -581,11 +534,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_ice_sprite_0007_sprite_0007",
       "community": 3,
-      "community_name": "Ice Visual Assets Theme",
-      "norm_label": "sprite-0007 image asset",
-      "_origin": "semantic",
-      "id": "ui_ice_sprite_0007_sprite_0007"
+      "community_name": "Ice & Snow UI Theme Assets",
+      "norm_label": "sprite-0007 image asset"
     },
     {
       "label": "Sprite-0008 Image Asset",
@@ -596,11 +548,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_ice_sprite_0008_sprite_0008",
       "community": 3,
-      "community_name": "Ice Visual Assets Theme",
-      "norm_label": "sprite-0008 image asset",
-      "_origin": "semantic",
-      "id": "ui_ice_sprite_0008_sprite_0008"
+      "community_name": "Ice & Snow UI Theme Assets",
+      "norm_label": "sprite-0008 image asset"
     },
     {
       "label": "Textures Visual Assets Theme",
@@ -611,11 +562,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_theme_textures",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "textures visual assets theme",
-      "_origin": "semantic",
-      "id": "ui_theme_textures"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "textures visual assets theme"
     },
     {
       "label": "Leaves001-03 Image Asset",
@@ -626,11 +576,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "addons_textures_leaves001_03_leaves001_03",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "leaves001-03 image asset",
-      "_origin": "semantic",
-      "id": "addons_textures_leaves001_03_leaves001_03"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "leaves001-03 image asset"
     },
     {
       "label": "Leaves001-04 Image Asset",
@@ -641,11 +590,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "addons_textures_leaves001_04_leaves001_04",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "leaves001-04 image asset",
-      "_origin": "semantic",
-      "id": "addons_textures_leaves001_04_leaves001_04"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "leaves001-04 image asset"
     },
     {
       "label": "flower Image Asset",
@@ -656,11 +604,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "addons_textures_flower_flower",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "flower image asset",
-      "_origin": "semantic",
-      "id": "addons_textures_flower_flower"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "flower image asset"
     },
     {
       "label": "grass_round Image Asset",
@@ -671,11 +618,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "addons_textures_grass_round_grass_round",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "grass_round image asset",
-      "_origin": "semantic",
-      "id": "addons_textures_grass_round_grass_round"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "grass_round image asset"
     },
     {
       "label": "grass_thin Image Asset",
@@ -686,11 +632,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "addons_textures_grass_thin_grass_thin",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "grass_thin image asset",
-      "_origin": "semantic",
-      "id": "addons_textures_grass_thin_grass_thin"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "grass_thin image asset"
     },
     {
       "label": "leaf_alpha Image Asset",
@@ -701,11 +646,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "addons_textures_leaf_alpha_leaf_alpha",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "leaf_alpha image asset",
-      "_origin": "semantic",
-      "id": "addons_textures_leaf_alpha_leaf_alpha"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "leaf_alpha image asset"
     },
     {
       "label": "leaf_particle Image Asset",
@@ -716,11 +660,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "addons_textures_leaf_particle_leaf_particle",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "leaf_particle image asset",
-      "_origin": "semantic",
-      "id": "addons_textures_leaf_particle_leaf_particle"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "leaf_particle image asset"
     },
     {
       "label": "rock_color Image Asset",
@@ -731,11 +674,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "addons_textures_rock_color_rock_color",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "rock_color image asset",
-      "_origin": "semantic",
-      "id": "addons_textures_rock_color_rock_color"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "rock_color image asset"
     },
     {
       "label": "tree_bark Image Asset",
@@ -746,11 +688,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "addons_textures_tree_bark_tree_bark",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "tree_bark image asset",
-      "_origin": "semantic",
-      "id": "addons_textures_tree_bark_tree_bark"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "tree_bark image asset"
     },
     {
       "label": "colormap Image Asset",
@@ -761,11 +702,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "assets_models_glb_format_textures_colormap_colormap",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "colormap image asset",
-      "_origin": "semantic",
-      "id": "assets_models_glb_format_textures_colormap_colormap"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "colormap image asset"
     },
     {
       "label": "colormap Image Asset",
@@ -776,11 +716,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "assets_models_glb_format_desert_textures_colormap_colormap",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "colormap image asset",
-      "_origin": "semantic",
-      "id": "assets_models_glb_format_desert_textures_colormap_colormap"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "colormap image asset"
     },
     {
       "label": "colormap Image Asset",
@@ -791,11 +730,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "assets_models_glb_format_grass_textures_colormap_colormap",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "colormap image asset",
-      "_origin": "semantic",
-      "id": "assets_models_glb_format_grass_textures_colormap_colormap"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "colormap image asset"
     },
     {
       "label": "colormap Image Asset",
@@ -806,11 +744,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "assets_models_glb_format_snow_textures_colormap_colormap",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "colormap image asset",
-      "_origin": "semantic",
-      "id": "assets_models_glb_format_snow_textures_colormap_colormap"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "colormap image asset"
     },
     {
       "label": "colormap Image Asset",
@@ -821,11 +758,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "assets_models_obj_format_textures_colormap_colormap",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "colormap image asset",
-      "_origin": "semantic",
-      "id": "assets_models_obj_format_textures_colormap_colormap"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "colormap image asset"
     },
     {
       "label": "variation-a Image Asset",
@@ -836,11 +772,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "assets_models_textures_variation_a_variation_a",
       "community": 0,
-      "community_name": "Textures Visual Assets Theme",
-      "norm_label": "variation-a image asset",
-      "_origin": "semantic",
-      "id": "assets_models_textures_variation_a_variation_a"
+      "community_name": "3D Model Textures & Colormaps",
+      "norm_label": "variation-a image asset"
     },
     {
       "label": "menus Visual Assets Theme",
@@ -851,11 +786,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_theme_menus",
       "community": 4,
-      "community_name": "menus Visual Assets Theme",
-      "norm_label": "menus visual assets theme",
-      "_origin": "semantic",
-      "id": "ui_theme_menus"
+      "community_name": "Menu & UI Grid Assets",
+      "norm_label": "menus visual assets theme"
     },
     {
       "label": "IMG-20230621-WA0013 Image Asset",
@@ -866,11 +800,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "assets_menus_img_20230621_wa0013_img_20230621_wa0013",
       "community": 4,
-      "community_name": "menus Visual Assets Theme",
-      "norm_label": "img-20230621-wa0013 image asset",
-      "_origin": "semantic",
-      "id": "assets_menus_img_20230621_wa0013_img_20230621_wa0013"
+      "community_name": "Menu & UI Grid Assets",
+      "norm_label": "img-20230621-wa0013 image asset"
     },
     {
       "label": "grid Image Asset",
@@ -881,11 +814,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "assets_menus_grid_grid",
       "community": 4,
-      "community_name": "menus Visual Assets Theme",
-      "norm_label": "grid image asset",
-      "_origin": "semantic",
-      "id": "assets_menus_grid_grid"
+      "community_name": "Menu & UI Grid Assets",
+      "norm_label": "grid image asset"
     },
     {
       "label": "IGI-Code-Circus Visual Assets Theme",
@@ -896,11 +828,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "ui_theme_igi-code-circus",
       "community": 6,
-      "community_name": "icon Image Asset",
-      "norm_label": "igi-code-circus visual assets theme",
-      "_origin": "semantic",
-      "id": "ui_theme_igi-code-circus"
+      "community_name": "Project Icon & Root Assets",
+      "norm_label": "igi-code-circus visual assets theme"
     },
     {
       "label": "icon Image Asset",
@@ -911,11 +842,10 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
+      "id": "icon_icon",
       "community": 6,
-      "community_name": "icon Image Asset",
-      "norm_label": "icon image asset",
-      "_origin": "semantic",
-      "id": "icon_icon"
+      "community_name": "Project Icon & Root Assets",
+      "norm_label": "icon image asset"
     }
   ],
   "links": [
@@ -926,7 +856,6 @@
       "source_file": ".agents/rules/graphify.md",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "agents_rules_graphify_graphify_rule",
       "target": "agents_rules_graphify_knowledge_graph_query"
     },
@@ -937,7 +866,6 @@
       "source_file": "UI/Desert/Desert 7.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_desert_desert_7_desert_7",
       "target": "ui_theme_desert"
     },
@@ -948,7 +876,6 @@
       "source_file": "UI/Desert/Desert Border BG Trial 1.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_desert_desert_border_bg_trial_1_desert_border_bg_trial_1",
       "target": "ui_theme_desert"
     },
@@ -959,7 +886,6 @@
       "source_file": "UI/Desert/Desert Border Trial 1.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_desert_desert_border_trial_1_desert_border_trial_1",
       "target": "ui_theme_desert"
     },
@@ -970,7 +896,6 @@
       "source_file": "UI/Desert/Desert Togle 3.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_desert_desert_togle_3_desert_togle_3",
       "target": "ui_theme_desert"
     },
@@ -981,7 +906,6 @@
       "source_file": "UI/Desert/Sprite-0002.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_desert_sprite_0002_sprite_0002",
       "target": "ui_theme_desert"
     },
@@ -992,7 +916,6 @@
       "source_file": "UI/Desert/Sprite-0003.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_desert_sprite_0003_sprite_0003",
       "target": "ui_theme_desert"
     },
@@ -1003,7 +926,6 @@
       "source_file": "UI/Desert/Sprite-0004.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_desert_sprite_0004_sprite_0004",
       "target": "ui_theme_desert"
     },
@@ -1014,7 +936,6 @@
       "source_file": "UI/Desert/Sprite-0005.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_desert_sprite_0005_sprite_0005",
       "target": "ui_theme_desert"
     },
@@ -1025,7 +946,6 @@
       "source_file": "UI/Desert/Sprite-0006.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_desert_sprite_0006_sprite_0006",
       "target": "ui_theme_desert"
     },
@@ -1036,7 +956,6 @@
       "source_file": "UI/Desert/Sprite-0007.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_desert_sprite_0007_sprite_0007",
       "target": "ui_theme_desert"
     },
@@ -1047,7 +966,6 @@
       "source_file": "UI/Desert/Sprite-0008.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_desert_sprite_0008_sprite_0008",
       "target": "ui_theme_desert"
     },
@@ -1058,7 +976,6 @@
       "source_file": "UI/Grass/Grass 1.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_grass_grass_1_grass_1",
       "target": "ui_theme_grass"
     },
@@ -1069,7 +986,6 @@
       "source_file": "UI/Grass/Grass Toggle 3.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_grass_grass_toggle_3_grass_toggle_3",
       "target": "ui_theme_grass"
     },
@@ -1080,7 +996,6 @@
       "source_file": "UI/Grass/Sprite-0002.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_grass_sprite_0002_sprite_0002",
       "target": "ui_theme_grass"
     },
@@ -1091,7 +1006,6 @@
       "source_file": "UI/Grass/Sprite-0003.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_grass_sprite_0003_sprite_0003",
       "target": "ui_theme_grass"
     },
@@ -1102,7 +1016,6 @@
       "source_file": "UI/Grass/Sprite-0004.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_grass_sprite_0004_sprite_0004",
       "target": "ui_theme_grass"
     },
@@ -1113,7 +1026,6 @@
       "source_file": "UI/Grass/Sprite-0005.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_grass_sprite_0005_sprite_0005",
       "target": "ui_theme_grass"
     },
@@ -1124,7 +1036,6 @@
       "source_file": "UI/Grass/Sprite-0006.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_grass_sprite_0006_sprite_0006",
       "target": "ui_theme_grass"
     },
@@ -1135,7 +1046,6 @@
       "source_file": "UI/Grass/Sprite-0007.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_grass_sprite_0007_sprite_0007",
       "target": "ui_theme_grass"
     },
@@ -1146,7 +1056,6 @@
       "source_file": "UI/Grass/Sprite-0008.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_grass_sprite_0008_sprite_0008",
       "target": "ui_theme_grass"
     },
@@ -1157,7 +1066,6 @@
       "source_file": "UI/Ice/Snow Hotbar 2.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_ice_snow_hotbar_2_snow_hotbar_2",
       "target": "ui_theme_ice"
     },
@@ -1168,7 +1076,6 @@
       "source_file": "UI/Ice/Snow Toggle 2.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_ice_snow_toggle_2_snow_toggle_2",
       "target": "ui_theme_ice"
     },
@@ -1179,7 +1086,6 @@
       "source_file": "UI/Ice/Sprite-0002.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_ice_sprite_0002_sprite_0002",
       "target": "ui_theme_ice"
     },
@@ -1190,7 +1096,6 @@
       "source_file": "UI/Ice/Sprite-0003.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_ice_sprite_0003_sprite_0003",
       "target": "ui_theme_ice"
     },
@@ -1201,7 +1106,6 @@
       "source_file": "UI/Ice/Sprite-0004.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_ice_sprite_0004_sprite_0004",
       "target": "ui_theme_ice"
     },
@@ -1212,7 +1116,6 @@
       "source_file": "UI/Ice/Sprite-0005.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_ice_sprite_0005_sprite_0005",
       "target": "ui_theme_ice"
     },
@@ -1223,7 +1126,6 @@
       "source_file": "UI/Ice/Sprite-0006.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_ice_sprite_0006_sprite_0006",
       "target": "ui_theme_ice"
     },
@@ -1234,7 +1136,6 @@
       "source_file": "UI/Ice/Sprite-0007.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_ice_sprite_0007_sprite_0007",
       "target": "ui_theme_ice"
     },
@@ -1245,7 +1146,6 @@
       "source_file": "UI/Ice/Sprite-0008.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "ui_ice_sprite_0008_sprite_0008",
       "target": "ui_theme_ice"
     },
@@ -1256,7 +1156,6 @@
       "source_file": "addons/Textures/flower.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "addons_textures_flower_flower",
       "target": "ui_theme_textures"
     },
@@ -1267,7 +1166,6 @@
       "source_file": "addons/Textures/grass_round.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "addons_textures_grass_round_grass_round",
       "target": "ui_theme_textures"
     },
@@ -1278,7 +1176,6 @@
       "source_file": "addons/Textures/grass_thin.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "addons_textures_grass_thin_grass_thin",
       "target": "ui_theme_textures"
     },
@@ -1289,7 +1186,6 @@
       "source_file": "addons/Textures/leaf_alpha.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "addons_textures_leaf_alpha_leaf_alpha",
       "target": "ui_theme_textures"
     },
@@ -1300,7 +1196,6 @@
       "source_file": "addons/Textures/leaf_particle.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "addons_textures_leaf_particle_leaf_particle",
       "target": "ui_theme_textures"
     },
@@ -1311,7 +1206,6 @@
       "source_file": "addons/Textures/Leaves001-03.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "addons_textures_leaves001_03_leaves001_03",
       "target": "ui_theme_textures"
     },
@@ -1322,7 +1216,6 @@
       "source_file": "addons/Textures/Leaves001-04.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "addons_textures_leaves001_04_leaves001_04",
       "target": "ui_theme_textures"
     },
@@ -1333,7 +1226,6 @@
       "source_file": "addons/Textures/rock_color.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "addons_textures_rock_color_rock_color",
       "target": "ui_theme_textures"
     },
@@ -1344,7 +1236,6 @@
       "source_file": "addons/Textures/tree_bark.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "addons_textures_tree_bark_tree_bark",
       "target": "ui_theme_textures"
     },
@@ -1355,7 +1246,6 @@
       "source_file": "assets/Models/GLB format/desert/Textures/colormap.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "assets_models_glb_format_desert_textures_colormap_colormap",
       "target": "ui_theme_textures"
     },
@@ -1366,7 +1256,6 @@
       "source_file": "assets/Models/GLB format/grass/Textures/colormap.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "assets_models_glb_format_grass_textures_colormap_colormap",
       "target": "ui_theme_textures"
     },
@@ -1377,7 +1266,6 @@
       "source_file": "assets/Models/GLB format/snow/Textures/colormap.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "assets_models_glb_format_snow_textures_colormap_colormap",
       "target": "ui_theme_textures"
     },
@@ -1388,7 +1276,6 @@
       "source_file": "assets/Models/GLB format/Textures/colormap.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "assets_models_glb_format_textures_colormap_colormap",
       "target": "ui_theme_textures"
     },
@@ -1399,7 +1286,6 @@
       "source_file": "assets/Models/OBJ format/Textures/colormap.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "assets_models_obj_format_textures_colormap_colormap",
       "target": "ui_theme_textures"
     },
@@ -1410,7 +1296,6 @@
       "source_file": "assets/Models/Textures/variation-a.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "assets_models_textures_variation_a_variation_a",
       "target": "ui_theme_textures"
     },
@@ -1421,7 +1306,6 @@
       "source_file": "assets/menus/grid.png",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "assets_menus_grid_grid",
       "target": "ui_theme_menus"
     },
@@ -1432,7 +1316,6 @@
       "source_file": "assets/menus/IMG-20230621-WA0013.jpg",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "assets_menus_img_20230621_wa0013_img_20230621_wa0013",
       "target": "ui_theme_menus"
     },
@@ -1443,7 +1326,6 @@
       "source_file": "icon.svg",
       "source_location": null,
       "weight": 1.0,
-      "_origin": "semantic",
       "source": "icon_icon",
       "target": "ui_theme_igi-code-circus"
     }
@@ -1465,5 +1347,5 @@
       "source_file": "UI/Desert/Desert 7.png"
     }
   ],
-  "built_at_commit": "33a42c78bd215700762f60c68068440bf1dd8453"
+  "built_at_commit": "3a0007c1a9cace3823650e4aa84652912a46a528"
 }

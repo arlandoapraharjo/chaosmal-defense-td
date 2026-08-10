@@ -1,1 +1,14 @@
-{"0": "3D Model Textures & Colormaps", "1": "Desert UI Theme Assets", "2": "Grass UI Theme Assets", "3": "Ice & Snow UI Theme Assets", "4": "Menu & UI Grid Assets", "5": "Graphify Agent Rules", "6": "Project Icon & Root Assets", "7": "Graphify Workflow Automation", "8": "Asset Licensing & Legal", "9": "Biomes Documentation", "10": "Project Readme Documentation"}
+{
+  "0": "Textures Visual Assets Theme",
+  "1": "Desert Visual Assets Theme",
+  "2": "Grass Visual Assets Theme",
+  "3": "Ice Visual Assets Theme",
+  "4": "menus Visual Assets Theme",
+  "5": "Graphify Rule Definition",
+  "6": "icon Image Asset",
+  "7": "Graphify Workflow Command",
+  "8": "Asset License Terms",
+  "9": "Biomes & Environments Documentation",
+  "10": "IGI Code Circus Project Overview",
+  "11": "install.ps1"
+}
