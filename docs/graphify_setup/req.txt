@@ -1,0 +1,70 @@
+==============================================================================
+                    GRAPHIFY ANTIGRAVITY INSTALLATION GUIDE (VENV)
+==============================================================================
+
+[REQUIREMENTS / DEPENDENCIES]
+------------------------------------------------------------------------------
+graphifyy>=0.9.38
+mcp>=1.0.0
+uv>=0.1.0
+
+------------------------------------------------------------------------------
+[MANUAL INSTALLATION STEPS USING VIRTUAL ENVIRONMENT (VENV)]
+------------------------------------------------------------------------------
+
+1. MEMBUAT DAN MENGAKTIFKAN VIRTUAL ENVIRONMENT (Python_Venv)
+   Buka terminal (PowerShell / Command Prompt) di direktori utama proyek:
+
+   a) Buat venv baru jika belum ada:
+      python -m venv Python_Venv
+
+   b) Aktifkan virtual environment:
+      - Di PowerShell:
+        .\Python_Venv\Scripts\Activate.ps1
+      - Di Command Prompt (cmd):
+        Python_Venv\Scripts\activate.bat
+
+2. INSTALASI GRAPHIFY & DEPENDENCIES DI VENV
+   Setelah venv aktif (terdapat tanda (Python_Venv) di terminal):
+
+   a) Install menggunakan pip:
+      pip install --no-cache-dir graphifyy mcp uv
+
+   b) Atau install menggunakan file req.txt ini:
+      pip install --no-cache-dir -r docs\graphify_setup\req.txt
+
+3. INTEGRASI GRAPHIFY DENGAN ANTIGRAVITY AGENT
+   Pastikan venv masih aktif, lalu jalankan:
+
+   graphify antigravity install
+
+   Perintah ini akan secara otomatis:
+   - Membuat file rule di: .agents/rules/graphify.md
+   - Membuat file workflow di: .agents/workflows/graphify.md
+   - Mengonfigurasi rule agent Antigravity agar memeriksa Knowledge Graph.
+
+4. KONFIGURASI MCP (MODEL CONTEXT PROTOCOL) - OPTIONAL / RECOMMENDED
+   Untuk mengaktifkan MCP architecture navigation, tambahkan konfigurasi berikut ke file:
+   C:\Users\<Username>\.gemini\antigravity\mcp_config.json
+
+   {
+     "mcpServers": {
+       "graphify": {
+         "command": "uv",
+         "args": [
+           "run",
+           "--with", "graphifyy",
+           "--with", "mcp",
+           "-m", "graphify.serve",
+           "${workspace.path}/graphify-out/graph.json"
+         ]
+       }
+     }
+   }
+
+5. MEMBANGUN KNOWLEDGE GRAPH PERTAMA KALI
+   Buka AI Coding Assistant (Antigravity Chat) dan jalankan:
+
+   /graphify .
+
+==============================================================================
