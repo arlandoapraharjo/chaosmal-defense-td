@@ -5,8 +5,8 @@ const TILE_SIZE = 1.0 # Standard size of kenney tiles
 const HALF_STEP = 2 # path lives on a half-resolution grid -> spacing is automatic
 const MAX_ROUTE_RETRIES = 10 # how many times to re-roll the zigzag if a leg gets boxed in
 const BUSH_VARIANT_COUNT = 4 # how many randomized wind/wiggle presets to spread bushes across
-const BUSH_SCALE_MIN = 0.5 # smallest random bush size (1.0 = original mesh size)
-const BUSH_SCALE_MAX = 0.75 # largest random bush size
+const BUSH_SCALE_MIN = 0.3 # smallest random bush size (1.0 = original mesh size)
+const BUSH_SCALE_MAX = 0.4 # largest random bush size
 const BUSH_CAST_SHADOWS = true # alpha-blended wind-animated shadows are expensive for how little bushes contribute visually
 const BUSH_VISIBILITY_END = 35.0 # bushes fully disappear past this distance
 const BUSH_VISIBILITY_FADE = 6.0 # distance over which they fade out, instead of popping
@@ -424,9 +424,9 @@ func _build_map():
 					var deco_xform = Transform3D(deco_basis, origin)
 					if r > 0.75:
 						tree_transforms.append(deco_xform)
-					elif r > 0.5:
+					elif r > 0.4:
 						tree_large_transforms.append(deco_xform)
-					elif r > 0.25:
+					elif r > 0.4:
 						rock_transforms.append(deco_xform)
 					else:
 						var variant_idx = randi() % BUSH_VARIANT_COUNT

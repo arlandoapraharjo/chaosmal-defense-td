@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="BiomeData" format=3 uid="uid://cgsne48ch7k6g"]
 
 [ext_resource type="Script" uid="uid://dt3mmbm7kd8rn" path="res://biomes/BiomeData.gd" id="1_36vdi"]
-[ext_resource type="PackedScene" uid="uid://b7e0ywe1g86fa" path="res://addons/Mesh/Bush2GLB3.tscn" id="1_nvp4h"]
+[ext_resource type="PackedScene" uid="uid://df4vlamfaywf7" path="res://scenes/bush.tscn" id="1_f2oft"]
 [ext_resource type="Environment" uid="uid://b4eww6pbq3efd" path="res://addons/Shader/default_env.tres" id="1_vqqub"]
 [ext_resource type="PackedScene" uid="uid://cifu6pkjchn3b" path="res://assets/Models/GLB format/grass/detail-rocks-large.glb" id="3_s6fgd"]
 [ext_resource type="PackedScene" uid="uid://bv7kv571tr038" path="res://assets/Models/GLB format/grass/tile.glb" id="5_s6fgd"]
@@ -23,7 +23,7 @@ tile_end = ExtResource("7_y6kn7")
 tree_model = ExtResource("12_f2oft")
 tree_large_model = ExtResource("11_f2oft")
 rock_model = ExtResource("3_s6fgd")
-bush_model = ExtResource("1_nvp4h")
+bush_model = ExtResource("1_f2oft")
 environment = ExtResource("1_vqqub")
 hotbar_theme = ExtResource("12_grass")
 metadata/_custom_type_script = "uid://dt3mmbm7kd8rn"

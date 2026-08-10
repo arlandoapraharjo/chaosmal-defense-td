@@ -77,7 +77,7 @@ func _setup_particles_and_light() -> void:
 	spatial_mat.albedo_color = Color(0.7, 0.2, 1.0, 1.0) # Purple
 	spatial_mat.emission_enabled = true
 	spatial_mat.emission = Color(0.7, 0.2, 1.0, 1.0)
-	spatial_mat.emission_energy_multiplier = 2.0
+	spatial_mat.emission_energy_multiplier = 0.3
 	spatial_mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
 	spatial_mat.billboard_keep_scale = true
 	spatial_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
