@@ -6,7 +6,7 @@
 [resource]
 render_priority = 0
 shader = ExtResource("1_fsj3v")
-shader_parameter/color = Color(0.101960786, 0.6901961, 0.21176471, 1)
+shader_parameter/color = Color(0.46666667, 0.6901961, 0.21176471, 1)
 shader_parameter/alpha = ExtResource("2_ll40k")
 shader_parameter/leaves_scale = 3.0
 shader_parameter/leaf_bend_amount = 2.0

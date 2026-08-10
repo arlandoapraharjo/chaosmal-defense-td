@@ -8,9 +8,9 @@ render_priority = 0
 shader = ExtResource("1_fpl6j")
 shader_parameter/color = Color(1, 1, 1, 1)
 shader_parameter/alpha = ExtResource("2_itvhw")
-shader_parameter/leaves_scale = 1.8
-shader_parameter/leaf_bend_amount = 0.9
-shader_parameter/light_steps = 8.0
+shader_parameter/leaves_scale = 3.0
+shader_parameter/leaf_bend_amount = 2.0
+shader_parameter/light_steps = 6.0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_i7u8o"]
 _surfaces = [{
