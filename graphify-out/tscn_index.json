@@ -1,0 +1,1192 @@
+{
+  "_meta": {
+    "generated_by": "godot_index.py",
+    "total_scenes": 28,
+    "root": "D:\\Godot\\Game\\IGI-Code-Circus"
+  },
+  "scenes": [
+    {
+      "file": "UI/CurrencyUI.tscn",
+      "scene_uid": "uid://d2se7ia331gmq",
+      "ext_resources": [
+        {
+          "path": "UI/CurrencyUI.gd",
+          "raw_path": "res://UI/CurrencyUI.gd",
+          "type": "Script",
+          "uid": "uid://ccurrencyuiscript",
+          "id": "1_currency_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "CurrencyUI",
+          "type": "CanvasLayer"
+        },
+        {
+          "name": "Control",
+          "type": "Control"
+        },
+        {
+          "name": "MarginContainer",
+          "type": "MarginContainer"
+        },
+        {
+          "name": "VBoxContainer",
+          "type": "VBoxContainer"
+        },
+        {
+          "name": "PanelContainer",
+          "type": "PanelContainer"
+        }
+      ]
+    },
+    {
+      "file": "UI/Hotbar/HotbarSlot.tscn",
+      "scene_uid": "uid://14xtdro5tc7m",
+      "ext_resources": [
+        {
+          "path": "UI/Hotbar/HotbarSlot.gd",
+          "raw_path": "res://UI/Hotbar/HotbarSlot.gd",
+          "type": "Script",
+          "uid": "uid://b64sdroxxtpdf",
+          "id": "1_slot"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "HotbarSlot",
+          "type": "PanelContainer"
+        },
+        {
+          "name": "BgTexture",
+          "type": "TextureRect"
+        },
+        {
+          "name": "MarginContainer",
+          "type": "MarginContainer"
+        },
+        {
+          "name": "VBoxContainer",
+          "type": "VBoxContainer"
+        },
+        {
+          "name": "SubViewportContainer",
+          "type": "SubViewportContainer"
+        }
+      ]
+    },
+    {
+      "file": "UI/Hotbar/TurretHotbar.tscn",
+      "scene_uid": "uid://dc6dgdjoiagk6",
+      "ext_resources": [
+        {
+          "path": "UI/Hotbar/TurretHotbar.gd",
+          "raw_path": "res://UI/Hotbar/TurretHotbar.gd",
+          "type": "Script",
+          "uid": "uid://carrttrorwd0v",
+          "id": "1_hotbar"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "TurretHotbar",
+          "type": "CanvasLayer"
+        },
+        {
+          "name": "HotbarPanel",
+          "type": "PanelContainer"
+        },
+        {
+          "name": "VBox",
+          "type": "VBoxContainer"
+        },
+        {
+          "name": "TitleLabel",
+          "type": "Label"
+        },
+        {
+          "name": "MarginContainer",
+          "type": "MarginContainer"
+        }
+      ]
+    },
+    {
+      "file": "UI/Menus/MainMenu.tscn",
+      "scene_uid": "uid://o1alob3g7ns8",
+      "ext_resources": [
+        {
+          "path": "UI/Menus/MainMenu.gd",
+          "raw_path": "res://UI/Menus/MainMenu.gd",
+          "type": "Script",
+          "uid": "uid://dwe3nbiaij50j",
+          "id": "1_script"
+        },
+        {
+          "path": "assets/menus/IMG-20230621-WA0013.jpg",
+          "raw_path": "res://assets/menus/IMG-20230621-WA0013.jpg",
+          "type": "Texture2D",
+          "uid": "uid://71ug0n8kquqo",
+          "id": "2_0cgh2"
+        },
+        {
+          "path": "assets/menus/grid.png",
+          "raw_path": "res://assets/menus/grid.png",
+          "type": "Texture2D",
+          "uid": "uid://3faw8ljjbtj7",
+          "id": "2_grid"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "MainMenu",
+          "type": "Control"
+        },
+        {
+          "name": "Background",
+          "type": "ColorRect"
+        },
+        {
+          "name": "TextureRect",
+          "type": "TextureRect"
+        },
+        {
+          "name": "VBoxContainer",
+          "type": "VBoxContainer"
+        },
+        {
+          "name": "StartButton",
+          "type": "Button"
+        }
+      ]
+    },
+    {
+      "file": "UI/SpeedToggle.tscn",
+      "scene_uid": null,
+      "ext_resources": [
+        {
+          "path": "UI/SpeedToggle.gd",
+          "raw_path": "res://UI/SpeedToggle.gd",
+          "type": "Script",
+          "id": "1_speed"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "SpeedToggle",
+          "type": "CanvasLayer"
+        },
+        {
+          "name": "Control",
+          "type": "Control"
+        }
+      ]
+    },
+    {
+      "file": "UI/WaveUI.tscn",
+      "scene_uid": "uid://beiea7nje0alg",
+      "ext_resources": [
+        {
+          "path": "UI/WaveUI.gd",
+          "raw_path": "res://UI/WaveUI.gd",
+          "type": "Script",
+          "id": "1_wave_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "WaveUI",
+          "type": "CanvasLayer"
+        },
+        {
+          "name": "Control",
+          "type": "Control"
+        },
+        {
+          "name": "MarginContainer",
+          "type": "MarginContainer"
+        },
+        {
+          "name": "PanelContainer",
+          "type": "PanelContainer"
+        },
+        {
+          "name": "HBoxContainer",
+          "type": "HBoxContainer"
+        }
+      ]
+    },
+    {
+      "file": "addons/Mesh/Bush2GLB3.tscn",
+      "scene_uid": "uid://b7e0ywe1g86fa",
+      "ext_resources": [
+        {
+          "path": "addons/Mesh/Bush2GLB3.glb",
+          "raw_path": "res://addons/Mesh/Bush2GLB3.glb",
+          "type": "PackedScene",
+          "uid": "uid://w7vkshth36rr",
+          "id": "1"
+        },
+        {
+          "path": "addons/Mesh/foliage.material",
+          "raw_path": "res://addons/Mesh/foliage.material",
+          "type": "Material",
+          "uid": "uid://bsfk6lgigxc50",
+          "id": "2"
+        }
+      ],
+      "nodes_preview": []
+    },
+    {
+      "file": "addons/Mesh/snow_bush.tscn",
+      "scene_uid": "uid://civx6dd6bw213",
+      "ext_resources": [
+        {
+          "path": "addons/Mesh/SnowBush.glb",
+          "raw_path": "res://addons/Mesh/SnowBush.glb",
+          "type": "PackedScene",
+          "uid": "uid://dusgdpceufae3",
+          "id": "1_bbxcv"
+        },
+        {
+          "path": "addons/Shader/foliage.gdshader",
+          "raw_path": "res://addons/Shader/foliage.gdshader",
+          "type": "Shader",
+          "uid": "uid://gjvfxm7fv06n",
+          "id": "2_sor5w"
+        },
+        {
+          "path": "addons/Textures/Leaves001-03.png",
+          "raw_path": "res://addons/Textures/Leaves001-03.png",
+          "type": "Texture2D",
+          "uid": "uid://cpaatg41nqqj3",
+          "id": "3_hsdpi"
+        }
+      ],
+      "nodes_preview": []
+    },
+    {
+      "file": "assets/Models/GLB format/desert/desert-tile-corner.tscn",
+      "scene_uid": "uid://by1gxsl52psa6",
+      "ext_resources": [
+        {
+          "path": "assets/Models/GLB format/grass/tile-corner-round.glb",
+          "raw_path": "res://assets/Models/GLB format/grass/tile-corner-round.glb",
+          "type": "PackedScene",
+          "uid": "uid://ddavm8a3gljea",
+          "id": "1_d2p0d"
+        },
+        {
+          "path": "assets/materials/desert_color.tres",
+          "raw_path": "res://assets/materials/desert_color.tres",
+          "type": "Material",
+          "uid": "uid://cekgndpskgl0l",
+          "id": "2_pveei"
+        }
+      ],
+      "nodes_preview": []
+    },
+    {
+      "file": "assets/Models/GLB format/desert/desert-tile-spawn.tscn",
+      "scene_uid": "uid://6ljpwl3pkb5l",
+      "ext_resources": [
+        {
+          "path": "assets/Models/GLB format/grass/tile-spawn.glb",
+          "raw_path": "res://assets/Models/GLB format/grass/tile-spawn.glb",
+          "type": "PackedScene",
+          "uid": "uid://c4cxd481sly5j",
+          "id": "1_oxt57"
+        },
+        {
+          "path": "assets/materials/desert_color.tres",
+          "raw_path": "res://assets/materials/desert_color.tres",
+          "type": "Material",
+          "uid": "uid://cekgndpskgl0l",
+          "id": "2_hmvft"
+        }
+      ],
+      "nodes_preview": []
+    },
+    {
+      "file": "assets/Models/GLB format/desert/desert-tile-spawnend.tscn",
+      "scene_uid": "uid://c83x5v4542cgj",
+      "ext_resources": [
+        {
+          "path": "assets/Models/GLB format/grass/tile-spawn-end.glb",
+          "raw_path": "res://assets/Models/GLB format/grass/tile-spawn-end.glb",
+          "type": "PackedScene",
+          "uid": "uid://cpwvwsxfjd4g1",
+          "id": "1_my7c1"
+        },
+        {
+          "path": "assets/materials/desert_color.tres",
+          "raw_path": "res://assets/materials/desert_color.tres",
+          "type": "Material",
+          "uid": "uid://cekgndpskgl0l",
+          "id": "2_ixat1"
+        }
+      ],
+      "nodes_preview": []
+    },
+    {
+      "file": "assets/Models/GLB format/desert/desert-tile-straight.tscn",
+      "scene_uid": "uid://8yl2cyvdmycj",
+      "ext_resources": [
+        {
+          "path": "assets/Models/GLB format/grass/tile-straight.glb",
+          "raw_path": "res://assets/Models/GLB format/grass/tile-straight.glb",
+          "type": "PackedScene",
+          "uid": "uid://cj4qd2hccxfxk",
+          "id": "1_lxgup"
+        },
+        {
+          "path": "assets/materials/desert_color.tres",
+          "raw_path": "res://assets/materials/desert_color.tres",
+          "type": "Material",
+          "uid": "uid://cekgndpskgl0l",
+          "id": "2_k08pr"
+        }
+      ],
+      "nodes_preview": []
+    },
+    {
+      "file": "assets/Models/GLB format/desert/desert-tile.tscn",
+      "scene_uid": "uid://c0048euacj2jx",
+      "ext_resources": [
+        {
+          "path": "assets/Models/GLB format/grass/tile.glb",
+          "raw_path": "res://assets/Models/GLB format/grass/tile.glb",
+          "type": "PackedScene",
+          "uid": "uid://bv7kv571tr038",
+          "id": "1_v43lx"
+        },
+        {
+          "path": "assets/materials/desert_color.tres",
+          "raw_path": "res://assets/materials/desert_color.tres",
+          "type": "Material",
+          "uid": "uid://cekgndpskgl0l",
+          "id": "2_g6kgl"
+        }
+      ],
+      "nodes_preview": []
+    },
+    {
+      "file": "assets/Models/GLB format/grass/better_tile_grass.tscn",
+      "scene_uid": "uid://hpoxx4k0obdy",
+      "ext_resources": [
+        {
+          "path": "assets/Models/GLB format/grass/tile.glb",
+          "raw_path": "res://assets/Models/GLB format/grass/tile.glb",
+          "type": "PackedScene",
+          "uid": "uid://bv7kv571tr038",
+          "id": "1_mw2mo"
+        }
+      ],
+      "nodes_preview": []
+    },
+    {
+      "file": "assets/Models/GLB format/world.tscn",
+      "scene_uid": "uid://bonpdp0wxujje",
+      "ext_resources": [
+        {
+          "path": "scripts/MapGenerator.gd",
+          "raw_path": "res://scripts/MapGenerator.gd",
+          "type": "Script",
+          "uid": "uid://vca8f7oohn30",
+          "id": "1_76vef"
+        },
+        {
+          "path": "scripts/CameraController.gd",
+          "raw_path": "res://scripts/CameraController.gd",
+          "type": "Script",
+          "uid": "uid://byp7p3p447u7h",
+          "id": "2_b0575"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "Map",
+          "type": "Node3D"
+        },
+        {
+          "name": "Camera3D",
+          "type": "Camera3D"
+        },
+        {
+          "name": "DirectionalLight3D",
+          "type": "DirectionalLight3D"
+        }
+      ]
+    },
+    {
+      "file": "map.tscn",
+      "scene_uid": "uid://036csi2xfnk3",
+      "ext_resources": [
+        {
+          "path": "addons/Shader/desert_env.tres",
+          "raw_path": "res://addons/Shader/desert_env.tres",
+          "type": "Environment",
+          "uid": "uid://eje2tefugyb2",
+          "id": "1_0t07s"
+        },
+        {
+          "path": "scripts/MapGenerator.gd",
+          "raw_path": "res://scripts/MapGenerator.gd",
+          "type": "Script",
+          "uid": "uid://vca8f7oohn30",
+          "id": "1_e0an3"
+        },
+        {
+          "path": "scripts/CameraController.gd",
+          "raw_path": "res://scripts/CameraController.gd",
+          "type": "Script",
+          "uid": "uid://byp7p3p447u7h",
+          "id": "2_p5pve"
+        },
+        {
+          "path": "biomes/BiomeData.gd",
+          "raw_path": "res://biomes/BiomeData.gd",
+          "type": "Script",
+          "uid": "uid://dt3mmbm7kd8rn",
+          "id": "2_urblq"
+        },
+        {
+          "path": "biomes/biome_snow.tres",
+          "raw_path": "res://biomes/biome_snow.tres",
+          "type": "Resource",
+          "uid": "uid://ub8ponw0r6f8",
+          "id": "3_iw27f"
+        },
+        {
+          "path": "biomes/biome_grass.tres",
+          "raw_path": "res://biomes/biome_grass.tres",
+          "type": "Resource",
+          "uid": "uid://cgsne48ch7k6g",
+          "id": "4_iw27f"
+        },
+        {
+          "path": "biomes/biome_desert.tres",
+          "raw_path": "res://biomes/biome_desert.tres",
+          "type": "Resource",
+          "uid": "uid://dkkpml6w0got6",
+          "id": "5_iw27f"
+        },
+        {
+          "path": "UI/Hotbar/TurretHotbar.tscn",
+          "raw_path": "res://UI/Hotbar/TurretHotbar.tscn",
+          "type": "PackedScene",
+          "uid": "uid://dc6dgdjoiagk6",
+          "id": "6_hotbar"
+        },
+        {
+          "path": "addons/Shader/sandstrom.gdshader",
+          "raw_path": "res://addons/Shader/sandstrom.gdshader",
+          "type": "Shader",
+          "uid": "uid://8haud4yhw01k",
+          "id": "7_6qsgm"
+        },
+        {
+          "path": "scripts/BuilderController.gd",
+          "raw_path": "res://scripts/BuilderController.gd",
+          "type": "Script",
+          "uid": "uid://wguegcpphxbe",
+          "id": "7_builder"
+        },
+        {
+          "path": "UI/SpeedToggle.tscn",
+          "raw_path": "res://UI/SpeedToggle.tscn",
+          "type": "PackedScene",
+          "id": "8_speedtoggle"
+        },
+        {
+          "path": "addons/Textures/water_mat.tres",
+          "raw_path": "res://addons/Textures/water_mat.tres",
+          "type": "Material",
+          "uid": "uid://cr8yf6r3utjih",
+          "id": "10_oysan"
+        },
+        {
+          "path": "scenes/PauseOverlay.tscn",
+          "raw_path": "res://scenes/PauseOverlay.tscn",
+          "type": "PackedScene",
+          "id": "16_pause"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "WorldEnvironment2",
+          "type": "WorldEnvironment"
+        },
+        {
+          "name": "Map",
+          "type": "Node3D"
+        },
+        {
+          "name": "FogVolume",
+          "type": "FogVolume"
+        },
+        {
+          "name": "Camera3D",
+          "type": "Camera3D"
+        },
+        {
+          "name": "DirectionalLight3D",
+          "type": "DirectionalLight3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/PauseOverlay.tscn",
+      "scene_uid": null,
+      "ext_resources": [
+        {
+          "path": "scripts/PauseOverlay.gd",
+          "raw_path": "res://scripts/PauseOverlay.gd",
+          "type": "Script",
+          "id": "1_script"
+        },
+        {
+          "path": "shaders/grayscale.gdshader",
+          "raw_path": "res://shaders/grayscale.gdshader",
+          "type": "Shader",
+          "id": "2_shader"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "PauseOverlay",
+          "type": "CanvasLayer"
+        },
+        {
+          "name": "ColorRect",
+          "type": "ColorRect"
+        },
+        {
+          "name": "PauseButton",
+          "type": "Button"
+        }
+      ]
+    },
+    {
+      "file": "scenes/PillarShockwave.tscn",
+      "scene_uid": null,
+      "ext_resources": [
+        {
+          "path": "scripts/PillarShockwave.gd",
+          "raw_path": "res://scripts/PillarShockwave.gd",
+          "type": "Script",
+          "id": "1_script"
+        },
+        {
+          "path": "shaders/pillar_shockwave.gdshader",
+          "raw_path": "res://shaders/pillar_shockwave.gdshader",
+          "type": "Shader",
+          "id": "2_shader"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "PillarShockwave",
+          "type": "CanvasLayer"
+        },
+        {
+          "name": "ColorRect",
+          "type": "ColorRect"
+        },
+        {
+          "name": "AnimationPlayer",
+          "type": "AnimationPlayer"
+        }
+      ]
+    },
+    {
+      "file": "scenes/bush.tscn",
+      "scene_uid": "uid://df4vlamfaywf7",
+      "ext_resources": [
+        {
+          "path": "addons/Mesh/bush_stylized_Cube_001.res",
+          "raw_path": "res://addons/Mesh/bush_stylized_Cube_001.res",
+          "type": "ArrayMesh",
+          "uid": "uid://bls0gfiyw83ga",
+          "id": "1_lad4k"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "Bush",
+          "type": "Node3D"
+        },
+        {
+          "name": "MeshInstance3D",
+          "type": "MeshInstance3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/explosion.tscn",
+      "scene_uid": "uid://bre7ucbq7catu",
+      "ext_resources": [],
+      "nodes_preview": [
+        {
+          "name": "Debris",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Smoke",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Fire",
+          "type": "GPUParticles3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/foliage_snow_tree.tscn",
+      "scene_uid": "uid://bp33u85pccjqh",
+      "ext_resources": [
+        {
+          "path": "addons/Mesh/stylized_leaves_Cube.res",
+          "raw_path": "res://addons/Mesh/stylized_leaves_Cube.res",
+          "type": "ArrayMesh",
+          "uid": "uid://22amrvklr8bg",
+          "id": "1_qk0lu"
+        },
+        {
+          "path": "addons/Shader/tree_leaves.gdshader",
+          "raw_path": "res://addons/Shader/tree_leaves.gdshader",
+          "type": "Shader",
+          "uid": "uid://cydngmu3tajlk",
+          "id": "2_0m26b"
+        },
+        {
+          "path": "addons/Textures/leaf_alpha.png",
+          "raw_path": "res://addons/Textures/leaf_alpha.png",
+          "type": "Texture2D",
+          "uid": "uid://bi7g3yhsyv6e6",
+          "id": "3_1c0d0"
+        },
+        {
+          "path": "addons/Mesh/stylized_trunk_Cylinder_001.res",
+          "raw_path": "res://addons/Mesh/stylized_trunk_Cylinder_001.res",
+          "type": "ArrayMesh",
+          "uid": "uid://gvspevu2ge3t",
+          "id": "3_5xchx"
+        },
+        {
+          "path": "addons/Shader/trunk_shader.gdshader",
+          "raw_path": "res://addons/Shader/trunk_shader.gdshader",
+          "type": "Shader",
+          "uid": "uid://ctdrf8cp7568r",
+          "id": "4_1c0d0"
+        },
+        {
+          "path": "addons/Textures/tree_bark.png",
+          "raw_path": "res://addons/Textures/tree_bark.png",
+          "type": "Texture2D",
+          "uid": "uid://7264wnuxqqop",
+          "id": "5_s8oh0"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "Leaves",
+          "type": "MeshInstance3D"
+        },
+        {
+          "name": "Trunk",
+          "type": "MeshInstance3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/foliage_tree.tscn",
+      "scene_uid": "uid://xty8kkdnyigg",
+      "ext_resources": [
+        {
+          "path": "addons/Mesh/stylized_leaves_Cube.res",
+          "raw_path": "res://addons/Mesh/stylized_leaves_Cube.res",
+          "type": "ArrayMesh",
+          "uid": "uid://22amrvklr8bg",
+          "id": "1_1n7d6"
+        },
+        {
+          "path": "addons/Mesh/stylized_trunk_Cylinder_001.res",
+          "raw_path": "res://addons/Mesh/stylized_trunk_Cylinder_001.res",
+          "type": "ArrayMesh",
+          "uid": "uid://gvspevu2ge3t",
+          "id": "3_anb7w"
+        },
+        {
+          "path": "addons/Textures/leaf_alpha.png",
+          "raw_path": "res://addons/Textures/leaf_alpha.png",
+          "type": "Texture2D",
+          "uid": "uid://bi7g3yhsyv6e6",
+          "id": "3_d2wdy"
+        },
+        {
+          "path": "addons/Shader/trunk_shader.gdshader",
+          "raw_path": "res://addons/Shader/trunk_shader.gdshader",
+          "type": "Shader",
+          "uid": "uid://ctdrf8cp7568r",
+          "id": "4_d2wdy"
+        },
+        {
+          "path": "addons/Textures/tree_bark.png",
+          "raw_path": "res://addons/Textures/tree_bark.png",
+          "type": "Texture2D",
+          "uid": "uid://7264wnuxqqop",
+          "id": "5_oqov6"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "Leaves",
+          "type": "MeshInstance3D"
+        },
+        {
+          "name": "Trunk",
+          "type": "MeshInstance3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/grass.tscn",
+      "scene_uid": "uid://c2r13jact1am1",
+      "ext_resources": [
+        {
+          "path": "addons/Shader/ground_shader.gdshader",
+          "raw_path": "res://addons/Shader/ground_shader.gdshader",
+          "type": "Shader",
+          "uid": "uid://cbnomhswlqywh",
+          "id": "1_2qnaq"
+        },
+        {
+          "path": "addons/Mesh/grass_plane_mesh.res",
+          "raw_path": "res://addons/Mesh/grass_plane_mesh.res",
+          "type": "ArrayMesh",
+          "uid": "uid://dii43dejxwbal",
+          "id": "1_mw2ei"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "Plane",
+          "type": "MeshInstance3D"
+        },
+        {
+          "name": "Grass",
+          "type": "MeshInstance3D"
+        },
+        {
+          "name": "MultiGrassGen",
+          "type": "MultiMeshInstance3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/grass_single.tscn",
+      "scene_uid": "uid://6703tir8bl2b",
+      "ext_resources": [
+        {
+          "path": "addons/Mesh/grass_plane_mesh.res",
+          "raw_path": "res://addons/Mesh/grass_plane_mesh.res",
+          "type": "ArrayMesh",
+          "uid": "uid://dii43dejxwbal",
+          "id": "1_tl3x3"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "Grass",
+          "type": "MeshInstance3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/grass_single_snow.tscn",
+      "scene_uid": "uid://o8pcj11agsac",
+      "ext_resources": [
+        {
+          "path": "addons/Materials/grass_billboard_snow.tres",
+          "raw_path": "res://addons/Materials/grass_billboard_snow.tres",
+          "type": "Material",
+          "uid": "uid://snowgrassmat123",
+          "id": "1_u470u"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "Grass",
+          "type": "MeshInstance3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/map.tscn",
+      "scene_uid": "uid://bpg8awe6kssxa",
+      "ext_resources": [
+        {
+          "path": "addons/Shader/desert_env.tres",
+          "raw_path": "res://addons/Shader/desert_env.tres",
+          "type": "Environment",
+          "uid": "uid://eje2tefugyb2",
+          "id": "1_mlgqr"
+        },
+        {
+          "path": "scripts/MapGenerator.gd",
+          "raw_path": "res://scripts/MapGenerator.gd",
+          "type": "Script",
+          "uid": "uid://vca8f7oohn30",
+          "id": "2_wslke"
+        },
+        {
+          "path": "biomes/BiomeData.gd",
+          "raw_path": "res://biomes/BiomeData.gd",
+          "type": "Script",
+          "uid": "uid://dt3mmbm7kd8rn",
+          "id": "3_gw3fx"
+        },
+        {
+          "path": "biomes/biome_snow.tres",
+          "raw_path": "res://biomes/biome_snow.tres",
+          "type": "Resource",
+          "uid": "uid://ub8ponw0r6f8",
+          "id": "4_n1psn"
+        },
+        {
+          "path": "biomes/biome_grass.tres",
+          "raw_path": "res://biomes/biome_grass.tres",
+          "type": "Resource",
+          "uid": "uid://cgsne48ch7k6g",
+          "id": "5_c00ee"
+        },
+        {
+          "path": "biomes/biome_desert.tres",
+          "raw_path": "res://biomes/biome_desert.tres",
+          "type": "Resource",
+          "uid": "uid://dkkpml6w0got6",
+          "id": "6_p7tei"
+        },
+        {
+          "path": "addons/Shader/sandstrom.gdshader",
+          "raw_path": "res://addons/Shader/sandstrom.gdshader",
+          "type": "Shader",
+          "uid": "uid://8haud4yhw01k",
+          "id": "7_c70he"
+        },
+        {
+          "path": "scripts/CameraController.gd",
+          "raw_path": "res://scripts/CameraController.gd",
+          "type": "Script",
+          "uid": "uid://byp7p3p447u7h",
+          "id": "8_mo32q"
+        },
+        {
+          "path": "UI/Hotbar/TurretHotbar.tscn",
+          "raw_path": "res://UI/Hotbar/TurretHotbar.tscn",
+          "type": "PackedScene",
+          "uid": "uid://dc6dgdjoiagk6",
+          "id": "9_6k6j1"
+        },
+        {
+          "path": "scripts/BuilderController.gd",
+          "raw_path": "res://scripts/BuilderController.gd",
+          "type": "Script",
+          "uid": "uid://wguegcpphxbe",
+          "id": "10_m335s"
+        },
+        {
+          "path": "addons/Textures/water_mat.tres",
+          "raw_path": "res://addons/Textures/water_mat.tres",
+          "type": "Material",
+          "uid": "uid://cr8yf6r3utjih",
+          "id": "11_sq6bu"
+        },
+        {
+          "path": "scripts/CurrencyManager.gd",
+          "raw_path": "res://scripts/CurrencyManager.gd",
+          "type": "Script",
+          "uid": "uid://ccj7lf23ow2nh",
+          "id": "12_curman"
+        },
+        {
+          "path": "UI/CurrencyUI.tscn",
+          "raw_path": "res://UI/CurrencyUI.tscn",
+          "type": "PackedScene",
+          "uid": "uid://d2se7ia331gmq",
+          "id": "13_curui"
+        },
+        {
+          "path": "UI/WaveUI.tscn",
+          "raw_path": "res://UI/WaveUI.tscn",
+          "type": "PackedScene",
+          "uid": "uid://beiea7nje0alg",
+          "id": "14_waveui"
+        },
+        {
+          "path": "shaders/pillar_shockwave.gdshader",
+          "raw_path": "res://shaders/pillar_shockwave.gdshader",
+          "type": "Shader",
+          "uid": "uid://cugpqtu17rfnm",
+          "id": "15_c00ee"
+        },
+        {
+          "path": "scenes/PauseOverlay.tscn",
+          "raw_path": "res://scenes/PauseOverlay.tscn",
+          "type": "PackedScene",
+          "id": "16_pause"
+        },
+        {
+          "path": "UI/SpeedToggle.tscn",
+          "raw_path": "res://UI/SpeedToggle.tscn",
+          "type": "PackedScene",
+          "id": "17_speed"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "CurrencyManager",
+          "type": "Node"
+        },
+        {
+          "name": "WorldEnvironment2",
+          "type": "WorldEnvironment"
+        },
+        {
+          "name": "Map",
+          "type": "Node3D"
+        },
+        {
+          "name": "FogVolume",
+          "type": "FogVolume"
+        },
+        {
+          "name": "Camera3D",
+          "type": "Camera3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/snow_bush.tscn",
+      "scene_uid": "uid://b1od0xu2nrbtp",
+      "ext_resources": [
+        {
+          "path": "addons/Materials/leaves_snow_mat.tres",
+          "raw_path": "res://addons/Materials/leaves_snow_mat.tres",
+          "type": "Material",
+          "uid": "uid://bawb2rbi6ehka",
+          "id": "1_rgukq"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "Bush",
+          "type": "Node3D"
+        },
+        {
+          "name": "MeshInstance3D",
+          "type": "MeshInstance3D"
+        }
+      ]
+    },
+    {
+      "file": "shaders/pilarshockwave.tscn",
+      "scene_uid": "uid://bgkc6w62c7pe5",
+      "ext_resources": [
+        {
+          "path": "shaders/pillar_shockwave.gdshader",
+          "raw_path": "res://shaders/pillar_shockwave.gdshader",
+          "type": "Shader",
+          "uid": "uid://cugpqtu17rfnm",
+          "id": "1_5m7uk"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "TextureRect",
+          "type": "TextureRect"
+        }
+      ]
+    }
+  ],
+  "asset_to_scenes": {
+    "UI/CurrencyUI.gd": [
+      "UI/CurrencyUI.tscn"
+    ],
+    "UI/Hotbar/HotbarSlot.gd": [
+      "UI/Hotbar/HotbarSlot.tscn"
+    ],
+    "UI/Hotbar/TurretHotbar.gd": [
+      "UI/Hotbar/TurretHotbar.tscn"
+    ],
+    "UI/Menus/MainMenu.gd": [
+      "UI/Menus/MainMenu.tscn"
+    ],
+    "assets/menus/IMG-20230621-WA0013.jpg": [
+      "UI/Menus/MainMenu.tscn"
+    ],
+    "assets/menus/grid.png": [
+      "UI/Menus/MainMenu.tscn"
+    ],
+    "UI/SpeedToggle.gd": [
+      "UI/SpeedToggle.tscn"
+    ],
+    "UI/WaveUI.gd": [
+      "UI/WaveUI.tscn"
+    ],
+    "addons/Mesh/Bush2GLB3.glb": [
+      "addons/Mesh/Bush2GLB3.tscn"
+    ],
+    "addons/Mesh/foliage.material": [
+      "addons/Mesh/Bush2GLB3.tscn"
+    ],
+    "addons/Mesh/SnowBush.glb": [
+      "addons/Mesh/snow_bush.tscn"
+    ],
+    "addons/Shader/foliage.gdshader": [
+      "addons/Mesh/snow_bush.tscn"
+    ],
+    "addons/Textures/Leaves001-03.png": [
+      "addons/Mesh/snow_bush.tscn"
+    ],
+    "assets/Models/GLB format/grass/tile-corner-round.glb": [
+      "assets/Models/GLB format/desert/desert-tile-corner.tscn"
+    ],
+    "assets/materials/desert_color.tres": [
+      "assets/Models/GLB format/desert/desert-tile-corner.tscn",
+      "assets/Models/GLB format/desert/desert-tile-spawn.tscn",
+      "assets/Models/GLB format/desert/desert-tile-spawnend.tscn",
+      "assets/Models/GLB format/desert/desert-tile-straight.tscn",
+      "assets/Models/GLB format/desert/desert-tile.tscn"
+    ],
+    "assets/Models/GLB format/grass/tile-spawn.glb": [
+      "assets/Models/GLB format/desert/desert-tile-spawn.tscn"
+    ],
+    "assets/Models/GLB format/grass/tile-spawn-end.glb": [
+      "assets/Models/GLB format/desert/desert-tile-spawnend.tscn"
+    ],
+    "assets/Models/GLB format/grass/tile-straight.glb": [
+      "assets/Models/GLB format/desert/desert-tile-straight.tscn"
+    ],
+    "assets/Models/GLB format/grass/tile.glb": [
+      "assets/Models/GLB format/desert/desert-tile.tscn",
+      "assets/Models/GLB format/grass/better_tile_grass.tscn"
+    ],
+    "scripts/MapGenerator.gd": [
+      "assets/Models/GLB format/world.tscn",
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "scripts/CameraController.gd": [
+      "assets/Models/GLB format/world.tscn",
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "addons/Shader/desert_env.tres": [
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "biomes/BiomeData.gd": [
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "biomes/biome_snow.tres": [
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "biomes/biome_grass.tres": [
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "biomes/biome_desert.tres": [
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "UI/Hotbar/TurretHotbar.tscn": [
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "addons/Shader/sandstrom.gdshader": [
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "scripts/BuilderController.gd": [
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "UI/SpeedToggle.tscn": [
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "addons/Textures/water_mat.tres": [
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "scenes/PauseOverlay.tscn": [
+      "map.tscn",
+      "scenes/map.tscn"
+    ],
+    "scripts/PauseOverlay.gd": [
+      "scenes/PauseOverlay.tscn"
+    ],
+    "shaders/grayscale.gdshader": [
+      "scenes/PauseOverlay.tscn"
+    ],
+    "scripts/PillarShockwave.gd": [
+      "scenes/PillarShockwave.tscn"
+    ],
+    "shaders/pillar_shockwave.gdshader": [
+      "scenes/PillarShockwave.tscn",
+      "scenes/map.tscn",
+      "shaders/pilarshockwave.tscn"
+    ],
+    "addons/Mesh/bush_stylized_Cube_001.res": [
+      "scenes/bush.tscn"
+    ],
+    "addons/Mesh/stylized_leaves_Cube.res": [
+      "scenes/foliage_snow_tree.tscn",
+      "scenes/foliage_tree.tscn"
+    ],
+    "addons/Shader/tree_leaves.gdshader": [
+      "scenes/foliage_snow_tree.tscn"
+    ],
+    "addons/Textures/leaf_alpha.png": [
+      "scenes/foliage_snow_tree.tscn",
+      "scenes/foliage_tree.tscn"
+    ],
+    "addons/Mesh/stylized_trunk_Cylinder_001.res": [
+      "scenes/foliage_snow_tree.tscn",
+      "scenes/foliage_tree.tscn"
+    ],
+    "addons/Shader/trunk_shader.gdshader": [
+      "scenes/foliage_snow_tree.tscn",
+      "scenes/foliage_tree.tscn"
+    ],
+    "addons/Textures/tree_bark.png": [
+      "scenes/foliage_snow_tree.tscn",
+      "scenes/foliage_tree.tscn"
+    ],
+    "addons/Shader/ground_shader.gdshader": [
+      "scenes/grass.tscn"
+    ],
+    "addons/Mesh/grass_plane_mesh.res": [
+      "scenes/grass.tscn",
+      "scenes/grass_single.tscn"
+    ],
+    "addons/Materials/grass_billboard_snow.tres": [
+      "scenes/grass_single_snow.tscn"
+    ],
+    "scripts/CurrencyManager.gd": [
+      "scenes/map.tscn"
+    ],
+    "UI/CurrencyUI.tscn": [
+      "scenes/map.tscn"
+    ],
+    "UI/WaveUI.tscn": [
+      "scenes/map.tscn"
+    ],
+    "addons/Materials/leaves_snow_mat.tres": [
+      "scenes/snow_bush.tscn"
+    ]
+  }
+}

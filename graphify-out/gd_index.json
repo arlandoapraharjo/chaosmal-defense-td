@@ -1,0 +1,1022 @@
+{
+  "_meta": {
+    "generated_by": "godot_index.py",
+    "total_scripts": 21,
+    "root": "D:\\Godot\\Game\\IGI-Code-Circus"
+  },
+  "scripts": [
+    {
+      "file": "UI/CurrencyUI.gd",
+      "class_name": null,
+      "extends": "CanvasLayer",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "UI/Hotbar/HotbarSlot.gd",
+      "class_name": null,
+      "extends": "PanelContainer",
+      "signals": [
+        {
+          "name": "slot_clicked",
+          "params": [
+            "index: int"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "apply_theme_config",
+          "params": [
+            "cfg"
+          ]
+        },
+        {
+          "name": "set_turret",
+          "params": [
+            "p_scene",
+            "p_name"
+          ]
+        },
+        {
+          "name": "set_cost_info",
+          "params": [
+            "cost",
+            "count",
+            "max_count"
+          ]
+        },
+        {
+          "name": "set_selected",
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "set_selection_state",
+          "params": [
+            "p_selected",
+            "p_any"
+          ]
+        },
+        {
+          "name": "set_bg_frames",
+          "params": [
+            "frames"
+          ]
+        }
+      ],
+      "loads": [],
+      "exports": [
+        {
+          "name": "slot_index",
+          "type": "int"
+        },
+        {
+          "name": "turret_name",
+          "type": "String"
+        },
+        {
+          "name": "turret_scene",
+          "type": "PackedScene"
+        },
+        {
+          "name": "slot_size",
+          "type": "float"
+        },
+        {
+          "name": "color_bg_normal",
+          "type": "Color"
+        },
+        {
+          "name": "color_bg_hover",
+          "type": "Color"
+        },
+        {
+          "name": "color_bg_selected",
+          "type": "Color"
+        },
+        {
+          "name": "color_border_normal",
+          "type": "Color"
+        },
+        {
+          "name": "color_border_hover",
+          "type": "Color"
+        },
+        {
+          "name": "color_border_selected",
+          "type": "Color"
+        },
+        {
+          "name": "color_glow",
+          "type": "Color"
+        }
+      ]
+    },
+    {
+      "file": "UI/Hotbar/HotbarTheme.gd",
+      "class_name": "HotbarTheme",
+      "extends": "Resource",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": [
+        {
+          "name": "panel_bg_color",
+          "type": "Color"
+        },
+        {
+          "name": "panel_border_color",
+          "type": "Color"
+        },
+        {
+          "name": "panel_shadow_color",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_bg_normal",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_bg_hover",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_bg_selected",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_border_normal",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_border_hover",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_border_selected",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_glow",
+          "type": "Color"
+        }
+      ]
+    },
+    {
+      "file": "UI/Hotbar/TurretHotbar.gd",
+      "class_name": null,
+      "extends": "CanvasLayer",
+      "signals": [
+        {
+          "name": "turret_selected",
+          "params": [
+            "index: int",
+            "scene: PackedScene",
+            "attack_range: float",
+            "extra_data: Dictionary"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "set_slot_turret",
+          "params": [
+            "index",
+            "scene",
+            "p_name"
+          ]
+        },
+        {
+          "name": "select_slot",
+          "params": [
+            "index"
+          ]
+        },
+        {
+          "name": "get_selected_index",
+          "params": []
+        },
+        {
+          "name": "apply_biome_theme",
+          "params": [
+            "theme"
+          ]
+        }
+      ],
+      "loads": [
+        {
+          "line": 80,
+          "raw": "res://UI/Hotbar/HotbarSlot.tscn",
+          "path": "UI/Hotbar/HotbarSlot.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 84,
+          "raw": "res://assets/Models/GLB format/desert/weapon-turret.glb",
+          "path": "assets/Models/GLB format/desert/weapon-turret.glb",
+          "call": "preload"
+        },
+        {
+          "line": 93,
+          "raw": "res://assets/Models/GLB format/desert/weapon-cannon.glb",
+          "path": "assets/Models/GLB format/desert/weapon-cannon.glb",
+          "call": "preload"
+        },
+        {
+          "line": 103,
+          "raw": "res://assets/Models/GLB format/desert/weapon-ballista.glb",
+          "path": "assets/Models/GLB format/desert/weapon-ballista.glb",
+          "call": "preload"
+        },
+        {
+          "line": 112,
+          "raw": "res://assets/Models/GLB format/desert/weapon-catapult.glb",
+          "path": "assets/Models/GLB format/desert/weapon-catapult.glb",
+          "call": "preload"
+        },
+        {
+          "line": 123,
+          "raw": "res://assets/Models/GLB format/weapon-turret.glb",
+          "path": "assets/Models/GLB format/weapon-turret.glb",
+          "call": "preload"
+        }
+      ],
+      "exports": [
+        {
+          "name": "panel_bg_color",
+          "type": "Color"
+        },
+        {
+          "name": "panel_border_color",
+          "type": "Color"
+        },
+        {
+          "name": "panel_shadow_color",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_bg_normal",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_bg_hover",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_bg_selected",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_border_normal",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_border_hover",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_border_selected",
+          "type": "Color"
+        },
+        {
+          "name": "slot_color_glow",
+          "type": "Color"
+        }
+      ]
+    },
+    {
+      "file": "UI/Menus/MainMenu.gd",
+      "class_name": null,
+      "extends": "Control",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "UI/SpeedToggle.gd",
+      "class_name": null,
+      "extends": "CanvasLayer",
+      "signals": [
+        {
+          "name": "speed_changed",
+          "params": [
+            "multiplier: float"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "get_current_multiplier",
+          "params": []
+        }
+      ],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "UI/WaveUI.gd",
+      "class_name": null,
+      "extends": "CanvasLayer",
+      "signals": [],
+      "functions": [
+        {
+          "name": "update_wave",
+          "params": [
+            "wave_number"
+          ]
+        },
+        {
+          "name": "show_insufficient_funds",
+          "params": []
+        }
+      ],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "biomes/BiomeData.gd",
+      "class_name": "BiomeData",
+      "extends": "Resource",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": [
+        {
+          "name": "tile_base",
+          "type": "PackedScene"
+        },
+        {
+          "name": "tile_straight",
+          "type": "PackedScene"
+        },
+        {
+          "name": "tile_corner",
+          "type": "PackedScene"
+        },
+        {
+          "name": "tile_spawn",
+          "type": "PackedScene"
+        },
+        {
+          "name": "tile_end",
+          "type": "PackedScene"
+        },
+        {
+          "name": "tree_model",
+          "type": "PackedScene"
+        },
+        {
+          "name": "tree_large_model",
+          "type": "PackedScene"
+        },
+        {
+          "name": "rock_model",
+          "type": "PackedScene"
+        },
+        {
+          "name": "bush_model",
+          "type": "PackedScene"
+        },
+        {
+          "name": "grass_model",
+          "type": "PackedScene"
+        },
+        {
+          "name": "environment",
+          "type": "Environment"
+        },
+        {
+          "name": "disable_fog",
+          "type": "bool"
+        },
+        {
+          "name": "has_heat_distortion",
+          "type": "bool"
+        },
+        {
+          "name": "hotbar_theme",
+          "type": "HotbarTheme"
+        }
+      ]
+    },
+    {
+      "file": "scenes/animation_player.gd",
+      "class_name": null,
+      "extends": "AnimationPlayer",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "scripts/BuilderController.gd",
+      "class_name": null,
+      "extends": "Node",
+      "signals": [
+        {
+          "name": "building_stopped"
+        },
+        {
+          "name": "turret_placed",
+          "params": [
+            "slot_index: int"
+          ]
+        },
+        {
+          "name": "total_deployment_updated",
+          "params": [
+            "current: int",
+            "max: int"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "get_max_deployment",
+          "params": []
+        },
+        {
+          "name": "get_current_deployment",
+          "params": []
+        },
+        {
+          "name": "start_building",
+          "params": [
+            "_index",
+            "turret_scene",
+            "attack_range",
+            "extra_data"
+          ]
+        },
+        {
+          "name": "stop_building",
+          "params": [
+            "emit_signal"
+          ]
+        },
+        {
+          "name": "set_speed_multiplier",
+          "params": [
+            "multiplier"
+          ]
+        }
+      ],
+      "loads": [
+        {
+          "line": 50,
+          "raw": "res://shaders/ghost_hologram.gdshader",
+          "path": "shaders/ghost_hologram.gdshader",
+          "call": "preload"
+        },
+        {
+          "line": 104,
+          "raw": "res://scripts/Turret.gd",
+          "path": "scripts/Turret.gd",
+          "call": "load"
+        },
+        {
+          "line": 301,
+          "raw": "res://scripts/Turret.gd",
+          "path": "scripts/Turret.gd",
+          "call": "load"
+        }
+      ],
+      "exports": [
+        {
+          "name": "map_generator",
+          "type": "Node3D"
+        },
+        {
+          "name": "turret_y_offset",
+          "type": "float"
+        },
+        {
+          "name": "base_max_deployment",
+          "type": "int"
+        },
+        {
+          "name": "deployment_increase_per_wave",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "file": "scripts/CameraController.gd",
+      "class_name": null,
+      "extends": "Camera3D",
+      "signals": [],
+      "functions": [
+        {
+          "name": "reset_camera",
+          "params": []
+        }
+      ],
+      "loads": [],
+      "exports": [
+        {
+          "name": "move_speed",
+          "type": "float"
+        },
+        {
+          "name": "zoom_speed",
+          "type": "float"
+        },
+        {
+          "name": "min_ortho_size",
+          "type": "float"
+        },
+        {
+          "name": "max_ortho_size_override",
+          "type": "float"
+        },
+        {
+          "name": "border_margin",
+          "type": "float"
+        }
+      ]
+    },
+    {
+      "file": "scripts/CurrencyManager.gd",
+      "class_name": "CurrencyManager",
+      "extends": "Node",
+      "signals": [
+        {
+          "name": "currency_changed",
+          "params": [
+            "new_amount: int"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "add_currency",
+          "params": [
+            "amount"
+          ]
+        },
+        {
+          "name": "spend_currency",
+          "params": [
+            "amount"
+          ]
+        },
+        {
+          "name": "get_currency",
+          "params": []
+        }
+      ],
+      "loads": [],
+      "exports": [
+        {
+          "name": "current_currency",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "file": "scripts/Enemy.gd",
+      "class_name": null,
+      "extends": "Node3D",
+      "signals": [
+        {
+          "name": "reached_end"
+        },
+        {
+          "name": "enemy_defeated"
+        }
+      ],
+      "functions": [
+        {
+          "name": "setup_enemy_type",
+          "params": [
+            "type_index",
+            "wave_number"
+          ]
+        },
+        {
+          "name": "setup",
+          "params": [
+            "waypoints"
+          ]
+        },
+        {
+          "name": "set_speed_multiplier",
+          "params": [
+            "multiplier"
+          ]
+        },
+        {
+          "name": "reset",
+          "params": [
+            "waypoints",
+            "new_speed"
+          ]
+        },
+        {
+          "name": "deactivate",
+          "params": []
+        },
+        {
+          "name": "take_damage",
+          "params": [
+            "amount"
+          ]
+        }
+      ],
+      "loads": [
+        {
+          "line": 7,
+          "raw": "res://scenes/explosion.tscn",
+          "path": "scenes/explosion.tscn",
+          "call": "preload"
+        }
+      ],
+      "exports": [
+        {
+          "name": "speed",
+          "type": "float"
+        },
+        {
+          "name": "spin_speed",
+          "type": "float"
+        },
+        {
+          "name": "turn_smoothing",
+          "type": "float"
+        },
+        {
+          "name": "max_hp",
+          "type": "float"
+        }
+      ]
+    },
+    {
+      "file": "scripts/EnemyDetector.gd",
+      "class_name": "EnemyDetector",
+      "extends": "Node",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "scripts/IncursionPillar.gd",
+      "class_name": "IncursionPillar",
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [
+        {
+          "name": "get_upgrade_cost",
+          "params": []
+        },
+        {
+          "name": "try_upgrade",
+          "params": []
+        }
+      ],
+      "loads": [
+        {
+          "line": 31,
+          "raw": "res://assets/Models/GLB format/tower-round-crystals.glb",
+          "path": "assets/Models/GLB format/tower-round-crystals.glb",
+          "call": "load"
+        },
+        {
+          "line": 242,
+          "raw": "res://scenes/PillarShockwave.tscn",
+          "path": "scenes/PillarShockwave.tscn",
+          "call": "load"
+        }
+      ],
+      "exports": [
+        {
+          "name": "max_level",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "file": "scripts/MapGenerator.gd",
+      "class_name": null,
+      "extends": "Node3D",
+      "signals": [
+        {
+          "name": "biome_changed",
+          "params": [
+            "biome: BiomeData"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "is_buildable",
+          "params": [
+            "grid_pos"
+          ]
+        },
+        {
+          "name": "occupy_cell",
+          "params": [
+            "grid_pos"
+          ]
+        }
+      ],
+      "loads": [
+        {
+          "line": 95,
+          "raw": "res://scripts/WaveManager.gd",
+          "path": "scripts/WaveManager.gd",
+          "call": "preload"
+        },
+        {
+          "line": 96,
+          "raw": "res://scripts/IncursionPillar.gd",
+          "path": "scripts/IncursionPillar.gd",
+          "call": "preload"
+        },
+        {
+          "line": 663,
+          "raw": "res://shaders/tree_sway.gdshader",
+          "path": "shaders/tree_sway.gdshader",
+          "call": "preload"
+        },
+        {
+          "line": 988,
+          "raw": "res://addons/Shader/ground_shader.gdshader",
+          "path": "addons/Shader/ground_shader.gdshader",
+          "call": "preload"
+        },
+        {
+          "line": 995,
+          "raw": "res://addons/Shader/ground_shader.gdshader",
+          "path": "addons/Shader/ground_shader.gdshader",
+          "call": "preload"
+        }
+      ],
+      "exports": [
+        {
+          "name": "border_wall_color_override",
+          "type": "Color"
+        },
+        {
+          "name": "biomes",
+          "type": "Array"
+        },
+        {
+          "name": "forced_biome_index",
+          "type": "int"
+        },
+        {
+          "name": "world_environment_node",
+          "type": "WorldEnvironment"
+        },
+        {
+          "name": "border_noise_frequency",
+          "type": "float"
+        },
+        {
+          "name": "border_noise_type",
+          "type": "FastNoiseLite"
+        },
+        {
+          "name": "border_detail_frequency",
+          "type": "float"
+        },
+        {
+          "name": "border_detail_strength",
+          "type": "float"
+        },
+        {
+          "name": "grass_y_offset",
+          "type": "float"
+        },
+        {
+          "name": "grass_density_base",
+          "type": "int"
+        },
+        {
+          "name": "grass_density_coastal",
+          "type": "int"
+        },
+        {
+          "name": "grass_tilt_randomness",
+          "type": "float"
+        },
+        {
+          "name": "grass_scale_y_min",
+          "type": "float"
+        },
+        {
+          "name": "grass_scale_y_max",
+          "type": "float"
+        },
+        {
+          "name": "grass_scale_xz_min",
+          "type": "float"
+        },
+        {
+          "name": "grass_scale_xz_max",
+          "type": "float"
+        }
+      ]
+    },
+    {
+      "file": "scripts/PauseOverlay.gd",
+      "class_name": "PauseOverlay",
+      "extends": "CanvasLayer",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "scripts/PillarShockwave.gd",
+      "class_name": "PillarShockwave",
+      "extends": "CanvasLayer",
+      "signals": [],
+      "functions": [
+        {
+          "name": "play_shockwave",
+          "params": [
+            "screen_pos"
+          ]
+        }
+      ],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "scripts/Turret.gd",
+      "class_name": null,
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [
+        {
+          "name": "set_speed_multiplier",
+          "params": [
+            "multiplier"
+          ]
+        },
+        {
+          "name": "get_upgrade_cost",
+          "params": []
+        },
+        {
+          "name": "upgrade",
+          "params": []
+        },
+        {
+          "name": "reset_cooldown",
+          "params": []
+        }
+      ],
+      "loads": [],
+      "exports": [
+        {
+          "name": "is_aoe",
+          "type": "bool"
+        },
+        {
+          "name": "is_half_circle",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "file": "scripts/TurretUpgradeManager.gd",
+      "class_name": "TurretUpgradeManager",
+      "extends": "Node",
+      "signals": [
+        {
+          "name": "turret_upgraded",
+          "params": [
+            "turret: Node3D",
+            "new_level: int"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "try_upgrade_turret",
+          "params": [
+            "turret"
+          ]
+        }
+      ],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "scripts/WaveManager.gd",
+      "class_name": null,
+      "extends": "Node3D",
+      "signals": [
+        {
+          "name": "wave_started",
+          "params": [
+            "wave_number: int"
+          ]
+        },
+        {
+          "name": "wave_completed",
+          "params": [
+            "wave_number: int"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "setup",
+          "params": [
+            "path"
+          ]
+        },
+        {
+          "name": "set_speed_multiplier",
+          "params": [
+            "multiplier"
+          ]
+        }
+      ],
+      "loads": [
+        {
+          "line": 15,
+          "raw": "res://assets/Models/GLB format/enemy-ufo-a.glb",
+          "path": "assets/Models/GLB format/enemy-ufo-a.glb",
+          "call": "preload"
+        },
+        {
+          "line": 16,
+          "raw": "res://assets/Models/GLB format/enemy-ufo-b.glb",
+          "path": "assets/Models/GLB format/enemy-ufo-b.glb",
+          "call": "preload"
+        },
+        {
+          "line": 17,
+          "raw": "res://assets/Models/GLB format/enemy-ufo-c.glb",
+          "path": "assets/Models/GLB format/enemy-ufo-c.glb",
+          "call": "preload"
+        },
+        {
+          "line": 18,
+          "raw": "res://assets/Models/GLB format/enemy-ufo-d.glb",
+          "path": "assets/Models/GLB format/enemy-ufo-d.glb",
+          "call": "preload"
+        },
+        {
+          "line": 21,
+          "raw": "res://scripts/Enemy.gd",
+          "path": "scripts/Enemy.gd",
+          "call": "preload"
+        }
+      ],
+      "exports": [
+        {
+          "name": "enemy_speed",
+          "type": "float"
+        },
+        {
+          "name": "pool_size",
+          "type": "int"
+        },
+        {
+          "name": "base_enemy_count_min",
+          "type": "int"
+        },
+        {
+          "name": "base_enemy_count_max",
+          "type": "int"
+        },
+        {
+          "name": "enemies_increase_per_wave_min",
+          "type": "int"
+        },
+        {
+          "name": "enemies_increase_per_wave_max",
+          "type": "int"
+        },
+        {
+          "name": "wave_delay_min",
+          "type": "float"
+        },
+        {
+          "name": "wave_delay_max",
+          "type": "float"
+        },
+        {
+          "name": "spawn_delay_min",
+          "type": "float"
+        },
+        {
+          "name": "spawn_delay_max",
+          "type": "float"
+        }
+      ]
+    }
+  ]
+}
