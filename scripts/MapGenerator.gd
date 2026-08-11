@@ -174,7 +174,12 @@ func _apply_biome(biome: BiomeData) -> void:
 	decoration_chance = biome.decoration_chance
 
 	if world_environment_node != null and biome.environment != null:
-		world_environment_node.environment = biome.environment
+		var env = biome.environment
+		if biome.disable_fog:
+			env = biome.environment.duplicate()
+			env.fog_enabled = false
+			env.volumetric_fog_enabled = false
+		world_environment_node.environment = env
 
 	biome_changed.emit(biome)
 
@@ -376,8 +381,8 @@ func _build_map():
 	# once, then batch every placement of that prop into one
 	# MultiMeshInstance3D.
 	mm_base = _make_multimesh_node("BaseTiles", tile_base)
-	mm_tree = _make_multimesh_node("Trees", tree_model)
-	mm_tree_large = _make_multimesh_node("TreesLarge", tree_large_model)
+	mm_tree = _make_multimesh_node("Trees", tree_model, true)
+	mm_tree_large = _make_multimesh_node("TreesLarge", tree_large_model, true)
 	mm_rock = _make_multimesh_node("Rocks", rock_model)
 	mm_bushes = _make_bush_variant_nodes(bush_model, BUSH_VARIANT_COUNT)
 	
@@ -423,9 +428,15 @@ func _build_map():
 					var deco_basis = Basis(Vector3.UP, rot_y)
 					var deco_xform = Transform3D(deco_basis, origin)
 					if r > 0.75:
-						tree_transforms.append(deco_xform)
+						var t_scale = active_biome.tree_scale if active_biome else 1.0
+						var t_basis = deco_basis.scaled(Vector3(t_scale, t_scale, t_scale))
+						var t_xform = Transform3D(t_basis, origin)
+						tree_transforms.append(t_xform)
 					elif r > 0.4:
-						tree_large_transforms.append(deco_xform)
+						var tl_scale = active_biome.tree_large_scale if active_biome else 1.0
+						var tl_basis = deco_basis.scaled(Vector3(tl_scale, tl_scale, tl_scale))
+						var tl_xform = Transform3D(tl_basis, origin)
+						tree_large_transforms.append(tl_xform)
 					elif r > 0.4:
 						rock_transforms.append(deco_xform)
 					else:
@@ -578,8 +589,7 @@ func _extract_meshes_info(scene: PackedScene) -> Array:
 		
 		var node_transform = current_transform
 		if node is Node3D and node != temp:
-			if not is_glb:
-				node_transform = current_transform * node.transform
+			node_transform = current_transform * node.transform
 			
 		if node is MeshInstance3D:
 			var material = null
@@ -604,7 +614,7 @@ func _extract_meshes_info(scene: PackedScene) -> Array:
 	_mesh_info_cache[cache_key] = mesh_instances
 	return mesh_instances
 
-func _make_multimesh_node(node_name: String, scene: PackedScene) -> Node3D:
+func _make_multimesh_node(node_name: String, scene: PackedScene, is_tree: bool = false) -> Node3D:
 	var root = Node3D.new()
 	root.name = node_name
 	add_child(root)
@@ -624,7 +634,18 @@ func _make_multimesh_node(node_name: String, scene: PackedScene) -> Node3D:
 		mm.mesh = info["mesh"]
 		mmi.multimesh = mm
 		
-		if info["material"] != null:
+		if is_tree and active_biome != null and active_biome.tree_sway_speed > 0.0 and active_biome.tree_sway_strength > 0.0:
+			var sway_mat = ShaderMaterial.new()
+			sway_mat.shader = preload("res://shaders/tree_sway.gdshader")
+			if info["material"] is BaseMaterial3D:
+				var base_mat = info["material"] as BaseMaterial3D
+				if base_mat.albedo_texture != null:
+					sway_mat.set_shader_parameter("albedo_texture", base_mat.albedo_texture)
+				sway_mat.set_shader_parameter("albedo_color", base_mat.albedo_color)
+			sway_mat.set_shader_parameter("sway_speed", active_biome.tree_sway_speed)
+			sway_mat.set_shader_parameter("sway_strength", active_biome.tree_sway_strength)
+			mmi.material_override = sway_mat
+		elif info["material"] != null:
 			mmi.material_override = info["material"]
 			
 		root.add_child(mmi)

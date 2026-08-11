@@ -1,16 +1,17 @@
 [gd_resource type="Resource" script_class="BiomeData" format=3 uid="uid://dkkpml6w0got6"]
 
 [ext_resource type="Script" uid="uid://dt3mmbm7kd8rn" path="res://biomes/BiomeData.gd" id="1_725qa"]
+[ext_resource type="PackedScene" uid="uid://bw2s68tegtqqc" path="res://assets/Models/GLB format/weapon-ammo-boulder.glb" id="1_ej4pw"]
 [ext_resource type="Environment" uid="uid://eje2tefugyb2" path="res://addons/Shader/desert_env.tres" id="1_kqj8a"]
-[ext_resource type="PackedScene" uid="uid://b7e0ywe1g86fa" path="res://addons/Mesh/Bush2GLB3.tscn" id="1_oq5im"]
 [ext_resource type="PackedScene" uid="uid://b5voy3r5o0ble" path="res://assets/Models/GLB format/desert/detail-dirt.glb" id="3_oq5im"]
 [ext_resource type="PackedScene" uid="uid://c0048euacj2jx" path="res://assets/Models/GLB format/desert/desert-tile.tscn" id="5_kqa02"]
 [ext_resource type="PackedScene" uid="uid://by1gxsl52psa6" path="res://assets/Models/GLB format/desert/desert-tile-corner.tscn" id="6_ej4pw"]
 [ext_resource type="PackedScene" uid="uid://c83x5v4542cgj" path="res://assets/Models/GLB format/desert/desert-tile-spawnend.tscn" id="7_nk1r8"]
 [ext_resource type="PackedScene" uid="uid://6ljpwl3pkb5l" path="res://assets/Models/GLB format/desert/desert-tile-spawn.tscn" id="8_vpp5a"]
 [ext_resource type="PackedScene" uid="uid://8yl2cyvdmycj" path="res://assets/Models/GLB format/desert/desert-tile-straight.tscn" id="9_tttv0"]
-[ext_resource type="PackedScene" uid="uid://d2pxuqb8xalnw" path="res://assets/Models/GLB format/desert/Cactuss.glb" id="10_oq5im"]
+[ext_resource type="PackedScene" uid="uid://banuit5p3xvtp" path="res://assets/Models/GLB format/desert/Palm Treeeeeeeeeeeee.glb" id="11_ej4pw"]
 [ext_resource type="Resource" uid="uid://b1rex4wqywsql" path="res://UI/Hotbar/hotbar_theme_desert.tres" id="11_theme"]
+[ext_resource type="PackedScene" uid="uid://cg2ja2ktl2v7k" path="res://assets/Models/GLB format/desert/Cactuz.glb" id="12_ej4pw"]
 
 [resource]
 script = ExtResource("1_725qa")
@@ -19,11 +20,16 @@ tile_straight = ExtResource("9_tttv0")
 tile_corner = ExtResource("6_ej4pw")
 tile_spawn = ExtResource("8_vpp5a")
 tile_end = ExtResource("7_nk1r8")
-tree_model = ExtResource("10_oq5im")
-tree_large_model = ExtResource("10_oq5im")
+tree_model = ExtResource("12_ej4pw")
+tree_scale = 11.0
+tree_large_model = ExtResource("11_ej4pw")
+tree_large_scale = 0.28
+tree_sway_speed = 2.0
+tree_sway_strength = 0.15
 rock_model = ExtResource("3_oq5im")
-bush_model = ExtResource("1_oq5im")
+bush_model = ExtResource("1_ej4pw")
 environment = ExtResource("1_kqj8a")
+disable_fog = true
 has_heat_distortion = true
 hotbar_theme = ExtResource("11_theme")
 metadata/_custom_type_script = "uid://dt3mmbm7kd8rn"
