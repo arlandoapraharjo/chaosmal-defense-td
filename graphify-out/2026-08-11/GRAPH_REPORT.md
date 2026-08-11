@@ -1,16 +1,16 @@
-# Graph Report - igi-dev-code-circus  (2026-08-11)
+# Graph Report - IGI-Code-Circus  (2026-08-10)
 
 ## Corpus Check
-- 7 files · ~23,071 words
+- 5 files · ~22,907 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 64 nodes · 50 edges · 14 communities (6 shown, 8 thin omitted)
+- 60 nodes · 48 edges · 12 communities (6 shown, 6 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3820feff`
+- Built from commit: `33a42c78`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -26,8 +26,6 @@
 - Asset License Terms
 - Biomes & Environments Documentation
 - IGI Code Circus Project Overview
-- rules/graphify.md
-- workflows/graphify.md
 
 ## God Nodes (most connected - your core abstractions)
 1. `Textures Visual Assets Theme` - 15 edges
@@ -35,11 +33,11 @@
 3. `Grass Visual Assets Theme` - 9 edges
 4. `Ice Visual Assets Theme` - 9 edges
 5. `menus Visual Assets Theme` - 2 edges
-6. `graphify` - 1 edges
-7. `Workflow: graphify` - 1 edges
-8. `Graphify Rule Definition` - 1 edges
-9. `Knowledge Graph Query & Navigation` - 1 edges
-10. `Desert 7 Image Asset` - 1 edges
+6. `Graphify Rule Definition` - 1 edges
+7. `Knowledge Graph Query & Navigation` - 1 edges
+8. `Desert 7 Image Asset` - 1 edges
+9. `Desert Border BG Trial 1 Image Asset` - 1 edges
+10. `Desert Border Trial 1 Image Asset` - 1 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `colormap Image Asset` --conceptually_related_to--> `Textures Visual Assets Theme`  [EXTRACTED]
@@ -59,7 +57,7 @@
 ## Hyperedges (group relationships)
 - **Game UI & Environment Themes** — ui_theme_desert, ui_theme_grass, ui_theme_ice, ui_theme_textures, ui_theme_menus [INFERRED 0.85]
 
-## Communities (14 total, 8 thin omitted)
+## Communities (12 total, 6 thin omitted)
 
 ### Community 0 - "Textures Visual Assets Theme"
 Cohesion: 0.12
@@ -82,14 +80,14 @@ Cohesion: 0.67
 Nodes (3): grid Image Asset, IMG-20230621-WA0013 Image Asset, menus Visual Assets Theme
 
 ## Knowledge Gaps
-- **55 isolated node(s):** `graphify`, `Workflow: graphify`, `Graphify Rule Definition`, `Graphify Workflow Command`, `IGI Code Circus Project Overview` (+50 more)
+- **53 isolated node(s):** `Graphify Rule Definition`, `Graphify Workflow Command`, `IGI Code Circus Project Overview`, `Asset License Terms`, `Biomes & Environments Documentation` (+48 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **What connects `graphify`, `Workflow: graphify`, `Graphify Rule Definition` to the rest of the system?**
-  _55 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `Graphify Rule Definition`, `Graphify Workflow Command`, `IGI Code Circus Project Overview` to the rest of the system?**
+  _53 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Textures Visual Assets Theme` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._

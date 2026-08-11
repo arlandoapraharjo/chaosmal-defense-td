@@ -1,282 +1,272 @@
 {
   ".agents/rules/graphify.md": {
-    "mtime": 1786419917.3300848,
-    "ast_hash": "f1e53ecc9194573d3c28fc116c743a2e",
-    "semantic_hash": ""
+    "mtime": 1786367429.0351107,
+    "ast_hash": "a0e4d192b9e2e17256124dbfc8e24e6a",
+    "semantic_hash": "a0e4d192b9e2e17256124dbfc8e24e6a"
   },
   ".agents/workflows/graphify.md": {
-    "mtime": 1786419917.331093,
-    "ast_hash": "6d73634a678cf1e1c71930adf80bd1f0",
-    "semantic_hash": ""
+    "mtime": 1786367429.0361094,
+    "ast_hash": "a831cf3669f1e6ab85d8a80ebe655f99",
+    "semantic_hash": "a831cf3669f1e6ab85d8a80ebe655f99"
   },
   "README.md": {
-    "mtime": 1786419917.3357196,
+    "mtime": 1783654031.0168936,
     "ast_hash": "344fade48cff47ece59477131fa5e4fc",
     "semantic_hash": "344fade48cff47ece59477131fa5e4fc"
   },
   "assets/License.txt": {
-    "mtime": 1786419917.4382408,
+    "mtime": 1783425930.8192437,
     "ast_hash": "87d62287a03483a17b68a2f728f383be",
     "semantic_hash": "87d62287a03483a17b68a2f728f383be"
   },
   "biomes/README.md": {
-    "mtime": 1786419918.2358828,
+    "mtime": 1783654115.5531116,
     "ast_hash": "bd6bd9a1d9d0b9e64303cc677bce83b1",
     "semantic_hash": "bd6bd9a1d9d0b9e64303cc677bce83b1"
   },
   "UI/Desert/Desert 7.png": {
-    "mtime": 1786419917.3387303,
+    "mtime": 1786366078.1403458,
     "ast_hash": "2b5cee48490bacf5c9d9284aca23bfb1",
     "semantic_hash": "2b5cee48490bacf5c9d9284aca23bfb1"
   },
   "UI/Desert/Desert Border BG Trial 1.png": {
-    "mtime": 1786419917.3407288,
+    "mtime": 1784547600.5566413,
     "ast_hash": "3b2a072860756b24926a2bbf54b1d26a",
     "semantic_hash": "3b2a072860756b24926a2bbf54b1d26a"
   },
   "UI/Desert/Desert Border Trial 1.png": {
-    "mtime": 1786419917.3407288,
+    "mtime": 1784547600.5596414,
     "ast_hash": "885ac7843aa9aae4d33a8d76eee4cd09",
     "semantic_hash": "885ac7843aa9aae4d33a8d76eee4cd09"
   },
   "UI/Desert/Desert Togle 3.png": {
-    "mtime": 1786419917.3417296,
+    "mtime": 1786366078.1403458,
     "ast_hash": "7e26529114a1e3d96269da47e5670cbc",
     "semantic_hash": "7e26529114a1e3d96269da47e5670cbc"
   },
   "UI/Desert/Sprite-0002.png": {
-    "mtime": 1786419917.342729,
+    "mtime": 1784547600.561642,
     "ast_hash": "36d02b3541dd6ef17c30a76101a3af41",
     "semantic_hash": "36d02b3541dd6ef17c30a76101a3af41"
   },
   "UI/Desert/Sprite-0003.png": {
-    "mtime": 1786419917.342729,
+    "mtime": 1784547600.5626497,
     "ast_hash": "4c3009df1ffcc358b3ee48c4f90bcc0c",
     "semantic_hash": "4c3009df1ffcc358b3ee48c4f90bcc0c"
   },
   "UI/Desert/Sprite-0004.png": {
-    "mtime": 1786419917.343736,
+    "mtime": 1784547600.5626497,
     "ast_hash": "f09f4b7149eb77cf4a30f31ededf3919",
     "semantic_hash": "f09f4b7149eb77cf4a30f31ededf3919"
   },
   "UI/Desert/Sprite-0005.png": {
-    "mtime": 1786419917.343736,
+    "mtime": 1784547600.5636387,
     "ast_hash": "9d3844bbf23295b537db10486be62226",
     "semantic_hash": "9d3844bbf23295b537db10486be62226"
   },
   "UI/Desert/Sprite-0006.png": {
-    "mtime": 1786419917.3447444,
+    "mtime": 1784547600.5636387,
     "ast_hash": "f00a62a9cfd48116de9706fcbc3bae9a",
     "semantic_hash": "f00a62a9cfd48116de9706fcbc3bae9a"
   },
   "UI/Desert/Sprite-0007.png": {
-    "mtime": 1786419917.3457463,
+    "mtime": 1784547600.5646403,
     "ast_hash": "665e2ace5596bd79331166b1007c7db8",
     "semantic_hash": "665e2ace5596bd79331166b1007c7db8"
   },
   "UI/Desert/Sprite-0008.png": {
-    "mtime": 1786419917.347761,
+    "mtime": 1784547600.5646403,
     "ast_hash": "edb859c74f915aa65c30257fcbe6e3a8",
     "semantic_hash": "edb859c74f915aa65c30257fcbe6e3a8"
   },
   "UI/Grass/Grass 1.png": {
-    "mtime": 1786419917.3487527,
+    "mtime": 1786366078.1403458,
     "ast_hash": "0e4e33ccbd42653bbb1248468a6ab5d6",
     "semantic_hash": "0e4e33ccbd42653bbb1248468a6ab5d6"
   },
   "UI/Grass/Grass Toggle 3.png": {
-    "mtime": 1786419917.3512993,
+    "mtime": 1786366078.1403458,
     "ast_hash": "8db4df892c4ce13677afce1119c91259",
     "semantic_hash": "8db4df892c4ce13677afce1119c91259"
   },
   "UI/Grass/Sprite-0002.png": {
-    "mtime": 1786419917.3538435,
+    "mtime": 1784547600.5656397,
     "ast_hash": "1f1ccad1609ff2355ae9863bd87fe280",
     "semantic_hash": "1f1ccad1609ff2355ae9863bd87fe280"
   },
   "UI/Grass/Sprite-0003.png": {
-    "mtime": 1786419917.3548532,
+    "mtime": 1784547600.5666444,
     "ast_hash": "8224859a79c118de2f190f0c6c25fbf8",
     "semantic_hash": "8224859a79c118de2f190f0c6c25fbf8"
   },
   "UI/Grass/Sprite-0004.png": {
-    "mtime": 1786419917.3558528,
+    "mtime": 1784547600.5666444,
     "ast_hash": "7a7a960b4dcac5f531f4db88e37b0ee4",
     "semantic_hash": "7a7a960b4dcac5f531f4db88e37b0ee4"
   },
   "UI/Grass/Sprite-0005.png": {
-    "mtime": 1786419917.3558528,
+    "mtime": 1784547600.5676434,
     "ast_hash": "f6dfb37d12b52f38358b720f8488b47d",
     "semantic_hash": "f6dfb37d12b52f38358b720f8488b47d"
   },
   "UI/Grass/Sprite-0006.png": {
-    "mtime": 1786419917.356866,
+    "mtime": 1784547600.5775325,
     "ast_hash": "fdff3d82ecf9d340c7032fb28f01a3d6",
     "semantic_hash": "fdff3d82ecf9d340c7032fb28f01a3d6"
   },
   "UI/Grass/Sprite-0007.png": {
-    "mtime": 1786419917.3578665,
+    "mtime": 1784547600.5785325,
     "ast_hash": "8c83cb99fff3e3a5254e08acd9000450",
     "semantic_hash": "8c83cb99fff3e3a5254e08acd9000450"
   },
   "UI/Grass/Sprite-0008.png": {
-    "mtime": 1786419917.3578665,
+    "mtime": 1784547600.5805328,
     "ast_hash": "57dd017a9200a9b8970fca58a09c5d16",
     "semantic_hash": "57dd017a9200a9b8970fca58a09c5d16"
   },
   "UI/Ice/Snow Hotbar 2.png": {
-    "mtime": 1786419917.3688354,
+    "mtime": 1786366078.1403458,
     "ast_hash": "66377676f8547b04a53daf641c4761e1",
     "semantic_hash": "66377676f8547b04a53daf641c4761e1"
   },
   "UI/Ice/Snow Toggle 2.png": {
-    "mtime": 1786419917.3698287,
+    "mtime": 1786366078.1403458,
     "ast_hash": "4b5578573f11eba13bd3ca19feb5530e",
     "semantic_hash": "4b5578573f11eba13bd3ca19feb5530e"
   },
   "UI/Ice/Sprite-0002.png": {
-    "mtime": 1786419917.3698287,
+    "mtime": 1784547600.582534,
     "ast_hash": "b1648a266905ada04cf2cfc7fcf5a6d9",
     "semantic_hash": "b1648a266905ada04cf2cfc7fcf5a6d9"
   },
   "UI/Ice/Sprite-0003.png": {
-    "mtime": 1786419917.370827,
+    "mtime": 1784547600.5835326,
     "ast_hash": "ccb24d7e414cbeb7b78b3503828ca145",
     "semantic_hash": "ccb24d7e414cbeb7b78b3503828ca145"
   },
   "UI/Ice/Sprite-0004.png": {
-    "mtime": 1786419917.3718226,
+    "mtime": 1784547600.5835326,
     "ast_hash": "376de450334cf720a82f20dd0cff82a5",
     "semantic_hash": "376de450334cf720a82f20dd0cff82a5"
   },
   "UI/Ice/Sprite-0005.png": {
-    "mtime": 1786419917.3718226,
+    "mtime": 1784547600.5855327,
     "ast_hash": "5f52446ba8a90e43cc30b89ed21ea73d",
     "semantic_hash": "5f52446ba8a90e43cc30b89ed21ea73d"
   },
   "UI/Ice/Sprite-0006.png": {
-    "mtime": 1786419917.3728254,
+    "mtime": 1784547600.5865433,
     "ast_hash": "a8e69a817d671a76dfa25c303030058c",
     "semantic_hash": "a8e69a817d671a76dfa25c303030058c"
   },
   "UI/Ice/Sprite-0007.png": {
-    "mtime": 1786419917.3738263,
+    "mtime": 1784547600.5865433,
     "ast_hash": "15fea7953e2b867c97cf1b7d0bb7daaf",
     "semantic_hash": "15fea7953e2b867c97cf1b7d0bb7daaf"
   },
   "UI/Ice/Sprite-0008.png": {
-    "mtime": 1786419917.3738263,
+    "mtime": 1784547600.5875306,
     "ast_hash": "863b29cc6e4061a45b68d6cd13c4df66",
     "semantic_hash": "863b29cc6e4061a45b68d6cd13c4df66"
   },
   "addons/Textures/Leaves001-03.png": {
-    "mtime": 1786419917.4220297,
+    "mtime": 1783425930.8172414,
     "ast_hash": "be00dab5692f46568902469de08e5127",
     "semantic_hash": "be00dab5692f46568902469de08e5127"
   },
   "addons/Textures/Leaves001-04.png": {
-    "mtime": 1786419917.4245431,
+    "mtime": 1783425930.8182416,
     "ast_hash": "c894bdaa93db83a681b6dc99c84767f0",
     "semantic_hash": "c894bdaa93db83a681b6dc99c84767f0"
   },
   "addons/Textures/flower.png": {
-    "mtime": 1786419917.42605,
+    "mtime": 1786366078.2039351,
     "ast_hash": "0c9dd15a09588657aede48db9e87225c",
     "semantic_hash": "0c9dd15a09588657aede48db9e87225c"
   },
   "addons/Textures/grass_round.png": {
-    "mtime": 1786419917.4270608,
+    "mtime": 1786366078.2039351,
     "ast_hash": "4565864f0662c3bf8d7c00caef09a8b0",
     "semantic_hash": "4565864f0662c3bf8d7c00caef09a8b0"
   },
   "addons/Textures/grass_thin.png": {
-    "mtime": 1786419917.4270608,
+    "mtime": 1786366078.2039351,
     "ast_hash": "db63435d75750694ef096166b4bd91a1",
     "semantic_hash": "db63435d75750694ef096166b4bd91a1"
   },
   "addons/Textures/leaf_alpha.png": {
-    "mtime": 1786419917.4280605,
+    "mtime": 1786366078.2039351,
     "ast_hash": "38f8f1fa0e180dfc61992a1b713a5ad3",
     "semantic_hash": "38f8f1fa0e180dfc61992a1b713a5ad3"
   },
   "addons/Textures/leaf_particle.png": {
-    "mtime": 1786419917.4290612,
+    "mtime": 1786366078.2039351,
     "ast_hash": "3c26734bb87853269942df961a630028",
     "semantic_hash": "3c26734bb87853269942df961a630028"
   },
   "addons/Textures/rock_color.png": {
-    "mtime": 1786419917.4362288,
+    "mtime": 1786366078.2039351,
     "ast_hash": "6700b44d56bc123c9d7ddbae7588ffa6",
     "semantic_hash": "6700b44d56bc123c9d7ddbae7588ffa6"
   },
   "addons/Textures/tree_bark.png": {
-    "mtime": 1786419917.4372406,
+    "mtime": 1786366078.2039351,
     "ast_hash": "f0a9e4add8da1a54479e1a068d5f1c5d",
     "semantic_hash": "f0a9e4add8da1a54479e1a068d5f1c5d"
   },
   "assets/Models/GLB format/Textures/colormap.png": {
-    "mtime": 1786419917.439241,
+    "mtime": 1786366078.2039351,
     "ast_hash": "fca33084a41431e5983a35482b29b2b4",
     "semantic_hash": "fca33084a41431e5983a35482b29b2b4"
   },
   "assets/Models/GLB format/desert/Textures/colormap.png": {
-    "mtime": 1786419917.441241,
+    "mtime": 1783654031.0308979,
     "ast_hash": "12e2d88f7a30e810f039f8423ca1fde9",
     "semantic_hash": "12e2d88f7a30e810f039f8423ca1fde9"
   },
   "assets/Models/GLB format/grass/Textures/colormap.png": {
-    "mtime": 1786419917.6416814,
+    "mtime": 1786366078.2039351,
     "ast_hash": "fca33084a41431e5983a35482b29b2b4",
     "semantic_hash": "fca33084a41431e5983a35482b29b2b4"
   },
   "assets/Models/GLB format/snow/Textures/colormap.png": {
-    "mtime": 1786419917.7116797,
+    "mtime": 1783425930.8929272,
     "ast_hash": "12e2d88f7a30e810f039f8423ca1fde9",
     "semantic_hash": "12e2d88f7a30e810f039f8423ca1fde9"
   },
   "assets/Models/OBJ format/Textures/colormap.png": {
-    "mtime": 1786419917.8874538,
+    "mtime": 1786366078.2039351,
     "ast_hash": "fca33084a41431e5983a35482b29b2b4",
     "semantic_hash": "fca33084a41431e5983a35482b29b2b4"
   },
   "assets/Models/Textures/variation-a.png": {
-    "mtime": 1786419918.2273228,
+    "mtime": 1783425931.6791072,
     "ast_hash": "495db6a0fe33f65988c622bf8068f0d4",
     "semantic_hash": "495db6a0fe33f65988c622bf8068f0d4"
   },
   "assets/menus/IMG-20230621-WA0013.jpg": {
-    "mtime": 1786419918.2303276,
+    "mtime": 1786366078.2202888,
     "ast_hash": "787696b1fbb567ea78cd279bb5da7f40",
     "semantic_hash": "787696b1fbb567ea78cd279bb5da7f40"
   },
   "assets/menus/grid.png": {
-    "mtime": 1786419918.231335,
+    "mtime": 1784547539.542627,
     "ast_hash": "9961f119af4d320b3128a1b1bc96b29e",
     "semantic_hash": "9961f119af4d320b3128a1b1bc96b29e"
   },
   "icon.svg": {
-    "mtime": 1786419918.2503507,
+    "mtime": 1783218098.149856,
     "ast_hash": "a16f2eed1b4496c4abf03d329708ba09",
     "semantic_hash": "a16f2eed1b4496c4abf03d329708ba09"
   },
   "docs/graphify_setup/install.ps1": {
-    "mtime": 1786419918.2378905,
+    "mtime": 1786368632.1258142,
     "ast_hash": "f15d3da79089f2947e03128a2755fdb0",
     "semantic_hash": ""
   },
   "docs/graphify_setup/req.txt": {
-    "mtime": 1786419918.2378905,
+    "mtime": 1786368640.4519973,
     "ast_hash": "08ecdbd7e223c0f8ce09e1116055c35b",
-    "semantic_hash": ""
-  },
-  "docs/graphify_setup/.agents/rules/graphify.md": {
-    "mtime": 1786420798.4311464,
-    "ast_hash": "a0e4d192b9e2e17256124dbfc8e24e6a",
-    "semantic_hash": ""
-  },
-  "docs/graphify_setup/.agents/workflows/graphify.md": {
-    "mtime": 1786420798.432146,
-    "ast_hash": "a831cf3669f1e6ab85d8a80ebe655f99",
     "semantic_hash": ""
   }
 }
