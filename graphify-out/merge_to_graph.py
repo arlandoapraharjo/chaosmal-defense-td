@@ -295,18 +295,20 @@ def merge(
     py_file = SCRIPT_DIR / ".graphify_python"
     py_exe  = None
     if py_file.exists():
-        py_exe = py_file.read_text(encoding="utf-8").strip()
+        py_exe = py_file.read_text(encoding="utf-8-sig").strip()
     if not py_exe:
         # fallback: use same Python that is running this script
         py_exe = sys.executable
 
     print(f"\nRunning: graphify cluster-only to regenerate GRAPH_REPORT.md ...")
     try:
-        cmd = [py_exe, "-m", "graphify", "cluster-only", str(PROJECT_ROOT), "--no-viz"]
+        # Clean path carefully to prevent carriage returns or hidden chars
+        py_exe_clean = str(Path(py_exe).resolve())
+        cmd = [py_exe_clean, "-m", "graphify", "cluster-only", str(PROJECT_ROOT), "--no-viz"]
         result = subprocess.run(
             cmd,
             capture_output=True, text=True, timeout=120,
-            cwd=str(PROJECT_ROOT),
+            cwd=str(PROJECT_ROOT)
         )
         out = (result.stdout + result.stderr).strip()
         if "Done" in out or result.returncode == 0:
