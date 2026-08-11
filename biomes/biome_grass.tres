@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://tcsu5iooeirf" path="res://assets/Models/GLB format/grass/detail-tree-large.glb" id="11_f2oft"]
 [ext_resource type="PackedScene" uid="uid://xty8kkdnyigg" path="res://scenes/foliage_tree.tscn" id="12_f2oft"]
 [ext_resource type="Resource" uid="uid://6b3llco02vor" path="res://UI/Hotbar/hotbar_theme_grass.tres" id="12_grass"]
+[ext_resource type="PackedScene" uid="uid://6703tir8bl2b" path="res://scenes/grass_single.tscn" id="13_grass_mdl"]
 
 [resource]
 script = ExtResource("1_36vdi")
@@ -24,6 +25,7 @@ tree_model = ExtResource("12_f2oft")
 tree_large_model = ExtResource("11_f2oft")
 rock_model = ExtResource("3_s6fgd")
 bush_model = ExtResource("1_f2oft")
+grass_model = ExtResource("13_grass_mdl")
 environment = ExtResource("1_vqqub")
 hotbar_theme = ExtResource("12_grass")
 metadata/_custom_type_script = "uid://dt3mmbm7kd8rn"

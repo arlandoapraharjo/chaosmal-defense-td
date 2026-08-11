@@ -64,12 +64,12 @@ var tree_model: PackedScene
 var tree_large_model: PackedScene
 var rock_model: PackedScene
 var bush_model: PackedScene
-var grass_model: PackedScene = preload("res://scenes/grass_single.tscn")
-var grass_model_snow: PackedScene = preload("res://scenes/grass_single_snow.tscn")
+var grass_model: PackedScene
 var decoration_chance: float = 0.2
 var active_biome: BiomeData = null
 var is_grass_biome: bool = false
 var is_snow_biome: bool = false
+var is_desert_biome: bool = false
 
 ## Coastal
 var mm_border: Node3D
@@ -160,6 +160,7 @@ func _apply_biome(biome: BiomeData) -> void:
 	active_biome = biome
 	is_grass_biome = active_biome != null and "grass" in active_biome.resource_path.get_file().to_lower()
 	is_snow_biome = active_biome != null and "snow" in active_biome.resource_path.get_file().to_lower()
+	is_desert_biome = active_biome != null and "desert" in active_biome.resource_path.get_file().to_lower()
 	tile_base = biome.tile_base
 	tile_straight = biome.tile_straight
 	tile_corner = biome.tile_corner
@@ -170,6 +171,7 @@ func _apply_biome(biome: BiomeData) -> void:
 	tree_large_model = biome.tree_large_model
 	rock_model = biome.rock_model
 	bush_model = biome.bush_model
+	grass_model = biome.grass_model
 
 	decoration_chance = biome.decoration_chance
 
@@ -386,13 +388,12 @@ func _build_map():
 	mm_rock = _make_multimesh_node("Rocks", rock_model)
 	mm_bushes = _make_bush_variant_nodes(bush_model, BUSH_VARIANT_COUNT)
 	
-	if is_grass_biome:
+	if grass_model != null:
 		mm_grass = _make_multimesh_node("GrassGen", grass_model)
 		_apply_grass_visibility_range(mm_grass)
+	if is_grass_biome:
 		_tint_node_materials(mm_base, Color.hex(0x1ab036ff))
 	elif is_snow_biome:
-		mm_grass = _make_multimesh_node("GrassGen", grass_model_snow)
-		_apply_grass_visibility_range(mm_grass)
 		_tint_node_materials(mm_base, Color.WHITE)
 
 	var base_transforms: Array[Transform3D] = []
@@ -427,8 +428,20 @@ func _build_map():
 						rot_y = randf() * TAU
 					var deco_basis = Basis(Vector3.UP, rot_y)
 					var deco_xform = Transform3D(deco_basis, origin)
+					
+					var is_adjacent_to_path = false
+					for dx in [-1, 0, 1]:
+						for dz in [-1, 0, 1]:
+							if path_lookup.has(pos + Vector2i(dx, dz)):
+								is_adjacent_to_path = true
+								break
+						if is_adjacent_to_path:
+							break
+
 					if r > 0.75:
 						var t_scale = active_biome.tree_scale if active_biome else 1.0
+						if is_desert_biome and is_adjacent_to_path:
+							t_scale = min(t_scale, 1.5)
 						var t_basis = deco_basis.scaled(Vector3(t_scale, t_scale, t_scale))
 						var t_xform = Transform3D(t_basis, origin)
 						tree_transforms.append(t_xform)
@@ -598,6 +611,7 @@ func _extract_meshes_info(scene: PackedScene) -> Array:
 				if material == null:
 					material = node.mesh.surface_get_material(0)
 			mesh_instances.append({
+				"name": node.name,
 				"mesh": node.mesh,
 				"material": material,
 				"transform": node_transform,
@@ -634,17 +648,29 @@ func _make_multimesh_node(node_name: String, scene: PackedScene, is_tree: bool =
 		mm.mesh = info["mesh"]
 		mmi.multimesh = mm
 		
-		if is_tree and active_biome != null and active_biome.tree_sway_speed > 0.0 and active_biome.tree_sway_strength > 0.0:
-			var sway_mat = ShaderMaterial.new()
-			sway_mat.shader = preload("res://shaders/tree_sway.gdshader")
+		var node_name_lower = String(info.get("name", "")).to_lower()
+		var mesh_name_lower = ""
+		if info["mesh"] != null and info["mesh"].resource_name != null:
+			mesh_name_lower = info["mesh"].resource_name.to_lower()
+		
+		# Only apply sway animation if it is a leaf sub-mesh and NOT a trunk / cylinder
+		var is_trunk = "cylinder" in node_name_lower or "trunk" in node_name_lower or "bark" in node_name_lower or "stem" in node_name_lower or "cylinder" in mesh_name_lower or "trunk" in mesh_name_lower
+		
+		if is_tree and not is_trunk and active_biome != null and active_biome.tree_sway_speed > 0.0 and active_biome.tree_sway_strength > 0.0:
 			if info["material"] is BaseMaterial3D:
+				# Plain GLB imports — replace with sway shader, copying albedo
+				var sway_mat = ShaderMaterial.new()
+				sway_mat.shader = preload("res://shaders/tree_sway.gdshader")
 				var base_mat = info["material"] as BaseMaterial3D
 				if base_mat.albedo_texture != null:
 					sway_mat.set_shader_parameter("albedo_texture", base_mat.albedo_texture)
 				sway_mat.set_shader_parameter("albedo_color", base_mat.albedo_color)
-			sway_mat.set_shader_parameter("sway_speed", active_biome.tree_sway_speed)
-			sway_mat.set_shader_parameter("sway_strength", active_biome.tree_sway_strength)
-			mmi.material_override = sway_mat
+				sway_mat.set_shader_parameter("sway_speed", active_biome.tree_sway_speed)
+				sway_mat.set_shader_parameter("sway_strength", active_biome.tree_sway_strength)
+				mmi.material_override = sway_mat
+			elif info["material"] != null:
+				# ShaderMaterial (e.g. foliage scenes with their own wind shader) — keep as-is
+				mmi.material_override = info["material"]
 		elif info["material"] != null:
 			mmi.material_override = info["material"]
 			

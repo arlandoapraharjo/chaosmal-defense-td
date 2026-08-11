@@ -29,6 +29,8 @@ class_name BiomeData
 @export_range(0.0, 2.0, 0.01) var tree_sway_strength: float = 0.15
 @export var rock_model: PackedScene
 @export var bush_model: PackedScene
+## Optional grass scene for this biome. Leave empty for biomes with no grass.
+@export var grass_model: PackedScene
 
 @export_group("Look & Feel")
 ## Assign a different Environment resource per biome (sky, fog, ambient
