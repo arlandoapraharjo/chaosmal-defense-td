@@ -192,20 +192,33 @@ Freshness check at session start:
 
 ---
 
-## Recommended Workflow (full refresh after major changes)
+## Agent Workflows & Commands (Quick Commands)
+
+These commands are registered as IDE shortcuts/workflows. You can run them to perform quick tasks:
+
+| IDE Command | Underlying Action | What it does | When to use |
+|---|---|---|---|
+| **`/refresh-graph`** | `godot_index.py --force`<br>`merge_to_graph.py --force-update` | Updates `gd_index.json`, `tscn_index.json`, and merges them into `graph.json` | When you want the **Agent IDE** to have the latest gameplay code reference (faster, does not build HTML). |
+| **`/update-viz`** | `godot_index.py`<br>`merge_to_graph.py --force-update --viz` | Updates indices, merges, and generates/updates `graph.html` visualizer | When you want to **open the visual graph in your browser** to inspect relations. |
+
+> **Note:** `/update-viz` already includes the refresh step automatically! There is **no need** to run `/refresh-graph` before running `/update-viz`.
+
+---
+
+## Recommended Manual Workflow (Full Rebuild)
+
+If you have major updates to images, documents, or need a fresh semantic extraction:
 
 ```powershell
-# 1. Rebuild GD+TSCN indexes (fast, no API)
-python graphify-out/godot_index.py --force
-
-# 2. Re-merge into graph.json
-python graphify-out/merge_to_graph.py --force-update
-
-# 3. If image/doc assets changed too, run full graphify update (uses LLM)
+# 1. If images/docs changed, run full graphify update (uses LLM)
 python -m graphify update .
 
-# 4. Re-label communities (uses LLM)
+# 2. Re-label communities (uses LLM)
 python -m graphify label .
+
+# 3. Rebuild indexes and merge GDScript + TSCN (no LLM, fast)
+python graphify-out/godot_index.py --force
+python graphify-out/merge_to_graph.py --force-update --viz
 ```
 
 ---
