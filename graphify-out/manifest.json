@@ -262,26 +262,11 @@
   "docs/graphify_setup/install.ps1": {
     "mtime": 1786483494.7007968,
     "ast_hash": "f15d3da79089f2947e03128a2755fdb0",
-    "semantic_hash": ""
+    "semantic_hash": "f15d3da79089f2947e03128a2755fdb0"
   },
   "docs/graphify_setup/req.txt": {
     "mtime": 1786483494.7016087,
     "ast_hash": "08ecdbd7e223c0f8ce09e1116055c35b",
-    "semantic_hash": ""
-  },
-  "Python_Venv/Scripts/Activate.ps1": {
-    "mtime": 1786483836.576623,
-    "ast_hash": "9fb7261d806bafffd5afd29a92df8580",
-    "semantic_hash": ""
-  },
-  "Python_Venv/Scripts/pywin32_postinstall.py": {
-    "mtime": 1786483862.1375084,
-    "ast_hash": "150c3bc834b83cd5da70f1b23afc84e6",
-    "semantic_hash": ""
-  },
-  "Python_Venv/Scripts/pywin32_testall.py": {
-    "mtime": 1786483862.1385424,
-    "ast_hash": "6c82608c96d5716d31c564e02adb11b7",
     "semantic_hash": ""
   },
   ".agents/workflows/refresh_graph.md": {
