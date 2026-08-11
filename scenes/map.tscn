@@ -115,9 +115,9 @@ mesh = SubResource("PlaneMesh_m8r5s")
 transform = Transform3D(70, 0, 0, 0, 70, 0, 0, 0, 70, 0, -2.860489, 0)
 mesh = SubResource("PlaneMesh_eotfe")
 
-[node name="PauseOverlay" parent="." instance=ExtResource("16_pause")]
+[node name="PauseOverlay" parent="." unique_id=1385682932 instance=ExtResource("16_pause")]
 
-[node name="SpeedToggle" parent="." instance=ExtResource("17_speed")]
+[node name="SpeedToggle" parent="." unique_id=2107856465 instance=ExtResource("17_speed")]
 
 [node name="PillarShockwave" type="CanvasLayer" parent="." unique_id=1489323577]
 
