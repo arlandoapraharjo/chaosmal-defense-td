@@ -33,50 +33,6 @@
       "norm_label": "install.ps1"
     },
     {
-      "label": "rules/graphify.md",
-      "file_type": "document",
-      "source_file": "docs/graphify_setup/.agents/rules/graphify.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "docs_graphify_setup_agents_rules_graphify",
-      "community": 12,
-      "community_name": "rules/graphify.md",
-      "norm_label": "rules/graphify.md"
-    },
-    {
-      "label": "graphify",
-      "file_type": "document",
-      "source_file": "docs/graphify_setup/.agents/rules/graphify.md",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "docs_graphify_setup_agents_rules_graphify_graphify",
-      "community": 12,
-      "community_name": "rules/graphify.md",
-      "norm_label": "graphify"
-    },
-    {
-      "label": "workflows/graphify.md",
-      "file_type": "document",
-      "source_file": "docs/graphify_setup/.agents/workflows/graphify.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "docs_graphify_setup_agents_workflows_graphify",
-      "community": 13,
-      "community_name": "workflows/graphify.md",
-      "norm_label": "workflows/graphify.md"
-    },
-    {
-      "label": "Workflow: graphify",
-      "file_type": "document",
-      "source_file": "docs/graphify_setup/.agents/workflows/graphify.md",
-      "source_location": "L6",
-      "_origin": "ast",
-      "id": "docs_graphify_setup_agents_workflows_graphify_workflow_graphify",
-      "community": 13,
-      "community_name": "workflows/graphify.md",
-      "norm_label": "workflow: graphify"
-    },
-    {
       "label": "Graphify Rule Definition",
       "file_type": "document",
       "source_file": ".agents/rules/graphify.md",
@@ -964,28 +920,6 @@
   ],
   "links": [
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/graphify_setup/.agents/rules/graphify.md",
-      "source_location": "L6",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "docs_graphify_setup_agents_rules_graphify",
-      "target": "docs_graphify_setup_agents_rules_graphify_graphify",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/graphify_setup/.agents/workflows/graphify.md",
-      "source_location": "L6",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "docs_graphify_setup_agents_workflows_graphify",
-      "target": "docs_graphify_setup_agents_workflows_graphify_workflow_graphify",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "conceptually_related_to",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
@@ -1531,5 +1465,5 @@
       "source_file": "UI/Desert/Desert 7.png"
     }
   ],
-  "built_at_commit": "3820feff3b892f177c6f7f1bc9e00f80ccdb5972"
+  "built_at_commit": "151dcec80275bc3c12e0b883b448fbfb02dd6d67"
 }
