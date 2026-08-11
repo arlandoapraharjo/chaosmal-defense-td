@@ -1,15 +1,15 @@
-[gd_resource type="ShaderMaterial" format=3 uid="uid://b6hcjwe0eglcm"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dmvo8gm4bvb3j"]
 
-[ext_resource type="Shader" uid="uid://cydngmu3tajlk" path="res://addons/Shader/tree_leaves.gdshader" id="1_fsj3v"]
+[ext_resource type="Shader" uid="uid://cydngmu3tajlk" path="res://addons/Shader/tree_leaves.gdshader" id="1_2w50c"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_y0wkv"]
 load_path = "res://.godot/imported/leaf_alpha.png-9c48bf6be54eda6cb5f11184c62eb37b.s3tc.ctex"
 
 [resource]
 render_priority = 0
-shader = ExtResource("1_fsj3v")
+shader = ExtResource("1_2w50c")
 shader_parameter/color = Color(0.37254903, 0.6901961, 0.21176471, 1)
 shader_parameter/alpha = SubResource("CompressedTexture2D_y0wkv")
-shader_parameter/leaves_scale = 3.0
+shader_parameter/leaves_scale = 6.0
 shader_parameter/leaf_bend_amount = 2.0
 shader_parameter/light_steps = 6.0
