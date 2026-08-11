@@ -26,9 +26,13 @@ from typing import Optional
 
 # ── konstanta ────────────────────────────────────────────────────────────────
 ROOT_DEFAULT     = Path(__file__).parent.parent  # graphify-out/../ = project root
-OUT_DIR          = Path(__file__).parent          # graphify-out/
-GD_INDEX_PATH    = OUT_DIR / "gd_index.json"
-TSCN_INDEX_PATH  = OUT_DIR / "tscn_index.json"
+OUT_DIR_DEFAULT  = Path(__file__).parent          # graphify-out/
+
+# resolved at runtime from args (see main())
+_OUT_DIR: Optional[Path] = None
+
+def get_out_dir() -> Path:
+    return _OUT_DIR or OUT_DIR_DEFAULT
 
 SKIP_DIRS = {".git", ".godot", "graphify-out", "Python_Venv", "node_modules"}
 
@@ -253,16 +257,18 @@ def build_tscn_index(root: Path) -> dict:
 
 
 # ── freshness check & rebuild ─────────────────────────────────────────────────
-def check_and_rebuild(root: Path, force: bool = False, check_only: bool = False) -> tuple[bool, bool]:
+def check_and_rebuild(root: Path, out_dir: Path, force: bool = False, check_only: bool = False) -> tuple[bool, bool]:
     """
     Returns (gd_rebuilt, tscn_rebuilt).
     Kalau check_only=True, hanya print status tanpa rebuild.
     """
+    gd_index_path   = out_dir / "gd_index.json"
+    tscn_index_path = out_dir / "tscn_index.json"
     gd_files   = list(find_files(root, ".gd"))
     tscn_files = list(find_files(root, ".tscn"))
 
-    gd_stale   = force or is_stale(GD_INDEX_PATH, gd_files)
-    tscn_stale = force or is_stale(TSCN_INDEX_PATH, tscn_files)
+    gd_stale   = force or is_stale(gd_index_path, gd_files)
+    tscn_stale = force or is_stale(tscn_index_path, tscn_files)
 
     print(f"GDScript files  : {len(gd_files)}")
     print(f"TSCN files      : {len(tscn_files)}")
@@ -279,7 +285,7 @@ def check_and_rebuild(root: Path, force: bool = False, check_only: bool = False)
     if gd_stale:
         print("\nBuilding gd_index.json ...")
         idx = build_gd_index(root)
-        GD_INDEX_PATH.write_text(json.dumps(idx, indent=2, ensure_ascii=False), encoding="utf-8")
+        gd_index_path.write_text(json.dumps(idx, indent=2, ensure_ascii=False), encoding="utf-8")
         total_funcs = sum(len(s.get("functions", [])) for s in idx["scripts"])
         total_loads = sum(len(s.get("loads", [])) for s in idx["scripts"])
         print(f"  OK {len(idx['scripts'])} scripts | {total_funcs} public funcs | {total_loads} load/preload calls")
@@ -288,7 +294,7 @@ def check_and_rebuild(root: Path, force: bool = False, check_only: bool = False)
     if tscn_stale:
         print("\nBuilding tscn_index.json ...")
         idx = build_tscn_index(root)
-        TSCN_INDEX_PATH.write_text(json.dumps(idx, indent=2, ensure_ascii=False), encoding="utf-8")
+        tscn_index_path.write_text(json.dumps(idx, indent=2, ensure_ascii=False), encoding="utf-8")
         total_res = sum(len(s.get("ext_resources", [])) for s in idx["scenes"])
         print(f"  OK {len(idx['scenes'])} scenes | {total_res} ext_resource refs | {len(idx['asset_to_scenes'])} unique assets")
         tscn_rebuilt = True
@@ -302,30 +308,35 @@ def check_and_rebuild(root: Path, force: bool = False, check_only: bool = False)
 # ── main ──────────────────────────────────────────────────────────────────────
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--root",  default=str(ROOT_DEFAULT), help="Root project Godot (default: parent folder script ini)")
-    parser.add_argument("--force", action="store_true",       help="Paksa rebuild meski index masih fresh")
-    parser.add_argument("--check", action="store_true",       help="Hanya cek status freshness, tanpa rebuild")
+    parser.add_argument("--root",    default=str(ROOT_DEFAULT), help="Root project Godot (default: parent folder script ini)")
+    parser.add_argument("--out-dir", default=None,              help="Folder output index JSON (default: folder script ini = graphify-out/)")
+    parser.add_argument("--force",   action="store_true",       help="Paksa rebuild meski index masih fresh")
+    parser.add_argument("--check",   action="store_true",       help="Hanya cek status freshness, tanpa rebuild")
     args = parser.parse_args()
 
-    root = Path(args.root).resolve()
+    root    = Path(args.root).resolve()
+    out_dir = Path(args.out_dir).resolve() if args.out_dir else OUT_DIR_DEFAULT
+    out_dir.mkdir(parents=True, exist_ok=True)
     if not root.exists():
         print(f"ERROR: root tidak ditemukan: {root}", file=sys.stderr)
         sys.exit(1)
 
     print(f"Root  : {root}")
-    print(f"Output: {OUT_DIR}\n")
+    print(f"Output: {out_dir}\n")
 
-    gd_rebuilt, tscn_rebuilt = check_and_rebuild(root, force=args.force, check_only=args.check)
+    gd_rebuilt, tscn_rebuilt = check_and_rebuild(root, out_dir, force=args.force, check_only=args.check)
 
     if gd_rebuilt or tscn_rebuilt:
         print(f"\nOutput:")
+        gd_path   = out_dir / "gd_index.json"
+        tscn_path = out_dir / "tscn_index.json"
         if gd_rebuilt:
-            sz = GD_INDEX_PATH.stat().st_size
-            print(f"  {GD_INDEX_PATH}  ({sz:,} bytes)")
+            sz = gd_path.stat().st_size
+            print(f"  {gd_path}  ({sz:,} bytes)")
         if tscn_rebuilt:
-            sz = TSCN_INDEX_PATH.stat().st_size
-            print(f"  {TSCN_INDEX_PATH}  ({sz:,} bytes)")
-        print("\nBaca index ini sebelum menyentuh .gd/.tscn apapun — hemat token!")
+            sz = tscn_path.stat().st_size
+            print(f"  {tscn_path}  ({sz:,} bytes)")
+        print("\nRead index before touching any .gd/.tscn -- saves tokens!")
 
 
 if __name__ == "__main__":
