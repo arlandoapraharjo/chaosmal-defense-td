@@ -4,7 +4,7 @@ extends Node3D
 ## Rotations per second for the UFO spin animation
 @export var spin_speed: float = 0.25
 
-var explosion_scene = preload("res://scenes/explosion.tscn")
+var explosion_scene: PackedScene = preload("res://scenes/explosion.tscn")
 
 var path_waypoints: Array[Vector3] = []
 var current_waypoint_index: int = 0
@@ -51,7 +51,7 @@ func setup_enemy_type(type_index: int, wave_number: int = 1) -> void:
 	max_hp = base_hp * (1.0 + (wave_number - 1) * 0.15)
 	
 	# Coins scale slower: base + 1 coin every 3 waves
-	coin_value = base_coins + int(wave_number / 3)
+	coin_value = base_coins + int(wave_number / 3.0)
 	
 	current_hp = max_hp
 

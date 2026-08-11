@@ -129,7 +129,7 @@ func _start_next_wave() -> void:
 	# Calculate enemy count: base + scaling + random variance, capped at 40
 	var base_count = randi_range(4, 6)
 	var wave_bonus = floor(current_wave * 1.5)
-	var variance = randi_range(0, max(1, current_wave / 3))
+	var variance = randi_range(0, max(1, int(current_wave / 3.0)))
 	_enemies_to_spawn = min(base_count + wave_bonus + variance, 40)
 
 	_state = WaveState.SPAWNING

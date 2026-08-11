@@ -105,7 +105,7 @@ var mm_rock: Node3D
 var mm_bushes: Array[Node3D] = []
 var mm_grass: Node3D
 
-func _ready():
+func _ready() -> void:
 	randomize() # only need to seed the RNG once, not every generation
 	border_noise.seed = randi()
 	border_noise.frequency = border_noise_frequency
@@ -208,7 +208,7 @@ var target_end: Vector2i
 # spanning tree, built only over cells earlier legs haven't already used
 # — so the zigzag can never fold back over itself.
 
-func _generate_path():
+func _generate_path() -> void:
 	var start_y = randi_range(1, MAP_SIZE - 2)
 	var end_y = _random_matching_parity(1, MAP_SIZE - 2, start_y)
 
@@ -367,15 +367,14 @@ func _expand_half_path(half_path: Array[Vector2i]) -> Array[Vector2i]:
 	var full: Array[Vector2i] = []
 	full.append(half_path[0])
 	for i in range(1, half_path.size()):
-		var a = half_path[i - 1]
-		var b = half_path[i]
-		@warning_ignore("integer_division")
-		var mid = (a + b) / 2 # a and b are always exactly 2 apart, so this is always exact
+		var a: Vector2i = half_path[i - 1]
+		var b: Vector2i = half_path[i]
+		var mid: Vector2i = Vector2i(int(float(a.x + b.x) / 2.0), int(float(a.y + b.y) / 2.0))
 		full.append(mid)
 		full.append(b)
 	return full
 
-func _build_map():
+func _build_map() -> void:
 	for child in get_children():
 		child.queue_free()
 
@@ -500,7 +499,7 @@ func _apply_grass_visibility_range(group: Node3D) -> void:
 			child.visibility_range_end_margin = GRASS_VISIBILITY_FADE
 			child.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 
-func _build_coastal_border(grass_transforms: Array[Transform3D]):
+func _build_coastal_border(grass_transforms: Array[Transform3D]) -> void:
 	mm_border = _make_multimesh_node("CoastalBorder", tile_base)
 	mm_border_wall = _make_border_wall_node("CoastalBorderWalls")
 	mm_border_wall_outer = _make_border_wall_node("CoastalBorderWallsOuter", true)
@@ -591,7 +590,6 @@ func _extract_meshes_info(scene: PackedScene) -> Array:
 
 	var temp = scene.instantiate()
 	var mesh_instances = []
-	var is_glb = scene.resource_path.get_extension().to_lower() in ["glb", "gltf"]
 	
 	var stack = [temp]
 	var transforms = [Transform3D.IDENTITY]
@@ -825,8 +823,8 @@ func _resolve_border_wall_color() -> Color:
 						var height_rect = end_y - start_y
 						
 						if width_rect > 0 and height_rect > 0:
-							var step_x = maxi(1, width_rect / 32)
-							var step_y = maxi(1, height_rect / 32)
+							var step_x = maxi(1, int(width_rect / 32.0))
+							var step_y = maxi(1, int(height_rect / 32.0))
 							var sum := Color(0.0, 0.0, 0.0)
 							var samples = 0
 							for yy in range(start_y, end_y, step_y):
@@ -913,7 +911,7 @@ func _apply_multimesh(group: Node3D, transforms: Array[Transform3D]) -> void:
 # --- Path tiles (kept as individual instances — few of them, and each needs
 # its own type + rotation, so this is not worth batching) ---------------
 
-func _place_path_tile(pos: Vector2i):
+func _place_path_tile(pos: Vector2i) -> void:
 	var index = path_lookup[pos] # O(1) instead of enemy_path.find(pos)
 
 	var is_start = (index == 0)
@@ -946,7 +944,7 @@ func _place_path_tile(pos: Vector2i):
 
 	_add_tile_to_scene(tile_instance, pos, rot_y)
 
-func _add_tile_to_scene(instance, pos: Vector2i, rot_y: float):
+func _add_tile_to_scene(instance: Node3D, pos: Vector2i, rot_y: float) -> void:
 	# Rotate around the tile's actual geometric center, not whatever origin
 	# point the imported model happens to have. If that origin is offset
 	# along the tile's "forward" axis (common for road-segment assets),
@@ -978,20 +976,12 @@ func _find_mesh_instance_recursive(node: Node) -> MeshInstance3D:
 
 func _tint_node_materials(node: Node, color: Color) -> void:
 	if node is MeshInstance3D:
-		var mat = null
-		if node.material_override:
-			mat = node.material_override
-		elif node.mesh and node.mesh.get_surface_count() > 0:
-			mat = node.mesh.surface_get_material(0)
-			if not mat:
-				mat = node.get_surface_override_material(0)
 		var shader = preload("res://addons/Shader/ground_shader.gdshader")
 		var new_mat = ShaderMaterial.new()
 		new_mat.shader = shader
 		new_mat.set_shader_parameter("ground_color", color)
 		node.material_override = new_mat
 	elif node is MultiMeshInstance3D:
-		var mat = node.material_override
 		var shader = preload("res://addons/Shader/ground_shader.gdshader")
 		var new_mat = ShaderMaterial.new()
 		new_mat.shader = shader

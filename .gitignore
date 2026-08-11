@@ -1,3 +1,13 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Python virtual environment
+Python_Venv/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Graphify generated cache / outputs
+graphify-out/cache/
+graphify-out/*/
