@@ -1,183 +1,113 @@
 {
   "communities": {
     "0": [
-      "addons_textures_flower_flower",
-      "addons_textures_grass_round_grass_round",
-      "addons_textures_grass_thin_grass_thin",
-      "addons_textures_leaf_alpha_leaf_alpha",
-      "addons_textures_leaf_particle_leaf_particle",
-      "addons_textures_leaves001_03_leaves001_03",
-      "addons_textures_leaves001_04_leaves001_04",
-      "addons_textures_rock_color_rock_color",
-      "addons_textures_tree_bark_tree_bark",
-      "assets_models_glb_format_desert_textures_colormap_colormap",
-      "assets_models_glb_format_grass_textures_colormap_colormap",
-      "assets_models_glb_format_snow_textures_colormap_colormap",
-      "assets_models_glb_format_textures_colormap_colormap",
-      "assets_models_obj_format_textures_colormap_colormap",
-      "assets_models_textures_variation_a_variation_a",
-      "tscn_addons_mesh_snow_bush",
-      "tscn_scenes_foliage_snow_tree",
-      "tscn_scenes_foliage_tree",
-      "ui_theme_textures"
-    ],
-    "1": [
-      "ui_desert_desert_7_desert_7",
-      "ui_desert_desert_border_bg_trial_1_desert_border_bg_trial_1",
-      "ui_desert_desert_border_trial_1_desert_border_trial_1",
-      "ui_desert_desert_togle_3_desert_togle_3",
-      "ui_desert_sprite_0002_sprite_0002",
-      "ui_desert_sprite_0003_sprite_0003",
-      "ui_desert_sprite_0004_sprite_0004",
-      "ui_desert_sprite_0005_sprite_0005",
-      "ui_desert_sprite_0006_sprite_0006",
-      "ui_desert_sprite_0007_sprite_0007",
-      "ui_desert_sprite_0008_sprite_0008",
-      "ui_theme_desert"
-    ],
-    "2": [
-      "ui_grass_grass_1_grass_1",
-      "ui_grass_grass_toggle_3_grass_toggle_3",
-      "ui_grass_sprite_0002_sprite_0002",
-      "ui_grass_sprite_0003_sprite_0003",
-      "ui_grass_sprite_0004_sprite_0004",
-      "ui_grass_sprite_0005_sprite_0005",
-      "ui_grass_sprite_0006_sprite_0006",
-      "ui_grass_sprite_0007_sprite_0007",
-      "ui_grass_sprite_0008_sprite_0008",
-      "ui_theme_grass"
-    ],
-    "3": [
-      "ui_ice_snow_hotbar_2_snow_hotbar_2",
-      "ui_ice_snow_toggle_2_snow_toggle_2",
-      "ui_ice_sprite_0002_sprite_0002",
-      "ui_ice_sprite_0003_sprite_0003",
-      "ui_ice_sprite_0004_sprite_0004",
-      "ui_ice_sprite_0005_sprite_0005",
-      "ui_ice_sprite_0006_sprite_0006",
-      "ui_ice_sprite_0007_sprite_0007",
-      "ui_ice_sprite_0008_sprite_0008",
-      "ui_theme_ice"
-    ],
-    "4": [
-      "assets_menus_grid_grid",
-      "assets_menus_img_20230621_wa0013_img_20230621_wa0013",
-      "gdscript_ui_menus_mainmenu",
-      "tscn_ui_menus_mainmenu",
-      "ui_theme_menus"
-    ],
-    "5": [
-      "agents_rules_graphify_graphify_rule",
-      "agents_rules_graphify_knowledge_graph_query"
-    ],
-    "6": [
-      "icon_icon",
-      "ui_theme_igi-code-circus"
-    ],
-    "7": [
-      "agents_workflows_graphify_graphify_workflow"
-    ],
-    "8": [
-      "assets_license_license"
-    ],
-    "9": [
-      "biomes_readme_biomes_readme"
-    ],
-    "10": [
-      "readme_project_readme"
-    ],
-    "11": [
-      "docs_graphify_setup_install"
-    ],
-    "12": [
-      "gdscript_scenes_animation_player"
-    ],
-    "13": [
-      "gdscript_scripts_enemydetector"
-    ],
-    "14": [
-      "gdscript_scripts_turretupgrademanager"
-    ],
-    "15": [
-      "gdscript_ui_hotbar_hotbartheme"
-    ],
-    "16": [
-      "tscn_addons_mesh_bush2glb3"
-    ],
-    "17": [
-      "tscn_assets_models_glb_format_desert_desert_tile"
-    ],
-    "18": [
-      "tscn_assets_models_glb_format_desert_desert_tile_corner"
-    ],
-    "19": [
-      "tscn_assets_models_glb_format_desert_desert_tile_spawn"
-    ],
-    "20": [
-      "tscn_assets_models_glb_format_desert_desert_tile_spawnend"
-    ],
-    "21": [
-      "tscn_assets_models_glb_format_desert_desert_tile_straight"
-    ],
-    "22": [
-      "tscn_assets_models_glb_format_grass_better_tile_grass"
-    ],
-    "23": [
-      "tscn_scenes_bush"
-    ],
-    "24": [
-      "tscn_scenes_grass"
-    ],
-    "25": [
-      "tscn_scenes_grass_single"
-    ],
-    "26": [
-      "tscn_scenes_grass_single_snow"
-    ],
-    "27": [
-      "tscn_scenes_snow_bush"
-    ],
-    "28": [
-      "tscn_shaders_pilarshockwave"
-    ],
-    "98": [
-      "gdscript_scripts_enemy",
+      "gdscript_scripts_cameracontroller",
       "gdscript_scripts_incursionpillar",
       "gdscript_scripts_mapgenerator",
       "gdscript_scripts_pillarshockwave",
-      "gdscript_scripts_wavemanager",
-      "tscn_scenes_explosion",
+      "tscn_assets_models_glb_format_world",
       "tscn_scenes_pillarshockwave"
     ],
-    "99": [
-      "gdscript_biomes_biomedata",
-      "gdscript_scripts_buildercontroller",
-      "gdscript_scripts_cameracontroller",
-      "gdscript_scripts_currencymanager",
-      "gdscript_scripts_pauseoverlay",
-      "gdscript_scripts_turret",
-      "gdscript_ui_currencyui",
+    "1": [
       "gdscript_ui_hotbar_hotbarslot",
       "gdscript_ui_hotbar_turrethotbar",
-      "gdscript_ui_speedtoggle",
-      "gdscript_ui_waveui",
-      "tscn_assets_models_glb_format_world",
-      "tscn_map",
-      "tscn_scenes_map",
-      "tscn_scenes_pauseoverlay",
-      "tscn_ui_currencyui",
       "tscn_ui_hotbar_hotbarslot",
-      "tscn_ui_hotbar_turrethotbar",
-      "tscn_ui_speedtoggle",
+      "tscn_ui_hotbar_turrethotbar"
+    ],
+    "2": [
+      "gdscript_scripts_enemy",
+      "gdscript_scripts_wavemanager",
+      "tscn_scenes_explosion"
+    ],
+    "3": [
+      "gdscript_ui_menus_mainmenu",
+      "tscn_ui_menus_mainmenu"
+    ],
+    "4": [
+      "gdscript_scenes_animation_player"
+    ],
+    "5": [
+      "gdscript_scripts_enemydetector"
+    ],
+    "6": [
+      "gdscript_scripts_turretupgrademanager"
+    ],
+    "7": [
+      "gdscript_ui_hotbar_hotbartheme"
+    ],
+    "8": [
+      "tscn_addons_mesh_bush2glb3"
+    ],
+    "9": [
+      "tscn_addons_mesh_snow_bush"
+    ],
+    "10": [
+      "tscn_assets_models_glb_format_desert_desert_tile"
+    ],
+    "11": [
+      "tscn_assets_models_glb_format_desert_desert_tile_corner"
+    ],
+    "12": [
+      "tscn_assets_models_glb_format_desert_desert_tile_spawn"
+    ],
+    "13": [
+      "tscn_assets_models_glb_format_desert_desert_tile_spawnend"
+    ],
+    "14": [
+      "tscn_assets_models_glb_format_desert_desert_tile_straight"
+    ],
+    "15": [
+      "tscn_assets_models_glb_format_grass_better_tile_grass"
+    ],
+    "16": [
+      "tscn_scenes_bush"
+    ],
+    "17": [
+      "tscn_scenes_foliage_snow_tree"
+    ],
+    "18": [
+      "tscn_scenes_foliage_tree"
+    ],
+    "19": [
+      "tscn_scenes_grass"
+    ],
+    "20": [
+      "tscn_scenes_grass_single"
+    ],
+    "21": [
+      "tscn_scenes_grass_single_snow"
+    ],
+    "22": [
+      "tscn_scenes_snow_bush"
+    ],
+    "23": [
+      "tscn_shaders_pilarshockwave"
+    ],
+    "98": [
+      "gdscript_biomes_biomedata",
+      "gdscript_scripts_pauseoverlay",
+      "gdscript_ui_speedtoggle",
+      "tscn_map",
+      "tscn_scenes_pauseoverlay",
+      "tscn_ui_speedtoggle"
+    ],
+    "99": [
+      "gdscript_scripts_buildercontroller",
+      "gdscript_scripts_currencymanager",
+      "gdscript_scripts_turret",
+      "gdscript_ui_currencyui",
+      "gdscript_ui_waveui",
+      "tscn_scenes_map",
+      "tscn_ui_currencyui",
       "tscn_ui_waveui"
     ]
   },
   "cohesion": {
-    "0": 0.11695906432748537,
-    "1": 0.16666666666666666,
-    "2": 0.2,
-    "3": 0.2,
-    "4": 0.5,
+    "0": 0.3333333333333333,
+    "1": 0.5,
+    "2": 0.6666666666666666,
+    "3": 1.0,
+    "4": 1.0,
     "5": 1.0,
     "6": 1.0,
     "7": 1.0,
@@ -197,39 +127,14 @@
     "21": 1.0,
     "22": 1.0,
     "23": 1.0,
-    "24": 1.0,
-    "25": 1.0,
-    "26": 1.0,
-    "27": 1.0,
-    "28": 1.0,
-    "98": 0.2857142857142857,
-    "99": 0.12631578947368421
+    "98": 0.3333333333333333,
+    "99": 0.25
   },
   "gods": [
-    {
-      "id": "ui_theme_textures",
-      "label": "Textures Visual Assets Theme",
-      "degree": 15
-    },
-    {
-      "id": "ui_theme_desert",
-      "label": "Desert Visual Assets Theme",
-      "degree": 11
-    },
     {
       "id": "tscn_scenes_map",
       "label": "Map Scene",
       "degree": 10
-    },
-    {
-      "id": "ui_theme_grass",
-      "label": "Grass Visual Assets Theme",
-      "degree": 9
-    },
-    {
-      "id": "ui_theme_ice",
-      "label": "Ice Visual Assets Theme",
-      "degree": 9
     },
     {
       "id": "tscn_map",
@@ -242,103 +147,118 @@
       "degree": 5
     },
     {
-      "id": "addons_textures_leaf_alpha_leaf_alpha",
-      "label": "leaf_alpha Image Asset",
-      "degree": 3
-    },
-    {
-      "id": "addons_textures_tree_bark_tree_bark",
-      "label": "tree_bark Image Asset",
-      "degree": 3
-    },
-    {
       "id": "gdscript_scripts_buildercontroller",
       "label": "BuilderController",
       "degree": 3
+    },
+    {
+      "id": "gdscript_scripts_cameracontroller",
+      "label": "CameraController",
+      "degree": 3
+    },
+    {
+      "id": "tscn_ui_hotbar_turrethotbar",
+      "label": "Turrethotbar Scene",
+      "degree": 3
+    },
+    {
+      "id": "tscn_ui_speedtoggle",
+      "label": "Speedtoggle Scene",
+      "degree": 3
+    },
+    {
+      "id": "tscn_scenes_pauseoverlay",
+      "label": "Pauseoverlay Scene",
+      "degree": 3
+    },
+    {
+      "id": "gdscript_ui_hotbar_turrethotbar",
+      "label": "TurretHotbar",
+      "degree": 2
+    },
+    {
+      "id": "gdscript_biomes_biomedata",
+      "label": "BiomeData",
+      "degree": 2
     }
   ],
   "surprises": [
     {
-      "source": "Foliage Snow Tree Scene",
-      "target": "leaf_alpha Image Asset",
+      "source": "Map Scene",
+      "target": "BiomeData",
       "source_files": [
-        "scenes/foliage_snow_tree.tscn",
-        "addons/Textures/leaf_alpha.png"
+        "scenes/map.tscn",
+        "biomes/BiomeData.gd"
       ],
       "confidence": "EXTRACTED",
       "relation": "references",
-      "why": "crosses file types (image ↔ doc); connects across different repos/directories"
+      "why": "connects across different repos/directories; bridges separate communities; peripheral node `BiomeData` unexpectedly reaches hub `Map Scene`"
     },
     {
-      "source": "Foliage Tree Scene",
-      "target": "leaf_alpha Image Asset",
+      "source": "Map Scene",
+      "target": "BiomeData",
       "source_files": [
-        "scenes/foliage_tree.tscn",
-        "addons/Textures/leaf_alpha.png"
+        "map.tscn",
+        "biomes/BiomeData.gd"
       ],
       "confidence": "EXTRACTED",
       "relation": "references",
-      "why": "crosses file types (image ↔ doc); connects across different repos/directories"
+      "why": "connects across different repos/directories; peripheral node `BiomeData` unexpectedly reaches hub `Map Scene`"
     },
     {
-      "source": "Foliage Snow Tree Scene",
-      "target": "tree_bark Image Asset",
+      "source": "Map Scene",
+      "target": "BuilderController",
       "source_files": [
-        "scenes/foliage_snow_tree.tscn",
-        "addons/Textures/tree_bark.png"
+        "map.tscn",
+        "scripts/BuilderController.gd"
       ],
       "confidence": "EXTRACTED",
       "relation": "references",
-      "why": "crosses file types (image ↔ doc); connects across different repos/directories"
+      "why": "connects across different repos/directories; bridges separate communities"
     },
     {
-      "source": "Foliage Tree Scene",
-      "target": "tree_bark Image Asset",
+      "source": "Map Scene",
+      "target": "CameraController",
       "source_files": [
-        "scenes/foliage_tree.tscn",
-        "addons/Textures/tree_bark.png"
+        "map.tscn",
+        "scripts/CameraController.gd"
       ],
       "confidence": "EXTRACTED",
       "relation": "references",
-      "why": "crosses file types (image ↔ doc); connects across different repos/directories"
+      "why": "connects across different repos/directories; bridges separate communities"
     },
     {
-      "source": "Mainmenu Scene",
-      "target": "IMG-20230621-WA0013 Image Asset",
+      "source": "Map Scene",
+      "target": "CameraController",
       "source_files": [
-        "UI/Menus/MainMenu.tscn",
-        "assets/menus/IMG-20230621-WA0013.jpg"
+        "scenes/map.tscn",
+        "scripts/CameraController.gd"
       ],
       "confidence": "EXTRACTED",
       "relation": "references",
-      "why": "crosses file types (image ↔ doc); connects across different repos/directories"
+      "why": "connects across different repos/directories; bridges separate communities"
     }
   ],
   "questions": [
     {
       "type": "bridge_node",
-      "question": "Why does `Map Scene` connect `Map Scene` to `MapGenerator`?",
-      "why": "High betweenness centrality (0.033) - this node is a cross-community bridge."
+      "question": "Why does `Map Scene` connect `Map Scene` to `MapGenerator`, `Turrethotbar Scene`, `Map Scene`?",
+      "why": "High betweenness centrality (0.167) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `MapGenerator` connect `MapGenerator` to `Map Scene`?",
-      "why": "High betweenness centrality (0.024) - this node is a cross-community bridge."
+      "question": "Why does `MapGenerator` connect `MapGenerator` to `Enemy`, `Map Scene`, `Map Scene`?",
+      "why": "High betweenness centrality (0.123) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Map Scene` connect `Map Scene` to `MapGenerator`, `Turrethotbar Scene`, `Map Scene`?",
+      "why": "High betweenness centrality (0.066) - this node is a cross-community bridge."
     },
     {
       "type": "isolated_nodes",
-      "question": "What connects `Graphify Rule Definition`, `Graphify Workflow Command`, `IGI Code Circus Project Overview` to the rest of the system?",
-      "why": "76 weakly-connected nodes found - possible documentation gaps or missing edges."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `Textures Visual Assets Theme` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.11695906432748537 - nodes in this community are weakly interconnected."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `Map Scene` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.12631578947368421 - nodes in this community are weakly interconnected."
+      "question": "What connects `CurrencyUI`, `HotbarSlot`, `HotbarTheme` to the rest of the system?",
+      "why": "31 weakly-connected nodes found - possible documentation gaps or missing edges."
     }
   ]
 }

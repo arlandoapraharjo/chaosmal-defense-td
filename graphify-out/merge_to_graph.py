@@ -191,6 +191,7 @@ def merge(
     tscn_idx_path: Path,
     dry_run: bool = False,
     force_update: bool = False,
+    generate_viz: bool = False,
 ):
     print(f"Loading graph    : {graph_path}")
     graph = load_json(graph_path)
@@ -268,7 +269,7 @@ def merge(
     total_new_nodes = len(new_gd_nodes) + len(new_tscn_nodes)
     total_new_edges = len(fresh_gd_edges) + len(fresh_tscn_edges)
 
-    if total_new_nodes == 0 and total_new_edges == 0:
+    if total_new_nodes == 0 and total_new_edges == 0 and not generate_viz:
         print("\nNothing to merge -- graph already up to date.")
         return
 
@@ -277,19 +278,22 @@ def merge(
         return
 
     # ── backup + write ────────────────────────────────────────────────────────
-    bak_path = graph_path.with_suffix(".json.bak")
-    shutil.copy2(graph_path, bak_path)
-    print(f"\nBackup written : {bak_path}")
+    if total_new_nodes > 0 or total_new_edges > 0:
+        bak_path = graph_path.with_suffix(".json.bak")
+        shutil.copy2(graph_path, bak_path)
+        print(f"\nBackup written : {bak_path}")
 
-    # Merge into graph
-    all_nodes = graph.get("nodes", []) + new_gd_nodes + new_tscn_nodes
-    all_links = graph.get("links", []) + fresh_gd_edges + fresh_tscn_edges
+        # Merge into graph
+        all_nodes = graph.get("nodes", []) + new_gd_nodes + new_tscn_nodes
+        all_links = graph.get("links", []) + fresh_gd_edges + fresh_tscn_edges
 
-    graph["nodes"] = all_nodes
-    graph["links"] = all_links
+        graph["nodes"] = all_nodes
+        graph["links"] = all_links
 
-    save_json(graph_path, graph)
-    print(f"graph.json updated: {len(all_nodes)} nodes total, {len(all_links)} edges total")
+        save_json(graph_path, graph)
+        print(f"graph.json updated: {len(all_nodes)} nodes total, {len(all_links)} edges total")
+    else:
+        all_nodes = graph.get("nodes", [])
 
     # ── trigger graphify cluster-only to regenerate HTML + report ────────────
     py_file = SCRIPT_DIR / ".graphify_python"
@@ -324,6 +328,37 @@ def merge(
         print(f"  [WARN] Could not run graphify cluster-only: {e}")
         print("  Run manually: python -m graphify cluster-only . --no-viz")
 
+    # ── generate HTML visualization directly ──────────────────────────────────
+    if generate_viz:
+        html_path = SCRIPT_DIR / "graph.html"
+        print(f"\nGenerating custom HTML visualization to {html_path}...")
+        try:
+            from graphify.export import to_html
+            from graphify.build import build_from_json
+            
+            # Rebuild Graph from updated nodes/edges
+            directed = bool(graph.get("directed", False))
+            G_viz = build_from_json(graph, directed=directed)
+            
+            # Parse communities and names
+            communities_viz = {}
+            labels_viz = {}
+            for node in graph.get("nodes", []):
+                nid = node["id"]
+                cid = node.get("community")
+                if cid is not None:
+                    cid_int = int(cid)
+                    if cid_int not in communities_viz:
+                        communities_viz[cid_int] = []
+                    communities_viz[cid_int].append(nid)
+                    if "community_name" in node:
+                        labels_viz[cid_int] = node["community_name"]
+            
+            to_html(G_viz, communities_viz, str(html_path), community_labels=labels_viz or None)
+            print("  Custom HTML visualization generated successfully!")
+        except Exception as e:
+            print(f"  [WARN] Could not generate graph.html: {e}")
+
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
 def main():
@@ -333,6 +368,7 @@ def main():
     parser.add_argument("--tscn-index",   default=str(DEFAULT_TSCN_IDX), help=f"Path to tscn_index.json")
     parser.add_argument("--dry-run",      action="store_true",            help="Show what would change without writing")
     parser.add_argument("--force-update", action="store_true",            help="Overwrite existing nodes (re-merge)")
+    parser.add_argument("--viz",          action="store_true",            help="Generate custom HTML visualization (graph.html) with all nodes")
     args = parser.parse_args()
 
     merge(
@@ -341,6 +377,7 @@ def main():
         tscn_idx_path = Path(args.tscn_index),
         dry_run      = args.dry_run,
         force_update = args.force_update,
+        generate_viz = args.viz,
     )
 
 

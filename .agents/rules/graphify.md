@@ -12,6 +12,10 @@ Rules:
 - **Querying the Graph**: For codebase or architecture questions, first run `graphify query "<question>"` (CLI) or `query_graph` (MCP) to traverse the merged graph (which contains GDScript and scene nodes). Use `graphify path` for relationships and `graphify explain` for concepts.
 - **Index Freshness Check**: At the start of a session, check if indexes are fresh using:
   `python graphify-out/godot_index.py --check`
-- **Rebuilding after changes**: After modifying any code or scene files in this session, keep the graph and indexes current by running the `refresh-graph` workflow, which runs:
-  `python graphify-out/godot_index.py --force`
-  `python graphify-out/merge_to_graph.py --force-update`
+- **Rebuilding after changes**: After modifying any code or scene files in this session, keep the graph and indexes current by running:
+  - `refresh-graph` workflow (to update json graphs):
+    `python graphify-out/godot_index.py --force`
+    `python graphify-out/merge_to_graph.py --force-update`
+  - `update-viz` workflow (to regenerate HTML visualization containing all nodes):
+    `python graphify-out/godot_index.py --force`
+    `python graphify-out/merge_to_graph.py --force-update --viz`

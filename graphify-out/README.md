@@ -61,11 +61,17 @@ Scans all `.gd` and `.tscn` files and outputs two **JSON index files** (`gd_inde
 > python -m graphify cluster-only .
 > ```
 > Use `--no-viz` to skip HTML generation (faster, useful in CI or when only the JSON graph matters).
+>
+> Alternatively, to generate `graph.html` containing all merged Godot nodes (which graphify's standard command skips due to safety checks), use:
+> ```powershell
+> python graphify-out/merge_to_graph.py --force-update --viz
+> ```
 
 
 ```powershell
 # Check if indexes are fresh (safe, no rebuild)
 python graphify-out/godot_index.py --check
+
 
 # Rebuild only if stale (default behavior)
 python graphify-out/godot_index.py
