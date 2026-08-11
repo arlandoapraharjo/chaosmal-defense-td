@@ -53,7 +53,15 @@ python graphify-out/merge_to_graph.py
 
 ## Usage: `godot_index.py`
 
-Scans all `.gd` and `.tscn` files and outputs two JSON index files.
+Scans all `.gd` and `.tscn` files and outputs two **JSON index files** (`gd_index.json`, `tscn_index.json`).
+
+> **Note:** `godot_index.py` does NOT generate `graph.html`. The interactive visualization is
+> produced by graphify itself. To regenerate it run:
+> ```powershell
+> python -m graphify cluster-only .
+> ```
+> Use `--no-viz` to skip HTML generation (faster, useful in CI or when only the JSON graph matters).
+
 
 ```powershell
 # Check if indexes are fresh (safe, no rebuild)
