@@ -20,7 +20,7 @@ static var _ammo_cache: Dictionary = {}
 
 func _init() -> void:
 	if _ammo_cache.is_empty():
-		var paths = {
+		var paths: Dictionary = {
 			"turret": "res://assets/Models/GLB format/weapon-ammo-bullet.glb",
 			"cannon": "res://assets/Models/GLB format/weapon-ammo-cannonball.glb",
 			"ballista": "res://assets/Models/GLB format/weapon-ammo-arrow.glb",
@@ -65,7 +65,7 @@ func _capture_initial_facing() -> void:
 		_initial_facing_dir = Vector3.FORWARD
 
 func _auto_detect_weapon_type() -> void:
-	var path_or_name = scene_file_path.to_lower() if scene_file_path != "" else name.to_lower()
+	var path_or_name: String = scene_file_path.to_lower() if scene_file_path != "" else name.to_lower()
 	if path_or_name.find("cannon") != -1:
 		weapon_type = "cannon"
 		is_half_circle = true
@@ -93,11 +93,11 @@ func _process(delta: float) -> void:
 		_cooldown_timer -= delta
 		return
 
-	var enemies = EnemyDetector.get_enemies_in_range(self, global_transform.origin, attack_range, min_attack_range)
+	var enemies: Array[Node3D] = EnemyDetector.get_enemies_in_range(self, global_transform.origin, attack_range, min_attack_range)
 	if is_half_circle:
 		var valid_enemies: Array[Node3D] = []
 		for enemy in enemies:
-			var dir = (enemy.global_transform.origin - global_transform.origin)
+			var dir: Vector3 = (enemy.global_transform.origin - global_transform.origin)
 			dir.y = 0.0
 			if dir.length_squared() > 0.0001 and dir.normalized().dot(_initial_facing_dir) >= -0.05:
 				valid_enemies.append(enemy)
@@ -118,19 +118,19 @@ func _process(delta: float) -> void:
 
 # Smoothly rotate the turret (Y-axis only) to face the target.
 func _rotate_toward_target(target: Node3D, delta: float) -> void:
-	var target_pos = target.global_transform.origin
-	var my_pos = global_transform.origin
+	var target_pos: Vector3 = target.global_transform.origin
+	var my_pos: Vector3 = global_transform.origin
 	# Flatten to horizontal plane
-	var dir = Vector3(target_pos.x - my_pos.x, 0.0, target_pos.z - my_pos.z)
+	var dir: Vector3 = Vector3(target_pos.x - my_pos.x, 0.0, target_pos.z - my_pos.z)
 	if dir.length_squared() < 0.0001:
 		return
-	var current_scale = scale
+	var current_scale: Vector3 = scale
 	# Extract pure rotation (no scale) for a clean slerp
-	var current_rot = global_transform.basis.orthonormalized()
-	var target_rot = Basis.looking_at(dir.normalized(), Vector3.UP, true)
+	var current_rot: Basis = global_transform.basis.orthonormalized()
+	var target_rot: Basis = Basis.looking_at(dir.normalized(), Vector3.UP, true)
 	# Slerp at rotation_speed degrees per second
-	var t = clampf(deg_to_rad(rotation_speed) * delta, 0.0, 1.0)
-	var new_rot = current_rot.slerp(target_rot, t)
+	var t: float = clampf(deg_to_rad(rotation_speed) * delta, 0.0, 1.0)
+	var new_rot: Basis = current_rot.slerp(target_rot, t)
 	# Reapply scale after rotation
 	global_transform.basis = new_rot.scaled(current_scale)
 
@@ -152,8 +152,8 @@ func upgrade() -> bool:
 	_recalculate_stats()
 	
 	# Visual feedback for upgrade
-	var tween = create_tween()
-	var original_scale = scale
+	var tween: Tween = create_tween()
+	var original_scale: Vector3 = scale
 	tween.tween_property(self, "scale", original_scale * 1.2, 0.15).set_trans(Tween.TRANS_BACK)
 	tween.tween_property(self, "scale", original_scale, 0.25)
 	
@@ -168,7 +168,7 @@ func _recalculate_stats() -> void:
 	if speed_toggle and speed_toggle.has_method("get_current_multiplier"):
 		current_multiplier = speed_toggle.get_current_multiplier()
 		
-	var level_cooldown = _base_cooldown * (1.0 - (turret_level - 1) * 0.1)
+	var level_cooldown: float = _base_cooldown * (1.0 - (turret_level - 1) * 0.1)
 	cooldown = level_cooldown / max(current_multiplier, 0.1)
 
 
@@ -177,7 +177,7 @@ func _trigger_single_target_attack(target: Node3D) -> void:
 		_spawn_ammo_projectile(target.global_transform.origin, target)
 	print("Turret (%s) fired at %s" % [weapon_type, target.name if is_instance_valid(target) else "target"])
 
-func _trigger_aoe_attack(targets: Array) -> void:
+func _trigger_aoe_attack(targets: Array[Node3D]) -> void:
 	if not targets.is_empty() and is_instance_valid(targets[0]):
 		_spawn_ammo_projectile(targets[0].global_transform.origin, null, targets)
 	print("Turret (%s AoE) fired, affecting %d enemies" % [weapon_type, targets.size()])
@@ -185,8 +185,8 @@ func _trigger_aoe_attack(targets: Array) -> void:
 func _get_ammo_scene(type_name: String) -> PackedScene:
 	return _ammo_scenes.get(type_name, _ammo_scenes.get("turret", null))
 
-func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, aoe_enemies: Array = []) -> void:
-	var ammo_scene = _get_ammo_scene(weapon_type)
+func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, aoe_enemies: Array[Node3D] = []) -> void:
+	var ammo_scene: PackedScene = _get_ammo_scene(weapon_type)
 	if ammo_scene == null:
 		return
 
@@ -202,8 +202,8 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 
 	ammo_instance.global_position = spawn_pos
 	
-	var distance = spawn_pos.distance_to(target_pos)
-	var flight_time = clampf(distance / projectile_speed, 0.1, 2.0)
+	var distance: float = spawn_pos.distance_to(target_pos)
+	var flight_time: float = clampf(distance / projectile_speed, 0.1, 2.0)
 	
 	if distance > 0.01:
 		ammo_instance.look_at(target_pos, Vector3.UP)
@@ -211,7 +211,7 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 		if weapon_type == "ballista":
 			ammo_instance.rotate_y(deg_to_rad(180.0))
 
-	var tween = create_tween()
+	var tween: Tween = create_tween()
 	if weapon_type == "catapult":
 		# Parabolic arc trajectory for boulder ammo
 		var arc_height: float = maxf(1.0, distance * 0.5)

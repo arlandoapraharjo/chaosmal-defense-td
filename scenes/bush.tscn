@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://df4vlamfaywf7"]
 
 [ext_resource type="ArrayMesh" uid="uid://bls0gfiyw83ga" path="res://addons/Mesh/bush_stylized_Cube_001.res" id="1_lad4k"]
+[ext_resource type="Material" uid="uid://dmvo8gm4bvb3j" path="res://addons/Materials/leaves_mat_bush.tres" id="2_material"]
 
 [node name="Bush" type="Node3D" unique_id=1844276692]
 transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1603879972]
+material_override = ExtResource("2_material")
 mesh = ExtResource("1_lad4k")

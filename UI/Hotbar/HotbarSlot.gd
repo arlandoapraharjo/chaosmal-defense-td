@@ -184,8 +184,7 @@ func _fit_camera_to_turret() -> void:
 		return
 	var aabb := _collect_aabb(_turret_instance, _turret_instance.transform)
 	if aabb.size == Vector3.ZERO:
-		preview_camera.position = Vector3(2.0, 2.0, 3.0)
-		preview_camera.look_at(Vector3.ZERO, Vector3.UP)
+		preview_camera.look_at_from_position(Vector3(2.0, 2.0, 3.0), Vector3.ZERO, Vector3.UP)
 		return
 	var center := aabb.get_center()
 	var radius := aabb.size.length() * 0.5
@@ -194,8 +193,7 @@ func _fit_camera_to_turret() -> void:
 	var dist   := (radius / tan(fov_rad * 0.5)) * 1.5
 	dist = max(dist, 0.5)
 	var dir := Vector3(0.7, 0.6, 1.0).normalized()
-	preview_camera.position = dir * dist
-	preview_camera.look_at(Vector3.ZERO, Vector3.UP)
+	preview_camera.look_at_from_position(dir * dist, Vector3.ZERO, Vector3.UP)
 
 func _collect_aabb(node: Node3D, xform: Transform3D) -> AABB:
 	var result := AABB()

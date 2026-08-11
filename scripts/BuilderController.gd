@@ -120,7 +120,7 @@ func start_building(_index: int, turret_scene: PackedScene, attack_range: float 
 	add_child(_ghost_instance)
 	_build_range_marker(_attack_range, _min_attack_range, _is_half_circle, _footprint_size)
 
-func stop_building(emit_signal: bool = true) -> void:
+func stop_building(do_emit_signal: bool = true) -> void:
 	_is_building = false
 	_turret_scene = null
 	_footprint_size = Vector2i(1, 1)
@@ -130,7 +130,7 @@ func stop_building(emit_signal: bool = true) -> void:
 		_ghost_instance.queue_free()
 		_ghost_instance = null
 	_clear_range_marker()
-	if emit_signal:
+	if do_emit_signal:
 		building_stopped.emit()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -235,8 +235,8 @@ func _build_range_marker(attack_range: float, min_attack_range: float = 0.0, is_
 	
 	var step_x = footprint.x
 	var step_y = footprint.y
-	var limit_x = (r / step_x + 1) * step_x
-	var limit_z = (r / step_y + 1) * step_y
+	var limit_x = (int(float(r) / step_x) + 1) * step_x
+	var limit_z = (int(float(r) / step_y) + 1) * step_y
 
 	for x in range(-limit_x, limit_x + step_x, step_x):
 		for z in range(-limit_z, limit_z + step_y, step_y):
