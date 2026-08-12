@@ -5,8 +5,9 @@ const TILE_SIZE = 1.0 # Standard size of kenney tiles
 const HALF_STEP = 2 # path lives on a half-resolution grid -> spacing is automatic
 const MAX_ROUTE_RETRIES = 10 # how many times to re-roll the zigzag if a leg gets boxed in
 const BUSH_VARIANT_COUNT = 4 # how many randomized wind/wiggle presets to spread bushes across
-const BUSH_SCALE_MIN = 0.3 # smallest random bush size (1.0 = original mesh size)
-const BUSH_SCALE_MAX = 0.4 # largest random bush size
+const BUSH_SCALE_MIN = 0.2 # smallest random bush size (1.0 = original mesh size)
+const BUSH_SCALE_MAX = 0.25 # largest random bush size
+const BUSH_Y_OFFSET_GRASS_SNOW = 0.8 # lifts bushes above the tile base in grass/snow biomes to avoid clipping
 const BUSH_CAST_SHADOWS = true # alpha-blended wind-animated shadows are expensive for how little bushes contribute visually
 const BUSH_VISIBILITY_END = 35.0 # bushes fully disappear past this distance
 const BUSH_VISIBILITY_FADE = 6.0 # distance over which they fade out, instead of popping
@@ -455,7 +456,10 @@ func _build_map() -> void:
 						var variant_idx = randi() % BUSH_VARIANT_COUNT
 						var bush_scale = randf_range(BUSH_SCALE_MIN, BUSH_SCALE_MAX)
 						var bush_basis = deco_basis.scaled(Vector3(bush_scale, bush_scale, bush_scale))
-						var bush_xform = Transform3D(bush_basis, origin)
+						var bush_origin = origin
+						if is_grass_biome or is_snow_biome:
+							bush_origin.y += BUSH_Y_OFFSET_GRASS_SNOW
+						var bush_xform = Transform3D(bush_basis, bush_origin)
 						bush_transforms[variant_idx].append(bush_xform)
 
 	_apply_multimesh(mm_base, base_transforms)
@@ -654,7 +658,7 @@ func _make_multimesh_node(node_name: String, scene: PackedScene, is_tree: bool =
 		# Only apply sway animation if it is a leaf sub-mesh and NOT a trunk / cylinder
 		var is_trunk = "cylinder" in node_name_lower or "trunk" in node_name_lower or "bark" in node_name_lower or "stem" in node_name_lower or "cylinder" in mesh_name_lower or "trunk" in mesh_name_lower
 		
-		if is_tree and not is_trunk and active_biome != null and active_biome.tree_sway_speed > 0.0 and active_biome.tree_sway_strength > 0.0:
+		if is_tree and not is_trunk and is_desert_biome and active_biome != null and active_biome.tree_sway_speed > 0.0 and active_biome.tree_sway_strength > 0.0:
 			if info["material"] is BaseMaterial3D:
 				# Plain GLB imports — replace with sway shader, copying albedo
 				var sway_mat = ShaderMaterial.new()
