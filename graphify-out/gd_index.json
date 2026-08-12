@@ -2,7 +2,7 @@
   "_meta": {
     "generated_by": "godot_index.py",
     "total_scripts": 21,
-    "root": "D:\\Godot\\Game\\IGI-Code-Circus"
+    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scripts": [
     {
@@ -456,7 +456,7 @@
         {
           "name": "stop_building",
           "params": [
-            "emit_signal"
+            "do_emit_signal"
           ]
         },
         {
@@ -728,31 +728,31 @@
       ],
       "loads": [
         {
-          "line": 95,
+          "line": 96,
           "raw": "res://scripts/WaveManager.gd",
           "path": "scripts/WaveManager.gd",
           "call": "preload"
         },
         {
-          "line": 96,
+          "line": 97,
           "raw": "res://scripts/IncursionPillar.gd",
           "path": "scripts/IncursionPillar.gd",
           "call": "preload"
         },
         {
-          "line": 663,
+          "line": 665,
           "raw": "res://shaders/tree_sway.gdshader",
           "path": "shaders/tree_sway.gdshader",
           "call": "preload"
         },
         {
-          "line": 988,
+          "line": 983,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 995,
+          "line": 989,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"

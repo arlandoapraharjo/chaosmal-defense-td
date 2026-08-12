@@ -2,7 +2,7 @@
   "_meta": {
     "generated_by": "godot_index.py",
     "total_scenes": 28,
-    "root": "D:\\Godot\\Game\\IGI-Code-Circus"
+    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scenes": [
     {
@@ -13,7 +13,7 @@
           "path": "UI/CurrencyUI.gd",
           "raw_path": "res://UI/CurrencyUI.gd",
           "type": "Script",
-          "uid": "uid://ccurrencyuiscript",
+          "uid": "uid://s8f8c7mj41j5",
           "id": "1_currency_script"
         }
       ],
@@ -608,6 +608,13 @@
           "type": "ArrayMesh",
           "uid": "uid://bls0gfiyw83ga",
           "id": "1_lad4k"
+        },
+        {
+          "path": "addons/Materials/leaves_mat_bush.tres",
+          "raw_path": "res://addons/Materials/leaves_mat_bush.tres",
+          "type": "Material",
+          "uid": "uid://dmvo8gm4bvb3j",
+          "id": "2_material"
         }
       ],
       "nodes_preview": [
@@ -1141,6 +1148,9 @@
       "shaders/pilarshockwave.tscn"
     ],
     "addons/Mesh/bush_stylized_Cube_001.res": [
+      "scenes/bush.tscn"
+    ],
+    "addons/Materials/leaves_mat_bush.tres": [
       "scenes/bush.tscn"
     ],
     "addons/Mesh/stylized_leaves_Cube.res": [
