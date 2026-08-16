@@ -1,71 +1,118 @@
-# Graph Report - IGI-Code-Circus  (2026-08-12)
+# Graph Report - igi-dev-code-circus  (2026-08-16)
 
 ## Corpus Check
-- 7 files · ~23,033 words
+- 8 files · ~24,290 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 26 nodes · 19 edges · 8 communities (4 shown, 4 thin omitted)
+- 84 nodes · 61 edges · 32 communities (7 shown, 25 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a8b9540b`
+- Built from commit: `35f4f7b3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Project Documentation & Recent Updates
 - Biome Setup Guide
-- How to create a new BiomeData resource
+- Game Scaling Stats — Hard Mode Redesign (v2)
 - rules/graphify.md
 - workflows/graphify.md
 - refresh_graph.md
 - update_viz.md
+- Turrethotbar Scene
+- MainMenu
+- animation_player
+- EnemyDetector
+- TurretUpgradeManager
+- HotbarTheme
+- Bush2Glb3 Scene
+- Snow Bush Scene
+- Desert Tile Scene
+- Desert Tile Corner Scene
+- Desert Tile Spawn Scene
+- Desert Tile Spawnend Scene
+- Desert Tile Straight Scene
+- Better Tile Grass Scene
+- Bush Scene
+- Foliage Snow Tree Scene
+- Foliage Tree Scene
+- Grass Scene
+- Grass Single Scene
+- Grass Single Snow Scene
+- Snow Bush Scene
+- Pilarshockwave Scene
+- MapGenerator
+- Map Scene
 
 ## God Nodes (most connected - your core abstractions)
-1. `Project Documentation & Recent Updates` - 6 edges
-2. `Biome Setup Guide` - 4 edges
-3. `How to create a new BiomeData resource` - 4 edges
-4. `Known biome asset paths` - 3 edges
-5. `graphify` - 1 edges
-6. `Workflow: graphify` - 1 edges
-7. `Workflow: refresh-graph` - 1 edges
-8. `Workflow: update-viz` - 1 edges
-9. `Biome System & Map Generation` - 1 edges
-10. `Enemy Pathing & Coordinate Alignment` - 1 edges
+1. `Map Scene` - 10 edges
+2. `Game Scaling Stats — Hard Mode Redesign (v2)` - 8 edges
+3. `Map Scene` - 7 edges
+4. `Project Documentation & Recent Updates` - 6 edges
+5. `MapGenerator` - 5 edges
+6. `Biome Setup Guide` - 4 edges
+7. `How to create a new BiomeData resource` - 4 edges
+8. `Known biome asset paths` - 3 edges
+9. `BuilderController` - 3 edges
+10. `CameraController` - 3 edges
 
 ## Surprising Connections (you probably didn't know these)
-- None detected - all connections are within the same source files.
+- `Map Scene` --references--> `BiomeData`  [EXTRACTED]
+  map.tscn → biomes/BiomeData.gd
+- `Map Scene` --references--> `BiomeData`  [EXTRACTED]
+  scenes/map.tscn → biomes/BiomeData.gd
+- `Map Scene` --references--> `CameraController`  [EXTRACTED]
+  map.tscn → scripts/CameraController.gd
+- `Map Scene` --references--> `CameraController`  [EXTRACTED]
+  scenes/map.tscn → scripts/CameraController.gd
+- `Map Scene` --references--> `CurrencyManager`  [EXTRACTED]
+  scenes/map.tscn → scripts/CurrencyManager.gd
 
 ## Import Cycles
 - None detected.
 
-## Communities (8 total, 4 thin omitted)
+## Communities (32 total, 25 thin omitted)
 
 ### Community 1 - "Project Documentation & Recent Updates"
 Cohesion: 0.29
 Nodes (6): Asset Imports & Fixing Missing Textures, Biome System & Map Generation, Biome Tree Rotation, Enemy Movement, Enemy Pathing & Coordinate Alignment, Project Documentation & Recent Updates
 
 ### Community 2 - "Biome Setup Guide"
-Cohesion: 0.33
-Nodes (5): Biome Setup Guide, Desert / Grass, Environment Audit Checklist (Item 2), Known biome asset paths, Snow (confirmed working)
+Cohesion: 0.20
+Nodes (9): Biome Setup Guide, Decorations group, Desert / Grass, Environment Audit Checklist (Item 2), How to create a new BiomeData resource, Known biome asset paths, Look & Feel group, Snow (confirmed working) (+1 more)
 
-### Community 3 - "How to create a new BiomeData resource"
+### Community 3 - "Game Scaling Stats — Hard Mode Redesign (v2)"
+Cohesion: 0.22
+Nodes (8): 1. Enemy Spawn Count Per Wave (NEW — this didn't exist in v1), 2. Enemy Health & Coins — Steeper Curve + Boss Waves, 3. Turret Damage & Cost — Steeper Growth + Real Cost Curve, 4. New Enemy Variants (adds decision-making, not just bigger numbers), 5. Spawn Timing / Density Curve, 6. Other Systems Worth Adding, 7. Suggested Playtesting Checklist, Game Scaling Stats — Hard Mode Redesign (v2)
+
+### Community 8 - "Turrethotbar Scene"
 Cohesion: 0.50
-Nodes (4): Decorations group, How to create a new BiomeData resource, Look & Feel group, Tiles group
+Nodes (4): HotbarSlot, TurretHotbar, Hotbarslot Scene, Turrethotbar Scene
+
+### Community 98 - "MapGenerator"
+Cohesion: 0.22
+Nodes (9): CameraController, Enemy, IncursionPillar, MapGenerator, PillarShockwave, WaveManager, World Scene, Explosion Scene (+1 more)
+
+### Community 99 - "Map Scene"
+Cohesion: 0.18
+Nodes (14): BiomeData, BuilderController, CurrencyManager, PauseOverlay, Turret, CurrencyUI, SpeedToggle, WaveUI (+6 more)
 
 ## Knowledge Gaps
-- **15 isolated node(s):** `graphify`, `Workflow: graphify`, `Workflow: refresh-graph`, `Workflow: update-viz`, `Biome System & Map Generation` (+10 more)
+- **53 isolated node(s):** `graphify`, `Workflow: graphify`, `Workflow: refresh-graph`, `Workflow: update-viz`, `Biome System & Map Generation` (+48 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **25 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Biome Setup Guide` connect `Biome Setup Guide` to `How to create a new BiomeData resource`?**
-  _High betweenness centrality (0.090) - this node is a cross-community bridge._
-- **Why does `How to create a new BiomeData resource` connect `How to create a new BiomeData resource` to `Biome Setup Guide`?**
-  _High betweenness centrality (0.070) - this node is a cross-community bridge._
+- **Why does `Map Scene` connect `Map Scene` to `Turrethotbar Scene`, `MapGenerator`?**
+  _High betweenness centrality (0.055) - this node is a cross-community bridge._
+- **Why does `MapGenerator` connect `MapGenerator` to `Map Scene`?**
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+- **Why does `Map Scene` connect `Map Scene` to `Turrethotbar Scene`, `MapGenerator`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
 - **What connects `graphify`, `Workflow: graphify`, `Workflow: refresh-graph` to the rest of the system?**
-  _15 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _53 weakly-connected nodes found - possible documentation gaps or missing edges._

@@ -1,0 +1,16 @@
+{
+  "communities": {
+    "0": [
+      "docs_graphify_setup_install"
+    ]
+  },
+  "cohesion": {
+    "0": 1.0
+  },
+  "gods": [],
+  "surprises": [],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}

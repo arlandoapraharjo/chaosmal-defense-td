@@ -9,9 +9,9 @@
 [ext_resource type="PackedScene" uid="uid://bk0pcbwcsm8po" path="res://assets/Models/GLB format/grass/tile-end-round.glb" id="7_y6kn7"]
 [ext_resource type="PackedScene" uid="uid://dftc3vgaldfnf" path="res://assets/Models/GLB format/grass/tile-spawn-end-round.glb" id="8_ueggd"]
 [ext_resource type="PackedScene" uid="uid://cj4qd2hccxfxk" path="res://assets/Models/GLB format/grass/tile-straight.glb" id="9_1g7nn"]
-[ext_resource type="PackedScene" uid="uid://tcsu5iooeirf" path="res://assets/Models/GLB format/grass/detail-tree-large.glb" id="11_f2oft"]
 [ext_resource type="PackedScene" uid="uid://xty8kkdnyigg" path="res://scenes/foliage_tree.tscn" id="12_f2oft"]
 [ext_resource type="Resource" uid="uid://6b3llco02vor" path="res://UI/Hotbar/hotbar_theme_grass.tres" id="12_grass"]
+[ext_resource type="PackedScene" uid="uid://ctfviyu7eidr1" path="res://scenes/thin_tree.tscn" id="12_isq2d"]
 [ext_resource type="PackedScene" uid="uid://6703tir8bl2b" path="res://scenes/grass_single.tscn" id="13_grass_mdl"]
 
 [resource]
@@ -22,7 +22,7 @@ tile_corner = ExtResource("6_isq2d")
 tile_spawn = ExtResource("8_ueggd")
 tile_end = ExtResource("7_y6kn7")
 tree_model = ExtResource("12_f2oft")
-tree_large_model = ExtResource("11_f2oft")
+tree_large_model = ExtResource("12_isq2d")
 rock_model = ExtResource("3_s6fgd")
 bush_model = ExtResource("1_f2oft")
 grass_model = ExtResource("13_grass_mdl")

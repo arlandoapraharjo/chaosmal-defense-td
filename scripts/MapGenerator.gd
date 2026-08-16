@@ -7,7 +7,7 @@ const MAX_ROUTE_RETRIES = 10 # how many times to re-roll the zigzag if a leg get
 const BUSH_VARIANT_COUNT = 4 # how many randomized wind/wiggle presets to spread bushes across
 const BUSH_SCALE_MIN = 0.2 # smallest random bush size (1.0 = original mesh size)
 const BUSH_SCALE_MAX = 0.25 # largest random bush size
-const BUSH_Y_OFFSET_GRASS_SNOW = 0.8 # lifts bushes above the tile base in grass/snow biomes to avoid clipping
+const BUSH_Y_OFFSET_GRASS_SNOW = 0.25 # lifts bushes above the tile base in grass/snow biomes to avoid clipping
 const BUSH_CAST_SHADOWS = true # alpha-blended wind-animated shadows are expensive for how little bushes contribute visually
 const BUSH_VISIBILITY_END = 35.0 # bushes fully disappear past this distance
 const BUSH_VISIBILITY_FADE = 6.0 # distance over which they fade out, instead of popping
@@ -53,6 +53,11 @@ signal biome_changed(biome: BiomeData)
 @export var grass_scale_y_max: float = 1.0
 @export var grass_scale_xz_min: float = 0.5
 @export var grass_scale_xz_max: float = 1.0
+@export var grass_cast_shadows: bool = false
+
+@export_group("Decoration Settings")
+@export var tree_large_y_offset: float = 0.25
+@export var tree_y_offset: float = 0.0
 # Resolved from whichever BiomeData is active this run — populated by
 # _apply_biome() before generation starts. Nothing below this point
 # hardcodes a specific biome's assets.
@@ -443,12 +448,16 @@ func _build_map() -> void:
 						if is_desert_biome and is_adjacent_to_path:
 							t_scale = min(t_scale, 1.5)
 						var t_basis = deco_basis.scaled(Vector3(t_scale, t_scale, t_scale))
-						var t_xform = Transform3D(t_basis, origin)
+						var t_origin = origin
+						t_origin.y += tree_y_offset
+						var t_xform = Transform3D(t_basis, t_origin)
 						tree_transforms.append(t_xform)
 					elif r > 0.4:
 						var tl_scale = active_biome.tree_large_scale if active_biome else 1.0
 						var tl_basis = deco_basis.scaled(Vector3(tl_scale, tl_scale, tl_scale))
-						var tl_xform = Transform3D(tl_basis, origin)
+						var tl_origin = origin
+						tl_origin.y += tree_large_y_offset
+						var tl_xform = Transform3D(tl_basis, tl_origin)
 						tree_large_transforms.append(tl_xform)
 					elif r > 0.4:
 						rock_transforms.append(deco_xform)
@@ -499,6 +508,7 @@ func _spawn_grass_tuft(grass_transforms: Array[Transform3D], origin: Vector3, de
 func _apply_grass_visibility_range(group: Node3D) -> void:
 	for child in group.get_children():
 		if child is MultiMeshInstance3D:
+			child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if grass_cast_shadows else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			child.visibility_range_end = GRASS_VISIBILITY_END
 			child.visibility_range_end_margin = GRASS_VISIBILITY_FADE
 			child.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
@@ -608,7 +618,9 @@ func _extract_meshes_info(scene: PackedScene) -> Array:
 			
 		if node is MeshInstance3D:
 			var material = null
-			if node.mesh != null and node.mesh.get_surface_count() > 0:
+			if node.material_override != null:
+				material = node.material_override
+			elif node.mesh != null and node.mesh.get_surface_count() > 0:
 				material = node.get_surface_override_material(0)
 				if material == null:
 					material = node.mesh.surface_get_material(0)

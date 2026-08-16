@@ -94,8 +94,9 @@ script = ExtResource("8_mo32q")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=240699733]
 transform = Transform3D(0.86643666, -0.25530002, 0.4290798, 0.007557401, 0.8659924, 0.50000006, -0.49922985, -0.4299756, 0.7522571, 23.904772, 26.098438, 32.629635)
 shadow_enabled = true
-directional_shadow_mode = 1
-directional_shadow_pancake_size = 400.0
+directional_shadow_mode = 0
+directional_shadow_max_distance = 60.0
+directional_shadow_pancake_size = 20.0
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=1033910215]
 use_hdr_2d = true

@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://ctfviyu7eidr1"]
+
+[ext_resource type="ArrayMesh" uid="uid://cf3xbkdn1glrk" path="res://addons/Mesh/thin_tree_stylized_Cube_004.res" id="1_wxmxb"]
+[ext_resource type="Material" uid="uid://xnbtiu5180on" path="res://addons/Materials/leaves_mat_thin.tres" id="2_ws2ob"]
+[ext_resource type="ArrayMesh" uid="uid://dodhbb6aq57yd" path="res://addons/Mesh/thin_tree_stylized_Cube_002.res" id="3_0jtxn"]
+[ext_resource type="Shader" uid="uid://ctdrf8cp7568r" path="res://addons/Shader/trunk_shader.gdshader" id="4_trunk_shader"]
+[ext_resource type="Texture2D" uid="uid://7264wnuxqqop" path="res://addons/Textures/tree_bark.png" id="5_tree_bark"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_trunk"]
+render_priority = 0
+shader = ExtResource("4_trunk_shader")
+shader_parameter/light_steps = 3.0
+shader_parameter/color_texture = ExtResource("5_tree_bark")
+shader_parameter/uv_scale = Vector2(2, 1)
+shader_parameter/outline_mask = 1.0
+
+[node name="Thin Tree" type="Node3D" unique_id=1026721140]
+
+[node name="Leaves" type="MeshInstance3D" parent="." unique_id=165623127]
+transform = Transform3D(0.13, 0, 0, 0, 0.13, 0, 0, 0, 0.13, -0.14153296, 1.126016, 0.62088066)
+mesh = ExtResource("1_wxmxb")
+surface_material_override/0 = ExtResource("2_ws2ob")
+
+[node name="Leaves2" type="MeshInstance3D" parent="." unique_id=53960373]
+transform = Transform3D(-0.07919945, 1.065433e-08, -0.103089504, -0.021530958, 0.127133, 0.016541366, 0.10081599, 0.02715141, -0.07745279, -0.22851497, 1.3676031, -0.49036333)
+mesh = ExtResource("1_wxmxb")
+surface_material_override/0 = ExtResource("2_ws2ob")
+
+[node name="Leaves3" type="MeshInstance3D" parent="." unique_id=13670127]
+transform = Transform3D(0.09169945, 0.026993472, -0.088105395, -0.021530958, 0.12713298, 0.016541366, 0.08959704, 0.0029243003, 0.09414785, -0.060026944, 1.3983383, 0.19508436)
+mesh = ExtResource("1_wxmxb")
+surface_material_override/0 = ExtResource("2_ws2ob")
+
+[node name="Trunk" type="MeshInstance3D" parent="." unique_id=537485695]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
+mesh = ExtResource("3_0jtxn")
+surface_material_override/0 = SubResource("ShaderMaterial_trunk")
