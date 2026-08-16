@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scenes": 28,
+    "total_scenes": 30,
     "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scenes": [
@@ -997,6 +997,124 @@
       ]
     },
     {
+      "file": "scenes/thin_tree.tscn",
+      "scene_uid": "uid://ctfviyu7eidr1",
+      "ext_resources": [
+        {
+          "path": "addons/Mesh/thin_tree_stylized_Cube_004.res",
+          "raw_path": "res://addons/Mesh/thin_tree_stylized_Cube_004.res",
+          "type": "ArrayMesh",
+          "uid": "uid://cf3xbkdn1glrk",
+          "id": "1_wxmxb"
+        },
+        {
+          "path": "addons/Materials/leaves_mat_thin.tres",
+          "raw_path": "res://addons/Materials/leaves_mat_thin.tres",
+          "type": "Material",
+          "uid": "uid://xnbtiu5180on",
+          "id": "2_ws2ob"
+        },
+        {
+          "path": "addons/Mesh/thin_tree_stylized_Cube_002.res",
+          "raw_path": "res://addons/Mesh/thin_tree_stylized_Cube_002.res",
+          "type": "ArrayMesh",
+          "uid": "uid://dodhbb6aq57yd",
+          "id": "3_0jtxn"
+        },
+        {
+          "path": "addons/Shader/trunk_shader.gdshader",
+          "raw_path": "res://addons/Shader/trunk_shader.gdshader",
+          "type": "Shader",
+          "uid": "uid://ctdrf8cp7568r",
+          "id": "4_trunk_shader"
+        },
+        {
+          "path": "addons/Textures/tree_bark.png",
+          "raw_path": "res://addons/Textures/tree_bark.png",
+          "type": "Texture2D",
+          "uid": "uid://7264wnuxqqop",
+          "id": "5_tree_bark"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "Leaves",
+          "type": "MeshInstance3D"
+        },
+        {
+          "name": "Leaves2",
+          "type": "MeshInstance3D"
+        },
+        {
+          "name": "Leaves3",
+          "type": "MeshInstance3D"
+        },
+        {
+          "name": "Trunk",
+          "type": "MeshInstance3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/thin_tree_snow.tscn",
+      "scene_uid": "uid://d0cckc8y6e8x4",
+      "ext_resources": [
+        {
+          "path": "addons/Mesh/thin_tree_stylized_Cube_004.res",
+          "raw_path": "res://addons/Mesh/thin_tree_stylized_Cube_004.res",
+          "type": "ArrayMesh",
+          "uid": "uid://cf3xbkdn1glrk",
+          "id": "1_1a2g0"
+        },
+        {
+          "path": "addons/Materials/leaves_mat_thin_snow.tres",
+          "raw_path": "res://addons/Materials/leaves_mat_thin_snow.tres",
+          "type": "Material",
+          "uid": "uid://cytpdyueaa76b",
+          "id": "2_1a2g0"
+        },
+        {
+          "path": "addons/Mesh/thin_tree_stylized_Cube_002.res",
+          "raw_path": "res://addons/Mesh/thin_tree_stylized_Cube_002.res",
+          "type": "ArrayMesh",
+          "uid": "uid://dodhbb6aq57yd",
+          "id": "3_60ek8"
+        },
+        {
+          "path": "addons/Shader/trunk_shader.gdshader",
+          "raw_path": "res://addons/Shader/trunk_shader.gdshader",
+          "type": "Shader",
+          "uid": "uid://ctdrf8cp7568r",
+          "id": "4_5203a"
+        },
+        {
+          "path": "addons/Textures/tree_bark.png",
+          "raw_path": "res://addons/Textures/tree_bark.png",
+          "type": "Texture2D",
+          "uid": "uid://7264wnuxqqop",
+          "id": "5_fqjhh"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "Leaves",
+          "type": "MeshInstance3D"
+        },
+        {
+          "name": "Leaves2",
+          "type": "MeshInstance3D"
+        },
+        {
+          "name": "Leaves3",
+          "type": "MeshInstance3D"
+        },
+        {
+          "name": "Trunk",
+          "type": "MeshInstance3D"
+        }
+      ]
+    },
+    {
       "file": "shaders/pilarshockwave.tscn",
       "scene_uid": "uid://bgkc6w62c7pe5",
       "ext_resources": [
@@ -1170,11 +1288,15 @@
     ],
     "addons/Shader/trunk_shader.gdshader": [
       "scenes/foliage_snow_tree.tscn",
-      "scenes/foliage_tree.tscn"
+      "scenes/foliage_tree.tscn",
+      "scenes/thin_tree.tscn",
+      "scenes/thin_tree_snow.tscn"
     ],
     "addons/Textures/tree_bark.png": [
       "scenes/foliage_snow_tree.tscn",
-      "scenes/foliage_tree.tscn"
+      "scenes/foliage_tree.tscn",
+      "scenes/thin_tree.tscn",
+      "scenes/thin_tree_snow.tscn"
     ],
     "addons/Shader/ground_shader.gdshader": [
       "scenes/grass.tscn"
@@ -1197,6 +1319,20 @@
     ],
     "addons/Materials/leaves_snow_mat.tres": [
       "scenes/snow_bush.tscn"
+    ],
+    "addons/Mesh/thin_tree_stylized_Cube_004.res": [
+      "scenes/thin_tree.tscn",
+      "scenes/thin_tree_snow.tscn"
+    ],
+    "addons/Materials/leaves_mat_thin.tres": [
+      "scenes/thin_tree.tscn"
+    ],
+    "addons/Mesh/thin_tree_stylized_Cube_002.res": [
+      "scenes/thin_tree.tscn",
+      "scenes/thin_tree_snow.tscn"
+    ],
+    "addons/Materials/leaves_mat_thin_snow.tres": [
+      "scenes/thin_tree_snow.tscn"
     ]
   }
 }
