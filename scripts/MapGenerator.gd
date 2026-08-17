@@ -46,7 +46,7 @@ signal biome_changed(biome: BiomeData)
 
 @export_group("Grass Settings")
 @export var grass_y_offset: float = 0.2
-@export var grass_density_base: int = 30
+@export var grass_density_base: int = 20
 @export var grass_density_coastal: int = 8
 @export var grass_tilt_randomness: float = 0.3
 @export var grass_scale_y_min: float = 0.3

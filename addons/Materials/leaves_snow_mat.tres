@@ -8,6 +8,6 @@ render_priority = 0
 shader = ExtResource("1_2lbcp")
 shader_parameter/color = Color(0.9098039, 0.9098039, 0.9098039, 1)
 shader_parameter/alpha = ExtResource("2_6nubu")
-shader_parameter/leaves_scale = 6.0
+shader_parameter/leaves_scale = 10.0
 shader_parameter/leaf_bend_amount = 2.0
 shader_parameter/light_steps = 6.0

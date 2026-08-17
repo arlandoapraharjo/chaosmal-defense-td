@@ -13,6 +13,8 @@ extends Node3D
 
 @export_enum("turret", "cannon", "ballista", "catapult") var weapon_type: String = "turret"
 @export_range(1.0, 50.0, 0.5) var projectile_speed: float = 12.0
+# Splash damage radius around the impact point (only used when is_aoe = true)
+@export_range(0.5, 10.0, 0.1) var aoe_radius: float = 2.0
 
 # Ammo scenes — preloaded once at parse time, not load()'d per shot
 var _ammo_scenes: Dictionary = {}
@@ -230,9 +232,14 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 		if is_instance_valid(target_enemy) and target_enemy.has_method("take_damage"):
 			target_enemy.take_damage(attack_damage)
 		elif not aoe_enemies.is_empty():
+			# Re-check enemy positions at impact time — only damage those
+			# actually near the impact point, not every enemy in turret range.
+			var aoe_radius_sq: float = aoe_radius * aoe_radius
 			for enemy in aoe_enemies:
 				if is_instance_valid(enemy) and enemy.has_method("take_damage"):
-					enemy.take_damage(attack_damage)
+					var dist_sq: float = enemy.global_transform.origin.distance_squared_to(target_pos)
+					if dist_sq <= aoe_radius_sq:
+						enemy.take_damage(attack_damage)
 
 		if is_instance_valid(ammo_instance):
 			ammo_instance.queue_free()
