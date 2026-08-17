@@ -1,16 +1,15 @@
-# Graph Report - igi-dev-code-circus  (2026-08-16)
+# Graph Report - C:\Users\user\repos\IGI-Code-Circus  (2026-08-16)
 
 ## Corpus Check
-- 8 files · ~24,290 words
-- Verdict: corpus is large enough that graph structure adds value.
+- cluster-only mode — file stats not available
 
 ## Summary
-- 84 nodes · 61 edges · 32 communities (7 shown, 25 thin omitted)
+- 86 nodes · 61 edges · 34 communities (7 shown, 27 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `35f4f7b3`
+- Built from commit: `9937203d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -43,6 +42,8 @@
 - Grass Single Scene
 - Grass Single Snow Scene
 - Snow Bush Scene
+- Thin Tree Scene
+- Thin Tree Snow Scene
 - Pilarshockwave Scene
 - MapGenerator
 - Map Scene
@@ -74,7 +75,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (32 total, 25 thin omitted)
+## Communities (34 total, 27 thin omitted)
 
 ### Community 1 - "Project Documentation & Recent Updates"
 Cohesion: 0.29
@@ -101,18 +102,18 @@ Cohesion: 0.18
 Nodes (14): BiomeData, BuilderController, CurrencyManager, PauseOverlay, Turret, CurrencyUI, SpeedToggle, WaveUI (+6 more)
 
 ## Knowledge Gaps
-- **53 isolated node(s):** `graphify`, `Workflow: graphify`, `Workflow: refresh-graph`, `Workflow: update-viz`, `Biome System & Map Generation` (+48 more)
+- **55 isolated node(s):** `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation`, `Enemy Movement`, `Enemy Pathing & Coordinate Alignment` (+50 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **25 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **27 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Map Scene` connect `Map Scene` to `Turrethotbar Scene`, `MapGenerator`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
+  _High betweenness centrality (0.053) - this node is a cross-community bridge._
 - **Why does `MapGenerator` connect `MapGenerator` to `Map Scene`?**
-  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+  _High betweenness centrality (0.039) - this node is a cross-community bridge._
 - **Why does `Map Scene` connect `Map Scene` to `Turrethotbar Scene`, `MapGenerator`?**
-  _High betweenness centrality (0.022) - this node is a cross-community bridge._
-- **What connects `graphify`, `Workflow: graphify`, `Workflow: refresh-graph` to the rest of the system?**
-  _53 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.021) - this node is a cross-community bridge._
+- **What connects `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation` to the rest of the system?**
+  _55 weakly-connected nodes found - possible documentation gaps or missing edges._

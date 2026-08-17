@@ -2,15 +2,324 @@
   "communities": {
     "0": [
       "docs_graphify_setup_install"
+    ],
+    "1": [
+      "readme",
+      "readme_asset_imports_fixing_missing_textures",
+      "readme_biome_system_map_generation",
+      "readme_biome_tree_rotation",
+      "readme_enemy_movement",
+      "readme_enemy_pathing_coordinate_alignment",
+      "readme_project_documentation_recent_updates"
+    ],
+    "2": [
+      "biomes_readme",
+      "biomes_readme_biome_setup_guide",
+      "biomes_readme_decorations_group",
+      "biomes_readme_desert_grass",
+      "biomes_readme_environment_audit_checklist_item_2",
+      "biomes_readme_how_to_create_a_new_biomedata_resource",
+      "biomes_readme_known_biome_asset_paths",
+      "biomes_readme_look_feel_group",
+      "biomes_readme_snow_confirmed_working",
+      "biomes_readme_tiles_group"
+    ],
+    "3": [
+      "game_stats",
+      "game_stats_1_enemy_spawn_count_per_wave_new_this_didn_t_exist_in_v1",
+      "game_stats_2_enemy_health_coins_steeper_curve_boss_waves",
+      "game_stats_3_turret_damage_cost_steeper_growth_real_cost_curve",
+      "game_stats_4_new_enemy_variants_adds_decision_making_not_just_bigger_numbers",
+      "game_stats_5_spawn_timing_density_curve",
+      "game_stats_6_other_systems_worth_adding",
+      "game_stats_7_suggested_playtesting_checklist",
+      "game_stats_game_scaling_stats_hard_mode_redesign_v2"
+    ],
+    "4": [
+      "agents_rules_graphify",
+      "agents_rules_graphify_graphify"
+    ],
+    "5": [
+      "agents_workflows_graphify",
+      "agents_workflows_graphify_workflow_graphify"
+    ],
+    "6": [
+      "agents_workflows_refresh_graph",
+      "agents_workflows_refresh_graph_workflow_refresh_graph"
+    ],
+    "7": [
+      "agents_workflows_update_viz",
+      "agents_workflows_update_viz_workflow_update_viz"
+    ],
+    "8": [
+      "gdscript_ui_hotbar_hotbarslot",
+      "gdscript_ui_hotbar_turrethotbar",
+      "tscn_ui_hotbar_hotbarslot",
+      "tscn_ui_hotbar_turrethotbar"
+    ],
+    "9": [
+      "gdscript_ui_menus_mainmenu",
+      "tscn_ui_menus_mainmenu"
+    ],
+    "10": [
+      "gdscript_scenes_animation_player"
+    ],
+    "11": [
+      "gdscript_scripts_enemydetector"
+    ],
+    "12": [
+      "gdscript_scripts_turretupgrademanager"
+    ],
+    "13": [
+      "gdscript_ui_hotbar_hotbartheme"
+    ],
+    "14": [
+      "tscn_addons_mesh_bush2glb3"
+    ],
+    "15": [
+      "tscn_addons_mesh_snow_bush"
+    ],
+    "16": [
+      "tscn_assets_models_glb_format_desert_desert_tile"
+    ],
+    "17": [
+      "tscn_assets_models_glb_format_desert_desert_tile_corner"
+    ],
+    "18": [
+      "tscn_assets_models_glb_format_desert_desert_tile_spawn"
+    ],
+    "19": [
+      "tscn_assets_models_glb_format_desert_desert_tile_spawnend"
+    ],
+    "20": [
+      "tscn_assets_models_glb_format_desert_desert_tile_straight"
+    ],
+    "21": [
+      "tscn_assets_models_glb_format_grass_better_tile_grass"
+    ],
+    "22": [
+      "tscn_scenes_bush"
+    ],
+    "23": [
+      "tscn_scenes_foliage_snow_tree"
+    ],
+    "24": [
+      "tscn_scenes_foliage_tree"
+    ],
+    "25": [
+      "tscn_scenes_grass"
+    ],
+    "26": [
+      "tscn_scenes_grass_single"
+    ],
+    "27": [
+      "tscn_scenes_grass_single_snow"
+    ],
+    "28": [
+      "tscn_scenes_snow_bush"
+    ],
+    "29": [
+      "tscn_scenes_thin_tree"
+    ],
+    "30": [
+      "tscn_scenes_thin_tree_snow"
+    ],
+    "31": [
+      "tscn_shaders_pilarshockwave"
+    ],
+    "98": [
+      "gdscript_scripts_cameracontroller",
+      "gdscript_scripts_enemy",
+      "gdscript_scripts_incursionpillar",
+      "gdscript_scripts_mapgenerator",
+      "gdscript_scripts_pillarshockwave",
+      "gdscript_scripts_wavemanager",
+      "tscn_assets_models_glb_format_world",
+      "tscn_scenes_explosion",
+      "tscn_scenes_pillarshockwave"
+    ],
+    "99": [
+      "gdscript_biomes_biomedata",
+      "gdscript_scripts_buildercontroller",
+      "gdscript_scripts_currencymanager",
+      "gdscript_scripts_pauseoverlay",
+      "gdscript_scripts_turret",
+      "gdscript_ui_currencyui",
+      "gdscript_ui_speedtoggle",
+      "gdscript_ui_waveui",
+      "tscn_map",
+      "tscn_scenes_map",
+      "tscn_scenes_pauseoverlay",
+      "tscn_ui_currencyui",
+      "tscn_ui_speedtoggle",
+      "tscn_ui_waveui"
     ]
   },
   "cohesion": {
-    "0": 1.0
+    "0": 1.0,
+    "1": 0.2857142857142857,
+    "2": 0.2,
+    "3": 0.2222222222222222,
+    "4": 1.0,
+    "5": 1.0,
+    "6": 1.0,
+    "7": 1.0,
+    "8": 0.5,
+    "9": 1.0,
+    "10": 1.0,
+    "11": 1.0,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "98": 0.2222222222222222,
+    "99": 0.17582417582417584
   },
-  "gods": [],
-  "surprises": [],
-  "tokens": {
-    "input": 0,
-    "output": 0
-  }
+  "gods": [
+    {
+      "id": "tscn_scenes_map",
+      "label": "Map Scene",
+      "degree": 10
+    },
+    {
+      "id": "game_stats_game_scaling_stats_hard_mode_redesign_v2",
+      "label": "Game Scaling Stats — Hard Mode Redesign (v2)",
+      "degree": 8
+    },
+    {
+      "id": "tscn_map",
+      "label": "Map Scene",
+      "degree": 7
+    },
+    {
+      "id": "readme_project_documentation_recent_updates",
+      "label": "Project Documentation & Recent Updates",
+      "degree": 6
+    },
+    {
+      "id": "gdscript_scripts_mapgenerator",
+      "label": "MapGenerator",
+      "degree": 5
+    },
+    {
+      "id": "biomes_readme_biome_setup_guide",
+      "label": "Biome Setup Guide",
+      "degree": 4
+    },
+    {
+      "id": "biomes_readme_how_to_create_a_new_biomedata_resource",
+      "label": "How to create a new BiomeData resource",
+      "degree": 4
+    },
+    {
+      "id": "biomes_readme_known_biome_asset_paths",
+      "label": "Known biome asset paths",
+      "degree": 3
+    },
+    {
+      "id": "gdscript_scripts_buildercontroller",
+      "label": "BuilderController",
+      "degree": 3
+    },
+    {
+      "id": "gdscript_scripts_cameracontroller",
+      "label": "CameraController",
+      "degree": 3
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Map Scene",
+      "target": "BiomeData",
+      "source_files": [
+        "map.tscn",
+        "biomes/BiomeData.gd"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories; peripheral node `BiomeData` unexpectedly reaches hub `Map Scene`"
+    },
+    {
+      "source": "Map Scene",
+      "target": "BiomeData",
+      "source_files": [
+        "scenes/map.tscn",
+        "biomes/BiomeData.gd"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories; peripheral node `BiomeData` unexpectedly reaches hub `Map Scene`"
+    },
+    {
+      "source": "Map Scene",
+      "target": "CameraController",
+      "source_files": [
+        "map.tscn",
+        "scripts/CameraController.gd"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "Map Scene",
+      "target": "CameraController",
+      "source_files": [
+        "scenes/map.tscn",
+        "scripts/CameraController.gd"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "Map Scene",
+      "target": "CurrencyManager",
+      "source_files": [
+        "scenes/map.tscn",
+        "scripts/CurrencyManager.gd"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories; peripheral node `CurrencyManager` unexpectedly reaches hub `Map Scene`"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `Map Scene` connect `Map Scene` to `Turrethotbar Scene`, `MapGenerator`?",
+      "why": "High betweenness centrality (0.053) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `MapGenerator` connect `MapGenerator` to `Map Scene`?",
+      "why": "High betweenness centrality (0.039) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Map Scene` connect `Map Scene` to `Turrethotbar Scene`, `MapGenerator`?",
+      "why": "High betweenness centrality (0.021) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation` to the rest of the system?",
+      "why": "55 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
 }

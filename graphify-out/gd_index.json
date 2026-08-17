@@ -681,13 +681,19 @@
       ],
       "loads": [
         {
-          "line": 31,
+          "line": 60,
+          "raw": "res://ui/lvl indicator/lvl_up.png",
+          "path": "ui/lvl indicator/lvl_up.png",
+          "call": "load"
+        },
+        {
+          "line": 68,
           "raw": "res://assets/Models/GLB format/tower-round-crystals.glb",
           "path": "assets/Models/GLB format/tower-round-crystals.glb",
           "call": "load"
         },
         {
-          "line": 242,
+          "line": 377,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -697,6 +703,30 @@
         {
           "name": "max_level",
           "type": "int"
+        },
+        {
+          "name": "indicator_position",
+          "type": "Vector3"
+        },
+        {
+          "name": "indicator_pixel_size",
+          "type": "float"
+        },
+        {
+          "name": "upgrade_btn_position",
+          "type": "Vector3"
+        },
+        {
+          "name": "upgrade_btn_pixel_size",
+          "type": "float"
+        },
+        {
+          "name": "shadow_offset",
+          "type": "Vector2"
+        },
+        {
+          "name": "shadow_color",
+          "type": "Color"
         }
       ]
     },
@@ -728,31 +758,31 @@
       ],
       "loads": [
         {
-          "line": 96,
+          "line": 101,
           "raw": "res://scripts/WaveManager.gd",
           "path": "scripts/WaveManager.gd",
           "call": "preload"
         },
         {
-          "line": 97,
+          "line": 102,
           "raw": "res://scripts/IncursionPillar.gd",
           "path": "scripts/IncursionPillar.gd",
           "call": "preload"
         },
         {
-          "line": 665,
+          "line": 677,
           "raw": "res://shaders/tree_sway.gdshader",
           "path": "shaders/tree_sway.gdshader",
           "call": "preload"
         },
         {
-          "line": 983,
+          "line": 995,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 989,
+          "line": 1001,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
@@ -821,6 +851,18 @@
         },
         {
           "name": "grass_scale_xz_max",
+          "type": "float"
+        },
+        {
+          "name": "grass_cast_shadows",
+          "type": "bool"
+        },
+        {
+          "name": "tree_large_y_offset",
+          "type": "float"
+        },
+        {
+          "name": "tree_y_offset",
           "type": "float"
         }
       ]

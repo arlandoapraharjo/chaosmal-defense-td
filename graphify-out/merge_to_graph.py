@@ -284,7 +284,12 @@ def merge(
         print(f"\nBackup written : {bak_path}")
 
         # Merge into graph
-        all_nodes = graph.get("nodes", []) + new_gd_nodes + new_tscn_nodes
+        existing_nodes = graph.get("nodes", [])
+        if force_update:
+            new_node_ids = {n["id"] for n in new_gd_nodes + new_tscn_nodes}
+            existing_nodes = [n for n in existing_nodes if n["id"] not in new_node_ids]
+
+        all_nodes = existing_nodes + new_gd_nodes + new_tscn_nodes
         all_links = graph.get("links", []) + fresh_gd_edges + fresh_tscn_edges
 
         graph["nodes"] = all_nodes
