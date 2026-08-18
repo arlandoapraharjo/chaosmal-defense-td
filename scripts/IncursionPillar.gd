@@ -47,16 +47,20 @@ func _load_textures() -> void:
 	# Load level indicator textures (lvl_1 to lvl_5)
 	for i in range(1, 6):
 		var tex: Texture2D = null
-		if ResourceLoader.exists("res://ui/lvl indicator/lvl_%d.png" % i):
+		if ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_%d.png" % i):
+			tex = load("res://UI/Level Up - Indicator/lvl_%d.png" % i) as Texture2D
+		elif ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_%d.gif" % i):
+			tex = load("res://UI/Level Up - Indicator/lvl_%d.gif" % i) as Texture2D
+		elif ResourceLoader.exists("res://ui/lvl indicator/lvl_%d.png" % i):
 			tex = load("res://ui/lvl indicator/lvl_%d.png" % i) as Texture2D
-		elif ResourceLoader.exists("res://ui/lvl indicator/lvl_%d.gif" % i):
-			tex = load("res://ui/lvl indicator/lvl_%d.gif" % i) as Texture2D
 		
 		if tex:
 			level_textures.append(tex)
 	
 	# Load level up button texture
-	if ResourceLoader.exists("res://ui/lvl indicator/lvl_up.png"):
+	if ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_up.png"):
+		upgrade_texture = load("res://UI/Level Up - Indicator/lvl_up.png") as Texture2D
+	elif ResourceLoader.exists("res://ui/lvl indicator/lvl_up.png"):
 		upgrade_texture = load("res://ui/lvl indicator/lvl_up.png") as Texture2D
 
 func _process(delta: float) -> void:
