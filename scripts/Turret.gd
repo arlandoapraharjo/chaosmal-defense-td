@@ -46,12 +46,18 @@ var _base_cooldown: float = 1.0
 var _current_target: Node3D = null
 # Initial forward direction upon placement (for 180-degree half-circle restriction)
 var _initial_facing_dir: Vector3 = Vector3.FORWARD
+# Catapult arm node for swing animation
+var _catapult_arm: Node3D = null
+var _catapult_swing_tween: Tween = null
+# Recoil animation state
+var _recoil_tween: Tween = null
 
 func _ready() -> void:
 	_base_cooldown = cooldown
 	_base_attack_damage = attack_damage
 	_auto_detect_weapon_type()
 	call_deferred("_capture_initial_facing")
+	call_deferred("_find_catapult_arm")
 
 ## Apply a global speed multiplier — faster speed = shorter cooldown = higher fire rate.
 func set_speed_multiplier(multiplier: float) -> void:
@@ -177,11 +183,18 @@ func _recalculate_stats() -> void:
 func _trigger_single_target_attack(target: Node3D) -> void:
 	if is_instance_valid(target):
 		_spawn_ammo_projectile(target.global_transform.origin, target)
+		# Recoil for non-catapult weapons (pushed backward away from target)
+		if weapon_type != "catapult":
+			_play_recoil(target.global_transform.origin)
 	print("Turret (%s) fired at %s" % [weapon_type, target.name if is_instance_valid(target) else "target"])
 
 func _trigger_aoe_attack(targets: Array[Node3D]) -> void:
 	if not targets.is_empty() and is_instance_valid(targets[0]):
-		_spawn_ammo_projectile(targets[0].global_transform.origin, null, targets)
+		if weapon_type == "catapult":
+			_play_catapult_swing(targets[0].global_transform.origin, null, targets)
+		else:
+			_spawn_ammo_projectile(targets[0].global_transform.origin, null, targets)
+			_play_recoil(targets[0].global_transform.origin)
 	print("Turret (%s AoE) fired, affecting %d enemies" % [weapon_type, targets.size()])
 
 func _get_ammo_scene(type_name: String) -> PackedScene:
@@ -212,6 +225,7 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 		# Fix ballista arrow model facing backwards — rotate 180° on Y axis
 		if weapon_type == "ballista":
 			ammo_instance.rotate_y(deg_to_rad(180.0))
+
 
 	var tween: Tween = create_tween()
 	if weapon_type == "catapult":
@@ -247,3 +261,154 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 
 func reset_cooldown() -> void:
 	_cooldown_timer = 0.0
+
+# ── Catapult Swing Animation ────────────────────────────────────────────────────
+
+## Locate the catapult arm child node for the swing animation.
+## Searches for nodes named arm/lever/beam, then falls back to the tallest
+## MeshInstance3D child, which is typically the throwing arm.
+func _find_catapult_arm() -> void:
+	if weapon_type != "catapult":
+		return
+	# Search by common arm-related name patterns
+	var arm_keywords: Array[String] = ["arm", "lever", "beam", "throw", "swing", "sling"]
+	for keyword in arm_keywords:
+		var found: Node = _find_child_by_keyword(self, keyword)
+		if found and found is Node3D:
+			_catapult_arm = found as Node3D
+			return
+	# Fallback: use the first MeshInstance3D child (skip the base platform)
+	var meshes: Array[MeshInstance3D] = []
+	_collect_mesh_instances(self, meshes)
+	if meshes.size() > 1:
+		# Pick the mesh with the highest local Y — likely the arm
+		var best: MeshInstance3D = meshes[0]
+		var best_y: float = best.position.y
+		for m in meshes:
+			if m.position.y > best_y:
+				best = m
+				best_y = m.position.y
+		_catapult_arm = best
+	elif meshes.size() == 1:
+		_catapult_arm = meshes[0]
+
+## Recursively search for a child node whose name contains keyword (case-insensitive).
+func _find_child_by_keyword(node: Node, keyword: String) -> Node:
+	for child in node.get_children():
+		if child.name.to_lower().find(keyword) != -1:
+			return child
+		var result: Node = _find_child_by_keyword(child, keyword)
+		if result:
+			return result
+	return null
+
+## Recursively collect all MeshInstance3D nodes.
+func _collect_mesh_instances(node: Node, result: Array[MeshInstance3D]) -> void:
+	for child in node.get_children():
+		if child is MeshInstance3D:
+			result.append(child)
+		_collect_mesh_instances(child, result)
+
+## Play the catapult throw animation and spawn the boulder at the peak of the swing.
+## The arm winds back, swings forward fast (launching the boulder), then returns.
+func _play_catapult_swing(target_pos: Vector3, target_enemy: Node3D = null, aoe_enemies: Array[Node3D] = []) -> void:
+	var arm: Node3D = _catapult_arm if is_instance_valid(_catapult_arm) else self
+	# Kill any existing swing so they don't stack
+	if _catapult_swing_tween and _catapult_swing_tween.is_valid():
+		_catapult_swing_tween.kill()
+
+	# Store original rotation to restore after animation
+	var original_rot: Vector3 = arm.rotation
+
+	# Determine swing axis — catapult arms swing on X axis (pitch forward)
+	# Wind-back: tilt arm slightly backward
+	# Throw: swing arm forward past neutral to the throw angle
+	# Return: ease back to original position
+	var wind_back_angle: float = deg_to_rad(-15.0)  # Backward tilt
+	var throw_angle: float = deg_to_rad(45.0)       # Forward throw
+	var wind_back_time: float = 0.15                 # Quick wind-up
+	var throw_time: float = 0.10                     # Fast throw
+	var hold_time: float = 0.05                      # Brief hold at peak
+	var return_time: float = 0.35                    # Slow return
+
+	_catapult_swing_tween = create_tween()
+	_catapult_swing_tween.set_ease(Tween.EASE_IN_OUT)
+	_catapult_swing_tween.set_trans(Tween.TRANS_SINE)
+
+	# Phase 1: Wind back
+	_catapult_swing_tween.tween_property(arm, "rotation:x",
+		original_rot.x + wind_back_angle, wind_back_time)
+
+	# Phase 2: Fast throw forward
+	_catapult_swing_tween.tween_property(arm, "rotation:x",
+		original_rot.x + throw_angle, throw_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+	# Phase 3: Spawn the boulder at the peak of the throw
+	_catapult_swing_tween.tween_callback(func():
+		_spawn_ammo_projectile(target_pos, target_enemy, aoe_enemies)
+	)
+
+	# Phase 4: Brief hold at peak
+	_catapult_swing_tween.tween_interval(hold_time)
+
+	# Phase 5: Slow return with a slight bounce
+	_catapult_swing_tween.tween_property(arm, "rotation:x",
+		original_rot.x - deg_to_rad(5.0), return_time * 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_catapult_swing_tween.tween_property(arm, "rotation:x",
+		original_rot.x, return_time * 0.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+
+# ── Recoil Animation ────────────────────────────────────────────────────────────
+
+var _base_position: Vector3 = Vector3.ZERO
+var _has_base_position: bool = false
+
+## Push-back recoil for turret, cannon, and ballista.
+## Slides the turret backward away from the target, then springs back.
+func _play_recoil(target_pos: Vector3 = Vector3.ZERO) -> void:
+	if not _has_base_position:
+		_base_position = position
+		_has_base_position = true
+
+	if _recoil_tween and _recoil_tween.is_valid():
+		_recoil_tween.kill()
+		position = _base_position
+
+	# Calculate vector pointing directly AWAY from the target (backward from firing direction)
+	var dir_away: Vector3 = Vector3.ZERO
+	if target_pos != Vector3.ZERO:
+		dir_away = global_transform.origin - target_pos
+		dir_away.y = 0.0
+
+	if dir_away.length_squared() > 0.0001:
+		dir_away = dir_away.normalized()
+	else:
+		# Fallback to model's reverse forward direction
+		dir_away = -global_transform.basis.z.normalized()
+		dir_away.y = 0.0
+		if dir_away.length_squared() > 0.0001:
+			dir_away = dir_away.normalized()
+		else:
+			dir_away = Vector3.BACK
+
+	var recoil_strength: float = 0.10
+	if weapon_type == "cannon":
+		recoil_strength = 0.20
+	elif weapon_type == "ballista":
+		recoil_strength = 0.12
+
+	var recoil_offset_world: Vector3 = dir_away * recoil_strength
+	# Convert to local space offset since we animate local position
+	var parent_basis: Basis = get_parent().global_transform.basis if get_parent() else Basis.IDENTITY
+	var local_offset: Vector3 = parent_basis.inverse() * recoil_offset_world
+
+	_recoil_tween = create_tween()
+	# Phase 1: Snap backward (away from target)
+	_recoil_tween.tween_property(self, "position",
+		_base_position + local_offset, 0.05).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	# Phase 2: Bounce forward slightly past origin
+	_recoil_tween.tween_property(self, "position",
+		_base_position - local_offset * 0.2, 0.12).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	# Phase 3: Settle cleanly back to base resting position
+	_recoil_tween.tween_property(self, "position",
+		_base_position, 0.08).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+

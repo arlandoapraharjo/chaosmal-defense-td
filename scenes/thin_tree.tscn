@@ -2,7 +2,7 @@
 
 [ext_resource type="ArrayMesh" uid="uid://cf3xbkdn1glrk" path="res://addons/Mesh/thin_tree_stylized_Cube_004.res" id="1_wxmxb"]
 [ext_resource type="Material" uid="uid://xnbtiu5180on" path="res://addons/Materials/leaves_mat_thin.tres" id="2_ws2ob"]
-[ext_resource type="ArrayMesh" uid="uid://c5f7bho2v5ex8" path="res://addons/Mesh/thin_tree_stylized_trunk_fix_Cube.res" id="3_ws2ob"]
+[ext_resource type="ArrayMesh" uid="uid://csg2t2wwnr1p8" path="res://addons/Mesh/thin_tree_stylized_trunk_fix_Cube.res" id="3_ws2ob"]
 [ext_resource type="Shader" uid="uid://ctdrf8cp7568r" path="res://addons/Shader/trunk_shader.gdshader" id="4_trunk_shader"]
 [ext_resource type="Texture2D" uid="uid://7264wnuxqqop" path="res://addons/Textures/tree_bark.png" id="5_tree_bark"]
 
