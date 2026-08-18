@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://71ug0n8kquqo" path="res://assets/menus/IMG-20230621-WA0013.jpg" id="2_0cgh2"]
 [ext_resource type="Texture2D" uid="uid://3faw8ljjbtj7" path="res://assets/menus/grid.png" id="2_grid"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn"]
 texture = ExtResource("2_grid")
 texture_margin_left = 10.0
 texture_margin_top = 10.0
@@ -13,65 +13,96 @@ texture_margin_bottom = 10.0
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
-[node name="MainMenu" type="Control" unique_id=711552719]
+[node name="Main" type="Node2D" unique_id=914936948]
+script = ExtResource("1_script")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=578386236]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=1175489396]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_script")
 
-[node name="Background" type="ColorRect" parent="." unique_id=1441073028]
+[node name="Background" type="ColorRect" parent="CanvasLayer/Control" unique_id=1259132434]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0, 0, 0, 1)
 
-[node name="TextureRect" type="TextureRect" parent="Background" unique_id=430845981]
-layout_mode = 0
-offset_top = -19.0
-offset_right = 1155.0
-offset_bottom = 686.0
-texture = ExtResource("2_0cgh2")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1172662925]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/Background" unique_id=1193574546]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 258.00006
-offset_top = 92.0
-offset_right = 458.0
-offset_bottom = 232.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.5, 1.5)
-theme_override_constants/separation = 20
+texture = ExtResource("2_0cgh2")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="StartButton" type="Button" parent="VBoxContainer" unique_id=248423127]
-custom_minimum_size = Vector2(200, 60)
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control" unique_id=326894317]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.102000006
+anchor_top = 0.397
+anchor_right = 0.30100003
+anchor_bottom = 0.73700005
+offset_left = -18.504005
+offset_top = -106.75601
+offset_right = 24.247955
+offset_bottom = 17.42398
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer" unique_id=1589070003]
 layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 48
+text = "Code Circus"
+horizontal_alignment = 1
+
+[node name="ButtonStart" type="Button" parent="CanvasLayer/Control/VBoxContainer" unique_id=911141927]
+custom_minimum_size = Vector2(240, 60)
+layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("StyleBoxTexture_1")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_1")
-theme_override_styles/hover = SubResource("StyleBoxTexture_1")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn")
 text = "Start Game"
 
-[node name="ExitButton" type="Button" parent="VBoxContainer" unique_id=467498937]
-custom_minimum_size = Vector2(200, 60)
+[node name="ButtonSettings" type="Button" parent="CanvasLayer/Control/VBoxContainer" unique_id=353551886]
+custom_minimum_size = Vector2(240, 60)
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("StyleBoxTexture_1")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_1")
-theme_override_styles/hover = SubResource("StyleBoxTexture_1")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn")
+text = "Settings"
+
+[node name="ButtonQuit" type="Button" parent="CanvasLayer/Control/VBoxContainer" unique_id=881836931]
+custom_minimum_size = Vector2(240, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn")
 text = "Exit"
 
-[connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/ButtonStart" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/ButtonSettings" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/ButtonQuit" to="." method="_on_quit_button_pressed"]
