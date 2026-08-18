@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b3kltwp2t23uc"
-path="res://.godot/imported/lvl_3.png-6e2c62a38902bbfa2ab0f025b538a8a7.ctex"
+uid="uid://w4wave4ind"
+path="res://.godot/imported/wave_4.png-7580d7ec2de4623bf548e2ae548a2ef8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/lvl indicator/lvl_3.png"
-dest_files=["res://.godot/imported/lvl_3.png-6e2c62a38902bbfa2ab0f025b538a8a7.ctex"]
+source_file="res://UI/Wave Indicator/wave_4.png"
+dest_files=["res://.godot/imported/wave_4.png-7580d7ec2de4623bf548e2ae548a2ef8.ctex"]
 
 [params]
 

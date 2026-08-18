@@ -284,59 +284,134 @@
     "ast_hash": "054c8d4cb884153a3ff7d26f6cc707fc",
     "semantic_hash": ""
   },
-  "UI/lvl indicator/lvl_1.gif": {
+  "UI/Level Up - Indicator/lvl_1.gif": {
     "mtime": 1786890059.047438,
     "ast_hash": "9023e997bbb724e8d96606cfbd615e1f",
     "semantic_hash": ""
   },
-  "UI/lvl indicator/lvl_1.png": {
+  "UI/Level Up - Indicator/lvl_1.png": {
     "mtime": 1786891737.1094205,
     "ast_hash": "d9d018558e1e6df1bb9a29ed835e176a",
     "semantic_hash": ""
   },
-  "UI/lvl indicator/lvl_2.gif": {
+  "UI/Level Up - Indicator/lvl_2.gif": {
     "mtime": 1786890081.9083235,
     "ast_hash": "5a73147668c5bcb279012b3edf5a049e",
     "semantic_hash": ""
   },
-  "UI/lvl indicator/lvl_2.png": {
+  "UI/Level Up - Indicator/lvl_2.png": {
     "mtime": 1786891737.1187012,
     "ast_hash": "cc5d930972aadff216667aed7c25d51e",
     "semantic_hash": ""
   },
-  "UI/lvl indicator/lvl_3.gif": {
+  "UI/Level Up - Indicator/lvl_3.gif": {
     "mtime": 1786890096.6274543,
     "ast_hash": "991105b07e1efc4fbfbc9279cda55a73",
     "semantic_hash": ""
   },
-  "UI/lvl indicator/lvl_3.png": {
+  "UI/Level Up - Indicator/lvl_3.png": {
     "mtime": 1786891737.1208336,
     "ast_hash": "a023ce78f99f75bb5a2effe4762b8dfc",
     "semantic_hash": ""
   },
-  "UI/lvl indicator/lvl_4.gif": {
+  "UI/Level Up - Indicator/lvl_4.gif": {
     "mtime": 1786890105.7632687,
     "ast_hash": "e2149f778c8209f3cbe709c636bfa127",
     "semantic_hash": ""
   },
-  "UI/lvl indicator/lvl_4.png": {
+  "UI/Level Up - Indicator/lvl_4.png": {
     "mtime": 1786891737.1229126,
     "ast_hash": "f4bc2636b5d51e6029c3933d3d639c91",
     "semantic_hash": ""
   },
-  "UI/lvl indicator/lvl_5.gif": {
+  "UI/Level Up - Indicator/lvl_5.gif": {
     "mtime": 1786890116.103179,
     "ast_hash": "8fd00376af59381f522139b0a4e6585b",
     "semantic_hash": ""
   },
-  "UI/lvl indicator/lvl_5.png": {
+  "UI/Level Up - Indicator/lvl_5.png": {
     "mtime": 1786891737.1250157,
     "ast_hash": "fd1f4835b33bb03f3bfe05c39bde59fd",
     "semantic_hash": ""
   },
-  "UI/lvl indicator/lvl_up.png": {
+  "UI/Level Up - Indicator/lvl_up.png": {
     "mtime": 1786891025.4833014,
     "ast_hash": "ee6cb932ff54c20d252dc5680970ed68",
+    "semantic_hash": ""
+  },
+  "UI/Level Up - Indicator/lvl_upNew.gif": {
+    "mtime": 1787047028.2613695,
+    "ast_hash": "04c7fc41ed1324daf49d5e432d1c560b",
+    "semantic_hash": ""
+  },
+  "UI/Pause&Play/esc_button.png": {
+    "mtime": 1787056271.0261042,
+    "ast_hash": "d5afd6940c0b3513acfa9fbc53a78507",
+    "semantic_hash": ""
+  },
+  "UI/Pause&Play/play_button.png": {
+    "mtime": 1787056199.191824,
+    "ast_hash": "e7fe71db2ac3d28fb118e162b993d813",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/intro waver.gif": {
+    "mtime": 1787059092.3057356,
+    "ast_hash": "3dff10d78be719d9d7a54da82bf2a4ae",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/wave_1.gif": {
+    "mtime": 1787059117.356293,
+    "ast_hash": "6e4d1574ba9fbba63a2519a27ede0fa5",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/wave_2.gif": {
+    "mtime": 1787059126.4917789,
+    "ast_hash": "d69904a67cda8d4b91d6f261dcee4fdb",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/wave_3.gif": {
+    "mtime": 1787059135.266008,
+    "ast_hash": "9e001e2b363ce1002a845cc5edc270da",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/wave_4.gif": {
+    "mtime": 1787059141.821535,
+    "ast_hash": "ec38dcc6a18cd14ba4aaadd77c94f0ea",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/wave_5.gif": {
+    "mtime": 1787059152.2494006,
+    "ast_hash": "352367e4a93c52c4e658048ecf0f3493",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/intro_waver.png": {
+    "mtime": 1787060452.2170463,
+    "ast_hash": "8d3790486ac0c35bfb9a8c179b2d0a1e",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/wave_1.png": {
+    "mtime": 1787060452.2235656,
+    "ast_hash": "b01ed2a53a30ae847447ced507fcf960",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/wave_2.png": {
+    "mtime": 1787060452.228564,
+    "ast_hash": "c7a90cd98987499e585a3e7bdb31afc7",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/wave_3.png": {
+    "mtime": 1787060452.2347875,
+    "ast_hash": "89b6ba075b2443618a5d22ee492095ff",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/wave_4.png": {
+    "mtime": 1787060452.240874,
+    "ast_hash": "07f4d1ae3aa884a3190b2d06ea695d11",
+    "semantic_hash": ""
+  },
+  "UI/Wave Indicator/wave_5.png": {
+    "mtime": 1787060452.2465496,
+    "ast_hash": "09e9a7cf3b772ec2d85f4a2f073401bd",
     "semantic_hash": ""
   }
 }

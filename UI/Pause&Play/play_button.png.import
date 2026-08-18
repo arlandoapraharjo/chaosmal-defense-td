@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ddhqhp4o87roj"
-path="res://.godot/imported/lvl_5.png-f57bebc8447c0dd8df6072abc769ab0a.ctex"
+uid="uid://di252ia5u7a3j"
+path="res://.godot/imported/play_button.png-9007152439bf436019186dfaa004783e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/lvl indicator/lvl_5.png"
-dest_files=["res://.godot/imported/lvl_5.png-f57bebc8447c0dd8df6072abc769ab0a.ctex"]
+source_file="res://UI/Pause&Play/play_button.png"
+dest_files=["res://.godot/imported/play_button.png-9007152439bf436019186dfaa004783e.ctex"]
 
 [params]
 

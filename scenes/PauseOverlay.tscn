@@ -3,22 +3,12 @@
 [ext_resource type="Script" path="res://scripts/PauseOverlay.gd" id="1_script"]
 [ext_resource type="Shader" path="res://shaders/grayscale.gdshader" id="2_shader"]
 
+[ext_resource type="Texture2D" uid="uid://dc02vwg6nkt0f" path="res://UI/Pause&Play/esc_button.png" id="3_esc"]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_grayscale"]
 shader = ExtResource("2_shader")
 shader_parameter/desaturation = 0.85
 shader_parameter/tint_color = Color(0.3, 0.3, 0.35, 1.0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
-bg_color = Color(0.12, 0.14, 0.18, 0.85)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.95, 0.75, 0.2, 0.9)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
 
 [node name="PauseOverlay" type="CanvasLayer"]
 process_mode = 3
@@ -34,13 +24,11 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="PauseButton" type="Button" parent="."]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 120.0
-offset_bottom = 46.0
-theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn")
-text = "⏸ Pause"
+[node name="PauseButton" type="TextureButton" parent="."]
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 52.0
+offset_bottom = 52.0
+texture_normal = ExtResource("3_esc")
+ignore_texture_size = true
+stretch_mode = 5

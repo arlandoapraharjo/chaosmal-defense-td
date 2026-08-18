@@ -445,8 +445,6 @@ func _build_map() -> void:
 
 					if r > 0.75:
 						var t_scale = active_biome.tree_scale if active_biome else 1.0
-						if is_desert_biome and is_adjacent_to_path:
-							t_scale = min(t_scale, 1.5)
 						var t_basis = deco_basis.scaled(Vector3(t_scale, t_scale, t_scale))
 						var t_origin = origin
 						t_origin.y += tree_y_offset
@@ -686,7 +684,17 @@ func _make_multimesh_node(node_name: String, scene: PackedScene, is_tree: bool =
 				# ShaderMaterial (e.g. foliage scenes with their own wind shader) — keep as-is
 				mmi.material_override = info["material"]
 		elif info["material"] != null:
-			mmi.material_override = info["material"]
+			if info["material"] is BaseMaterial3D:
+				var base_mat = (info["material"] as BaseMaterial3D).duplicate()
+				# Prevent harsh self-shadowing / black polygons on foliage and trees
+				if is_tree and not is_trunk:
+					base_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+					base_mat.diffuse_mode = BaseMaterial3D.DIFFUSE_BURLEY
+					base_mat.backlight_enabled = true
+					base_mat.backlight = Color(0.4, 0.4, 0.3)
+				mmi.material_override = base_mat
+			else:
+				mmi.material_override = info["material"]
 			
 		root.add_child(mmi)
 
