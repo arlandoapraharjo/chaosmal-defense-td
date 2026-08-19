@@ -13,7 +13,12 @@ const WAVE_TEXTURES = {
 	2: preload("res://UI/Wave Indicator/wave_2.png"),
 	3: preload("res://UI/Wave Indicator/wave_3.png"),
 	4: preload("res://UI/Wave Indicator/wave_4.png"),
-	5: preload("res://UI/Wave Indicator/wave_5.png")
+	5: preload("res://UI/Wave Indicator/wave_5.png"),
+	6: preload("res://UI/Wave Indicator/wave_1x2.png"),
+	7: preload("res://UI/Wave Indicator/wave_2x2.png"),
+	8: preload("res://UI/Wave Indicator/wave_3x2.png"),
+	9: preload("res://UI/Wave Indicator/wave_4x2.png"),
+	10: preload("res://UI/Wave Indicator/wave_5x2.png")
 }
 
 func _ready() -> void:
@@ -28,7 +33,7 @@ func update_wave(wave_number: int) -> void:
 	if not container or not wave_texture:
 		return
 
-	var target_tex = WAVE_TEXTURES.get(wave_number, WAVE_TEXTURES.get(5))
+	var target_tex = WAVE_TEXTURES.get(wave_number, WAVE_TEXTURES.get(10))
 
 	if _wave_tween and _wave_tween.is_running():
 		_wave_tween.kill()

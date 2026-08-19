@@ -1,10 +1,10 @@
 extends CanvasLayer
 
-@onready var label: Label = $Control/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Label
-@onready var panel: PanelContainer = $Control/MarginContainer/VBoxContainer/PanelContainer
+@onready var label: Label = $Control/MarginContainer/VBoxContainer/CoinsBanner/Label
+@onready var panel: TextureRect = $Control/MarginContainer/VBoxContainer/CoinsBanner
 
-@onready var deployment_label: Label = $Control/MarginContainer/VBoxContainer/DeploymentPanel/HBoxContainer/Label
-@onready var deployment_panel: PanelContainer = $Control/MarginContainer/VBoxContainer/DeploymentPanel
+@onready var deployment_label: Label = $Control/MarginContainer/VBoxContainer/TurretBanner/Label
+@onready var deployment_panel: TextureRect = $Control/MarginContainer/VBoxContainer/TurretBanner
 
 func _ready() -> void:
 	call_deferred("_connect_manager")
@@ -21,7 +21,7 @@ func _connect_manager() -> void:
 
 func _on_currency_changed(amount: int) -> void:
 	if label:
-		label.text = "Coins: %d" % amount
+		label.text = str(amount)
 		# Subtle punch scale animation when currency changes
 		var tween = create_tween()
 		tween.tween_property(panel, "scale", Vector2(1.1, 1.1), 0.1)
@@ -38,7 +38,7 @@ func _connect_builder_controller() -> void:
 
 func _on_deployment_updated(current: int, max_deploy: int) -> void:
 	if deployment_label:
-		deployment_label.text = "Turrets: %d / %d" % [current, max_deploy]
+		deployment_label.text = "%d / %d" % [current, max_deploy]
 		var tween = create_tween()
 		tween.tween_property(deployment_panel, "scale", Vector2(1.1, 1.1), 0.1)
 		tween.tween_property(deployment_panel, "scale", Vector2(1.0, 1.0), 0.1)

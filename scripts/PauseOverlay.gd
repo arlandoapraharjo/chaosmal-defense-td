@@ -4,8 +4,8 @@ class_name PauseOverlay
 @onready var color_rect: ColorRect = $ColorRect
 @onready var pause_button: BaseButton = $PauseButton
 
-var _tex_esc = preload("res://UI/Pause&Play/esc_button.png")
-var _tex_play = preload("res://UI/Pause&Play/play_button.png")
+var _tex_esc = preload("res://UI/Pause&Play/esc_buttonV2.png")
+var _tex_play = preload("res://UI/Pause&Play/play_buttonV2.png")
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS

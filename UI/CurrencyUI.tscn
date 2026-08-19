@@ -1,20 +1,8 @@
 [gd_scene format=3 uid="uid://d2se7ia331gmq"]
 
 [ext_resource type="Script" uid="uid://s8f8c7mj41j5" path="res://UI/CurrencyUI.gd" id="1_currency_script"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_currency"]
-bg_color = Color(0.12, 0.14, 0.18, 0.85)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.95, 0.75, 0.2, 0.9)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-shadow_color = Color(0, 0, 0, 0.4)
-shadow_size = 6
+[ext_resource type="Texture2D" uid="uid://0j2omnkoier5" path="res://UI/Coins&Turret/coins_banner.png" id="2_coins_banner"]
+[ext_resource type="Texture2D" uid="uid://ccuisw80s73rt" path="res://UI/Coins&Turret/turret_banner.png" id="3_turret_banner"]
 
 [node name="CurrencyUI" type="CanvasLayer"]
 layer = 10
@@ -44,42 +32,54 @@ grow_horizontal = 0
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="PanelContainer" type="PanelContainer" parent="Control/MarginContainer/VBoxContainer"]
+[node name="CoinsBanner" type="TextureRect" parent="Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 48)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_currency")
+pivot_offset = Vector2(100, 24)
+texture = ExtResource("2_coins_banner")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer/PanelContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="Icon" type="Label" parent="Control/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.84, 0, 1)
-theme_override_font_sizes/font_size = 22
-text = "🪙 "
-
-[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
-layout_mode = 2
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/CoinsBanner"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 48.0
+offset_right = -14.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 20
-text = "Coins: 0"
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="DeploymentPanel" type="PanelContainer" parent="Control/MarginContainer/VBoxContainer"]
+[node name="TurretBanner" type="TextureRect" parent="Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 48)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_currency")
+pivot_offset = Vector2(100, 24)
+texture = ExtResource("3_turret_banner")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer/DeploymentPanel"]
-layout_mode = 2
-alignment = 1
-
-[node name="Icon" type="Label" parent="Control/MarginContainer/VBoxContainer/DeploymentPanel/HBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 22
-text = "🗼 "
-
-[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/DeploymentPanel/HBoxContainer"]
-layout_mode = 2
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/TurretBanner"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 48.0
+offset_right = -14.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 20
-text = "Turrets: 0 / 10"
+text = "0 / 10"
+horizontal_alignment = 1
+vertical_alignment = 1

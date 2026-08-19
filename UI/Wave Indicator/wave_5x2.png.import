@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dc02vwg6nkt0f"
-path="res://.godot/imported/esc_button.png-a83a134c9f1f02a00ecd96d70d95798a.ctex"
+uid="uid://c1gwe54ch14l4"
+path="res://.godot/imported/wave_5x2.png-5e154e2af47c0e8c4005fbc10717106f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/Pause&Play/esc_button.png"
-dest_files=["res://.godot/imported/esc_button.png-a83a134c9f1f02a00ecd96d70d95798a.ctex"]
+source_file="res://UI/Wave Indicator/wave_5x2.png"
+dest_files=["res://.godot/imported/wave_5x2.png-5e154e2af47c0e8c4005fbc10717106f.ctex"]
 
 [params]
 
