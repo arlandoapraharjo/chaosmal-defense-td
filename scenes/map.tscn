@@ -96,7 +96,6 @@ transform = Transform3D(0.86643666, -0.25530002, 0.4290798, 0.007557401, 0.86599
 shadow_enabled = true
 directional_shadow_mode = 0
 directional_shadow_max_distance = 60.0
-directional_shadow_pancake_size = 20.0
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=1033910215]
 use_hdr_2d = true

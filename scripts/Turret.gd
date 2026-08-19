@@ -197,8 +197,21 @@ func _trigger_aoe_attack(targets: Array[Node3D]) -> void:
 			_play_recoil(targets[0].global_transform.origin)
 	print("Turret (%s AoE) fired, affecting %d enemies" % [weapon_type, targets.size()])
 
+var _hit_particle_scene: PackedScene = preload("res://scenes/hit_particle.tscn")
+
 func _get_ammo_scene(type_name: String) -> PackedScene:
 	return _ammo_scenes.get(type_name, _ammo_scenes.get("turret", null))
+
+func _spawn_hit_particle(pos: Vector3) -> void:
+	if _hit_particle_scene == null:
+		return
+	var hit_part = _hit_particle_scene.instantiate()
+	var scene_root = get_tree().current_scene
+	if scene_root:
+		scene_root.add_child(hit_part)
+	else:
+		get_parent().add_child(hit_part)
+	hit_part.global_position = pos
 
 func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, aoe_enemies: Array[Node3D] = []) -> void:
 	var ammo_scene: PackedScene = _get_ammo_scene(weapon_type)
@@ -243,6 +256,9 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 		tween.tween_property(ammo_instance, "global_position", target_pos, flight_time)
 
 	tween.tween_callback(func():
+		var impact_pos = target_pos + Vector3(0, 0.3, 0)
+		_spawn_hit_particle(impact_pos)
+
 		if is_instance_valid(target_enemy) and target_enemy.has_method("take_damage"):
 			target_enemy.take_damage(attack_damage)
 		elif not aoe_enemies.is_empty():

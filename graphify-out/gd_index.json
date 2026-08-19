@@ -1,8 +1,8 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scripts": 21,
-    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
+    "total_scripts": 22,
+    "root": "C:\\igi-dev-code-circus"
   },
   "scripts": [
     {
@@ -335,7 +335,44 @@
           "params": []
         }
       ],
-      "loads": [],
+      "loads": [
+        {
+          "line": 10,
+          "raw": "res://UI/Wave Indicator/intro_waver.png",
+          "path": "UI/Wave Indicator/intro_waver.png",
+          "call": "preload"
+        },
+        {
+          "line": 12,
+          "raw": "res://UI/Wave Indicator/wave_1.png",
+          "path": "UI/Wave Indicator/wave_1.png",
+          "call": "preload"
+        },
+        {
+          "line": 13,
+          "raw": "res://UI/Wave Indicator/wave_2.png",
+          "path": "UI/Wave Indicator/wave_2.png",
+          "call": "preload"
+        },
+        {
+          "line": 14,
+          "raw": "res://UI/Wave Indicator/wave_3.png",
+          "path": "UI/Wave Indicator/wave_3.png",
+          "call": "preload"
+        },
+        {
+          "line": 15,
+          "raw": "res://UI/Wave Indicator/wave_4.png",
+          "path": "UI/Wave Indicator/wave_4.png",
+          "call": "preload"
+        },
+        {
+          "line": 16,
+          "raw": "res://UI/Wave Indicator/wave_5.png",
+          "path": "UI/Wave Indicator/wave_5.png",
+          "call": "preload"
+        }
+      ],
       "exports": []
     },
     {
@@ -665,6 +702,15 @@
       "exports": []
     },
     {
+      "file": "scripts/HitParticle.gd",
+      "class_name": null,
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": []
+    },
+    {
       "file": "scripts/IncursionPillar.gd",
       "class_name": "IncursionPillar",
       "extends": "Node3D",
@@ -681,19 +727,25 @@
       ],
       "loads": [
         {
-          "line": 60,
+          "line": 62,
+          "raw": "res://UI/Level Up - Indicator/lvl_up.png",
+          "path": "UI/Level Up - Indicator/lvl_up.png",
+          "call": "load"
+        },
+        {
+          "line": 64,
           "raw": "res://ui/lvl indicator/lvl_up.png",
           "path": "ui/lvl indicator/lvl_up.png",
           "call": "load"
         },
         {
-          "line": 68,
+          "line": 72,
           "raw": "res://assets/Models/GLB format/tower-round-crystals.glb",
           "path": "assets/Models/GLB format/tower-round-crystals.glb",
           "call": "load"
         },
         {
-          "line": 377,
+          "line": 381,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -770,19 +822,19 @@
           "call": "preload"
         },
         {
-          "line": 677,
+          "line": 675,
           "raw": "res://shaders/tree_sway.gdshader",
           "path": "shaders/tree_sway.gdshader",
           "call": "preload"
         },
         {
-          "line": 995,
+          "line": 1003,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 1001,
+          "line": 1009,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
@@ -873,7 +925,20 @@
       "extends": "CanvasLayer",
       "signals": [],
       "functions": [],
-      "loads": [],
+      "loads": [
+        {
+          "line": 7,
+          "raw": "res://UI/Pause&Play/esc_button.png",
+          "path": "UI/Pause&Play/esc_button.png",
+          "call": "preload"
+        },
+        {
+          "line": 8,
+          "raw": "res://UI/Pause&Play/play_button.png",
+          "path": "UI/Pause&Play/play_button.png",
+          "call": "preload"
+        }
+      ],
       "exports": []
     },
     {
@@ -917,7 +982,14 @@
           "params": []
         }
       ],
-      "loads": [],
+      "loads": [
+        {
+          "line": 200,
+          "raw": "res://scenes/hit_particle.tscn",
+          "path": "scenes/hit_particle.tscn",
+          "call": "preload"
+        }
+      ],
       "exports": [
         {
           "name": "is_aoe",

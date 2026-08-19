@@ -1,8 +1,8 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scenes": 30,
-    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
+    "total_scenes": 31,
+    "root": "C:\\igi-dev-code-circus"
   },
   "scenes": [
     {
@@ -206,12 +206,12 @@
           "type": "MarginContainer"
         },
         {
-          "name": "PanelContainer",
-          "type": "PanelContainer"
+          "name": "WaveTexture",
+          "type": "TextureRect"
         },
         {
-          "name": "HBoxContainer",
-          "type": "HBoxContainer"
+          "name": "NotificationContainer",
+          "type": "MarginContainer"
         }
       ]
     },
@@ -549,6 +549,13 @@
           "raw_path": "res://shaders/grayscale.gdshader",
           "type": "Shader",
           "id": "2_shader"
+        },
+        {
+          "path": "UI/Pause&Play/esc_button.png",
+          "raw_path": "res://UI/Pause&Play/esc_button.png",
+          "type": "Texture2D",
+          "uid": "uid://dc02vwg6nkt0f",
+          "id": "3_esc"
         }
       ],
       "nodes_preview": [
@@ -562,7 +569,7 @@
         },
         {
           "name": "PauseButton",
-          "type": "Button"
+          "type": "TextureButton"
         }
       ]
     },
@@ -829,6 +836,29 @@
       ]
     },
     {
+      "file": "scenes/hit_particle.tscn",
+      "scene_uid": "uid://c3whhx5yvkath",
+      "ext_resources": [
+        {
+          "path": "scripts/HitParticle.gd",
+          "raw_path": "res://scripts/HitParticle.gd",
+          "type": "Script",
+          "uid": "uid://8tlg6mgg5lpv",
+          "id": "1_d8j2k"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "Hit Particle",
+          "type": "Node3D"
+        },
+        {
+          "name": "GPUParticles3D",
+          "type": "GPUParticles3D"
+        }
+      ]
+    },
+    {
       "file": "scenes/map.tscn",
       "scene_uid": "uid://bpg8awe6kssxa",
       "ext_resources": [
@@ -1015,11 +1045,11 @@
           "id": "2_ws2ob"
         },
         {
-          "path": "addons/Mesh/thin_tree_stylized_Cube_002.res",
-          "raw_path": "res://addons/Mesh/thin_tree_stylized_Cube_002.res",
+          "path": "addons/Mesh/thin_tree_stylized_trunk_fix_Cube.res",
+          "raw_path": "res://addons/Mesh/thin_tree_stylized_trunk_fix_Cube.res",
           "type": "ArrayMesh",
-          "uid": "uid://dodhbb6aq57yd",
-          "id": "3_0jtxn"
+          "uid": "uid://csg2t2wwnr1p8",
+          "id": "3_ws2ob"
         },
         {
           "path": "addons/Shader/trunk_shader.gdshader",
@@ -1074,11 +1104,11 @@
           "id": "2_1a2g0"
         },
         {
-          "path": "addons/Mesh/thin_tree_stylized_Cube_002.res",
-          "raw_path": "res://addons/Mesh/thin_tree_stylized_Cube_002.res",
+          "path": "addons/Mesh/thin_tree_stylized_trunk_fix_Cube.res",
+          "raw_path": "res://addons/Mesh/thin_tree_stylized_trunk_fix_Cube.res",
           "type": "ArrayMesh",
-          "uid": "uid://dodhbb6aq57yd",
-          "id": "3_60ek8"
+          "uid": "uid://c5f7bho2v5ex8",
+          "id": "3_1a2g0"
         },
         {
           "path": "addons/Shader/trunk_shader.gdshader",
@@ -1257,6 +1287,9 @@
     "shaders/grayscale.gdshader": [
       "scenes/PauseOverlay.tscn"
     ],
+    "UI/Pause&Play/esc_button.png": [
+      "scenes/PauseOverlay.tscn"
+    ],
     "scripts/PillarShockwave.gd": [
       "scenes/PillarShockwave.tscn"
     ],
@@ -1308,6 +1341,9 @@
     "addons/Materials/grass_billboard_snow.tres": [
       "scenes/grass_single_snow.tscn"
     ],
+    "scripts/HitParticle.gd": [
+      "scenes/hit_particle.tscn"
+    ],
     "scripts/CurrencyManager.gd": [
       "scenes/map.tscn"
     ],
@@ -1327,7 +1363,7 @@
     "addons/Materials/leaves_mat_thin.tres": [
       "scenes/thin_tree.tscn"
     ],
-    "addons/Mesh/thin_tree_stylized_Cube_002.res": [
+    "addons/Mesh/thin_tree_stylized_trunk_fix_Cube.res": [
       "scenes/thin_tree.tscn",
       "scenes/thin_tree_snow.tscn"
     ],
