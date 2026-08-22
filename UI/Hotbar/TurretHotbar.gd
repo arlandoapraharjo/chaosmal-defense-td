@@ -125,7 +125,7 @@ const TURRET_ASSETS: Array[Dictionary] = [
 		"attack_range": 4.0,
 		"footprint_size": Vector2i(2, 2),
 		"mesh_scale": Vector3(2.0, 2.0, 2.0),
-		"weapon_type": "turret",
+		"weapon_type": "heavy_turret",
 		"attack_damage": 50.0,
 		"cooldown": 1.0,
 		"cost": 7,

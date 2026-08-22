@@ -1,0 +1,130 @@
+[gd_scene format=3 uid="uid://ct5vtompixl3d"]
+
+[ext_resource type="Script" uid="uid://8tlg6mgg5lpv" path="res://scripts/HitParticle.gd" id="1_script"]
+
+[sub_resource type="Curve" id="Curve_splinter_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.75, 0.8), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_splinter_scale"]
+curve = SubResource("Curve_splinter_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_splinters"]
+particle_flag_align_y = true
+spread = 120.0
+initial_velocity_min = 3.5
+initial_velocity_max = 6.5
+gravity = Vector3(0, -8, 0)
+damping_min = 2.0
+damping_max = 4.0
+scale_min = 0.08
+scale_max = 0.25
+scale_curve = SubResource("CurveTexture_splinter_scale")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_splinter"]
+albedo_color = Color(0.6, 0.45, 0.25, 1)
+roughness = 0.85
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_splinter"]
+material = SubResource("StandardMaterial3D_splinter")
+top_radius = 0.04
+bottom_radius = 0.01
+height = 0.4
+radial_segments = 5
+rings = 1
+
+[sub_resource type="Curve" id="Curve_chip_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.6, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_chip_scale"]
+curve = SubResource("Curve_chip_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_chips"]
+particle_flag_align_y = true
+spread = 160.0
+initial_velocity_min = 4.0
+initial_velocity_max = 7.0
+gravity = Vector3(0, -9, 0)
+damping_min = 1.5
+damping_max = 3.0
+scale_min = 0.12
+scale_max = 0.35
+scale_curve = SubResource("CurveTexture_chip_scale")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_chip"]
+albedo_color = Color(0.75, 0.72, 0.68, 1)
+emission_enabled = true
+emission = Color(0.6, 0.55, 0.5, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_chip"]
+material = SubResource("StandardMaterial3D_chip")
+top_radius = 0.07
+bottom_radius = 0.0
+height = 0.2
+radial_segments = 6
+rings = 1
+
+[sub_resource type="Curve" id="Curve_spark_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.4, 0.6), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_spark_scale"]
+curve = SubResource("Curve_spark_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sparks"]
+spread = 90.0
+initial_velocity_min = 5.0
+initial_velocity_max = 8.0
+gravity = Vector3(0, -6, 0)
+damping_min = 3.0
+damping_max = 5.0
+scale_min = 0.04
+scale_max = 0.1
+scale_curve = SubResource("CurveTexture_spark_scale")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_spark"]
+albedo_color = Color(1, 0.9, 0.6, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.4, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_spark"]
+material = SubResource("StandardMaterial3D_spark")
+radius = 0.04
+height = 0.08
+radial_segments = 4
+rings = 2
+
+[node name="BallistaHitParticle" type="Node3D" unique_id=1365339886]
+script = ExtResource("1_script")
+
+[node name="Splinters" type="GPUParticles3D" parent="." unique_id=36187568]
+emitting = false
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_splinters")
+draw_pass_1 = SubResource("CylinderMesh_splinter")
+
+[node name="HullChips" type="GPUParticles3D" parent="." unique_id=996128894]
+emitting = false
+amount = 14
+lifetime = 0.35
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_chips")
+draw_pass_1 = SubResource("CylinderMesh_chip")
+
+[node name="ImpactSparks" type="GPUParticles3D" parent="." unique_id=1090865981]
+emitting = false
+amount = 6
+lifetime = 0.2
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_sparks")
+draw_pass_1 = SubResource("SphereMesh_spark")

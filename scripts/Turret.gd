@@ -11,7 +11,7 @@ extends Node3D
 # How fast (deg/sec) the turret rotates to face its target
 @export_range(10.0, 720.0, 5.0) var rotation_speed: float = 180.0
 
-@export_enum("turret", "cannon", "ballista", "catapult") var weapon_type: String = "turret"
+@export_enum("turret", "cannon", "ballista", "catapult", "heavy_turret") var weapon_type: String = "turret"
 @export_range(1.0, 50.0, 0.5) var projectile_speed: float = 12.0
 # Splash damage radius around the impact point (only used when is_aoe = true)
 @export_range(0.5, 10.0, 0.1) var aoe_radius: float = 2.0
@@ -24,6 +24,7 @@ func _init() -> void:
 	if _ammo_cache.is_empty():
 		var paths: Dictionary = {
 			"turret": "res://assets/Models/GLB format/weapon-ammo-bullet.glb",
+			"heavy_turret": "res://assets/Models/GLB format/weapon-ammo-bullet.glb",
 			"cannon": "res://assets/Models/GLB format/weapon-ammo-cannonball.glb",
 			"ballista": "res://assets/Models/GLB format/weapon-ammo-arrow.glb",
 			"catapult": "res://assets/Models/GLB format/weapon-ammo-boulder.glb"
@@ -73,6 +74,8 @@ func _capture_initial_facing() -> void:
 		_initial_facing_dir = Vector3.FORWARD
 
 func _auto_detect_weapon_type() -> void:
+	if weapon_type == "heavy_turret":
+		return
 	var path_or_name: String = scene_file_path.to_lower() if scene_file_path != "" else name.to_lower()
 	if path_or_name.find("cannon") != -1:
 		weapon_type = "cannon"
@@ -197,15 +200,23 @@ func _trigger_aoe_attack(targets: Array[Node3D]) -> void:
 			_play_recoil(targets[0].global_transform.origin)
 	print("Turret (%s AoE) fired, affecting %d enemies" % [weapon_type, targets.size()])
 
-var _hit_particle_scene: PackedScene = preload("res://scenes/hit_particle.tscn")
+var _hit_particle_scenes: Dictionary = {
+	"turret": preload("res://scenes/hit_particle.tscn"),
+	"cannon": preload("res://scenes/hit_particle.tscn"),
+	"heavy_turret": preload("res://scenes/hit_particle_cannon.tscn"),
+	"ballista": preload("res://scenes/hit_particle_ballista.tscn"),
+	"catapult": preload("res://scenes/boulder_impact.tscn")
+}
 
 func _get_ammo_scene(type_name: String) -> PackedScene:
 	return _ammo_scenes.get(type_name, _ammo_scenes.get("turret", null))
 
-func _spawn_hit_particle(pos: Vector3) -> void:
-	if _hit_particle_scene == null:
+func _spawn_hit_particle(pos: Vector3, type_name: String = "") -> void:
+	var wtype = type_name if not type_name.is_empty() else weapon_type
+	var hit_scene: PackedScene = _hit_particle_scenes.get(wtype, _hit_particle_scenes.get("turret", null))
+	if hit_scene == null:
 		return
-	var hit_part = _hit_particle_scene.instantiate()
+	var hit_part = hit_scene.instantiate()
 	var scene_root = get_tree().current_scene
 	if scene_root:
 		scene_root.add_child(hit_part)
@@ -235,8 +246,8 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 	
 	if distance > 0.01:
 		ammo_instance.look_at(target_pos, Vector3.UP)
-		# Fix ballista arrow model facing backwards — rotate 180° on Y axis
-		if weapon_type == "ballista":
+		# Fix ammo models facing backwards (bullet, arrow, etc. point +Z in Kenney model assets, whereas Godot look_at uses -Z as forward)
+		if weapon_type != "catapult":
 			ammo_instance.rotate_y(deg_to_rad(180.0))
 
 
@@ -256,8 +267,12 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 		tween.tween_property(ammo_instance, "global_position", target_pos, flight_time)
 
 	tween.tween_callback(func():
-		var impact_pos = target_pos + Vector3(0, 0.3, 0)
-		_spawn_hit_particle(impact_pos)
+		if weapon_type == "catapult":
+			var ground_impact_pos = Vector3(target_pos.x, 0.0, target_pos.z)
+			_spawn_hit_particle(ground_impact_pos, "catapult")
+		else:
+			var impact_pos = target_pos + Vector3(0, 0.3, 0)
+			_spawn_hit_particle(impact_pos, weapon_type)
 
 		if is_instance_valid(target_enemy) and target_enemy.has_method("take_damage"):
 			target_enemy.take_damage(attack_damage)
@@ -409,6 +424,8 @@ func _play_recoil(target_pos: Vector3 = Vector3.ZERO) -> void:
 	var recoil_strength: float = 0.10
 	if weapon_type == "cannon":
 		recoil_strength = 0.20
+	elif weapon_type == "heavy_turret":
+		recoil_strength = 0.25
 	elif weapon_type == "ballista":
 		recoil_strength = 0.12
 
