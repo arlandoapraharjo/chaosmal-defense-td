@@ -1,4 +1,5 @@
 extends Node3D
+class_name WaveManager
 
 ## WaveManager — standalone wave-based enemy spawner.
 ##
@@ -24,6 +25,14 @@ var enemy_script = preload("res://scripts/Enemy.gd")
 @export var enemy_speed: float = 1.5     # Tiles per second
 @export var pool_size: int = 30          # Pre-allocated enemy count
 
+static var instance = null
+
+# ─── Statistics Tracking ───────────────────────────────────────────────────────
+var total_enemies_defeated: int = 0
+var total_enemies_spawned: int = 0
+var waves_cleared: int = 0
+var is_game_over: bool = false
+
 # ─── Wave Configuration ────────────────────────────────────────────────────────
 @export var base_enemy_count_min: int = 3
 @export var base_enemy_count_max: int = 5
@@ -39,7 +48,7 @@ signal wave_started(wave_number: int)
 signal wave_completed(wave_number: int)
 
 # ─── Wave State Machine ────────────────────────────────────────────────────────
-enum WaveState { WAITING_FOR_FIRST_WAVE, SPAWNING, WAVE_PAUSE }
+enum WaveState { WAITING_FOR_FIRST_WAVE, SPAWNING, WAVE_PAUSE, STOPPED }
 var _state: int = WaveState.WAITING_FOR_FIRST_WAVE
 var current_wave: int = 0
 var _enemies_to_spawn: int = 0
@@ -61,6 +70,13 @@ var _speed_multiplier: float = 1.0
 # Avoids allocation hitches during waves
 var _pool: Array[Node3D] = []
 var _active_enemies: Array[Node3D] = []
+
+func _enter_tree() -> void:
+	instance = self
+
+func _ready() -> void:
+	instance = self
+
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -179,10 +195,14 @@ func _create_enemy_node(type_index: int) -> Node3D:
 	# Set enemy type stats (coin_value, max_hp) based on model type
 	enemy_root.setup_enemy_type(type_index)
 
-	# Connect the reached_end signal so we can reclaim it
+	# Connect signals
 	enemy_root.reached_end.connect(_on_enemy_reached_end.bind(enemy_root))
+	enemy_root.enemy_defeated.connect(_on_enemy_defeated)
 
 	return enemy_root
+
+func _on_enemy_defeated() -> void:
+	total_enemies_defeated += 1
 
 func _spawn_enemy() -> void:
 	var enemy: Node3D = null
@@ -207,6 +227,7 @@ func _spawn_enemy() -> void:
 	# Re-apply enemy type stats with wave scaling
 	enemy.setup_enemy_type(enemy.enemy_type_index, current_wave)
 	
+	total_enemies_spawned += 1
 	var wave_speed = enemy_speed * (1.0 + current_wave * 0.03)
 	enemy.reset(_waypoints, wave_speed)
 	if enemy.has_method("set_speed_multiplier"):
@@ -218,10 +239,39 @@ func _on_enemy_reached_end(enemy: Node3D) -> void:
 	_active_enemies.erase(enemy)
 	_pool.append(enemy)
 
+## Stop spawning new waves (used on game over or victory)
+func stop_spawning() -> void:
+	_ready_to_spawn = false
+	_state = WaveState.STOPPED
+	set_physics_process(false)
+
+## Destroys all currently active enemies in expanding shockwave cascade
+func wipe_all_active_enemies(pillar_world_pos: Vector3) -> void:
+	stop_spawning()
+	var active_copy = _active_enemies.duplicate()
+	for enemy in active_copy:
+		if is_instance_valid(enemy) and enemy.visible and enemy.has_method("destroy_by_shockwave"):
+			var dist = enemy.global_position.distance_to(pillar_world_pos)
+			var delay = clamp(dist * 0.035, 0.05, 0.75)
+			enemy.destroy_by_shockwave(delay)
+
+## Retrieves summary game stats for victory and defeat screens
+func get_game_stats() -> Dictionary:
+	var cur = 0
+	if CurrencyManager.instance:
+		cur = CurrencyManager.instance.current_currency
+	return {
+		"waves_cleared": waves_cleared,
+		"current_wave": current_wave,
+		"enemies_defeated": total_enemies_defeated,
+		"currency": cur
+	}
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 #  UTILITIES
 # ═══════════════════════════════════════════════════════════════════════════════
+
 
 func _set_extra_cull_margin_recursive(node: Node, margin: float) -> void:
 	if node is GeometryInstance3D:

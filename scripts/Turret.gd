@@ -90,20 +90,7 @@ func _auto_detect_weapon_type() -> void:
 	elif path_or_name.find("turret") != -1:
 		weapon_type = "turret"
 
-func _process(delta: float) -> void:
-	# --- Clear target if it's dead/deactivated ---
-	if _current_target != null:
-		if not is_instance_valid(_current_target) or not _current_target.visible or _current_target.get("_is_done") == true:
-			_current_target = null
-
-	# --- Continuous rotation toward locked target ---
-	if is_instance_valid(_current_target):
-		_rotate_toward_target(_current_target, delta)
-
-	if _cooldown_timer > 0.0:
-		_cooldown_timer -= delta
-		return
-
+func _get_valid_enemies() -> Array[Node3D]:
 	var enemies: Array[Node3D] = EnemyDetector.get_enemies_in_range(self, global_transform.origin, attack_range, min_attack_range)
 	if is_half_circle:
 		var valid_enemies: Array[Node3D] = []
@@ -113,12 +100,27 @@ func _process(delta: float) -> void:
 			if dir.length_squared() > 0.0001 and dir.normalized().dot(_initial_facing_dir) >= -0.05:
 				valid_enemies.append(enemy)
 		enemies = valid_enemies
+	return enemies
+
+func _process(delta: float) -> void:
+	var enemies: Array[Node3D] = _get_valid_enemies()
 
 	if enemies.is_empty():
 		_current_target = null
+	else:
+		# Enemies are sorted by distance ascending in EnemyDetector (closest first)
+		_current_target = enemies[0]
+
+	# --- Continuous rotation toward locked target ---
+	if is_instance_valid(_current_target):
+		_rotate_toward_target(_current_target, delta)
+
+	if _cooldown_timer > 0.0:
+		_cooldown_timer -= delta
 		return
 
-	_current_target = enemies[0]
+	if enemies.is_empty() or _current_target == null:
+		return
 
 	if is_aoe:
 		_trigger_aoe_attack(enemies)

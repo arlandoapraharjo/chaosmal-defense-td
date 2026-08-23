@@ -35,6 +35,14 @@ const ENEMY_TYPE_STATS: Array = [
 	[10, 260.0],  # UFO-D: elite, tanky
 ]
 
+# Damage dealt to the Incursion Pillar on suicide impact per UFO type
+const ENEMY_TYPE_DAMAGE: Array[float] = [10.0, 15.0, 20.0, 25.0]
+
+func get_contact_damage() -> float:
+	if enemy_type_index >= 0 and enemy_type_index < ENEMY_TYPE_DAMAGE.size():
+		return ENEMY_TYPE_DAMAGE[enemy_type_index]
+	return 10.0
+
 ## Assign coin_value and max_hp based on the UFO model type index and wave number.
 func setup_enemy_type(type_index: int, wave_number: int = 1) -> void:
 	enemy_type_index = type_index
@@ -104,12 +112,14 @@ func reset(waypoints: Array[Vector3], new_speed: float) -> void:
 				rotation.y = atan2(look_dir.x, look_dir.z)
 	_cache_visual_node()
 	_spin_angle = 0.0
+
 ## Hide and stop processing — the Spawner will reclaim this node.
 func deactivate() -> void:
 	_is_done = true
 	EnemyDetector.unregister(self)
 	visible = false
 	set_physics_process(false)
+
 func _physics_process(delta: float) -> void:
 	if _is_done or path_waypoints.is_empty():
 		return
@@ -121,9 +131,7 @@ func _physics_process(delta: float) -> void:
 		_visual_node.rotation.y = _spin_angle - rotation.y
 
 	if current_waypoint_index >= path_waypoints.size():
-		_is_done = true
-		reached_end.emit()
-		deactivate()
+		_hit_pillar_and_explode()
 		return
 
 	# How far this enemy is allowed to travel this tick. Any distance left
@@ -163,9 +171,55 @@ func _physics_process(delta: float) -> void:
 			remaining_move = 0.0
 
 	if current_waypoint_index >= path_waypoints.size():
-		_is_done = true
-		reached_end.emit()
-		deactivate()
+		_hit_pillar_and_explode()
+
+func _spawn_explosion() -> void:
+	var explosion = explosion_scene.instantiate()
+	var scene_root = get_tree().current_scene
+	if scene_root:
+		scene_root.add_child(explosion)
+	else:
+		get_parent().add_child(explosion)
+	explosion.global_position = global_position
+	for child in explosion.get_children():
+		if child is GPUParticles3D:
+			child.emitting = true
+	get_tree().create_timer(2.0).timeout.connect(explosion.queue_free)
+
+func _hit_pillar_and_explode() -> void:
+	if _is_done:
+		return
+	_is_done = true
+	_spawn_explosion()
+	
+	# Find pillar in scene and apply suicide attack damage
+	var pillar = get_tree().get_first_node_in_group("pillar")
+	if not pillar:
+		var scene_root = get_tree().current_scene
+		if scene_root:
+			pillar = scene_root.find_child("IncursionPillar", true, false)
+	if pillar and pillar.has_method("take_damage"):
+		pillar.take_damage(get_contact_damage())
+		
+	reached_end.emit()
+	deactivate()
+
+func destroy_by_shockwave(delay: float = 0.0) -> void:
+	if _is_done or not visible:
+		return
+	if delay > 0.0:
+		get_tree().create_timer(delay).timeout.connect(_on_shockwave_explode)
+	else:
+		_on_shockwave_explode()
+
+func _on_shockwave_explode() -> void:
+	if _is_done or not is_inside_tree() or not visible:
+		return
+	_is_done = true
+	_spawn_explosion()
+	enemy_defeated.emit()
+	reached_end.emit()
+	deactivate()
 
 func take_damage(amount: float) -> void:
 	if _is_done:
@@ -174,21 +228,11 @@ func take_damage(amount: float) -> void:
 	if current_hp <= 0:
 		current_hp = 0
 		_is_done = true
-		
-		var explosion = explosion_scene.instantiate()
-		var scene_root = get_tree().current_scene
-		if scene_root:
-			scene_root.add_child(explosion)
-		else:
-			get_parent().add_child(explosion)
-		explosion.global_position = global_position
-		for child in explosion.get_children():
-			if child is GPUParticles3D:
-				child.emitting = true
-		get_tree().create_timer(2.0).timeout.connect(explosion.queue_free)
+		_spawn_explosion()
 		
 		enemy_defeated.emit()
 		if CurrencyManager.instance:
 			CurrencyManager.instance.add_currency(coin_value)
 		reached_end.emit()
 		deactivate()
+

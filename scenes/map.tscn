@@ -17,6 +17,7 @@
 [ext_resource type="Shader" uid="uid://cugpqtu17rfnm" path="res://shaders/pillar_shockwave.gdshader" id="15_c00ee"]
 [ext_resource type="PackedScene" path="res://scenes/PauseOverlay.tscn" id="16_pause"]
 [ext_resource type="PackedScene" path="res://UI/SpeedToggle.tscn" id="17_speed"]
+[ext_resource type="PackedScene" path="res://scenes/GameOverOverlay.tscn" id="18_gameover"]
 
 [sub_resource type="Gradient" id="Gradient_ooc2g"]
 
@@ -118,6 +119,8 @@ mesh = SubResource("PlaneMesh_eotfe")
 [node name="PauseOverlay" parent="." unique_id=1385682932 instance=ExtResource("16_pause")]
 
 [node name="SpeedToggle" parent="." unique_id=2107856465 instance=ExtResource("17_speed")]
+
+[node name="GameOverOverlay" parent="." unique_id=384729101 instance=ExtResource("18_gameover")]
 
 [node name="PillarShockwave" type="CanvasLayer" parent="." unique_id=1489323577]
 
