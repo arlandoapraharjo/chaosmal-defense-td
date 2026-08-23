@@ -1,8 +1,8 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scripts": 22,
-    "root": "C:\\igi-dev-code-circus"
+    "total_scripts": 23,
+    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scripts": [
     {
@@ -68,7 +68,20 @@
           ]
         }
       ],
-      "loads": [],
+      "loads": [
+        {
+          "line": 98,
+          "raw": "res://UI/Turret Hotbar/turret_slot.png",
+          "path": "UI/Turret Hotbar/turret_slot.png",
+          "call": "preload"
+        },
+        {
+          "line": 247,
+          "raw": "res://UI/Turret Hotbar/turret_slot.png",
+          "path": "UI/Turret Hotbar/turret_slot.png",
+          "call": "preload"
+        }
+      ],
       "exports": [
         {
           "name": "slot_index",
@@ -291,7 +304,7 @@
     {
       "file": "UI/Menus/MainMenu.gd",
       "class_name": null,
-      "extends": "Control",
+      "extends": "Node2D",
       "signals": [],
       "functions": [],
       "loads": [],
@@ -371,6 +384,36 @@
           "raw": "res://UI/Wave Indicator/wave_5.png",
           "path": "UI/Wave Indicator/wave_5.png",
           "call": "preload"
+        },
+        {
+          "line": 17,
+          "raw": "res://UI/Wave Indicator/wave_1x2.png",
+          "path": "UI/Wave Indicator/wave_1x2.png",
+          "call": "preload"
+        },
+        {
+          "line": 18,
+          "raw": "res://UI/Wave Indicator/wave_2x2.png",
+          "path": "UI/Wave Indicator/wave_2x2.png",
+          "call": "preload"
+        },
+        {
+          "line": 19,
+          "raw": "res://UI/Wave Indicator/wave_3x2.png",
+          "path": "UI/Wave Indicator/wave_3x2.png",
+          "call": "preload"
+        },
+        {
+          "line": 20,
+          "raw": "res://UI/Wave Indicator/wave_4x2.png",
+          "path": "UI/Wave Indicator/wave_4x2.png",
+          "call": "preload"
+        },
+        {
+          "line": 21,
+          "raw": "res://UI/Wave Indicator/wave_5x2.png",
+          "path": "UI/Wave Indicator/wave_5x2.png",
+          "call": "preload"
         }
       ],
       "exports": []
@@ -445,6 +488,15 @@
       "file": "scenes/animation_player.gd",
       "class_name": null,
       "extends": "AnimationPlayer",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "scripts/BoulderImpact.gd",
+      "class_name": null,
+      "extends": "Node3D",
       "signals": [],
       "functions": [],
       "loads": [],
@@ -745,7 +797,7 @@
           "call": "load"
         },
         {
-          "line": 381,
+          "line": 387,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -928,14 +980,14 @@
       "loads": [
         {
           "line": 7,
-          "raw": "res://UI/Pause&Play/esc_button.png",
-          "path": "UI/Pause&Play/esc_button.png",
+          "raw": "res://UI/Pause&Play/esc_buttonV2.png",
+          "path": "UI/Pause&Play/esc_buttonV2.png",
           "call": "preload"
         },
         {
           "line": 8,
-          "raw": "res://UI/Pause&Play/play_button.png",
-          "path": "UI/Pause&Play/play_button.png",
+          "raw": "res://UI/Pause&Play/play_buttonV2.png",
+          "path": "UI/Pause&Play/play_buttonV2.png",
           "call": "preload"
         }
       ],
@@ -984,9 +1036,33 @@
       ],
       "loads": [
         {
-          "line": 200,
+          "line": 204,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 205,
+          "raw": "res://scenes/hit_particle.tscn",
+          "path": "scenes/hit_particle.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 206,
+          "raw": "res://scenes/hit_particle_cannon.tscn",
+          "path": "scenes/hit_particle_cannon.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 207,
+          "raw": "res://scenes/hit_particle_ballista.tscn",
+          "path": "scenes/hit_particle_ballista.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 208,
+          "raw": "res://scenes/boulder_impact.tscn",
+          "path": "scenes/boulder_impact.tscn",
           "call": "preload"
         }
       ],

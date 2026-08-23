@@ -1,7 +1,7 @@
 extends CanvasLayer
 
 ## SpeedToggle — floating top-right pill UI for controlling game speed.
-## Emits speed_changed(multiplier) which Spawner and BuilderController listen to.
+## Adjusts Engine.time_scale and emits speed_changed(multiplier).
 
 signal speed_changed(multiplier: float)
 
@@ -22,8 +22,12 @@ const COLOR_BORDER       := Color(0.20, 0.55, 1.00, 0.70)
 @onready var _ui_root = $Control if has_node("Control") else self
 
 func _ready() -> void:
+	Engine.time_scale = SPEEDS[_current_index]
 	_build_ui()
 	_refresh_buttons()
+
+func _exit_tree() -> void:
+	Engine.time_scale = 1.0
 
 func _build_ui() -> void:
 	var panel := PanelContainer.new()
@@ -81,6 +85,7 @@ func _build_ui() -> void:
 func _on_speed_pressed(index: int) -> void:
 	_current_index = index
 	_refresh_buttons()
+	Engine.time_scale = SPEEDS[_current_index]
 	speed_changed.emit(SPEEDS[_current_index])
 
 func _refresh_buttons() -> void:

@@ -344,14 +344,7 @@ var _biome_frames: Array[Texture2D] = []
 
 func _load_biome_frames() -> void:
 	_biome_frames.clear()
-	var bg_path = ""
-	if current_biome_folder == "Ice":
-		bg_path = "res://UI/Ice/Snow Hotbar 2.png"
-	elif current_biome_folder == "Grass":
-		bg_path = "res://UI/Grass/Grass 1.png"
-	elif current_biome_folder == "Desert":
-		bg_path = "res://UI/Desert/Desert 7.png"
-		
+	var bg_path = "res://UI/Turret Hotbar/turret_slot.png"
 	if ResourceLoader.exists(bg_path):
 		_biome_frames.append(load(bg_path))
 			

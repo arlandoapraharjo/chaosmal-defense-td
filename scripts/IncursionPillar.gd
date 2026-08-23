@@ -378,11 +378,26 @@ func _on_upgraded() -> void:
 		_trigger_shockwave()
 
 func _trigger_shockwave() -> void:
+	# Zoom camera out to default position
+	var camera = get_viewport().get_camera_3d()
+	if camera and camera.has_method("reset_camera"):
+		camera.reset_camera()
+
+	# Trigger visual shockwave distortion
 	var shockwave_scene = load("res://scenes/PillarShockwave.tscn") as PackedScene
 	if shockwave_scene:
 		var shockwave = shockwave_scene.instantiate() as PillarShockwave
 		add_child(shockwave)
 		
-		var camera = get_viewport().get_camera_3d()
 		var screen_pos = camera.unproject_position(global_position) if camera else get_viewport().get_visible_rect().size / 2.0
 		shockwave.play_shockwave(screen_pos)
+
+	# Explode all active enemies on the map
+	var active_enemies: Array[Node3D] = []
+	for enemy in EnemyDetector._active_enemies:
+		if is_instance_valid(enemy) and enemy.visible and enemy.get("_is_done") != true:
+			active_enemies.append(enemy)
+
+	for enemy in active_enemies:
+		if is_instance_valid(enemy) and enemy.has_method("take_damage"):
+			enemy.take_damage(999999.0)

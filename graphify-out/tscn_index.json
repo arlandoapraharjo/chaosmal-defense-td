@@ -1,8 +1,8 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scenes": 31,
-    "root": "C:\\igi-dev-code-circus"
+    "total_scenes": 35,
+    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scenes": [
     {
@@ -15,6 +15,20 @@
           "type": "Script",
           "uid": "uid://s8f8c7mj41j5",
           "id": "1_currency_script"
+        },
+        {
+          "path": "UI/Coins&Turret/coins_banner.png",
+          "raw_path": "res://UI/Coins&Turret/coins_banner.png",
+          "type": "Texture2D",
+          "uid": "uid://0j2omnkoier5",
+          "id": "2_coins_banner"
+        },
+        {
+          "path": "UI/Coins&Turret/turret_banner.png",
+          "raw_path": "res://UI/Coins&Turret/turret_banner.png",
+          "type": "Texture2D",
+          "uid": "uid://ccuisw80s73rt",
+          "id": "3_turret_banner"
         }
       ],
       "nodes_preview": [
@@ -35,8 +49,8 @@
           "type": "VBoxContainer"
         },
         {
-          "name": "PanelContainer",
-          "type": "PanelContainer"
+          "name": "CoinsBanner",
+          "type": "TextureRect"
         }
       ]
     },
@@ -50,6 +64,13 @@
           "type": "Script",
           "uid": "uid://b64sdroxxtpdf",
           "id": "1_slot"
+        },
+        {
+          "path": "UI/Turret Hotbar/turret_slot.png",
+          "raw_path": "res://UI/Turret Hotbar/turret_slot.png",
+          "type": "Texture2D",
+          "uid": "uid://uuvxc60iagvs",
+          "id": "2_bg"
         }
       ],
       "nodes_preview": [
@@ -138,7 +159,11 @@
       ],
       "nodes_preview": [
         {
-          "name": "MainMenu",
+          "name": "Main",
+          "type": "Node2D"
+        },
+        {
+          "name": "Control",
           "type": "Control"
         },
         {
@@ -152,10 +177,6 @@
         {
           "name": "VBoxContainer",
           "type": "VBoxContainer"
-        },
-        {
-          "name": "StartButton",
-          "type": "Button"
         }
       ]
     },
@@ -418,123 +439,6 @@
       ]
     },
     {
-      "file": "map.tscn",
-      "scene_uid": "uid://036csi2xfnk3",
-      "ext_resources": [
-        {
-          "path": "addons/Shader/desert_env.tres",
-          "raw_path": "res://addons/Shader/desert_env.tres",
-          "type": "Environment",
-          "uid": "uid://eje2tefugyb2",
-          "id": "1_0t07s"
-        },
-        {
-          "path": "scripts/MapGenerator.gd",
-          "raw_path": "res://scripts/MapGenerator.gd",
-          "type": "Script",
-          "uid": "uid://vca8f7oohn30",
-          "id": "1_e0an3"
-        },
-        {
-          "path": "scripts/CameraController.gd",
-          "raw_path": "res://scripts/CameraController.gd",
-          "type": "Script",
-          "uid": "uid://byp7p3p447u7h",
-          "id": "2_p5pve"
-        },
-        {
-          "path": "biomes/BiomeData.gd",
-          "raw_path": "res://biomes/BiomeData.gd",
-          "type": "Script",
-          "uid": "uid://dt3mmbm7kd8rn",
-          "id": "2_urblq"
-        },
-        {
-          "path": "biomes/biome_snow.tres",
-          "raw_path": "res://biomes/biome_snow.tres",
-          "type": "Resource",
-          "uid": "uid://ub8ponw0r6f8",
-          "id": "3_iw27f"
-        },
-        {
-          "path": "biomes/biome_grass.tres",
-          "raw_path": "res://biomes/biome_grass.tres",
-          "type": "Resource",
-          "uid": "uid://cgsne48ch7k6g",
-          "id": "4_iw27f"
-        },
-        {
-          "path": "biomes/biome_desert.tres",
-          "raw_path": "res://biomes/biome_desert.tres",
-          "type": "Resource",
-          "uid": "uid://dkkpml6w0got6",
-          "id": "5_iw27f"
-        },
-        {
-          "path": "UI/Hotbar/TurretHotbar.tscn",
-          "raw_path": "res://UI/Hotbar/TurretHotbar.tscn",
-          "type": "PackedScene",
-          "uid": "uid://dc6dgdjoiagk6",
-          "id": "6_hotbar"
-        },
-        {
-          "path": "addons/Shader/sandstrom.gdshader",
-          "raw_path": "res://addons/Shader/sandstrom.gdshader",
-          "type": "Shader",
-          "uid": "uid://8haud4yhw01k",
-          "id": "7_6qsgm"
-        },
-        {
-          "path": "scripts/BuilderController.gd",
-          "raw_path": "res://scripts/BuilderController.gd",
-          "type": "Script",
-          "uid": "uid://wguegcpphxbe",
-          "id": "7_builder"
-        },
-        {
-          "path": "UI/SpeedToggle.tscn",
-          "raw_path": "res://UI/SpeedToggle.tscn",
-          "type": "PackedScene",
-          "id": "8_speedtoggle"
-        },
-        {
-          "path": "addons/Textures/water_mat.tres",
-          "raw_path": "res://addons/Textures/water_mat.tres",
-          "type": "Material",
-          "uid": "uid://cr8yf6r3utjih",
-          "id": "10_oysan"
-        },
-        {
-          "path": "scenes/PauseOverlay.tscn",
-          "raw_path": "res://scenes/PauseOverlay.tscn",
-          "type": "PackedScene",
-          "id": "16_pause"
-        }
-      ],
-      "nodes_preview": [
-        {
-          "name": "WorldEnvironment2",
-          "type": "WorldEnvironment"
-        },
-        {
-          "name": "Map",
-          "type": "Node3D"
-        },
-        {
-          "name": "FogVolume",
-          "type": "FogVolume"
-        },
-        {
-          "name": "Camera3D",
-          "type": "Camera3D"
-        },
-        {
-          "name": "DirectionalLight3D",
-          "type": "DirectionalLight3D"
-        }
-      ]
-    },
-    {
       "file": "scenes/PauseOverlay.tscn",
       "scene_uid": null,
       "ext_resources": [
@@ -606,6 +510,72 @@
       ]
     },
     {
+      "file": "scenes/ballista_hit_particle.tscn",
+      "scene_uid": "uid://ct5vtompixl3d",
+      "ext_resources": [
+        {
+          "path": "scripts/HitParticle.gd",
+          "raw_path": "res://scripts/HitParticle.gd",
+          "type": "Script",
+          "uid": "uid://8tlg6mgg5lpv",
+          "id": "1_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "BallistaHitParticle",
+          "type": "Node3D"
+        },
+        {
+          "name": "Splinters",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "HullChips",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ImpactSparks",
+          "type": "GPUParticles3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/boulder_impact.tscn",
+      "scene_uid": "uid://cfqah84aiulrw",
+      "ext_resources": [
+        {
+          "path": "scripts/BoulderImpact.gd",
+          "raw_path": "res://scripts/BoulderImpact.gd",
+          "type": "Script",
+          "uid": "uid://6b1ok6gcl2e8",
+          "id": "1_bould"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "BoulderImpact",
+          "type": "Node3D"
+        },
+        {
+          "name": "RockChunks",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "DustCloud",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Shockwave",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "DirtSpray",
+          "type": "GPUParticles3D"
+        }
+      ]
+    },
+    {
       "file": "scenes/bush.tscn",
       "scene_uid": "uid://df4vlamfaywf7",
       "ext_resources": [
@@ -632,6 +602,37 @@
         {
           "name": "MeshInstance3D",
           "type": "MeshInstance3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/cannon_hit_particle.tscn",
+      "scene_uid": "uid://6jeobrgamo6s",
+      "ext_resources": [
+        {
+          "path": "scripts/HitParticle.gd",
+          "raw_path": "res://scripts/HitParticle.gd",
+          "type": "Script",
+          "uid": "uid://8tlg6mgg5lpv",
+          "id": "1_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "CannonHitParticle",
+          "type": "Node3D"
+        },
+        {
+          "name": "Debris",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Smoke",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Flash",
+          "type": "GPUParticles3D"
         }
       ]
     },
@@ -853,7 +854,75 @@
           "type": "Node3D"
         },
         {
-          "name": "GPUParticles3D",
+          "name": "Debris",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Sparks",
+          "type": "GPUParticles3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/hit_particle_ballista.tscn",
+      "scene_uid": "uid://dpubgh37vtlro",
+      "ext_resources": [
+        {
+          "path": "scripts/HitParticle.gd",
+          "raw_path": "res://scripts/HitParticle.gd",
+          "type": "Script",
+          "id": "1_hitballista"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "HitParticleBallista",
+          "type": "Node3D"
+        },
+        {
+          "name": "PiercingStreaks",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "HullSplinters",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "PiercingFlash",
+          "type": "GPUParticles3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/hit_particle_cannon.tscn",
+      "scene_uid": "uid://sj34ktk8o4ee",
+      "ext_resources": [
+        {
+          "path": "scripts/HitParticle.gd",
+          "raw_path": "res://scripts/HitParticle.gd",
+          "type": "Script",
+          "id": "1_hitcanon"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "HitParticleCannon",
+          "type": "Node3D"
+        },
+        {
+          "name": "Fireball",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Smoke",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Shrapnel",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Shockwave",
           "type": "GPUParticles3D"
         }
       ]
@@ -1168,7 +1237,16 @@
     "UI/CurrencyUI.gd": [
       "UI/CurrencyUI.tscn"
     ],
+    "UI/Coins&Turret/coins_banner.png": [
+      "UI/CurrencyUI.tscn"
+    ],
+    "UI/Coins&Turret/turret_banner.png": [
+      "UI/CurrencyUI.tscn"
+    ],
     "UI/Hotbar/HotbarSlot.gd": [
+      "UI/Hotbar/HotbarSlot.tscn"
+    ],
+    "UI/Turret Hotbar/turret_slot.png": [
       "UI/Hotbar/HotbarSlot.tscn"
     ],
     "UI/Hotbar/TurretHotbar.gd": [
@@ -1229,56 +1307,10 @@
     ],
     "scripts/MapGenerator.gd": [
       "assets/Models/GLB format/world.tscn",
-      "map.tscn",
       "scenes/map.tscn"
     ],
     "scripts/CameraController.gd": [
       "assets/Models/GLB format/world.tscn",
-      "map.tscn",
-      "scenes/map.tscn"
-    ],
-    "addons/Shader/desert_env.tres": [
-      "map.tscn",
-      "scenes/map.tscn"
-    ],
-    "biomes/BiomeData.gd": [
-      "map.tscn",
-      "scenes/map.tscn"
-    ],
-    "biomes/biome_snow.tres": [
-      "map.tscn",
-      "scenes/map.tscn"
-    ],
-    "biomes/biome_grass.tres": [
-      "map.tscn",
-      "scenes/map.tscn"
-    ],
-    "biomes/biome_desert.tres": [
-      "map.tscn",
-      "scenes/map.tscn"
-    ],
-    "UI/Hotbar/TurretHotbar.tscn": [
-      "map.tscn",
-      "scenes/map.tscn"
-    ],
-    "addons/Shader/sandstrom.gdshader": [
-      "map.tscn",
-      "scenes/map.tscn"
-    ],
-    "scripts/BuilderController.gd": [
-      "map.tscn",
-      "scenes/map.tscn"
-    ],
-    "UI/SpeedToggle.tscn": [
-      "map.tscn",
-      "scenes/map.tscn"
-    ],
-    "addons/Textures/water_mat.tres": [
-      "map.tscn",
-      "scenes/map.tscn"
-    ],
-    "scenes/PauseOverlay.tscn": [
-      "map.tscn",
       "scenes/map.tscn"
     ],
     "scripts/PauseOverlay.gd": [
@@ -1297,6 +1329,16 @@
       "scenes/PillarShockwave.tscn",
       "scenes/map.tscn",
       "shaders/pilarshockwave.tscn"
+    ],
+    "scripts/HitParticle.gd": [
+      "scenes/ballista_hit_particle.tscn",
+      "scenes/cannon_hit_particle.tscn",
+      "scenes/hit_particle.tscn",
+      "scenes/hit_particle_ballista.tscn",
+      "scenes/hit_particle_cannon.tscn"
+    ],
+    "scripts/BoulderImpact.gd": [
+      "scenes/boulder_impact.tscn"
     ],
     "addons/Mesh/bush_stylized_Cube_001.res": [
       "scenes/bush.tscn"
@@ -1341,8 +1383,32 @@
     "addons/Materials/grass_billboard_snow.tres": [
       "scenes/grass_single_snow.tscn"
     ],
-    "scripts/HitParticle.gd": [
-      "scenes/hit_particle.tscn"
+    "addons/Shader/desert_env.tres": [
+      "scenes/map.tscn"
+    ],
+    "biomes/BiomeData.gd": [
+      "scenes/map.tscn"
+    ],
+    "biomes/biome_snow.tres": [
+      "scenes/map.tscn"
+    ],
+    "biomes/biome_grass.tres": [
+      "scenes/map.tscn"
+    ],
+    "biomes/biome_desert.tres": [
+      "scenes/map.tscn"
+    ],
+    "addons/Shader/sandstrom.gdshader": [
+      "scenes/map.tscn"
+    ],
+    "UI/Hotbar/TurretHotbar.tscn": [
+      "scenes/map.tscn"
+    ],
+    "scripts/BuilderController.gd": [
+      "scenes/map.tscn"
+    ],
+    "addons/Textures/water_mat.tres": [
+      "scenes/map.tscn"
     ],
     "scripts/CurrencyManager.gd": [
       "scenes/map.tscn"
@@ -1351,6 +1417,12 @@
       "scenes/map.tscn"
     ],
     "UI/WaveUI.tscn": [
+      "scenes/map.tscn"
+    ],
+    "scenes/PauseOverlay.tscn": [
+      "scenes/map.tscn"
+    ],
+    "UI/SpeedToggle.tscn": [
       "scenes/map.tscn"
     ],
     "addons/Materials/leaves_snow_mat.tres": [

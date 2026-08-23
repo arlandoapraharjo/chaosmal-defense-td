@@ -24,7 +24,7 @@ var _is_capped: bool = false
 
 @export_group("Layout")
 ## Width and height of this slot in pixels.
-@export var slot_size: float = 50.0:
+@export var slot_size: float = 64.0:
 	set(v):
 		slot_size = v
 		custom_minimum_size = Vector2(v, v)
@@ -69,7 +69,7 @@ var is_selected: bool = false
 var any_selected: bool = false
 var is_hovered: bool = false
 var _scale_tween: Tween = null
-var _opacity_tween: Tween = null
+var _modulate_tween: Tween = null
 var _icon_scale_tween: Tween = null
 var _rotate_tween: Tween = null
 var _turret_instance: Node3D = null
@@ -78,14 +78,13 @@ var bg_frames: Array[Texture2D] = []
 var bg_frame_index: int = 0
 var bg_timer: float = 0.0
 
-@onready var bg_texture: TextureRect = $BgTexture
-
+@onready var bg_texture: TextureRect          = $BgTexture
 @onready var sub_viewport: SubViewport        = $MarginContainer/VBoxContainer/SubViewportContainer/SubViewport
 @onready var preview_camera: Camera3D         = $MarginContainer/VBoxContainer/SubViewportContainer/SubViewport/PreviewScene/Camera3D
 @onready var turret_anchor: Node3D            = $MarginContainer/VBoxContainer/SubViewportContainer/SubViewport/PreviewScene/TurretAnchor
-@onready var tooltip_label: Label             = $MarginContainer/VBoxContainer/TooltipLabel
-@onready var cost_label: Label                = $MarginContainer/VBoxContainer/CostLabel
-@onready var count_label: Label               = $MarginContainer/VBoxContainer/CountLabel
+@onready var tooltip_label: Label             = $TooltipAnchor/TooltipLabel
+@onready var cost_label: Label                = $MarginContainer/VBoxContainer/BottomBar/CostLabel
+@onready var count_label: Label               = $MarginContainer/VBoxContainer/BottomBar/CountLabel
 
 func _ready() -> void:
 	custom_minimum_size = Vector2(slot_size, slot_size)
@@ -95,8 +94,11 @@ func _ready() -> void:
 	mouse_exited.connect(_on_mouse_exited)
 	gui_input.connect(_on_gui_input)
 	sub_viewport.own_world_3d = true
+	if bg_texture and bg_texture.texture == null:
+		bg_texture.texture = preload("res://UI/Turret Hotbar/turret_slot.png")
 	if turret_scene != null:
 		_load_turret_preview()
+	_refresh_cost_labels()
 	_refresh_visual()
 
 # ── Style ─────────────────────────────────────────────────────────────────────
@@ -107,10 +109,6 @@ func _rebuild_styles() -> void:
 # ── Public API ────────────────────────────────────────────────────────────────
 
 ## Called by TurretHotbar to bulk-apply a style config dict.
-## Keys: slot_size, color_bg_normal, color_bg_hover, color_bg_selected,
-##       color_border_normal, color_border_hover, color_border_selected,
-##       color_glow, border_width_normal, border_width_hover,
-##       border_width_selected, corner_radius, glow_shadow_size
 func apply_theme_config(cfg: Dictionary) -> void:
 	if cfg.has("slot_size"):            slot_size            = cfg["slot_size"]
 	if cfg.has("color_bg_normal"):      color_bg_normal      = cfg["color_bg_normal"]
@@ -150,19 +148,18 @@ func _refresh_cost_labels() -> void:
 	if not is_node_ready():
 		return
 	if cost_label:
-		cost_label.visible = is_hovered
 		if turret_cost > 0:
-			cost_label.text = "Cost: %d" % turret_cost
+			cost_label.text = "⚡%d" % turret_cost
 		else:
-			cost_label.text = ""
+			cost_label.text = "Free"
 	if count_label:
-		count_label.visible = is_hovered
 		if turret_max > 0:
-			count_label.text = "%d / %d" % [turret_count, turret_max]
+			count_label.text = "%d/%d" % [turret_count, turret_max]
 		else:
 			count_label.text = ""
 	if tooltip_label:
 		tooltip_label.text = turret_name
+		tooltip_label.visible = is_hovered
 
 # ── Turret Preview ────────────────────────────────────────────────────────────
 
@@ -233,50 +230,51 @@ func set_bg_frames(frames: Array[Texture2D]) -> void:
 	_refresh_visual()
 
 func _process(delta: float) -> void:
-	if bg_frames.is_empty() or not is_selected:
-		return
-	bg_timer += delta
-	if bg_timer >= 0.1:
-		bg_timer = 0.0
-		bg_frame_index = (bg_frame_index + 1) % bg_frames.size()
-		bg_texture.texture = bg_frames[bg_frame_index]
+	if bg_frames.size() > 1 and is_selected:
+		bg_timer += delta
+		if bg_timer >= 0.1:
+			bg_timer = 0.0
+			bg_frame_index = (bg_frame_index + 1) % bg_frames.size()
+			bg_texture.texture = bg_frames[bg_frame_index]
 
 func _refresh_visual() -> void:
 	if not is_node_ready():
 		return
 	
 	if bg_frames.size() > 0:
-		if is_selected:
-			pass # _process handles animation
-		else:
-			bg_texture.texture = bg_frames[0]
-			bg_frame_index = 0
-			bg_timer = 0.0
+		bg_texture.texture = bg_frames[0]
+	elif bg_texture.texture == null:
+		bg_texture.texture = preload("res://UI/Turret Hotbar/turret_slot.png")
 			
-	var target_opacity = 1.0
-	var icon_scale = 1.0
-	var card_scale = 1.0
+	var target_modulate := Color(1.0, 1.0, 1.0, 1.0)
+	var icon_scale := 1.0
+	var card_scale := 1.0
 	
 	# Grey out if at deployment cap
 	if _is_capped and not is_selected:
-		target_opacity = 0.45
 		card_scale = 0.95
+		icon_scale = 0.95
+		target_modulate = Color(0.55, 0.55, 0.55, 0.5)
 	elif is_selected:
-		icon_scale = 1.4
-		target_opacity = 1.0
-		card_scale = 79.0 / slot_size
+		icon_scale = 1.25
+		card_scale = 1.12
+		target_modulate = Color(1.3, 1.3, 1.15, 1.0)
 	elif is_hovered:
-		target_opacity = 1.0
-		card_scale = 0.92
+		icon_scale = 1.1
+		card_scale = 1.06
+		target_modulate = Color(1.15, 1.15, 1.15, 1.0)
 	else:
 		if any_selected:
-			target_opacity = 0.8
+			card_scale = 1.0
+			icon_scale = 1.0
+			target_modulate = Color(0.85, 0.85, 0.85, 0.85)
 		else:
-			target_opacity = 1.0
-		card_scale = 1.0
+			card_scale = 1.0
+			icon_scale = 1.0
+			target_modulate = Color(1.0, 1.0, 1.0, 1.0)
 		
 	_animate_scale(card_scale)
-	_animate_opacity(target_opacity)
+	_animate_modulate(target_modulate)
 	_animate_icon_scale(icon_scale)
 
 func _animate_scale(target: float) -> void:
@@ -287,13 +285,13 @@ func _animate_scale(target: float) -> void:
 	_scale_tween.set_trans(Tween.TRANS_BACK)
 	_scale_tween.tween_property(self, "scale", Vector2(target, target), 0.18)
 
-func _animate_opacity(target: float) -> void:
-	if _opacity_tween:
-		_opacity_tween.kill()
-	_opacity_tween = create_tween()
-	_opacity_tween.set_ease(Tween.EASE_OUT)
-	_opacity_tween.set_trans(Tween.TRANS_SINE)
-	_opacity_tween.tween_property(self, "modulate:a", target, 0.2)
+func _animate_modulate(target: Color) -> void:
+	if _modulate_tween:
+		_modulate_tween.kill()
+	_modulate_tween = create_tween()
+	_modulate_tween.set_ease(Tween.EASE_OUT)
+	_modulate_tween.set_trans(Tween.TRANS_SINE)
+	_modulate_tween.tween_property(self, "modulate", target, 0.18)
 
 func _animate_icon_scale(target: float) -> void:
 	if not is_instance_valid(turret_anchor):
@@ -303,18 +301,18 @@ func _animate_icon_scale(target: float) -> void:
 	_icon_scale_tween = create_tween()
 	_icon_scale_tween.set_ease(Tween.EASE_OUT)
 	_icon_scale_tween.set_trans(Tween.TRANS_BACK)
-	_icon_scale_tween.tween_property(turret_anchor, "scale", Vector3(target, target, target), 0.25)
+	_icon_scale_tween.tween_property(turret_anchor, "scale", Vector3(target, target, target), 0.22)
 
 # ── Input ──────────────────────────────────────────────────────────────────────
 
 func _on_mouse_entered() -> void:
 	is_hovered = true
-	_refresh_cost_labels()  # show full tooltip with cost + count
+	_refresh_cost_labels()
 	_refresh_visual()
 
 func _on_mouse_exited() -> void:
 	is_hovered = false
-	_refresh_cost_labels()  # revert tooltip to just the name
+	_refresh_cost_labels()
 	_refresh_visual()
 
 func _on_gui_input(event: InputEvent) -> void:
