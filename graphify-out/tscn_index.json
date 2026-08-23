@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scenes": 35,
+    "total_scenes": 38,
     "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scenes": [
@@ -435,6 +435,40 @@
         {
           "name": "DirectionalLight3D",
           "type": "DirectionalLight3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/GameOverOverlay.tscn",
+      "scene_uid": "uid://cx8v4qm5pak21",
+      "ext_resources": [
+        {
+          "path": "scripts/GameOverOverlay.gd",
+          "raw_path": "res://scripts/GameOverOverlay.gd",
+          "type": "Script",
+          "id": "1_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "GameOverOverlay",
+          "type": "CanvasLayer"
+        },
+        {
+          "name": "Backdrop",
+          "type": "ColorRect"
+        },
+        {
+          "name": "CenterContainer",
+          "type": "CenterContainer"
+        },
+        {
+          "name": "ModalPanel",
+          "type": "PanelContainer"
+        },
+        {
+          "name": "VBoxContainer",
+          "type": "VBoxContainer"
         }
       ]
     },
@@ -1047,6 +1081,12 @@
           "raw_path": "res://UI/SpeedToggle.tscn",
           "type": "PackedScene",
           "id": "17_speed"
+        },
+        {
+          "path": "scenes/GameOverOverlay.tscn",
+          "raw_path": "res://scenes/GameOverOverlay.tscn",
+          "type": "PackedScene",
+          "id": "18_gameover"
         }
       ],
       "nodes_preview": [
@@ -1069,6 +1109,71 @@
         {
           "name": "Camera3D",
           "type": "Camera3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/pillar_destruction.tscn",
+      "scene_uid": "uid://b7v1j08kqlw3a",
+      "ext_resources": [
+        {
+          "path": "scripts/PillarDestructionParticle.gd",
+          "raw_path": "res://scripts/PillarDestructionParticle.gd",
+          "type": "Script",
+          "id": "1_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "PillarDestructionParticle",
+          "type": "Node3D"
+        },
+        {
+          "name": "CrystalMonolithShards",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ArcanePlasmaBurst",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ArcaneBlastSparks",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "OmniLight3D",
+          "type": "OmniLight3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/pillar_hit_particle.tscn",
+      "scene_uid": "uid://c6f30aampm12k",
+      "ext_resources": [
+        {
+          "path": "scripts/HitParticle.gd",
+          "raw_path": "res://scripts/HitParticle.gd",
+          "type": "Script",
+          "uid": "uid://8tlg6mgg5lpv",
+          "id": "1_hit"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "PillarHitParticle",
+          "type": "Node3D"
+        },
+        {
+          "name": "CrystalShards",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ArcaneSparks",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ArcaneDust",
+          "type": "GPUParticles3D"
         }
       ]
     },
@@ -1313,6 +1418,9 @@
       "assets/Models/GLB format/world.tscn",
       "scenes/map.tscn"
     ],
+    "scripts/GameOverOverlay.gd": [
+      "scenes/GameOverOverlay.tscn"
+    ],
     "scripts/PauseOverlay.gd": [
       "scenes/PauseOverlay.tscn"
     ],
@@ -1335,7 +1443,8 @@
       "scenes/cannon_hit_particle.tscn",
       "scenes/hit_particle.tscn",
       "scenes/hit_particle_ballista.tscn",
-      "scenes/hit_particle_cannon.tscn"
+      "scenes/hit_particle_cannon.tscn",
+      "scenes/pillar_hit_particle.tscn"
     ],
     "scripts/BoulderImpact.gd": [
       "scenes/boulder_impact.tscn"
@@ -1424,6 +1533,12 @@
     ],
     "UI/SpeedToggle.tscn": [
       "scenes/map.tscn"
+    ],
+    "scenes/GameOverOverlay.tscn": [
+      "scenes/map.tscn"
+    ],
+    "scripts/PillarDestructionParticle.gd": [
+      "scenes/pillar_destruction.tscn"
     ],
     "addons/Materials/leaves_snow_mat.tres": [
       "scenes/snow_bush.tscn"

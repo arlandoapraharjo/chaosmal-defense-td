@@ -1,0 +1,141 @@
+[gd_scene format=3 uid="uid://b7v1j08kqlw3a"]
+
+[ext_resource type="Script" path="res://scripts/PillarDestructionParticle.gd" id="1_script"]
+
+[sub_resource type="Curve" id="Curve_large_shard_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.75, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_large_shard_scale"]
+curve = SubResource("Curve_large_shard_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_large_shards"]
+emission_shape = 1
+emission_sphere_radius = 0.8
+direction = Vector3(0, 1, 0)
+spread = 85.0
+initial_velocity_min = 6.0
+initial_velocity_max = 12.0
+gravity = Vector3(0, -12.0, 0)
+scale_min = 0.35
+scale_max = 0.85
+scale_curve = SubResource("CurveTexture_large_shard_scale")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_large_crystal"]
+albedo_color = Color(0.7, 0.15, 1.0, 1)
+emission_enabled = true
+emission = Color(0.8, 0.2, 1.0, 1)
+emission_energy_multiplier = 4.0
+roughness = 0.15
+
+[sub_resource type="BoxMesh" id="BoxMesh_large_crystal"]
+material = SubResource("StandardMaterial3D_large_crystal")
+size = Vector3(0.3, 0.7, 0.3)
+
+[sub_resource type="Curve" id="Curve_plasma_alpha"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.15, 0.8), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_plasma_alpha"]
+curve = SubResource("Curve_plasma_alpha")
+
+[sub_resource type="Curve" id="Curve_plasma_scale"]
+_data = [Vector2(0, 0.3), 0.0, 0.0, 0, 0, Vector2(0.3, 1.0), 0.0, 0.0, 0, 0, Vector2(1, 1.8), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_plasma_scale"]
+curve = SubResource("Curve_plasma_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_plasma"]
+emission_shape = 1
+emission_sphere_radius = 0.5
+direction = Vector3(0, 1, 0)
+spread = 70.0
+initial_velocity_min = 2.5
+initial_velocity_max = 6.0
+gravity = Vector3(0, 1.5, 0)
+scale_min = 0.5
+scale_max = 1.3
+scale_curve = SubResource("CurveTexture_plasma_scale")
+color = Color(0.85, 0.25, 1.0, 0.7)
+alpha_curve = SubResource("CurveTexture_plasma_alpha")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_plasma"]
+transparency = 1
+vertex_color_use_as_albedo = true
+emission_enabled = true
+emission = Color(0.65, 0.1, 0.9, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_plasma"]
+material = SubResource("StandardMaterial3D_plasma")
+radius = 0.6
+height = 1.2
+radial_segments = 12
+rings = 6
+
+[sub_resource type="Curve" id="Curve_blast_sparks_alpha"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_blast_sparks_alpha"]
+curve = SubResource("Curve_blast_sparks_alpha")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_blast_sparks"]
+particle_flag_align_y = true
+spread = 180.0
+initial_velocity_min = 9.0
+initial_velocity_max = 15.0
+gravity = Vector3(0, -6.0, 0)
+scale_min = 0.15
+scale_max = 0.4
+alpha_curve = SubResource("CurveTexture_blast_sparks_alpha")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_blast_sparks"]
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.9, 0.5, 1.0, 1)
+emission_enabled = true
+emission = Color(0.95, 0.4, 1.0, 1)
+emission_energy_multiplier = 5.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_blast_sparks"]
+material = SubResource("StandardMaterial3D_blast_sparks")
+top_radius = 0.06
+bottom_radius = 0.0
+height = 0.45
+
+[node name="PillarDestructionParticle" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="CrystalMonolithShards" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 32
+lifetime = 1.5
+one_shot = true
+explosiveness = 0.95
+process_material = SubResource("ParticleProcessMaterial_large_shards")
+draw_pass_1 = SubResource("BoxMesh_large_crystal")
+
+[node name="ArcanePlasmaBurst" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 24
+lifetime = 1.8
+one_shot = true
+explosiveness = 0.9
+process_material = SubResource("ParticleProcessMaterial_plasma")
+draw_pass_1 = SubResource("SphereMesh_plasma")
+
+[node name="ArcaneBlastSparks" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 35
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_blast_sparks")
+draw_pass_1 = SubResource("CylinderMesh_blast_sparks")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+light_color = Color(0.85, 0.3, 1.0, 1)
+light_energy = 5.0
+omni_range = 10.0

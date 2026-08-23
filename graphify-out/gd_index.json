@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scripts": 23,
+    "total_scripts": 25,
     "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scripts": [
@@ -681,6 +681,10 @@
       ],
       "functions": [
         {
+          "name": "get_contact_damage",
+          "params": []
+        },
+        {
           "name": "setup_enemy_type",
           "params": [
             "type_index",
@@ -709,6 +713,12 @@
         {
           "name": "deactivate",
           "params": []
+        },
+        {
+          "name": "destroy_by_shockwave",
+          "params": [
+            "delay"
+          ]
         },
         {
           "name": "take_damage",
@@ -754,6 +764,28 @@
       "exports": []
     },
     {
+      "file": "scripts/GameOverOverlay.gd",
+      "class_name": "GameOverOverlay",
+      "extends": "CanvasLayer",
+      "signals": [],
+      "functions": [
+        {
+          "name": "show_victory",
+          "params": [
+            "stats"
+          ]
+        },
+        {
+          "name": "show_defeat",
+          "params": [
+            "stats"
+          ]
+        }
+      ],
+      "loads": [],
+      "exports": []
+    },
+    {
       "file": "scripts/HitParticle.gd",
       "class_name": null,
       "extends": "Node3D",
@@ -766,8 +798,25 @@
       "file": "scripts/IncursionPillar.gd",
       "class_name": "IncursionPillar",
       "extends": "Node3D",
-      "signals": [],
+      "signals": [
+        {
+          "name": "pillar_damaged",
+          "params": [
+            "current_hp: float",
+            "max_hp: float"
+          ]
+        },
+        {
+          "name": "pillar_destroyed"
+        }
+      ],
       "functions": [
+        {
+          "name": "take_damage",
+          "params": [
+            "amount"
+          ]
+        },
         {
           "name": "get_upgrade_cost",
           "params": []
@@ -779,25 +828,37 @@
       ],
       "loads": [
         {
-          "line": 62,
+          "line": 83,
           "raw": "res://UI/Level Up - Indicator/lvl_up.png",
           "path": "UI/Level Up - Indicator/lvl_up.png",
           "call": "load"
         },
         {
-          "line": 64,
+          "line": 85,
           "raw": "res://ui/lvl indicator/lvl_up.png",
           "path": "ui/lvl indicator/lvl_up.png",
           "call": "load"
         },
         {
-          "line": 72,
+          "line": 93,
           "raw": "res://assets/Models/GLB format/tower-round-crystals.glb",
           "path": "assets/Models/GLB format/tower-round-crystals.glb",
           "call": "load"
         },
         {
-          "line": 387,
+          "line": 392,
+          "raw": "res://scenes/pillar_hit_particle.tscn",
+          "path": "scenes/pillar_hit_particle.tscn",
+          "call": "load"
+        },
+        {
+          "line": 403,
+          "raw": "res://scenes/pillar_destruction.tscn",
+          "path": "scenes/pillar_destruction.tscn",
+          "call": "load"
+        },
+        {
+          "line": 622,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -807,6 +868,14 @@
         {
           "name": "max_level",
           "type": "int"
+        },
+        {
+          "name": "max_hp",
+          "type": "float"
+        },
+        {
+          "name": "hp_bar_position",
+          "type": "Vector3"
         },
         {
           "name": "indicator_position",
@@ -994,6 +1063,15 @@
       "exports": []
     },
     {
+      "file": "scripts/PillarDestructionParticle.gd",
+      "class_name": "PillarDestructionParticle",
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": []
+    },
+    {
       "file": "scripts/PillarShockwave.gd",
       "class_name": "PillarShockwave",
       "extends": "CanvasLayer",
@@ -1036,31 +1114,31 @@
       ],
       "loads": [
         {
-          "line": 204,
-          "raw": "res://scenes/hit_particle.tscn",
-          "path": "scenes/hit_particle.tscn",
-          "call": "preload"
-        },
-        {
-          "line": 205,
-          "raw": "res://scenes/hit_particle.tscn",
-          "path": "scenes/hit_particle.tscn",
-          "call": "preload"
-        },
-        {
           "line": 206,
+          "raw": "res://scenes/hit_particle.tscn",
+          "path": "scenes/hit_particle.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 207,
+          "raw": "res://scenes/hit_particle.tscn",
+          "path": "scenes/hit_particle.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 208,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 207,
+          "line": 209,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 208,
+          "line": 210,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"
@@ -1103,7 +1181,7 @@
     },
     {
       "file": "scripts/WaveManager.gd",
-      "class_name": null,
+      "class_name": "WaveManager",
       "extends": "Node3D",
       "signals": [
         {
@@ -1131,35 +1209,49 @@
           "params": [
             "multiplier"
           ]
+        },
+        {
+          "name": "stop_spawning",
+          "params": []
+        },
+        {
+          "name": "wipe_all_active_enemies",
+          "params": [
+            "pillar_world_pos"
+          ]
+        },
+        {
+          "name": "get_game_stats",
+          "params": []
         }
       ],
       "loads": [
         {
-          "line": 15,
+          "line": 16,
           "raw": "res://assets/Models/GLB format/enemy-ufo-a.glb",
           "path": "assets/Models/GLB format/enemy-ufo-a.glb",
           "call": "preload"
         },
         {
-          "line": 16,
+          "line": 17,
           "raw": "res://assets/Models/GLB format/enemy-ufo-b.glb",
           "path": "assets/Models/GLB format/enemy-ufo-b.glb",
           "call": "preload"
         },
         {
-          "line": 17,
+          "line": 18,
           "raw": "res://assets/Models/GLB format/enemy-ufo-c.glb",
           "path": "assets/Models/GLB format/enemy-ufo-c.glb",
           "call": "preload"
         },
         {
-          "line": 18,
+          "line": 19,
           "raw": "res://assets/Models/GLB format/enemy-ufo-d.glb",
           "path": "assets/Models/GLB format/enemy-ufo-d.glb",
           "call": "preload"
         },
         {
-          "line": 21,
+          "line": 22,
           "raw": "res://scripts/Enemy.gd",
           "path": "scripts/Enemy.gd",
           "call": "preload"

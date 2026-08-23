@@ -107,7 +107,7 @@ Cohesion: 0.18
 Nodes (11): BiomeData, CurrencyManager, PauseOverlay, CurrencyUI, SpeedToggle, WaveUI, Map Scene, Pauseoverlay Scene (+3 more)
 
 ## Knowledge Gaps
-- **58 isolated node(s):** `graphify`, `Workflow: graphify`, `Workflow: refresh-graph`, `Workflow: update-viz`, `Biome System & Map Generation` (+53 more)
+- **58 isolated node(s):** `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation`, `Enemy Movement`, `Enemy Pathing & Coordinate Alignment` (+53 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **27 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -118,5 +118,5 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.105) - this node is a cross-community bridge._
 - **Why does `BuilderController` connect `HitParticle` to `Map Scene`?**
   _High betweenness centrality (0.052) - this node is a cross-community bridge._
-- **What connects `graphify`, `Workflow: graphify`, `Workflow: refresh-graph` to the rest of the system?**
+- **What connects `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation` to the rest of the system?**
   _58 weakly-connected nodes found - possible documentation gaps or missing edges._

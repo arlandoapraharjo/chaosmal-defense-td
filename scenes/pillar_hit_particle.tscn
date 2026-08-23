@@ -1,0 +1,124 @@
+[gd_scene format=3 uid="uid://c6f30aampm12k"]
+
+[ext_resource type="Script" uid="uid://8tlg6mgg5lpv" path="res://scripts/HitParticle.gd" id="1_hit"]
+
+[sub_resource type="Curve" id="Curve_crystal_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.7, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_crystal_scale"]
+curve = SubResource("Curve_crystal_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_crystal"]
+emission_shape = 1
+emission_sphere_radius = 0.4
+direction = Vector3(0, 1, 0)
+spread = 80.0
+initial_velocity_min = 3.5
+initial_velocity_max = 6.5
+scale_min = 0.15
+scale_max = 0.35
+scale_curve = SubResource("CurveTexture_crystal_scale")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_crystal"]
+albedo_color = Color(0.75, 0.25, 1, 1)
+roughness = 0.2
+emission_enabled = true
+emission = Color(0.85, 0.3, 1, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_crystal"]
+material = SubResource("StandardMaterial3D_crystal")
+size = Vector3(0.15, 0.3, 0.15)
+
+[sub_resource type="Curve" id="Curve_sparks_alpha"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_sparks_alpha"]
+curve = SubResource("Curve_sparks_alpha")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sparks"]
+particle_flag_align_y = true
+spread = 180.0
+initial_velocity_min = 5.0
+initial_velocity_max = 8.0
+gravity = Vector3(0, -4, 0)
+scale_min = 0.1
+scale_max = 0.25
+alpha_curve = SubResource("CurveTexture_sparks_alpha")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sparks"]
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 0.6, 1, 1)
+emission_enabled = true
+emission = Color(1, 0.5, 1, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_sparks"]
+material = SubResource("StandardMaterial3D_sparks")
+top_radius = 0.04
+bottom_radius = 0.0
+height = 0.25
+
+[sub_resource type="Curve" id="Curve_dust_alpha"]
+_data = [Vector2(0, 0.6), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_dust_alpha"]
+curve = SubResource("Curve_dust_alpha")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dust"]
+emission_shape = 1
+emission_sphere_radius = 0.3
+direction = Vector3(0, 1, 0)
+spread = 90.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.5
+gravity = Vector3(0, 1, 0)
+scale_min = 0.2
+scale_max = 0.5
+color = Color(0.3, 0.15, 0.35, 0.5)
+alpha_curve = SubResource("CurveTexture_dust_alpha")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dust"]
+transparency = 1
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_dust"]
+material = SubResource("StandardMaterial3D_dust")
+radius = 0.3
+height = 0.6
+radial_segments = 8
+rings = 4
+
+[node name="PillarHitParticle" type="Node3D" unique_id=488058529]
+script = ExtResource("1_hit")
+
+[node name="CrystalShards" type="GPUParticles3D" parent="." unique_id=266508430]
+emitting = false
+amount = 16
+lifetime = 0.6
+one_shot = true
+explosiveness = 0.9
+process_material = SubResource("ParticleProcessMaterial_crystal")
+draw_pass_1 = SubResource("BoxMesh_crystal")
+
+[node name="ArcaneSparks" type="GPUParticles3D" parent="." unique_id=1205058490]
+emitting = false
+amount = 20
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_sparks")
+draw_pass_1 = SubResource("CylinderMesh_sparks")
+
+[node name="ArcaneDust" type="GPUParticles3D" parent="." unique_id=838454568]
+emitting = false
+amount = 10
+lifetime = 0.7
+one_shot = true
+explosiveness = 0.85
+process_material = SubResource("ParticleProcessMaterial_dust")
+draw_pass_1 = SubResource("SphereMesh_dust")

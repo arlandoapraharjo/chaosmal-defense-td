@@ -323,7 +323,7 @@
     },
     {
       "type": "isolated_nodes",
-      "question": "What connects `graphify`, `Workflow: graphify`, `Workflow: refresh-graph` to the rest of the system?",
+      "question": "What connects `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation` to the rest of the system?",
       "why": "58 weakly-connected nodes found - possible documentation gaps or missing edges."
     }
   ]

@@ -9,8 +9,8 @@
       "source_file": "scenes/explosion.tscn",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
-      "community_name": "MapGenerator",
+      "community": 99,
+      "community_name": "Map Scene",
       "norm_label": "explosion scene",
       "description": "Scene with 0 ext_resource(s)",
       "_scene_uid": "uid://bre7ucbq7catu",
@@ -60,6 +60,20 @@
       "id": "tscn_scenes_snow_bush"
     },
     {
+      "label": "Pillar Destruction Scene",
+      "file_type": "code",
+      "source_file": "scenes/pillar_destruction.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "IncursionPillar",
+      "norm_label": "pillar destruction scene",
+      "description": "Scene with 1 ext_resource(s)",
+      "_scene_uid": "uid://b7v1j08kqlw3a",
+      "_ext_resource_count": 1,
+      "id": "tscn_scenes_pillar_destruction"
+    },
+    {
       "label": "Waveui Scene",
       "file_type": "code",
       "source_file": "UI/WaveUI.tscn",
@@ -102,6 +116,20 @@
       "id": "tscn_scenes_hit_particle"
     },
     {
+      "label": "Pillar Hit Particle Scene",
+      "file_type": "code",
+      "source_file": "scenes/pillar_hit_particle.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "IncursionPillar",
+      "norm_label": "pillar hit particle scene",
+      "description": "Scene with 1 ext_resource(s)",
+      "_scene_uid": "uid://c6f30aampm12k",
+      "_ext_resource_count": 1,
+      "id": "tscn_scenes_pillar_hit_particle"
+    },
+    {
       "label": "Boulder Impact Scene",
       "file_type": "code",
       "source_file": "scenes/boulder_impact.tscn",
@@ -128,6 +156,20 @@
       "_scene_uid": "uid://ct5vtompixl3d",
       "_ext_resource_count": 1,
       "id": "tscn_scenes_ballista_hit_particle"
+    },
+    {
+      "label": "Gameoveroverlay Scene",
+      "file_type": "code",
+      "source_file": "scenes/GameOverOverlay.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "Map Scene",
+      "norm_label": "gameoveroverlay scene",
+      "description": "Scene with 1 ext_resource(s)",
+      "_scene_uid": "uid://cx8v4qm5pak21",
+      "_ext_resource_count": 1,
+      "id": "tscn_scenes_gameoveroverlay"
     },
     {
       "label": "Turrethotbar Scene",
@@ -222,9 +264,9 @@
       "community": 99,
       "community_name": "Map Scene",
       "norm_label": "map scene",
-      "description": "Scene with 17 ext_resource(s)",
+      "description": "Scene with 18 ext_resource(s)",
       "_scene_uid": "uid://bpg8awe6kssxa",
-      "_ext_resource_count": 17,
+      "_ext_resource_count": 18,
       "id": "tscn_scenes_map"
     },
     {
@@ -289,8 +331,8 @@
       "source_file": "assets/Models/GLB format/world.tscn",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
-      "community_name": "MapGenerator",
+      "community": 99,
+      "community_name": "Map Scene",
       "norm_label": "world scene",
       "description": "Scene with 2 ext_resource(s)",
       "_scene_uid": "uid://bonpdp0wxujje",
@@ -374,7 +416,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 8,
-      "community_name": "MapGenerator",
+      "community_name": "IncursionPillar",
       "norm_label": "pillarshockwave scene",
       "description": "Scene with 2 ext_resource(s)",
       "_scene_uid": null,
@@ -499,8 +541,8 @@
       "source_file": "scripts/MapGenerator.gd",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
-      "community_name": "MapGenerator",
+      "community": 99,
+      "community_name": "Map Scene",
       "norm_label": "mapgenerator",
       "description": "extends Node3D | funcs: is_buildable, occupy_cell | signals: biome_changed",
       "_gd_extends": "Node3D",
@@ -564,14 +606,17 @@
       "source_file": "scripts/WaveManager.gd",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
-      "community_name": "MapGenerator",
+      "community": 99,
+      "community_name": "Map Scene",
       "norm_label": "wavemanager",
-      "description": "extends Node3D | funcs: setup, set_speed_multiplier | signals: wave_started, wave_completed",
+      "description": "extends Node3D | funcs: setup, set_speed_multiplier, stop_spawning, wipe_all_active_enemies, get_game_stats | signals: wave_started, wave_completed",
       "_gd_extends": "Node3D",
       "_gd_functions": [
         "setup",
-        "set_speed_multiplier"
+        "set_speed_multiplier",
+        "stop_spawning",
+        "wipe_all_active_enemies",
+        "get_game_stats"
       ],
       "_gd_signals": [
         "wave_started",
@@ -653,17 +698,23 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 8,
-      "community_name": "MapGenerator",
+      "community_name": "IncursionPillar",
       "norm_label": "incursionpillar",
-      "description": "extends Node3D | funcs: get_upgrade_cost, try_upgrade",
+      "description": "extends Node3D | funcs: take_damage, get_upgrade_cost, try_upgrade | signals: pillar_damaged, pillar_destroyed",
       "_gd_extends": "Node3D",
       "_gd_functions": [
+        "take_damage",
         "get_upgrade_cost",
         "try_upgrade"
       ],
-      "_gd_signals": [],
+      "_gd_signals": [
+        "pillar_damaged",
+        "pillar_destroyed"
+      ],
       "_gd_exports": [
         "max_level",
+        "max_hp",
+        "hp_bar_position",
         "indicator_position",
         "indicator_pixel_size",
         "upgrade_btn_position",
@@ -679,8 +730,8 @@
       "source_file": "scripts/CameraController.gd",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
-      "community_name": "MapGenerator",
+      "community": 99,
+      "community_name": "Map Scene",
       "norm_label": "cameracontroller",
       "description": "extends Camera3D | funcs: reset_camera",
       "_gd_extends": "Camera3D",
@@ -801,17 +852,19 @@
       "source_file": "scripts/Enemy.gd",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 8,
-      "community_name": "MapGenerator",
+      "community": 99,
+      "community_name": "Map Scene",
       "norm_label": "enemy",
-      "description": "extends Node3D | funcs: setup_enemy_type, setup, set_speed_multiplier, reset, deactivate, take_damage | signals: reached_end, enemy_defeated",
+      "description": "extends Node3D | funcs: get_contact_damage, setup_enemy_type, setup, set_speed_multiplier, reset, deactivate ... | signals: reached_end, enemy_defeated",
       "_gd_extends": "Node3D",
       "_gd_functions": [
+        "get_contact_damage",
         "setup_enemy_type",
         "setup",
         "set_speed_multiplier",
         "reset",
         "deactivate",
+        "destroy_by_shockwave",
         "take_damage"
       ],
       "_gd_signals": [
@@ -900,7 +953,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "community": 8,
-      "community_name": "MapGenerator",
+      "community_name": "IncursionPillar",
       "norm_label": "pillarshockwave",
       "description": "extends CanvasLayer | funcs: play_shockwave",
       "_gd_extends": "CanvasLayer",
@@ -910,6 +963,25 @@
       "_gd_signals": [],
       "_gd_exports": [],
       "id": "gdscript_scripts_pillarshockwave"
+    },
+    {
+      "label": "GameOverOverlay",
+      "file_type": "code",
+      "source_file": "scripts/GameOverOverlay.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "Map Scene",
+      "norm_label": "gameoveroverlay",
+      "description": "extends CanvasLayer | funcs: show_victory, show_defeat",
+      "_gd_extends": "CanvasLayer",
+      "_gd_functions": [
+        "show_victory",
+        "show_defeat"
+      ],
+      "_gd_signals": [],
+      "_gd_exports": [],
+      "id": "gdscript_scripts_gameoveroverlay"
     },
     {
       "label": "WaveUI",
@@ -1013,6 +1085,22 @@
       "_gd_signals": [],
       "_gd_exports": [],
       "id": "gdscript_ui_menus_mainmenu"
+    },
+    {
+      "label": "PillarDestructionParticle",
+      "file_type": "code",
+      "source_file": "scripts/PillarDestructionParticle.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "IncursionPillar",
+      "norm_label": "pillardestructionparticle",
+      "description": "extends Node3D",
+      "_gd_extends": "Node3D",
+      "_gd_functions": [],
+      "_gd_signals": [],
+      "_gd_exports": [],
+      "id": "gdscript_scripts_pillardestructionparticle"
     },
     {
       "label": "BoulderImpact",
@@ -1443,6 +1531,18 @@
       "_origin": "ast",
       "_resource_type": "PackedScene",
       "source": "tscn_scenes_map",
+      "target": "tscn_scenes_gameoveroverlay"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scenes/map.tscn",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "_resource_type": "PackedScene",
+      "source": "tscn_scenes_map",
       "target": "tscn_scenes_pauseoverlay"
     },
     {
@@ -1557,6 +1657,18 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
+      "source_file": "scenes/GameOverOverlay.tscn",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "_resource_type": "Script",
+      "source": "tscn_scenes_gameoveroverlay",
+      "target": "gdscript_scripts_gameoveroverlay"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "scenes/hit_particle.tscn",
       "source_location": "L1",
       "weight": 1.0,
@@ -1660,6 +1772,30 @@
       "_resource_type": "Script",
       "source": "tscn_scenes_pauseoverlay",
       "target": "gdscript_scripts_pauseoverlay"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scenes/pillar_destruction.tscn",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "_resource_type": "Script",
+      "source": "tscn_scenes_pillar_destruction",
+      "target": "gdscript_scripts_pillardestructionparticle"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scenes/pillar_hit_particle.tscn",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "_resource_type": "Script",
+      "source": "tscn_scenes_pillar_hit_particle",
+      "target": "gdscript_scripts_hitparticle"
     },
     {
       "relation": "references",
@@ -2074,6 +2210,28 @@
       "_origin": "ast",
       "source": "gdscript_scripts_incursionpillar",
       "target": "tscn_scenes_pillarshockwave"
+    },
+    {
+      "relation": "loads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/IncursionPillar.gd",
+      "source_location": "L392",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "gdscript_scripts_incursionpillar",
+      "target": "tscn_scenes_pillar_hit_particle"
+    },
+    {
+      "relation": "loads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/IncursionPillar.gd",
+      "source_location": "L403",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "gdscript_scripts_incursionpillar",
+      "target": "tscn_scenes_pillar_destruction"
     },
     {
       "relation": "loads",

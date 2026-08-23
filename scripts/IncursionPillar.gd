@@ -7,8 +7,18 @@ var current_level: int = 1
 # Upgrade costs for each level transition (L1->L2, L2->L3, L3->L4, L4->L5)
 var upgrade_costs: Array[int] = [10, 25, 50, 100]
 
+# --- Health & Defense ---
+@export_group("Health & Defense")
+@export var max_hp: float = 100.0
+var current_hp: float = 100.0
+var is_destroyed: bool = false
+
+signal pillar_damaged(current_hp: float, max_hp: float)
+signal pillar_destroyed
+
 # --- UI & Drop Shadow Customization (@export) ---
 @export_group("UI Layout & Sizing")
+@export var hp_bar_position: Vector3 = Vector3(2.4, 3.65, 0)
 @export var indicator_position: Vector3 = Vector3(2.4, 2.8, 0)
 @export var indicator_pixel_size: float = 0.01
 @export var upgrade_btn_position: Vector3 = Vector3(1.25, 1.25, 0)
@@ -19,8 +29,15 @@ var upgrade_costs: Array[int] = [10, 25, 50, 100]
 @export var shadow_color: Color = Color(0.0, 0.0, 0.0, 0.6) # Dark translucent silhouette
 
 var visual_model: Node3D = null
+var level_pivot: Node3D = null
 var level_sprite: Sprite3D = null
 var level_shadow_sprite: Sprite3D = null
+
+var hp_pivot: Node3D = null
+var hp_viewport: SubViewport = null
+var hp_progress_bar: ProgressBar = null
+var hp_label: Label = null
+var hp_sprite: Sprite3D = null
 
 var upgrade_pivot: Node3D = null
 var upgrade_sprite: Sprite3D = null
@@ -36,11 +53,15 @@ var glow_light: OmniLight3D = null
 var spinning_parts: Array[Node3D] = []
 
 func _ready() -> void:
+	add_to_group("pillar")
+	current_hp = max_hp
 	_load_textures()
 	_setup_visual_model()
 	_setup_ui()
+	_setup_health_bar()
 	_update_ui()
 	_update_effects()
+	_update_health_bar(false)
 
 func _load_textures() -> void:
 	level_textures.clear()
@@ -92,7 +113,6 @@ func _find_spinning_parts(node: Node) -> void:
 	for child in node.get_children():
 		_find_spinning_parts(child)
 
-
 func _setup_particles_and_light() -> void:
 	# Add Purple Particles
 	particles = GPUParticles3D.new()
@@ -132,10 +152,9 @@ func _setup_particles_and_light() -> void:
 	glow_light.position = Vector3(0, 2.0, 0)
 	add_child(glow_light)
 
-
 func _setup_ui() -> void:
 	# 1. Level Indicator Sprite (Top on Right Side)
-	var level_pivot = Node3D.new()
+	level_pivot = Node3D.new()
 	level_pivot.name = "LevelIndicatorPivot"
 	level_pivot.position = indicator_position
 	add_child(level_pivot)
@@ -233,48 +252,242 @@ func _setup_ui() -> void:
 	upgrade_area.mouse_entered.connect(_on_upgrade_area_mouse_entered)
 	upgrade_area.mouse_exited.connect(_on_upgrade_area_mouse_exited)
 
+func _setup_health_bar() -> void:
+	hp_pivot = Node3D.new()
+	hp_pivot.name = "HealthBarPivot"
+	hp_pivot.position = hp_bar_position
+	add_child(hp_pivot)
+
+	# SubViewport to render clean, customized 2D progress bar in 3D
+	hp_viewport = SubViewport.new()
+	hp_viewport.name = "HPViewport"
+	hp_viewport.size = Vector2i(200, 36)
+	hp_viewport.transparent_bg = true
+	hp_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(hp_viewport)
+
+	var bg_panel = Panel.new()
+	bg_panel.custom_minimum_size = Vector2(200, 36)
+	var bg_style = StyleBoxFlat.new()
+	bg_style.bg_color = Color(0.08, 0.08, 0.12, 0.9)
+	bg_style.border_color = Color(0.3, 0.3, 0.45, 1.0)
+	bg_style.set_border_width_all(2)
+	bg_style.set_corner_radius_all(6)
+	bg_panel.add_theme_stylebox_override("panel", bg_style)
+	hp_viewport.add_child(bg_panel)
+
+	hp_progress_bar = ProgressBar.new()
+	hp_progress_bar.custom_minimum_size = Vector2(192, 28)
+	hp_progress_bar.position = Vector2(4, 4)
+	hp_progress_bar.show_percentage = false
+	hp_progress_bar.max_value = 100.0
+	hp_progress_bar.value = 100.0
+
+	var bar_bg_style = StyleBoxFlat.new()
+	bar_bg_style.bg_color = Color(0.18, 0.05, 0.05, 0.8)
+	bar_bg_style.set_corner_radius_all(4)
+	hp_progress_bar.add_theme_stylebox_override("background", bar_bg_style)
+
+	var bar_fill_style = StyleBoxFlat.new()
+	bar_fill_style.bg_color = Color(0.2, 0.85, 0.35, 1.0) # Vibrant green
+	bar_fill_style.set_corner_radius_all(4)
+	hp_progress_bar.add_theme_stylebox_override("fill", bar_fill_style)
+	bg_panel.add_child(hp_progress_bar)
+
+	hp_label = Label.new()
+	hp_label.custom_minimum_size = Vector2(200, 36)
+	hp_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hp_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	hp_label.text = "❤️ 100 / 100"
+	hp_label.add_theme_font_size_override("font_size", 16)
+	hp_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	hp_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	hp_label.add_theme_constant_override("outline_size", 4)
+	bg_panel.add_child(hp_label)
+
+	# 3D Sprite displaying the SubViewport texture
+	hp_sprite = Sprite3D.new()
+	hp_sprite.name = "HPSprite"
+	hp_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	hp_sprite.no_depth_test = true
+	hp_sprite.render_priority = 10
+	hp_sprite.pixel_size = 0.0075
+	hp_sprite.texture = hp_viewport.get_texture()
+	hp_pivot.add_child(hp_sprite)
+
+func _update_health_bar(animate: bool = true) -> void:
+	if not hp_progress_bar:
+		return
+	var target_val = (current_hp / max_hp) * 100.0
+	if animate and is_inside_tree():
+		var tween = create_tween()
+		if tween:
+			var prop_tw = tween.tween_property(hp_progress_bar, "value", target_val, 0.2)
+			if prop_tw:
+				prop_tw.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	else:
+		hp_progress_bar.value = target_val
+		
+	# Change fill bar color dynamically based on health
+	var fill_style = hp_progress_bar.get_theme_stylebox("fill") as StyleBoxFlat
+	if fill_style:
+		if target_val > 50.0:
+			fill_style.bg_color = Color(0.2, 0.85, 0.35) # Green
+		elif target_val > 25.0:
+			fill_style.bg_color = Color(0.95, 0.75, 0.15) # Orange/Yellow
+		else:
+			fill_style.bg_color = Color(0.95, 0.2, 0.2) # Red
+
+	if hp_label:
+		hp_label.text = "❤️ %d / %d" % [int(ceil(current_hp)), int(max_hp)]
+
+func take_damage(amount: float) -> void:
+	if is_destroyed:
+		return
+	current_hp = max(0.0, current_hp - amount)
+	pillar_damaged.emit(current_hp, max_hp)
+	_update_health_bar(true)
+	_play_shambles_effect()
+
+	if current_hp <= 0.0:
+		_trigger_defeat()
+
+func _play_shambles_effect() -> void:
+	if is_destroyed or not visual_model or not is_inside_tree():
+		return
+
+	# 1. Decaying rapid wobble / shake tween on visual_model
+	var shake_tween = create_tween()
+	if shake_tween:
+		var base_pos = Vector3.ZERO
+		shake_tween.tween_property(visual_model, "position", base_pos + Vector3(randf_range(-0.18, 0.18), randf_range(0.0, 0.1), randf_range(-0.18, 0.18)), 0.04)
+		shake_tween.tween_property(visual_model, "rotation:z", deg_to_rad(randf_range(-5.0, 5.0)), 0.04)
+		shake_tween.tween_property(visual_model, "position", base_pos + Vector3(randf_range(-0.1, 0.1), 0, randf_range(-0.1, 0.1)), 0.04)
+		shake_tween.tween_property(visual_model, "rotation:z", deg_to_rad(randf_range(-2.5, 2.5)), 0.04)
+		shake_tween.tween_property(visual_model, "position", base_pos, 0.06)
+		shake_tween.tween_property(visual_model, "rotation:z", 0.0, 0.06)
+
+	# 2. Emissive damage flash on light & crystals
+	if glow_light:
+		var orig_light_col = glow_light.light_color
+		var orig_energy = glow_light.light_energy
+		glow_light.light_color = Color(1.0, 0.15, 0.15)
+		glow_light.light_energy = orig_energy * 2.2
+		var light_tween = create_tween()
+		if light_tween:
+			light_tween.tween_property(glow_light, "light_color", orig_light_col, 0.25)
+			light_tween.tween_property(glow_light, "light_energy", orig_energy, 0.25)
+
+	# 3. Flash health bar sprite
+	if hp_sprite:
+		var hp_tween = create_tween()
+		if hp_tween:
+			hp_sprite.modulate = Color(1.0, 0.3, 0.3, 1.0)
+			hp_tween.tween_property(hp_sprite, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.2)
+
+	# 4. Spawn crumbling debris & hit sparks
+	_spawn_debris_burst()
+
+func _spawn_debris_burst() -> void:
+	var debris_scene = load("res://scenes/pillar_hit_particle.tscn") as PackedScene
+	if debris_scene:
+		var deb = debris_scene.instantiate()
+		add_child(deb)
+		deb.position = Vector3(randf_range(-0.2, 0.2), randf_range(1.2, 2.5), randf_range(-0.2, 0.2))
+
+func _trigger_defeat() -> void:
+	if is_destroyed:
+		return
+	is_destroyed = true
+
+	var destruction_scene = load("res://scenes/pillar_destruction.tscn") as PackedScene
+	if destruction_scene:
+		var exp = destruction_scene.instantiate()
+		get_parent().add_child(exp)
+		exp.global_position = global_position + Vector3(0, 1.5, 0)
+
+	if visual_model:
+		visual_model.visible = false
+	if particles:
+		particles.emitting = false
+	if glow_light:
+		glow_light.visible = false
+	if hp_pivot:
+		hp_pivot.visible = false
+	if level_pivot:
+		level_pivot.visible = false
+	if upgrade_pivot:
+		upgrade_pivot.visible = false
+
+	if WaveManager.instance:
+		WaveManager.instance.stop_spawning()
+
+	pillar_destroyed.emit()
+
+	var defeat_timer = get_tree().create_timer(1.2)
+	defeat_timer.timeout.connect(_show_defeat_modal)
+
+func _show_defeat_modal() -> void:
+	var overlay = get_tree().get_first_node_in_group("game_over_overlay")
+	if not overlay:
+		var scene_root = get_tree().current_scene
+		if scene_root:
+			overlay = scene_root.find_child("GameOverOverlay", true, false)
+	if overlay and overlay.has_method("show_defeat"):
+		var stats = WaveManager.instance.get_game_stats() if WaveManager.instance else {}
+		overlay.show_defeat(stats)
+
 func _on_indicator_area_mouse_entered() -> void:
-	if not is_instance_valid(level_sprite):
+	if not is_instance_valid(level_sprite) or not is_inside_tree():
 		return
 	var tween = create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(level_sprite, "scale", Vector3(0.92, 0.92, 0.92), 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	if level_shadow_sprite:
-		tween.tween_property(level_shadow_sprite, "scale", Vector3(0.92, 0.92, 0.92), 0.1)
-		tween.tween_property(level_shadow_sprite, "position", Vector3(shadow_offset.x * 0.5, shadow_offset.y * 0.5, -0.01), 0.1)
+	if tween:
+		tween.set_parallel(true)
+		var tw = tween.tween_property(level_sprite, "scale", Vector3(0.92, 0.92, 0.92), 0.1)
+		if tw:
+			tw.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		if level_shadow_sprite:
+			tween.tween_property(level_shadow_sprite, "scale", Vector3(0.92, 0.92, 0.92), 0.1)
+			tween.tween_property(level_shadow_sprite, "position", Vector3(shadow_offset.x * 0.5, shadow_offset.y * 0.5, -0.01), 0.1)
 
 func _on_indicator_area_mouse_exited() -> void:
-	if not is_instance_valid(level_sprite):
+	if not is_instance_valid(level_sprite) or not is_inside_tree():
 		return
 	var tween = create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(level_sprite, "scale", Vector3(1.0, 1.0, 1.0), 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	if level_shadow_sprite:
-		tween.tween_property(level_shadow_sprite, "scale", Vector3(1.0, 1.0, 1.0), 0.15)
-		tween.tween_property(level_shadow_sprite, "position", Vector3(shadow_offset.x, shadow_offset.y, -0.01), 0.15)
+	if tween:
+		tween.set_parallel(true)
+		var tw = tween.tween_property(level_sprite, "scale", Vector3(1.0, 1.0, 1.0), 0.15)
+		if tw:
+			tw.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		if level_shadow_sprite:
+			tween.tween_property(level_shadow_sprite, "scale", Vector3(1.0, 1.0, 1.0), 0.15)
+			tween.tween_property(level_shadow_sprite, "position", Vector3(shadow_offset.x, shadow_offset.y, -0.01), 0.15)
 
 func _on_upgrade_area_mouse_entered() -> void:
-	if current_level >= max_level or not is_instance_valid(upgrade_sprite):
+	if current_level >= max_level or not is_instance_valid(upgrade_sprite) or not is_inside_tree():
 		return
-	# Hover push / scale-down effect
 	var tween = create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(upgrade_sprite, "scale", Vector3(0.9, 0.9, 0.9), 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	if upgrade_shadow_sprite:
-		tween.tween_property(upgrade_shadow_sprite, "scale", Vector3(0.9, 0.9, 0.9), 0.1)
-		# Shadow tightens closer when pressed in
-		tween.tween_property(upgrade_shadow_sprite, "position", Vector3(shadow_offset.x * 0.5, shadow_offset.y * 0.5, -0.01), 0.1)
+	if tween:
+		tween.set_parallel(true)
+		var tw = tween.tween_property(upgrade_sprite, "scale", Vector3(0.9, 0.9, 0.9), 0.1)
+		if tw:
+			tw.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		if upgrade_shadow_sprite:
+			tween.tween_property(upgrade_shadow_sprite, "scale", Vector3(0.9, 0.9, 0.9), 0.1)
+			tween.tween_property(upgrade_shadow_sprite, "position", Vector3(shadow_offset.x * 0.5, shadow_offset.y * 0.5, -0.01), 0.1)
 
 func _on_upgrade_area_mouse_exited() -> void:
-	if not is_instance_valid(upgrade_sprite):
+	if not is_instance_valid(upgrade_sprite) or not is_inside_tree():
 		return
-	# Return to normal scale and shadow offset
 	var tween = create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(upgrade_sprite, "scale", Vector3(1.0, 1.0, 1.0), 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	if upgrade_shadow_sprite:
-		tween.tween_property(upgrade_shadow_sprite, "scale", Vector3(1.0, 1.0, 1.0), 0.15)
-		tween.tween_property(upgrade_shadow_sprite, "position", Vector3(shadow_offset.x, shadow_offset.y, -0.01), 0.15)
+	if tween:
+		tween.set_parallel(true)
+		var tw = tween.tween_property(upgrade_sprite, "scale", Vector3(1.0, 1.0, 1.0), 0.15)
+		if tw:
+			tw.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		if upgrade_shadow_sprite:
+			tween.tween_property(upgrade_shadow_sprite, "scale", Vector3(1.0, 1.0, 1.0), 0.15)
+			tween.tween_property(upgrade_shadow_sprite, "position", Vector3(shadow_offset.x, shadow_offset.y, -0.01), 0.15)
 
 func get_upgrade_cost() -> int:
 	if current_level >= max_level:
@@ -317,13 +530,14 @@ func _update_ui() -> void:
 			upgrade_cost_label.text = "⚡ %d" % cost
 
 func _update_effects() -> void:
-	if glow_light:
+	if glow_light and is_inside_tree():
 		var target_energy = 1.0 + (current_level * 1.5)
 		var target_range = 5.0 + (current_level * 2.0)
 		var tween = create_tween()
-		tween.set_parallel(true)
-		tween.tween_property(glow_light, "light_energy", target_energy, 0.5)
-		tween.tween_property(glow_light, "omni_range", target_range, 0.5)
+		if tween:
+			tween.set_parallel(true)
+			tween.tween_property(glow_light, "light_energy", target_energy, 0.5)
+			tween.tween_property(glow_light, "omni_range", target_range, 0.5)
 		
 	if particles:
 		particles.amount = 30 + (current_level * 15)
@@ -338,11 +552,11 @@ func _update_effects() -> void:
 
 func _on_upgrade_area_input_event(_camera: Node, event: InputEvent, _position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		# Extra click punch bounce
-		if upgrade_sprite:
+		if upgrade_sprite and is_inside_tree():
 			var tween = create_tween()
-			tween.tween_property(upgrade_sprite, "scale", Vector3(0.8, 0.8, 0.8), 0.06)
-			tween.tween_property(upgrade_sprite, "scale", Vector3(0.9, 0.9, 0.9), 0.1)
+			if tween:
+				tween.tween_property(upgrade_sprite, "scale", Vector3(0.8, 0.8, 0.8), 0.06)
+				tween.tween_property(upgrade_sprite, "scale", Vector3(0.9, 0.9, 0.9), 0.1)
 		try_upgrade()
 
 func try_upgrade() -> bool:
@@ -360,22 +574,43 @@ func try_upgrade() -> bool:
 		return false
 
 func _flash_insufficient_funds() -> void:
-	if upgrade_cost_label:
+	if upgrade_cost_label and is_inside_tree():
 		var tween = create_tween()
-		upgrade_cost_label.modulate = Color(1.0, 0.2, 0.2, 1.0)
-		tween.tween_property(upgrade_cost_label, "modulate", Color(1.0, 0.9, 0.3, 1.0), 0.4)
+		if tween:
+			upgrade_cost_label.modulate = Color(1.0, 0.2, 0.2, 1.0)
+			tween.tween_property(upgrade_cost_label, "modulate", Color(1.0, 0.9, 0.3, 1.0), 0.4)
 
 func _on_upgraded() -> void:
 	_update_effects()
-	# Scale animation & glow effect — heightens Y scale while leaving X and Z width intact
-	if visual_model:
+	if visual_model and is_inside_tree():
 		var target_scale = Vector3(1.2, 3.2 + (current_level - 1) * 0.5, 1.2)
 		var tween = create_tween()
-		tween.tween_property(visual_model, "scale", Vector3(1.2, (3.2 + (current_level - 1) * 0.5) * 1.2, 1.2), 0.2).set_trans(Tween.TRANS_BACK)
-		tween.tween_property(visual_model, "scale", target_scale, 0.3)
+		if tween:
+			var tw = tween.tween_property(visual_model, "scale", Vector3(1.2, (3.2 + (current_level - 1) * 0.5) * 1.2, 1.2), 0.2)
+			if tw:
+				tw.set_trans(Tween.TRANS_BACK)
+			tween.tween_property(visual_model, "scale", target_scale, 0.3)
 
 	if current_level >= max_level:
-		_trigger_shockwave()
+		_trigger_endgame_victory()
+
+func _trigger_endgame_victory() -> void:
+	_trigger_shockwave()
+	if WaveManager.instance:
+		WaveManager.instance.wipe_all_active_enemies(global_position)
+		
+	var victory_timer = get_tree().create_timer(1.8)
+	victory_timer.timeout.connect(_show_victory_modal)
+
+func _show_victory_modal() -> void:
+	var overlay = get_tree().get_first_node_in_group("game_over_overlay")
+	if not overlay:
+		var scene_root = get_tree().current_scene
+		if scene_root:
+			overlay = scene_root.find_child("GameOverOverlay", true, false)
+	if overlay and overlay.has_method("show_victory"):
+		var stats = WaveManager.instance.get_game_stats() if WaveManager.instance else {}
+		overlay.show_victory(stats)
 
 func _trigger_shockwave() -> void:
 	# Zoom camera out to default position
