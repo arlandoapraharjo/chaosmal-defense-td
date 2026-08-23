@@ -389,32 +389,22 @@ func _play_shambles_effect() -> void:
 	_spawn_debris_burst()
 
 func _spawn_debris_burst() -> void:
-	var debris_scene = load("res://scenes/explosion.tscn") as PackedScene
+	var debris_scene = load("res://scenes/pillar_hit_particle.tscn") as PackedScene
 	if debris_scene:
 		var deb = debris_scene.instantiate()
-		deb.scale = Vector3(0.6, 0.6, 0.6)
 		add_child(deb)
-		deb.position = Vector3(randf_range(-0.25, 0.25), randf_range(1.2, 2.5), randf_range(-0.25, 0.25))
-		for child in deb.get_children():
-			if child is GPUParticles3D:
-				child.emitting = true
-		get_tree().create_timer(1.2).timeout.connect(deb.queue_free)
+		deb.position = Vector3(randf_range(-0.2, 0.2), randf_range(1.2, 2.5), randf_range(-0.2, 0.2))
 
 func _trigger_defeat() -> void:
 	if is_destroyed:
 		return
 	is_destroyed = true
 
-	var explosion_scene = load("res://scenes/explosion.tscn") as PackedScene
-	if explosion_scene:
-		var exp = explosion_scene.instantiate()
-		exp.scale = Vector3(2.5, 2.5, 2.5)
+	var destruction_scene = load("res://scenes/pillar_destruction.tscn") as PackedScene
+	if destruction_scene:
+		var exp = destruction_scene.instantiate()
 		get_parent().add_child(exp)
 		exp.global_position = global_position + Vector3(0, 1.5, 0)
-		for child in exp.get_children():
-			if child is GPUParticles3D:
-				child.emitting = true
-		get_tree().create_timer(3.0).timeout.connect(exp.queue_free)
 
 	if visual_model:
 		visual_model.visible = false

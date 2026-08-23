@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scenes": 36,
+    "total_scenes": 38,
     "root": "C:\\igi-dev-code-circus"
   },
   "scenes": [
@@ -1106,6 +1106,70 @@
       ]
     },
     {
+      "file": "scenes/pillar_destruction.tscn",
+      "scene_uid": "uid://b7v1j08kqlw3a",
+      "ext_resources": [
+        {
+          "path": "scripts/PillarDestructionParticle.gd",
+          "raw_path": "res://scripts/PillarDestructionParticle.gd",
+          "type": "Script",
+          "id": "1_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "PillarDestructionParticle",
+          "type": "Node3D"
+        },
+        {
+          "name": "CrystalMonolithShards",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ArcanePlasmaBurst",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ArcaneBlastSparks",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "OmniLight3D",
+          "type": "OmniLight3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/pillar_hit_particle.tscn",
+      "scene_uid": "uid://c6f30aampm12k",
+      "ext_resources": [
+        {
+          "path": "scripts/HitParticle.gd",
+          "raw_path": "res://scripts/HitParticle.gd",
+          "type": "Script",
+          "id": "1_hit"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "PillarHitParticle",
+          "type": "Node3D"
+        },
+        {
+          "name": "CrystalShards",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ArcaneSparks",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ArcaneDust",
+          "type": "GPUParticles3D"
+        }
+      ]
+    },
+    {
       "file": "scenes/snow_bush.tscn",
       "scene_uid": "uid://b1od0xu2nrbtp",
       "ext_resources": [
@@ -1368,7 +1432,8 @@
       "scenes/cannon_hit_particle.tscn",
       "scenes/hit_particle.tscn",
       "scenes/hit_particle_ballista.tscn",
-      "scenes/hit_particle_cannon.tscn"
+      "scenes/hit_particle_cannon.tscn",
+      "scenes/pillar_hit_particle.tscn"
     ],
     "scripts/BoulderImpact.gd": [
       "scenes/boulder_impact.tscn"
@@ -1460,6 +1525,9 @@
     ],
     "scenes/GameOverOverlay.tscn": [
       "scenes/map.tscn"
+    ],
+    "scripts/PillarDestructionParticle.gd": [
+      "scenes/pillar_destruction.tscn"
     ],
     "addons/Materials/leaves_snow_mat.tres": [
       "scenes/snow_bush.tscn"

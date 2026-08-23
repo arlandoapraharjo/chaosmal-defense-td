@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scripts": 24,
+    "total_scripts": 25,
     "root": "C:\\igi-dev-code-circus"
   },
   "scripts": [
@@ -834,18 +834,18 @@
         },
         {
           "line": 392,
-          "raw": "res://scenes/explosion.tscn",
-          "path": "scenes/explosion.tscn",
+          "raw": "res://scenes/pillar_hit_particle.tscn",
+          "path": "scenes/pillar_hit_particle.tscn",
           "call": "load"
         },
         {
-          "line": 408,
-          "raw": "res://scenes/explosion.tscn",
-          "path": "scenes/explosion.tscn",
+          "line": 403,
+          "raw": "res://scenes/pillar_destruction.tscn",
+          "path": "scenes/pillar_destruction.tscn",
           "call": "load"
         },
         {
-          "line": 626,
+          "line": 616,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -1047,6 +1047,15 @@
           "call": "preload"
         }
       ],
+      "exports": []
+    },
+    {
+      "file": "scripts/PillarDestructionParticle.gd",
+      "class_name": "PillarDestructionParticle",
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [],
+      "loads": [],
       "exports": []
     },
     {
