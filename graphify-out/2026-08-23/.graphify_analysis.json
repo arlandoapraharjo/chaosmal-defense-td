@@ -52,14 +52,11 @@
       "agents_workflows_update_viz_workflow_update_viz"
     ],
     "8": [
-      "gdscript_scripts_cameracontroller",
-      "gdscript_scripts_enemy",
       "gdscript_scripts_incursionpillar",
-      "gdscript_scripts_mapgenerator",
+      "gdscript_scripts_pillardestructionparticle",
       "gdscript_scripts_pillarshockwave",
-      "gdscript_scripts_wavemanager",
-      "tscn_assets_models_glb_format_world",
-      "tscn_scenes_explosion",
+      "tscn_scenes_pillar_destruction",
+      "tscn_scenes_pillar_hit_particle",
       "tscn_scenes_pillarshockwave"
     ],
     "9": [
@@ -152,11 +149,19 @@
     ],
     "99": [
       "gdscript_biomes_biomedata",
+      "gdscript_scripts_cameracontroller",
       "gdscript_scripts_currencymanager",
+      "gdscript_scripts_enemy",
+      "gdscript_scripts_gameoveroverlay",
+      "gdscript_scripts_mapgenerator",
       "gdscript_scripts_pauseoverlay",
+      "gdscript_scripts_wavemanager",
       "gdscript_ui_currencyui",
       "gdscript_ui_speedtoggle",
       "gdscript_ui_waveui",
+      "tscn_assets_models_glb_format_world",
+      "tscn_scenes_explosion",
+      "tscn_scenes_gameoveroverlay",
       "tscn_scenes_map",
       "tscn_scenes_pauseoverlay",
       "tscn_ui_currencyui",
@@ -173,7 +178,7 @@
     "5": 1.0,
     "6": 1.0,
     "7": 1.0,
-    "8": 0.2222222222222222,
+    "8": 0.3333333333333333,
     "9": 0.5,
     "10": 1.0,
     "11": 1.0,
@@ -199,13 +204,13 @@
     "31": 1.0,
     "32": 1.0,
     "98": 0.24444444444444444,
-    "99": 0.18181818181818182
+    "99": 0.1111111111111111
   },
   "gods": [
     {
       "id": "tscn_scenes_map",
       "label": "Map Scene",
-      "degree": 10
+      "degree": 11
     },
     {
       "id": "game_stats_game_scaling_stats_hard_mode_redesign_v2",
@@ -220,7 +225,7 @@
     {
       "id": "gdscript_scripts_hitparticle",
       "label": "HitParticle",
-      "degree": 5
+      "degree": 6
     },
     {
       "id": "gdscript_scripts_turret",
@@ -238,6 +243,11 @@
       "degree": 4
     },
     {
+      "id": "gdscript_scripts_incursionpillar",
+      "label": "IncursionPillar",
+      "degree": 4
+    },
+    {
       "id": "gdscript_scripts_mapgenerator",
       "label": "MapGenerator",
       "degree": 4
@@ -246,11 +256,6 @@
       "id": "biomes_readme_known_biome_asset_paths",
       "label": "Known biome asset paths",
       "degree": 3
-    },
-    {
-      "id": "gdscript_ui_hotbar_turrethotbar",
-      "label": "TurretHotbar",
-      "degree": 2
     }
   ],
   "surprises": [
@@ -266,15 +271,15 @@
       "why": "connects across different repos/directories; bridges separate communities; peripheral node `BuilderController` unexpectedly reaches hub `Map Scene`"
     },
     {
-      "source": "Map Scene",
-      "target": "CameraController",
+      "source": "Pillar Hit Particle Scene",
+      "target": "HitParticle",
       "source_files": [
-        "scenes/map.tscn",
-        "scripts/CameraController.gd"
+        "scenes/pillar_hit_particle.tscn",
+        "scripts/HitParticle.gd"
       ],
       "confidence": "EXTRACTED",
       "relation": "references",
-      "why": "connects across different repos/directories; bridges separate communities; peripheral node `CameraController` unexpectedly reaches hub `Map Scene`"
+      "why": "connects across different repos/directories; bridges separate communities; peripheral node `Pillar Hit Particle Scene` unexpectedly reaches hub `HitParticle`"
     },
     {
       "source": "Map Scene",
@@ -300,31 +305,41 @@
     },
     {
       "source": "Map Scene",
-      "target": "CurrencyManager",
+      "target": "CameraController",
       "source_files": [
         "scenes/map.tscn",
-        "scripts/CurrencyManager.gd"
+        "scripts/CameraController.gd"
       ],
       "confidence": "EXTRACTED",
       "relation": "references",
-      "why": "connects across different repos/directories; peripheral node `CurrencyManager` unexpectedly reaches hub `Map Scene`"
+      "why": "connects across different repos/directories; peripheral node `CameraController` unexpectedly reaches hub `Map Scene`"
     }
   ],
   "questions": [
     {
       "type": "bridge_node",
-      "question": "Why does `Map Scene` connect `Map Scene` to `MapGenerator`, `TurretHotbar`, `HitParticle`?",
-      "why": "High betweenness centrality (0.105) - this node is a cross-community bridge."
+      "question": "Why does `Map Scene` connect `Map Scene` to `TurretHotbar`, `HitParticle`?",
+      "why": "High betweenness centrality (0.110) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `BuilderController` connect `HitParticle` to `Map Scene`?",
-      "why": "High betweenness centrality (0.052) - this node is a cross-community bridge."
+      "question": "Why does `MapGenerator` connect `Map Scene` to `IncursionPillar`?",
+      "why": "High betweenness centrality (0.055) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `IncursionPillar` connect `IncursionPillar` to `Map Scene`?",
+      "why": "High betweenness centrality (0.043) - this node is a cross-community bridge."
     },
     {
       "type": "isolated_nodes",
       "question": "What connects `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation` to the rest of the system?",
-      "why": "58 weakly-connected nodes found - possible documentation gaps or missing edges."
+      "why": "60 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Map Scene` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected."
     }
   ]
 }

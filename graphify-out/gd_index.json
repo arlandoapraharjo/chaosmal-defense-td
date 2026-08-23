@@ -222,43 +222,59 @@
       ],
       "loads": [
         {
-          "line": 80,
+          "line": 83,
           "raw": "res://UI/Hotbar/HotbarSlot.tscn",
           "path": "UI/Hotbar/HotbarSlot.tscn",
           "call": "preload"
         },
         {
-          "line": 84,
+          "line": 87,
           "raw": "res://assets/Models/GLB format/desert/weapon-turret.glb",
           "path": "assets/Models/GLB format/desert/weapon-turret.glb",
           "call": "preload"
         },
         {
-          "line": 93,
+          "line": 96,
           "raw": "res://assets/Models/GLB format/desert/weapon-cannon.glb",
           "path": "assets/Models/GLB format/desert/weapon-cannon.glb",
           "call": "preload"
         },
         {
-          "line": 103,
+          "line": 106,
           "raw": "res://assets/Models/GLB format/desert/weapon-ballista.glb",
           "path": "assets/Models/GLB format/desert/weapon-ballista.glb",
           "call": "preload"
         },
         {
-          "line": 112,
+          "line": 115,
           "raw": "res://assets/Models/GLB format/desert/weapon-catapult.glb",
           "path": "assets/Models/GLB format/desert/weapon-catapult.glb",
           "call": "preload"
         },
         {
-          "line": 123,
+          "line": 126,
           "raw": "res://assets/Models/GLB format/weapon-turret.glb",
           "path": "assets/Models/GLB format/weapon-turret.glb",
+          "call": "preload"
+        },
+        {
+          "line": 197,
+          "raw": "res://UI/Turret Hotbar/Thotbar_toggle.png",
+          "path": "UI/Turret Hotbar/Thotbar_toggle.png",
+          "call": "preload"
+        },
+        {
+          "line": 198,
+          "raw": "res://UI/Turret Hotbar/Dhotbar_toggle2.png",
+          "path": "UI/Turret Hotbar/Dhotbar_toggle2.png",
           "call": "preload"
         }
       ],
       "exports": [
+        {
+          "name": "toggle_offset_top",
+          "type": "float"
+        },
         {
           "name": "panel_bg_color",
           "type": "Color"
@@ -312,7 +328,7 @@
     },
     {
       "file": "UI/SpeedToggle.gd",
-      "class_name": null,
+      "class_name": "SpeedToggle",
       "extends": "CanvasLayer",
       "signals": [
         {
@@ -323,6 +339,10 @@
         }
       ],
       "functions": [
+        {
+          "name": "reset_speed",
+          "params": []
+        },
         {
           "name": "get_current_multiplier",
           "params": []
@@ -858,7 +878,7 @@
           "call": "load"
         },
         {
-          "line": 622,
+          "line": 625,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"

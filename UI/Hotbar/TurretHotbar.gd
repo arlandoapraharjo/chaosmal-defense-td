@@ -28,6 +28,9 @@ signal turret_selected(index: int, scene: PackedScene, attack_range: float, extr
 		slot_spacing = v
 		if is_node_ready(): _apply_slot_spacing()
 
+## Vertical resting offset for the toggle button (from bottom edge)
+@export var toggle_offset_top: float = -25.0
+
 # ── Panel Style ───────────────────────────────────────────────────────────────
 
 @export_group("Panel Style")
@@ -191,6 +194,9 @@ func _connect_to_map_generator() -> void:
 
 # ── Popup Toggle ───────────────────────────────────────────────────────────────
 
+const TOGGLE_TEX_OPEN := preload("res://UI/Turret Hotbar/Thotbar_toggle.png")
+const TOGGLE_TEX_CLOSE := preload("res://UI/Turret Hotbar/Dhotbar_toggle2.png")
+
 func _setup_popup() -> void:
 	# Wait one frame so the panel has its final size
 	await get_tree().process_frame
@@ -200,13 +206,14 @@ func _setup_popup() -> void:
 	hotbar_panel.position.y = hotbar_panel.position.y + hotbar_panel.size.y + 20
 	hotbar_panel.visible = true
 
-	# Create the toggle button at the bottom center
+	# Create the toggle button
 	_toggle_btn = Button.new()
-	_toggle_btn.text = "▲ Turrets"
-	_toggle_btn.custom_minimum_size = Vector2(120, 32)
+	_toggle_btn.text = ""
+	_toggle_btn.custom_minimum_size = Vector2(64, 32)
 	_toggle_btn.pressed.connect(_toggle_hotbar)
-	# Style the button to match the hotbar theme
+	_toggle_btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	_apply_toggle_style()
+
 	# Add as a sibling control so it lives in the same CanvasLayer
 	add_child(_toggle_btn)
 	# Position it at bottom center
@@ -214,62 +221,28 @@ func _setup_popup() -> void:
 	_toggle_btn.anchor_right = 0.5
 	_toggle_btn.anchor_top = 1.0
 	_toggle_btn.anchor_bottom = 1.0
-	_toggle_btn.offset_left = -60
-	_toggle_btn.offset_right = 60
-	_toggle_btn.offset_top = -32
+	_toggle_btn.offset_left = -32
+	_toggle_btn.offset_right = 32
+	_toggle_btn.offset_top = toggle_offset_top
 	_toggle_btn.offset_bottom = 0
 	_toggle_btn.grow_horizontal = Control.GROW_DIRECTION_BOTH
 
 func _apply_toggle_style() -> void:
-	var tex_path := ""
-	if current_biome_folder == "Desert":
-		tex_path = "res://UI/Desert/Desert Togle 3.png"
-	elif current_biome_folder == "Ice":
-		tex_path = "res://UI/Ice/Snow Toggle 2.png"
-	elif current_biome_folder == "Grass":
-		tex_path = "res://UI/Grass/Grass Toggle 3.png"
-		
-	if tex_path != "":
-		var tex = load(tex_path)
-		if tex:
-			var style_tex = StyleBoxTexture.new()
-			style_tex.texture = tex
-			_toggle_btn.add_theme_stylebox_override("normal", style_tex)
-			
-			var style_hover_tex = StyleBoxTexture.new()
-			style_hover_tex.texture = tex
-			# Removed hover modulate_color (glow effect)
-			_toggle_btn.add_theme_stylebox_override("hover", style_hover_tex)
-			
-			var style_pressed_tex = StyleBoxTexture.new()
-			style_pressed_tex.texture = tex
-			style_pressed_tex.modulate_color = Color(0.8, 0.8, 0.8, 1.0)
-			_toggle_btn.add_theme_stylebox_override("pressed", style_pressed_tex)
-			
-			_toggle_btn.add_theme_color_override("font_color", panel_border_color)
-			_toggle_btn.add_theme_color_override("font_hover_color", Color(1, 1, 1, 1))
-			return
-	var style_normal := StyleBoxFlat.new()
-	style_normal.bg_color = panel_bg_color
-	style_normal.border_color = panel_border_color
-	style_normal.set_border_width_all(2)
-	style_normal.corner_radius_top_left = 8
-	style_normal.corner_radius_top_right = 8
-	style_normal.corner_radius_bottom_left = 0
-	style_normal.corner_radius_bottom_right = 0
+	if not _toggle_btn:
+		return
+	var toggle_tex = TOGGLE_TEX_CLOSE if _is_open else TOGGLE_TEX_OPEN
+	var style_normal := StyleBoxTexture.new()
+	style_normal.texture = toggle_tex
 	_toggle_btn.add_theme_stylebox_override("normal", style_normal)
 
-	var style_hover := style_normal.duplicate()
-	style_hover.bg_color = Color(panel_bg_color.r + 0.05, panel_bg_color.g + 0.05, panel_bg_color.b + 0.1, panel_bg_color.a)
-	style_hover.border_color = Color(panel_border_color.r, panel_border_color.g, panel_border_color.b, 1.0)
+	var style_hover := StyleBoxTexture.new()
+	style_hover.texture = toggle_tex
 	_toggle_btn.add_theme_stylebox_override("hover", style_hover)
 
-	var style_pressed := style_normal.duplicate()
-	style_pressed.bg_color = Color(panel_bg_color.r + 0.08, panel_bg_color.g + 0.08, panel_bg_color.b + 0.15, panel_bg_color.a)
+	var style_pressed := StyleBoxTexture.new()
+	style_pressed.texture = toggle_tex
+	style_pressed.modulate_color = Color(0.85, 0.85, 0.85, 1.0)
 	_toggle_btn.add_theme_stylebox_override("pressed", style_pressed)
-
-	_toggle_btn.add_theme_color_override("font_color", panel_border_color)
-	_toggle_btn.add_theme_color_override("font_hover_color", Color(1, 1, 1, 1))
 
 func _toggle_hotbar() -> void:
 	if _is_open:
@@ -281,7 +254,7 @@ func _show_hotbar() -> void:
 	if _is_open:
 		return
 	_is_open = true
-	_toggle_btn.text = "▼ Close"
+	_apply_toggle_style()
 
 	if _panel_tween:
 		_panel_tween.kill()
@@ -290,14 +263,14 @@ func _show_hotbar() -> void:
 	_panel_tween.set_trans(Tween.TRANS_BACK)
 	# Slide panel up, push toggle button up above it
 	_panel_tween.tween_property(hotbar_panel, "position:y", _panel_target_y, 0.35)
-	_panel_tween.parallel().tween_property(_toggle_btn, "offset_top", -32 - hotbar_panel.size.y - 4, 0.35)
+	_panel_tween.parallel().tween_property(_toggle_btn, "offset_top", toggle_offset_top - hotbar_panel.size.y - 4, 0.35)
 	_panel_tween.parallel().tween_property(_toggle_btn, "offset_bottom", 0 - hotbar_panel.size.y - 4, 0.35)
 
 func _hide_hotbar() -> void:
 	if not _is_open:
 		return
 	_is_open = false
-	_toggle_btn.text = "▲ Turrets"
+	_apply_toggle_style()
 
 	if _panel_tween:
 		_panel_tween.kill()
@@ -307,7 +280,7 @@ func _hide_hotbar() -> void:
 	# Slide panel back down off screen, toggle button returns to bottom
 	var hidden_y = _panel_target_y + hotbar_panel.size.y + 20
 	_panel_tween.tween_property(hotbar_panel, "position:y", hidden_y, 0.25)
-	_panel_tween.parallel().tween_property(_toggle_btn, "offset_top", -32, 0.25)
+	_panel_tween.parallel().tween_property(_toggle_btn, "offset_top", toggle_offset_top, 0.25)
 	_panel_tween.parallel().tween_property(_toggle_btn, "offset_bottom", 0, 0.25)
 
 func _unhandled_input(event: InputEvent) -> void:

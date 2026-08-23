@@ -749,40 +749,6 @@
       "id": "gdscript_scripts_cameracontroller"
     },
     {
-      "label": "TurretHotbar",
-      "file_type": "code",
-      "source_file": "UI/Hotbar/TurretHotbar.gd",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "TurretHotbar",
-      "norm_label": "turrethotbar",
-      "description": "extends CanvasLayer | funcs: set_slot_turret, select_slot, get_selected_index, apply_biome_theme | signals: turret_selected",
-      "_gd_extends": "CanvasLayer",
-      "_gd_functions": [
-        "set_slot_turret",
-        "select_slot",
-        "get_selected_index",
-        "apply_biome_theme"
-      ],
-      "_gd_signals": [
-        "turret_selected"
-      ],
-      "_gd_exports": [
-        "panel_bg_color",
-        "panel_border_color",
-        "panel_shadow_color",
-        "slot_color_bg_normal",
-        "slot_color_bg_hover",
-        "slot_color_bg_selected",
-        "slot_color_border_normal",
-        "slot_color_border_hover",
-        "slot_color_border_selected",
-        "slot_color_glow"
-      ],
-      "id": "gdscript_ui_hotbar_turrethotbar"
-    },
-    {
       "label": "HotbarTheme",
       "file_type": "code",
       "source_file": "UI/Hotbar/HotbarTheme.gd",
@@ -911,6 +877,41 @@
       "id": "gdscript_biomes_biomedata"
     },
     {
+      "label": "TurretHotbar",
+      "file_type": "code",
+      "source_file": "UI/Hotbar/TurretHotbar.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "TurretHotbar",
+      "norm_label": "turrethotbar",
+      "description": "extends CanvasLayer | funcs: set_slot_turret, select_slot, get_selected_index, apply_biome_theme | signals: turret_selected",
+      "_gd_extends": "CanvasLayer",
+      "_gd_functions": [
+        "set_slot_turret",
+        "select_slot",
+        "get_selected_index",
+        "apply_biome_theme"
+      ],
+      "_gd_signals": [
+        "turret_selected"
+      ],
+      "_gd_exports": [
+        "toggle_offset_top",
+        "panel_bg_color",
+        "panel_border_color",
+        "panel_shadow_color",
+        "slot_color_bg_normal",
+        "slot_color_bg_hover",
+        "slot_color_bg_selected",
+        "slot_color_border_normal",
+        "slot_color_border_hover",
+        "slot_color_border_selected",
+        "slot_color_glow"
+      ],
+      "id": "gdscript_ui_hotbar_turrethotbar"
+    },
+    {
       "label": "animation_player",
       "file_type": "code",
       "source_file": "scenes/animation_player.gd",
@@ -925,26 +926,6 @@
       "_gd_signals": [],
       "_gd_exports": [],
       "id": "gdscript_scenes_animation_player"
-    },
-    {
-      "label": "SpeedToggle",
-      "file_type": "code",
-      "source_file": "UI/SpeedToggle.gd",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "Map Scene",
-      "norm_label": "speedtoggle",
-      "description": "extends CanvasLayer | funcs: get_current_multiplier | signals: speed_changed",
-      "_gd_extends": "CanvasLayer",
-      "_gd_functions": [
-        "get_current_multiplier"
-      ],
-      "_gd_signals": [
-        "speed_changed"
-      ],
-      "_gd_exports": [],
-      "id": "gdscript_ui_speedtoggle"
     },
     {
       "label": "PillarShockwave",
@@ -963,6 +944,27 @@
       "_gd_signals": [],
       "_gd_exports": [],
       "id": "gdscript_scripts_pillarshockwave"
+    },
+    {
+      "label": "SpeedToggle",
+      "file_type": "code",
+      "source_file": "UI/SpeedToggle.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "Map Scene",
+      "norm_label": "speedtoggle",
+      "description": "extends CanvasLayer | funcs: reset_speed, get_current_multiplier | signals: speed_changed",
+      "_gd_extends": "CanvasLayer",
+      "_gd_functions": [
+        "reset_speed",
+        "get_current_multiplier"
+      ],
+      "_gd_signals": [
+        "speed_changed"
+      ],
+      "_gd_exports": [],
+      "id": "gdscript_ui_speedtoggle"
     },
     {
       "label": "GameOverOverlay",

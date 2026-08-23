@@ -595,6 +595,7 @@ func _on_upgraded() -> void:
 		_trigger_endgame_victory()
 
 func _trigger_endgame_victory() -> void:
+	SpeedToggle.reset_to_default()
 	_trigger_shockwave()
 	if WaveManager.instance:
 		WaveManager.instance.wipe_all_active_enemies(global_position)
@@ -613,6 +614,8 @@ func _show_victory_modal() -> void:
 		overlay.show_victory(stats)
 
 func _trigger_shockwave() -> void:
+	SpeedToggle.reset_to_default()
+
 	# Zoom camera out to default position
 	var camera = get_viewport().get_camera_3d()
 	if camera and camera.has_method("reset_camera"):
