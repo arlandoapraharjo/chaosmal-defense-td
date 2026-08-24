@@ -13,13 +13,11 @@ config_version=5
 config/name="IGI-dev - code-circus"
 run/main_scene="res://UI/Menus/MainMenu.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
-
 config/icon="res://icon.svg"
 
 [autoload]
 
 BiomeManager="*res://scripts/BiomeManager.gd"
-
 
 [display]
 
