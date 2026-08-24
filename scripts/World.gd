@@ -20,8 +20,9 @@ func set_menu_mode(menu_active: bool) -> void:
 	if turret_hotbar: turret_hotbar.visible = not menu_active
 	if pause_overlay: pause_overlay.visible = not menu_active
 	if speed_toggle: speed_toggle.visible = not menu_active
-	if game_over_overlay: game_over_overlay.visible = not menu_active
+	if game_over_overlay: game_over_overlay.visible = false
 	if pillar_shockwave: pillar_shockwave.visible = not menu_active
+
 
 	if builder_controller:
 		builder_controller.set_process(not menu_active)
