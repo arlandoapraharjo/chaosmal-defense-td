@@ -158,9 +158,14 @@ func _pick_biome() -> BiomeData:
 	if forced_biome_index >= 0 and forced_biome_index < biomes.size():
 		return biomes[forced_biome_index]
 	
+	var bm = get_node_or_null("/root/BiomeManager")
+	if bm != null and bm.current_biome != null:
+		return bm.current_biome
+	
 	var biome = biomes[_current_biome_index]
 	_current_biome_index = (_current_biome_index + 1) % biomes.size()
 	return biome
+
 
 func _apply_biome(biome: BiomeData) -> void:
 	active_biome = biome

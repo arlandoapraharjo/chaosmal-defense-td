@@ -18,8 +18,10 @@
 [ext_resource type="PackedScene" path="res://scenes/PauseOverlay.tscn" id="16_pause"]
 [ext_resource type="PackedScene" path="res://UI/SpeedToggle.tscn" id="17_speed"]
 [ext_resource type="PackedScene" path="res://scenes/GameOverOverlay.tscn" id="18_gameover"]
+[ext_resource type="Script" path="res://scripts/World.gd" id="19_world"]
 
 [sub_resource type="Gradient" id="Gradient_ooc2g"]
+
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_qwqyf"]
 gradient = SubResource("Gradient_ooc2g")
@@ -62,6 +64,8 @@ shader_parameter/thickness = 0.0
 shader_parameter/progress = 0.0
 
 [node name="World" type="Node3D" unique_id=67285049]
+script = ExtResource("19_world")
+
 
 [node name="CurrencyManager" type="Node" parent="." unique_id=98127391]
 script = ExtResource("12_curman")

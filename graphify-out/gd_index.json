@@ -1,8 +1,8 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scripts": 25,
-    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
+    "total_scripts": 27,
+    "root": "D:\\Godot\\Game\\IGI-Code-Circus"
   },
   "scripts": [
     {
@@ -320,10 +320,17 @@
     {
       "file": "UI/Menus/MainMenu.gd",
       "class_name": null,
-      "extends": "Node2D",
+      "extends": "Node",
       "signals": [],
       "functions": [],
-      "loads": [],
+      "loads": [
+        {
+          "line": 61,
+          "raw": "res://scenes/map.tscn",
+          "path": "scenes/map.tscn",
+          "call": "load"
+        }
+      ],
       "exports": []
     },
     {
@@ -511,6 +518,51 @@
       "signals": [],
       "functions": [],
       "loads": [],
+      "exports": []
+    },
+    {
+      "file": "scripts/BiomeManager.gd",
+      "class_name": null,
+      "extends": "Node",
+      "signals": [],
+      "functions": [
+        {
+          "name": "randomize_biome",
+          "params": []
+        },
+        {
+          "name": "set_biome",
+          "params": [
+            "biome"
+          ]
+        },
+        {
+          "name": "set_biome_by_index",
+          "params": [
+            "idx"
+          ]
+        }
+      ],
+      "loads": [
+        {
+          "line": 6,
+          "raw": "res://biomes/biome_grass.tres",
+          "path": "biomes/biome_grass.tres",
+          "call": "preload"
+        },
+        {
+          "line": 7,
+          "raw": "res://biomes/biome_snow.tres",
+          "path": "biomes/biome_snow.tres",
+          "call": "preload"
+        },
+        {
+          "line": 8,
+          "raw": "res://biomes/biome_desert.tres",
+          "path": "biomes/biome_desert.tres",
+          "call": "preload"
+        }
+      ],
       "exports": []
     },
     {
@@ -963,19 +1015,19 @@
           "call": "preload"
         },
         {
-          "line": 675,
+          "line": 680,
           "raw": "res://shaders/tree_sway.gdshader",
           "path": "shaders/tree_sway.gdshader",
           "call": "preload"
         },
         {
-          "line": 1003,
+          "line": 1008,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 1009,
+          "line": 1014,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
@@ -1134,31 +1186,31 @@
       ],
       "loads": [
         {
-          "line": 206,
+          "line": 209,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 207,
+          "line": 210,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 208,
+          "line": 211,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 209,
+          "line": 212,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 210,
+          "line": 213,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"
@@ -1319,6 +1371,26 @@
           "type": "float"
         }
       ]
+    },
+    {
+      "file": "scripts/World.gd",
+      "class_name": null,
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [
+        {
+          "name": "set_menu_mode",
+          "params": [
+            "menu_active"
+          ]
+        },
+        {
+          "name": "is_menu_mode",
+          "params": []
+        }
+      ],
+      "loads": [],
+      "exports": []
     }
   ]
 }
