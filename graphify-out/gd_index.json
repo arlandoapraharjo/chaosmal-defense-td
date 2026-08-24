@@ -884,6 +884,12 @@
       ],
       "functions": [
         {
+          "name": "set_ui_visible",
+          "params": [
+            "is_vis"
+          ]
+        },
+        {
           "name": "take_damage",
           "params": [
             "amount"
@@ -900,37 +906,37 @@
       ],
       "loads": [
         {
-          "line": 83,
+          "line": 89,
           "raw": "res://UI/Level Up - Indicator/lvl_up.png",
           "path": "UI/Level Up - Indicator/lvl_up.png",
           "call": "load"
         },
         {
-          "line": 85,
+          "line": 91,
           "raw": "res://ui/lvl indicator/lvl_up.png",
           "path": "ui/lvl indicator/lvl_up.png",
           "call": "load"
         },
         {
-          "line": 93,
+          "line": 99,
           "raw": "res://assets/Models/GLB format/tower-round-crystals.glb",
           "path": "assets/Models/GLB format/tower-round-crystals.glb",
           "call": "load"
         },
         {
-          "line": 407,
+          "line": 413,
           "raw": "res://scenes/pillar_hit_particle.tscn",
           "path": "scenes/pillar_hit_particle.tscn",
           "call": "load"
         },
         {
-          "line": 418,
+          "line": 424,
           "raw": "res://scenes/pillar_destruction.tscn",
           "path": "scenes/pillar_destruction.tscn",
           "call": "load"
         },
         {
-          "line": 641,
+          "line": 647,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"

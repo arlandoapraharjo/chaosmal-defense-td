@@ -815,9 +815,10 @@
       "community": 99,
       "community_name": "GDScript Gameplay Logic",
       "norm_label": "incursionpillar",
-      "description": "extends Node3D | funcs: take_damage, get_upgrade_cost, try_upgrade | signals: pillar_damaged, pillar_destroyed",
+      "description": "extends Node3D | funcs: set_ui_visible, take_damage, get_upgrade_cost, try_upgrade | signals: pillar_damaged, pillar_destroyed",
       "_gd_extends": "Node3D",
       "_gd_functions": [
+        "set_ui_visible",
         "take_damage",
         "get_upgrade_cost",
         "try_upgrade"

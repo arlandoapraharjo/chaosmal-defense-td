@@ -63,6 +63,12 @@ func _ready() -> void:
 	_update_effects()
 	_update_health_bar(false)
 
+func set_ui_visible(is_vis: bool) -> void:
+	if level_pivot: level_pivot.visible = is_vis
+	if hp_pivot: hp_pivot.visible = is_vis
+	if upgrade_pivot: upgrade_pivot.visible = is_vis
+
+
 func _load_textures() -> void:
 	level_textures.clear()
 	# Load level indicator textures (lvl_1 to lvl_5)
