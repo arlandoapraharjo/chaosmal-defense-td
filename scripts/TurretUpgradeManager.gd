@@ -31,7 +31,10 @@ func try_upgrade_turret(turret: Node3D) -> bool:
 		return success
 	else:
 		# Could trigger a UI feedback for insufficient funds here
-		var wave_ui = get_node_or_null("/root/World/WaveUI")
+		var wave_ui = get_tree().get_first_node_in_group("wave_ui")
+		if not wave_ui:
+			wave_ui = get_node_or_null("/root/World/WaveUI")
 		if wave_ui and wave_ui.has_method("show_insufficient_funds"):
 			wave_ui.show_insufficient_funds()
+
 		return false

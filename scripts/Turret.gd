@@ -180,9 +180,10 @@ func _recalculate_stats() -> void:
 	
 	# Current global speed multiplier
 	var current_multiplier = 1.0
-	var speed_toggle = get_node_or_null("/root/World/SpeedToggle")
+	var speed_toggle = SpeedToggle.instance if SpeedToggle.instance else get_tree().get_first_node_in_group("speed_toggle")
 	if speed_toggle and speed_toggle.has_method("get_current_multiplier"):
 		current_multiplier = speed_toggle.get_current_multiplier()
+
 		
 	var level_cooldown: float = _base_cooldown * (1.0 - (turret_level - 1) * 0.1)
 	cooldown = level_cooldown / max(current_multiplier, 0.1)

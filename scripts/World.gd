@@ -12,10 +12,18 @@ extends Node3D
 
 var _is_menu_mode: bool = false
 var _home_pos_currency: Vector2
+var _home_pos_wave: Vector2
 var _home_pos_pause: Vector2
 var _home_pos_speed: Vector2
 var _home_pos_hotbar: Vector2
 var _has_saved_home_positions: bool = false
+
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
+	if pause_overlay:
+		pause_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
+	if speed_toggle:
+		speed_toggle.process_mode = Node.PROCESS_MODE_ALWAYS
 
 func set_menu_mode(menu_active: bool) -> void:
 	_is_menu_mode = menu_active
@@ -26,6 +34,8 @@ func set_menu_mode(menu_active: bool) -> void:
 		spawner = find_child("WaveManager", true, false)
 	if spawner:
 		spawner.set_physics_process(not menu_active)
+		if not menu_active and spawner.has_method("trigger_first_wave_if_waiting"):
+			spawner.call("trigger_first_wave_if_waiting")
 
 	# 2. Hide / Show Pillar floating 3D UI
 	var pillar = get_tree().get_first_node_in_group("pillar")
@@ -55,9 +65,7 @@ func set_menu_mode(menu_active: bool) -> void:
 		if speed_toggle: speed_toggle.visible = false
 		if pillar_shockwave: pillar_shockwave.visible = false
 	else:
-		if wave_ui: wave_ui.visible = true
 		if pillar_shockwave: pillar_shockwave.visible = true
-
 		_animate_gameplay_ui_slide_in()
 
 func _save_home_positions() -> void:
@@ -67,6 +75,10 @@ func _save_home_positions() -> void:
 	if currency_ui:
 		var c_ctrl = currency_ui.get_node_or_null("Control/MarginContainer")
 		if c_ctrl: _home_pos_currency = c_ctrl.position
+
+	if wave_ui:
+		var w_ctrl = wave_ui.get_node_or_null("Control/MarginContainer")
+		if w_ctrl: _home_pos_wave = w_ctrl.position
 
 	if pause_overlay:
 		var p_btn = pause_overlay.get_node_or_null("PauseButton")
@@ -95,7 +107,17 @@ func _animate_gameplay_ui_slide_in() -> void:
 			tween.tween_property(c_ctrl, "position:y", _home_pos_currency.y, 0.55)\
 				.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
-	# B. Pause Button (PauseOverlay) — Slide in from TOP
+	# B. Wave UI (WaveUI) — Slide in from TOP
+	if wave_ui:
+		wave_ui.visible = true
+		var w_ctrl = wave_ui.get_node_or_null("Control/MarginContainer")
+		if w_ctrl:
+			w_ctrl.position.y = _home_pos_wave.y - 180
+			var tween = create_tween()
+			tween.tween_property(w_ctrl, "position:y", _home_pos_wave.y, 0.55)\
+				.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+	# C. Pause Button (PauseOverlay) — Slide in from TOP
 	if pause_overlay:
 		pause_overlay.visible = true
 		var p_btn = pause_overlay.get_node_or_null("PauseButton")
@@ -105,7 +127,7 @@ func _animate_gameplay_ui_slide_in() -> void:
 			tween.tween_property(p_btn, "position:y", _home_pos_pause.y, 0.55)\
 				.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
-	# C. Speedup Button (SpeedToggle) — Slide in from TOP
+	# D. Speedup Button (SpeedToggle) — Slide in from TOP
 	if speed_toggle:
 		speed_toggle.visible = true
 		var s_btn = speed_toggle.get_node_or_null("Control/SpeedButton")
@@ -115,7 +137,7 @@ func _animate_gameplay_ui_slide_in() -> void:
 			tween.tween_property(s_btn, "position:y", _home_pos_speed.y, 0.55)\
 				.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
-	# D. Turret Hotbar (TurretHotbar) — Slide in from BOTTOM
+	# E. Turret Hotbar (TurretHotbar) — Slide in from BOTTOM
 	if turret_hotbar:
 		turret_hotbar.visible = true
 		var h_panel = turret_hotbar.get_node_or_null("HotbarPanel")

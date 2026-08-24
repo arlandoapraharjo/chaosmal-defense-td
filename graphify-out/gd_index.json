@@ -325,7 +325,7 @@
       "functions": [],
       "loads": [
         {
-          "line": 75,
+          "line": 77,
           "raw": "res://scenes/map.tscn",
           "path": "scenes/map.tscn",
           "call": "load"
@@ -629,19 +629,19 @@
       ],
       "loads": [
         {
-          "line": 50,
+          "line": 52,
           "raw": "res://shaders/ghost_hologram.gdshader",
           "path": "shaders/ghost_hologram.gdshader",
           "call": "preload"
         },
         {
-          "line": 104,
+          "line": 106,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
         },
         {
-          "line": 301,
+          "line": 306,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
@@ -1192,12 +1192,6 @@
       ],
       "loads": [
         {
-          "line": 209,
-          "raw": "res://scenes/hit_particle.tscn",
-          "path": "scenes/hit_particle.tscn",
-          "call": "preload"
-        },
-        {
           "line": 210,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
@@ -1205,18 +1199,24 @@
         },
         {
           "line": 211,
+          "raw": "res://scenes/hit_particle.tscn",
+          "path": "scenes/hit_particle.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 212,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 212,
+          "line": 213,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 213,
+          "line": 214,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"
@@ -1281,6 +1281,10 @@
           "params": [
             "path"
           ]
+        },
+        {
+          "name": "trigger_first_wave_if_waiting",
+          "params": []
         },
         {
           "name": "set_speed_multiplier",

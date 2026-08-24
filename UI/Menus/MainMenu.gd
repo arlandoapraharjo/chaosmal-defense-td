@@ -24,8 +24,10 @@ var _is_animating := false
 var _is_game_started := false
 var _orbit_angle: float = 0.75
 var _orbit_center := Vector3(10.0, 0.0, 10.0)
-var _orbit_radius := 22.0
-var _orbit_height := 8.5
+var _orbit_radius := 21.0
+var _orbit_height := 14.0
+var _menu_ortho_size: float = 24.0
+var _screen_right_offset: float = -3.2
 
 func _ready() -> void:
 	# 1. Initialize BiomeManager
@@ -99,10 +101,18 @@ func _update_menu_camera_pose() -> void:
 	if _camera == null:
 		return
 
+	_camera.size = _menu_ortho_size
+
 	var cam_x = _orbit_center.x + _orbit_radius * cos(_orbit_angle)
 	var cam_z = _orbit_center.z + _orbit_radius * sin(_orbit_angle)
 	_camera.global_position = Vector3(cam_x, _orbit_height, cam_z)
-	_camera.look_at(_orbit_center + Vector3(0, 1.2, 0))
+	_camera.look_at(_orbit_center + Vector3(0, 0.5, 0))
+
+	# Shift camera to the left along its local X-axis so the 3D map shifts RIGHT on screen
+	var right_vec = _camera.global_transform.basis.x
+	_camera.global_position += right_vec * _screen_right_offset
+
+
 
 func _on_start_button_pressed() -> void:
 	if _is_animating or _is_game_started:

@@ -95,6 +95,11 @@ func setup(path: Array[Vector2i]) -> void:
 	_state = WaveState.WAITING_FOR_FIRST_WAVE
 	_wave_pause_timer = _first_wave_delay
 
+func trigger_first_wave_if_waiting() -> void:
+	if _state == WaveState.WAITING_FOR_FIRST_WAVE:
+		_wave_pause_timer = 0.5
+
+
 ## Applies the speed multiplier to all currently active enemies and stores
 ## it for future spawns.
 func set_speed_multiplier(multiplier: float) -> void:

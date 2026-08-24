@@ -13,7 +13,7 @@ func _ready() -> void:
 func _connect_manager() -> void:
 	var manager = CurrencyManager.instance
 	if not manager:
-		manager = get_node_or_null("/root/World/CurrencyManager")
+		manager = get_tree().get_first_node_in_group("currency_manager")
 	if manager:
 		if not manager.currency_changed.is_connected(_on_currency_changed):
 			manager.currency_changed.connect(_on_currency_changed)
@@ -28,9 +28,10 @@ func _on_currency_changed(amount: int) -> void:
 		tween.tween_property(panel, "scale", Vector2(1.0, 1.0), 0.1)
 
 func _connect_builder_controller() -> void:
-	var builder = get_node_or_null("/root/World/BuilderController")
+	var builder = get_tree().get_first_node_in_group("builder_controller")
 	if not builder:
 		builder = get_tree().get_root().find_child("BuilderController", true, false)
+
 	if builder:
 		if not builder.total_deployment_updated.is_connected(_on_deployment_updated):
 			builder.total_deployment_updated.connect(_on_deployment_updated)

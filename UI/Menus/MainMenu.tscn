@@ -32,6 +32,7 @@ grow_vertical = 2
 script = ExtResource("1_script")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1259132434]
+process_mode = 3
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,10 +42,12 @@ grow_vertical = 2
 stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1033910215]
+process_mode = 3
 handle_input_locally = false
 physics_object_picking = true
 size = Vector2i(1152, 648)
 render_target_update_mode = 4
+
 
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=578386236]

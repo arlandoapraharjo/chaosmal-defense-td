@@ -22,12 +22,14 @@ const WAVE_TEXTURES = {
 }
 
 func _ready() -> void:
+	add_to_group("wave_ui")
 	# Start hidden until wave 1 begins
 	if container:
 		container.modulate = Color(1, 1, 1, 0)
 	if notification_container:
 		notification_container.modulate = Color(1, 1, 1, 0)
 		notification_container.position.y = 10
+
 
 func update_wave(wave_number: int) -> void:
 	if not container or not wave_texture:
