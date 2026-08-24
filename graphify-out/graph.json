@@ -242,20 +242,6 @@
       "id": "tscn_scenes_hit_particle_cannon"
     },
     {
-      "label": "Speedtoggle Scene",
-      "file_type": "code",
-      "source_file": "UI/SpeedToggle.tscn",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "Map Scene",
-      "norm_label": "speedtoggle scene",
-      "description": "Scene with 1 ext_resource(s)",
-      "_scene_uid": null,
-      "_ext_resource_count": 1,
-      "id": "tscn_ui_speedtoggle"
-    },
-    {
       "label": "Map Scene",
       "file_type": "code",
       "source_file": "scenes/map.tscn",
@@ -422,6 +408,20 @@
       "_scene_uid": null,
       "_ext_resource_count": 2,
       "id": "tscn_scenes_pillarshockwave"
+    },
+    {
+      "label": "Speedtoggle Scene",
+      "file_type": "code",
+      "source_file": "UI/SpeedToggle.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "Map Scene",
+      "norm_label": "speedtoggle scene",
+      "description": "Scene with 2 ext_resource(s)",
+      "_scene_uid": null,
+      "_ext_resource_count": 2,
+      "id": "tscn_ui_speedtoggle"
     },
     {
       "label": "Snow Bush Scene",

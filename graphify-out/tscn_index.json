@@ -189,6 +189,12 @@
           "raw_path": "res://UI/SpeedToggle.gd",
           "type": "Script",
           "id": "1_speed"
+        },
+        {
+          "path": "UI/Speedup/speed_1x.png",
+          "raw_path": "res://UI/Speedup/speed_1x.png",
+          "type": "Texture2D",
+          "id": "2_speed1x"
         }
       ],
       "nodes_preview": [
@@ -199,6 +205,10 @@
         {
           "name": "Control",
           "type": "Control"
+        },
+        {
+          "name": "SpeedButton",
+          "type": "TextureButton"
         }
       ]
     },
@@ -1367,6 +1377,9 @@
       "UI/Menus/MainMenu.tscn"
     ],
     "UI/SpeedToggle.gd": [
+      "UI/SpeedToggle.tscn"
+    ],
+    "UI/Speedup/speed_1x.png": [
       "UI/SpeedToggle.tscn"
     ],
     "UI/WaveUI.gd": [
