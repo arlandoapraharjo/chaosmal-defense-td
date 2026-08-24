@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="IGI-dev:code-circus"
-run/main_scene="res://scenes/map.tscn"
+config/name="IGI-dev - code-circus"
+run/main_scene="uid://bpg8awe6kssxa"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 

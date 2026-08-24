@@ -1,6 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+*.exe
 
 # Python virtual environment
 Python_Venv/

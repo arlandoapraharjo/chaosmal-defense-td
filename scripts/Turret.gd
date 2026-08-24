@@ -52,6 +52,8 @@ var _catapult_arm: Node3D = null
 var _catapult_swing_tween: Tween = null
 # Recoil animation state
 var _recoil_tween: Tween = null
+# The node whose position is animated during recoil (barrel if found, else self)
+var _recoil_node: Node3D = null
 
 func _ready() -> void:
 	_base_cooldown = cooldown
@@ -59,6 +61,7 @@ func _ready() -> void:
 	_auto_detect_weapon_type()
 	call_deferred("_capture_initial_facing")
 	call_deferred("_find_catapult_arm")
+	call_deferred("_find_recoil_barrel")
 
 ## Apply a global speed multiplier — faster speed = shorter cooldown = higher fire rate.
 func set_speed_multiplier(multiplier: float) -> void:
@@ -390,21 +393,39 @@ func _play_catapult_swing(target_pos: Vector3, target_enemy: Node3D = null, aoe_
 	_catapult_swing_tween.tween_property(arm, "rotation:x",
 		original_rot.x, return_time * 0.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
-# ── Recoil Animation ────────────────────────────────────────────────────────────
+# ── Recoil Animation ────────────────────────────────────────────────────────
 
 var _base_position: Vector3 = Vector3.ZERO
 var _has_base_position: bool = false
 
+## Locate the barrel child node so recoil only moves the gun, not the base.
+## The GLB models have: Root -> base mesh -> "barrel" mesh.
+## If no barrel is found, _recoil_node stays null and we fall back to self.
+func _find_recoil_barrel() -> void:
+	if weapon_type == "catapult":
+		return
+	# Search for a child named "barrel" (case-insensitive)
+	var barrel_keywords: Array[String] = ["barrel", "gun", "turret_top", "cannon_body"]
+	for keyword in barrel_keywords:
+		var found: Node = _find_child_by_keyword(self, keyword)
+		if found and found is Node3D:
+			_recoil_node = found as Node3D
+			return
+
 ## Push-back recoil for turret, cannon, and ballista.
-## Slides the turret backward away from the target, then springs back.
+## Slides the barrel backward away from the target, then springs back.
+## The base platform stays completely stationary.
 func _play_recoil(target_pos: Vector3 = Vector3.ZERO) -> void:
+	# Determine which node to animate: barrel if found, otherwise self (fallback)
+	var anim_node: Node3D = _recoil_node if is_instance_valid(_recoil_node) else self
+
 	if not _has_base_position:
-		_base_position = position
+		_base_position = anim_node.position
 		_has_base_position = true
 
 	if _recoil_tween and _recoil_tween.is_valid():
 		_recoil_tween.kill()
-		position = _base_position
+		anim_node.position = _base_position
 
 	# Calculate vector pointing directly AWAY from the target (backward from firing direction)
 	var dir_away: Vector3 = Vector3.ZERO
@@ -432,18 +453,18 @@ func _play_recoil(target_pos: Vector3 = Vector3.ZERO) -> void:
 		recoil_strength = 0.12
 
 	var recoil_offset_world: Vector3 = dir_away * recoil_strength
-	# Convert to local space offset since we animate local position
-	var parent_basis: Basis = get_parent().global_transform.basis if get_parent() else Basis.IDENTITY
+	# Convert world-space recoil direction into the animated node's parent local space
+	var parent_node: Node3D = anim_node.get_parent() as Node3D if anim_node.get_parent() is Node3D else null
+	var parent_basis: Basis = parent_node.global_transform.basis if parent_node else Basis.IDENTITY
 	var local_offset: Vector3 = parent_basis.inverse() * recoil_offset_world
 
 	_recoil_tween = create_tween()
 	# Phase 1: Snap backward (away from target)
-	_recoil_tween.tween_property(self, "position",
+	_recoil_tween.tween_property(anim_node, "position",
 		_base_position + local_offset, 0.05).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	# Phase 2: Bounce forward slightly past origin
-	_recoil_tween.tween_property(self, "position",
+	_recoil_tween.tween_property(anim_node, "position",
 		_base_position - local_offset * 0.2, 0.12).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	# Phase 3: Settle cleanly back to base resting position
-	_recoil_tween.tween_property(self, "position",
+	_recoil_tween.tween_property(anim_node, "position",
 		_base_position, 0.08).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-
