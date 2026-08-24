@@ -1,4 +1,5 @@
-extends Node
+extends Control
+
 
 @onready var sub_viewport: SubViewport = $SubViewportContainer/SubViewport
 @onready var left_panel: Control = $CanvasLayer/Control/LeftPanel

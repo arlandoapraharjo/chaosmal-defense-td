@@ -105,7 +105,22 @@ func _setup_visual_model() -> void:
 		visual_model = cylinder
 		spinning_parts.append(cylinder)
 		
+	# Add clickable Area3D covering the main pillar body so clicking the pillar triggers upgrade
+	var pillar_body_area = Area3D.new()
+	pillar_body_area.name = "PillarBodyArea"
+	var p_shape = CollisionShape3D.new()
+	var p_box = BoxShape3D.new()
+	p_box.size = Vector3(2.2, 6.5, 2.2)
+	p_shape.shape = p_box
+	p_shape.position = Vector3(0, 3.0, 0)
+	pillar_body_area.add_child(p_shape)
+	add_child(pillar_body_area)
+	pillar_body_area.input_event.connect(_on_upgrade_area_input_event)
+	pillar_body_area.mouse_entered.connect(_on_upgrade_area_mouse_entered)
+	pillar_body_area.mouse_exited.connect(_on_upgrade_area_mouse_exited)
+		
 	_setup_particles_and_light()
+
 
 func _find_spinning_parts(node: Node) -> void:
 	if node is Node3D and node.name.to_lower().begins_with("crystal"):
@@ -402,9 +417,10 @@ func _trigger_defeat() -> void:
 
 	var destruction_scene = load("res://scenes/pillar_destruction.tscn") as PackedScene
 	if destruction_scene:
-		var exp = destruction_scene.instantiate()
-		get_parent().add_child(exp)
-		exp.global_position = global_position + Vector3(0, 1.5, 0)
+		var explosion = destruction_scene.instantiate()
+		get_parent().add_child(explosion)
+		explosion.global_position = global_position + Vector3(0, 1.5, 0)
+
 
 	if visual_model:
 		visual_model.visible = false

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://o1alob3g7ns8"]
 
 [ext_resource type="Script" uid="uid://dwe3nbiaij50j" path="res://UI/Menus/MainMenu.gd" id="1_script"]
-[ext_resource type="Shader" uid="uid://bx7n4pt2ql52d" path="res://shaders/trapezoid_panel.gdshader" id="2_shader"]
+[ext_resource type="Shader" path="res://shaders/trapezoid_panel.gdshader" id="2_shader"]
 [ext_resource type="Texture2D" uid="uid://3faw8ljjbtj7" path="res://assets/menus/grid.png" id="3_grid"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_trapezoid"]
@@ -42,8 +42,10 @@ stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1033910215]
 handle_input_locally = false
+physics_object_picking = true
 size = Vector2i(1152, 648)
 render_target_update_mode = 4
+
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=578386236]
 

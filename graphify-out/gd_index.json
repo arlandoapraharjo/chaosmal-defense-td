@@ -320,12 +320,12 @@
     {
       "file": "UI/Menus/MainMenu.gd",
       "class_name": null,
-      "extends": "Node",
+      "extends": "Control",
       "signals": [],
       "functions": [],
       "loads": [
         {
-          "line": 61,
+          "line": 75,
           "raw": "res://scenes/map.tscn",
           "path": "scenes/map.tscn",
           "call": "load"
@@ -918,19 +918,19 @@
           "call": "load"
         },
         {
-          "line": 392,
+          "line": 407,
           "raw": "res://scenes/pillar_hit_particle.tscn",
           "path": "scenes/pillar_hit_particle.tscn",
           "call": "load"
         },
         {
-          "line": 403,
+          "line": 418,
           "raw": "res://scenes/pillar_destruction.tscn",
           "path": "scenes/pillar_destruction.tscn",
           "call": "load"
         },
         {
-          "line": 625,
+          "line": 641,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"

@@ -513,8 +513,8 @@
       "community": 99,
       "community_name": "GDScript Gameplay Logic",
       "norm_label": "mainmenu",
-      "description": "extends Node",
-      "_gd_extends": "Node",
+      "description": "extends Control",
+      "_gd_extends": "Control",
       "_gd_functions": [],
       "_gd_signals": [],
       "_gd_exports": []
