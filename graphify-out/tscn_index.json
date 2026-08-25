@@ -499,10 +499,10 @@
           "id": "2_shader"
         },
         {
-          "path": "UI/Pause&Play/esc_button.png",
-          "raw_path": "res://UI/Pause&Play/esc_button.png",
+          "path": "UI/Pause&Play/esc_buttonV2.png",
+          "raw_path": "res://UI/Pause&Play/esc_buttonV2.png",
           "type": "Texture2D",
-          "uid": "uid://dc02vwg6nkt0f",
+          "uid": "uid://6txklmgditbp",
           "id": "3_esc"
         }
       ],
@@ -1440,7 +1440,7 @@
     "shaders/grayscale.gdshader": [
       "scenes/PauseOverlay.tscn"
     ],
-    "UI/Pause&Play/esc_button.png": [
+    "UI/Pause&Play/esc_buttonV2.png": [
       "scenes/PauseOverlay.tscn"
     ],
     "scripts/PillarShockwave.gd": [

@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/PauseOverlay.gd" id="1_script"]
 [ext_resource type="Shader" path="res://shaders/grayscale.gdshader" id="2_shader"]
 
-[ext_resource type="Texture2D" uid="uid://dc02vwg6nkt0f" path="res://UI/Pause&Play/esc_button.png" id="3_esc"]
+[ext_resource type="Texture2D" uid="uid://6txklmgditbp" path="res://UI/Pause&Play/esc_buttonV2.png" id="3_esc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_grayscale"]
 shader = ExtResource("2_shader")
