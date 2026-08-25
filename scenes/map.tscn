@@ -17,7 +17,8 @@
 [ext_resource type="Shader" uid="uid://cugpqtu17rfnm" path="res://shaders/pillar_shockwave.gdshader" id="15_c00ee"]
 [ext_resource type="PackedScene" path="res://scenes/PauseOverlay.tscn" id="16_pause"]
 [ext_resource type="PackedScene" path="res://UI/SpeedToggle.tscn" id="17_speed"]
-[ext_resource type="PackedScene" path="res://scenes/GameOverOverlay.tscn" id="18_gameover"]
+[ext_resource type="PackedScene" uid="uid://cx8v4qm5pak21" path="res://scenes/GameOverOverlay.tscn" id="18_gameover"]
+[ext_resource type="Script" uid="uid://3ts65qp6w4w6" path="res://scripts/World.gd" id="19_world"]
 
 [sub_resource type="Gradient" id="Gradient_ooc2g"]
 
@@ -43,8 +44,8 @@ shader_parameter/fog_speed = 1.510000309225
 [sub_resource type="PlaneMesh" id="PlaneMesh_m8r5s"]
 lightmap_size_hint = Vector2i(12, 12)
 material = ExtResource("11_sq6bu")
-subdivide_width = 20
-subdivide_depth = 20
+subdivide_width = 25
+subdivide_depth = 25
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y6u0t"]
 vertex_color_use_as_albedo = true
@@ -62,6 +63,7 @@ shader_parameter/thickness = 0.0
 shader_parameter/progress = 0.0
 
 [node name="World" type="Node3D" unique_id=67285049]
+script = ExtResource("19_world")
 
 [node name="CurrencyManager" type="Node" parent="." unique_id=98127391]
 script = ExtResource("12_curman")
@@ -109,11 +111,11 @@ script = ExtResource("10_m335s")
 map_generator = NodePath("../Map")
 
 [node name="Ocean" type="MeshInstance3D" parent="." unique_id=321031919]
-transform = Transform3D(70, 0, 0, 0, 70, 0, 0, 0, 70, 0, -1, 0)
+transform = Transform3D(120, 0, 0, 0, 120, 0, 0, 0, 120, 10, -1, 10)
 mesh = SubResource("PlaneMesh_m8r5s")
 
 [node name="OceanFloor" type="MeshInstance3D" parent="." unique_id=42007401]
-transform = Transform3D(70, 0, 0, 0, 70, 0, 0, 0, 70, 0, -2.860489, 0)
+transform = Transform3D(120, 0, 0, 0, 120, 0, 0, 0, 120, 10, -2.860489, 10)
 mesh = SubResource("PlaneMesh_eotfe")
 
 [node name="PauseOverlay" parent="." unique_id=1385682932 instance=ExtResource("16_pause")]

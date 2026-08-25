@@ -18,8 +18,12 @@ var _tween: Tween = null
 @onready var _ui_root: Control = $Control if has_node("Control") else null
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	instance = self
+	add_to_group("speed_toggle")
+
 	_load_textures()
+
 	_setup_button()
 	Engine.time_scale = SPEEDS[_current_index]
 	_update_appearance()

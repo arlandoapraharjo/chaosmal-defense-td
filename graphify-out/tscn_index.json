@@ -143,40 +143,39 @@
           "id": "1_script"
         },
         {
-          "path": "assets/menus/IMG-20230621-WA0013.jpg",
-          "raw_path": "res://assets/menus/IMG-20230621-WA0013.jpg",
-          "type": "Texture2D",
-          "uid": "uid://71ug0n8kquqo",
-          "id": "2_0cgh2"
+          "path": "shaders/trapezoid_panel.gdshader",
+          "raw_path": "res://shaders/trapezoid_panel.gdshader",
+          "type": "Shader",
+          "id": "2_shader"
         },
         {
           "path": "assets/menus/grid.png",
           "raw_path": "res://assets/menus/grid.png",
           "type": "Texture2D",
           "uid": "uid://3faw8ljjbtj7",
-          "id": "2_grid"
+          "id": "3_grid"
         }
       ],
       "nodes_preview": [
         {
           "name": "Main",
-          "type": "Node2D"
+          "type": "Control"
+        },
+        {
+          "name": "SubViewportContainer",
+          "type": "SubViewportContainer"
+        },
+        {
+          "name": "SubViewport",
+          "type": "SubViewport"
         },
         {
           "name": "Control",
           "type": "Control"
         },
         {
-          "name": "Background",
-          "type": "ColorRect"
-        },
-        {
-          "name": "TextureRect",
-          "type": "TextureRect"
-        },
-        {
-          "name": "VBoxContainer",
-          "type": "VBoxContainer"
+          "name": "LeftPanel",
+          "type": "Control"
         }
       ]
     },
@@ -1096,10 +1095,22 @@
           "path": "scenes/GameOverOverlay.tscn",
           "raw_path": "res://scenes/GameOverOverlay.tscn",
           "type": "PackedScene",
+          "uid": "uid://cx8v4qm5pak21",
           "id": "18_gameover"
+        },
+        {
+          "path": "scripts/World.gd",
+          "raw_path": "res://scripts/World.gd",
+          "type": "Script",
+          "uid": "uid://3ts65qp6w4w6",
+          "id": "19_world"
         }
       ],
       "nodes_preview": [
+        {
+          "name": "World",
+          "type": "Node3D"
+        },
         {
           "name": "CurrencyManager",
           "type": "Node"
@@ -1115,10 +1126,6 @@
         {
           "name": "FogVolume",
           "type": "FogVolume"
-        },
-        {
-          "name": "Camera3D",
-          "type": "Camera3D"
         }
       ]
     },
@@ -1291,7 +1298,6 @@
           "path": "addons/Mesh/thin_tree_stylized_trunk_fix_Cube.res",
           "raw_path": "res://addons/Mesh/thin_tree_stylized_trunk_fix_Cube.res",
           "type": "ArrayMesh",
-          "uid": "uid://c5f7bho2v5ex8",
           "id": "3_1a2g0"
         },
         {
@@ -1370,7 +1376,7 @@
     "UI/Menus/MainMenu.gd": [
       "UI/Menus/MainMenu.tscn"
     ],
-    "assets/menus/IMG-20230621-WA0013.jpg": [
+    "shaders/trapezoid_panel.gdshader": [
       "UI/Menus/MainMenu.tscn"
     ],
     "assets/menus/grid.png": [
@@ -1548,6 +1554,9 @@
       "scenes/map.tscn"
     ],
     "scenes/GameOverOverlay.tscn": [
+      "scenes/map.tscn"
+    ],
+    "scripts/World.gd": [
       "scenes/map.tscn"
     ],
     "scripts/PillarDestructionParticle.gd": [

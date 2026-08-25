@@ -11,7 +11,9 @@ func _enter_tree() -> void:
 	instance = self
 
 func _ready() -> void:
+	add_to_group("currency_manager")
 	currency_changed.emit(current_currency)
+
 
 func add_currency(amount: int) -> void:
 	current_currency += amount

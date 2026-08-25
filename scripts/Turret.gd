@@ -180,9 +180,10 @@ func _recalculate_stats() -> void:
 	
 	# Current global speed multiplier
 	var current_multiplier = 1.0
-	var speed_toggle = get_node_or_null("/root/World/SpeedToggle")
+	var speed_toggle = SpeedToggle.instance if SpeedToggle.instance else get_tree().get_first_node_in_group("speed_toggle")
 	if speed_toggle and speed_toggle.has_method("get_current_multiplier"):
 		current_multiplier = speed_toggle.get_current_multiplier()
+
 		
 	var level_cooldown: float = _base_cooldown * (1.0 - (turret_level - 1) * 0.1)
 	cooldown = level_cooldown / max(current_multiplier, 0.1)
@@ -398,14 +399,15 @@ func _play_catapult_swing(target_pos: Vector3, target_enemy: Node3D = null, aoe_
 var _base_position: Vector3 = Vector3.ZERO
 var _has_base_position: bool = false
 
-## Locate the barrel child node so recoil only moves the gun, not the base.
-## The GLB models have: Root -> base mesh -> "barrel" mesh.
-## If no barrel is found, _recoil_node stays null and we fall back to self.
+## Locate the barrel/arrow child node so recoil only moves the gun, not the base.
+## Turret/cannon models have: Root -> base mesh -> "barrel" mesh.
+## Ballista models have: Root -> base mesh -> "arrow" mesh.
+## If no match is found, _recoil_node stays null and we fall back to self.
 func _find_recoil_barrel() -> void:
 	if weapon_type == "catapult":
 		return
-	# Search for a child named "barrel" (case-insensitive)
-	var barrel_keywords: Array[String] = ["barrel", "gun", "turret_top", "cannon_body"]
+	# Search for the gun/projectile child node (case-insensitive)
+	var barrel_keywords: Array[String] = ["barrel", "arrow", "gun", "turret_top", "cannon_body"]
 	for keyword in barrel_keywords:
 		var found: Node = _find_child_by_keyword(self, keyword)
 		if found and found is Node3D:

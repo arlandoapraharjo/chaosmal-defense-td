@@ -1,11 +1,20 @@
 [gd_scene format=3 uid="uid://o1alob3g7ns8"]
 
 [ext_resource type="Script" uid="uid://dwe3nbiaij50j" path="res://UI/Menus/MainMenu.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://71ug0n8kquqo" path="res://assets/menus/IMG-20230621-WA0013.jpg" id="2_0cgh2"]
-[ext_resource type="Texture2D" uid="uid://3faw8ljjbtj7" path="res://assets/menus/grid.png" id="2_grid"]
+[ext_resource type="Shader" path="res://shaders/trapezoid_panel.gdshader" id="2_shader"]
+[ext_resource type="Texture2D" uid="uid://3faw8ljjbtj7" path="res://assets/menus/grid.png" id="3_grid"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_trapezoid"]
+shader = ExtResource("2_shader")
+shader_parameter/bg_color = Color(0.06, 0.08, 0.13, 0.92)
+shader_parameter/bg_gradient_color = Color(0.1, 0.14, 0.22, 0.96)
+shader_parameter/border_color = Color(0.35, 0.65, 0.95, 0.9)
+shader_parameter/slant_amount = 0.16
+shader_parameter/border_width = 0.007
+shader_parameter/gloss_intensity = 0.15
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn"]
-texture = ExtResource("2_grid")
+texture = ExtResource("3_grid")
 texture_margin_left = 10.0
 texture_margin_top = 10.0
 texture_margin_right = 10.0
@@ -13,13 +22,37 @@ texture_margin_bottom = 10.0
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
-[node name="Main" type="Node2D" unique_id=914936948]
+[node name="Main" type="Control" unique_id=914936948]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_script")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=1259132434]
+process_mode = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1033910215]
+process_mode = 3
+handle_input_locally = false
+physics_object_picking = true
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=578386236]
 
 [node name="Control" type="Control" parent="CanvasLayer" unique_id=1175489396]
-clip_contents = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,138 +60,130 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Background" type="ColorRect" parent="CanvasLayer/Control" unique_id=1259132434]
+[node name="LeftPanel" type="Control" parent="CanvasLayer/Control" unique_id=326894317]
+layout_mode = 1
+anchor_right = 0.35
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SkewedBg" type="ColorRect" parent="CanvasLayer/Control/LeftPanel" unique_id=1193574546]
+material = SubResource("ShaderMaterial_trapezoid")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 1)
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/Background" unique_id=1193574546]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_0cgh2")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control" unique_id=326894317]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/LeftPanel" unique_id=1589070003]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.102000006
-anchor_top = 0.397
-anchor_right = 0.30100003
-anchor_bottom = 0.73700005
-offset_left = -18.504005
-offset_top = -106.75601
-offset_right = 24.247955
-offset_bottom = 17.42398
+anchor_left = 0.1
+anchor_top = 0.15
+anchor_right = 0.8
+anchor_bottom = 0.85
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 24
 alignment = 1
 
-[node name="Label" type="Label" parent="CanvasLayer/Control/VBoxContainer" unique_id=1589070003]
+[node name="TitleLabel" type="Label" parent="CanvasLayer/Control/LeftPanel/VBoxContainer" unique_id=748291039]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 48
-text = "Code Circus"
+theme_override_colors/font_color = Color(0.92, 0.96, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.1, 0.2, 0.4, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 42
+text = "CODE CIRCUS"
 horizontal_alignment = 1
 
-[node name="ButtonStart" type="Button" parent="CanvasLayer/Control/VBoxContainer" unique_id=911141927]
-custom_minimum_size = Vector2(240, 60)
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/Control/LeftPanel/VBoxContainer" unique_id=892374921]
+layout_mode = 2
+
+[node name="ButtonStart" type="Button" parent="CanvasLayer/Control/LeftPanel/VBoxContainer" unique_id=911141927]
+custom_minimum_size = Vector2(200, 54)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxTexture_btn")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_btn")
 theme_override_styles/hover = SubResource("StyleBoxTexture_btn")
 text = "Start Game"
 
-[node name="ButtonSettings" type="Button" parent="CanvasLayer/Control/VBoxContainer" unique_id=353551886]
-custom_minimum_size = Vector2(240, 60)
+[node name="ButtonSettings" type="Button" parent="CanvasLayer/Control/LeftPanel/VBoxContainer" unique_id=353551886]
+custom_minimum_size = Vector2(200, 54)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxTexture_btn")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_btn")
 theme_override_styles/hover = SubResource("StyleBoxTexture_btn")
 text = "Settings"
 
-[node name="ButtonQuit" type="Button" parent="CanvasLayer/Control/VBoxContainer" unique_id=881836931]
-custom_minimum_size = Vector2(240, 60)
+[node name="ButtonQuit" type="Button" parent="CanvasLayer/Control/LeftPanel/VBoxContainer" unique_id=881836931]
+custom_minimum_size = Vector2(200, 54)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxTexture_btn")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_btn")
 theme_override_styles/hover = SubResource("StyleBoxTexture_btn")
 text = "Exit"
 
-[node name="PanelSettings" type="VBoxContainer" parent="CanvasLayer/Control" unique_id=405710299]
-custom_minimum_size = Vector2(300, 0)
+[node name="PanelSettings" type="VBoxContainer" parent="CanvasLayer/Control/LeftPanel" unique_id=405710299]
+visible = false
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.05
-anchor_top = 0.12
-anchor_right = 0.42
-anchor_bottom = 0.92
+anchor_left = 0.08
+anchor_top = 0.15
+anchor_right = 0.82
+anchor_bottom = 0.85
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 18
 
-[node name="LabelSettings" type="Label" parent="CanvasLayer/Control/PanelSettings" unique_id=1163577354]
+[node name="LabelSettings" type="Label" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=1163577354]
 layout_mode = 2
-size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 32
 text = "Settings"
 horizontal_alignment = 1
 
-[node name="HBoxFullscreen" type="HBoxContainer" parent="CanvasLayer/Control/PanelSettings" unique_id=1335187635]
-custom_minimum_size = Vector2(0, 44)
+[node name="HBoxFullscreen" type="HBoxContainer" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=1335187635]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="LabelFullscreen" type="Label" parent="CanvasLayer/Control/PanelSettings/HBoxFullscreen" unique_id=1908074135]
-custom_minimum_size = Vector2(130, 0)
+[node name="LabelFullscreen" type="Label" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxFullscreen" unique_id=1908074135]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 20
-text = "Fullscreen"
-
-[node name="CheckButtonFullscreen" type="CheckButton" parent="CanvasLayer/Control/PanelSettings/HBoxFullscreen" unique_id=1291881582]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 18
+text = "Fullscreen"
 
-[node name="HBoxMaster" type="HBoxContainer" parent="CanvasLayer/Control/PanelSettings" unique_id=137051924]
-custom_minimum_size = Vector2(0, 44)
+[node name="CheckButtonFullscreen" type="CheckButton" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxFullscreen" unique_id=1291881582]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+
+[node name="HBoxMaster" type="HBoxContainer" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=137051924]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="LabelMaster" type="Label" parent="CanvasLayer/Control/PanelSettings/HBoxMaster" unique_id=824274364]
-custom_minimum_size = Vector2(130, 0)
+[node name="LabelMaster" type="Label" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMaster" unique_id=824274364]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "Master"
 
-[node name="SliderMaster" type="HSlider" parent="CanvasLayer/Control/PanelSettings/HBoxMaster" unique_id=23459299]
-custom_minimum_size = Vector2(150, 20)
+[node name="SliderMaster" type="HSlider" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMaster" unique_id=23459299]
+custom_minimum_size = Vector2(120, 20)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -166,21 +191,20 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="HBoxMusic" type="HBoxContainer" parent="CanvasLayer/Control/PanelSettings" unique_id=927262267]
-custom_minimum_size = Vector2(0, 44)
+[node name="HBoxMusic" type="HBoxContainer" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=927262267]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="LabelMusic" type="Label" parent="CanvasLayer/Control/PanelSettings/HBoxMusic" unique_id=919754218]
-custom_minimum_size = Vector2(130, 0)
+[node name="LabelMusic" type="Label" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMusic" unique_id=919754218]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "Music"
 
-[node name="SliderMusic" type="HSlider" parent="CanvasLayer/Control/PanelSettings/HBoxMusic" unique_id=1070351990]
-custom_minimum_size = Vector2(150, 20)
+[node name="SliderMusic" type="HSlider" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMusic" unique_id=1070351990]
+custom_minimum_size = Vector2(120, 20)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -188,21 +212,20 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="HBoxSFX" type="HBoxContainer" parent="CanvasLayer/Control/PanelSettings" unique_id=1217698442]
-custom_minimum_size = Vector2(0, 44)
+[node name="HBoxSFX" type="HBoxContainer" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=1217698442]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="LabelSFX" type="Label" parent="CanvasLayer/Control/PanelSettings/HBoxSFX" unique_id=1701587883]
-custom_minimum_size = Vector2(130, 0)
+[node name="LabelSFX" type="Label" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxSFX" unique_id=1701587883]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "SFX"
 
-[node name="SliderSFX" type="HSlider" parent="CanvasLayer/Control/PanelSettings/HBoxSFX" unique_id=217595506]
-custom_minimum_size = Vector2(150, 20)
+[node name="SliderSFX" type="HSlider" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxSFX" unique_id=217595506]
+custom_minimum_size = Vector2(120, 20)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -210,22 +233,22 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="ButtonBack" type="Button" parent="CanvasLayer/Control/PanelSettings" unique_id=865670970]
-custom_minimum_size = Vector2(240, 60)
+[node name="ButtonBack" type="Button" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=865670970]
+custom_minimum_size = Vector2(200, 54)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxTexture_btn")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_btn")
 theme_override_styles/hover = SubResource("StyleBoxTexture_btn")
 text = "Back"
 
-[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/ButtonStart" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/ButtonSettings" to="." method="_on_settings_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/ButtonQuit" to="." method="_on_quit_button_pressed"]
-[connection signal="toggled" from="CanvasLayer/Control/PanelSettings/HBoxFullscreen/CheckButtonFullscreen" to="." method="_on_fullscreen_toggled"]
-[connection signal="value_changed" from="CanvasLayer/Control/PanelSettings/HBoxMaster/SliderMaster" to="." method="_on_master_volume_changed"]
-[connection signal="value_changed" from="CanvasLayer/Control/PanelSettings/HBoxMusic/SliderMusic" to="." method="_on_music_volume_changed"]
-[connection signal="value_changed" from="CanvasLayer/Control/PanelSettings/HBoxSFX/SliderSFX" to="." method="_on_sfx_volume_changed"]
-[connection signal="pressed" from="CanvasLayer/Control/PanelSettings/ButtonBack" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/LeftPanel/VBoxContainer/ButtonStart" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/LeftPanel/VBoxContainer/ButtonSettings" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/LeftPanel/VBoxContainer/ButtonQuit" to="." method="_on_quit_button_pressed"]
+[connection signal="toggled" from="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxFullscreen/CheckButtonFullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="value_changed" from="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMaster/SliderMaster" to="." method="_on_master_volume_changed"]
+[connection signal="value_changed" from="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMusic/SliderMusic" to="." method="_on_music_volume_changed"]
+[connection signal="value_changed" from="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxSFX/SliderSFX" to="." method="_on_sfx_volume_changed"]
+[connection signal="pressed" from="CanvasLayer/Control/LeftPanel/PanelSettings/ButtonBack" to="." method="_on_back_button_pressed"]

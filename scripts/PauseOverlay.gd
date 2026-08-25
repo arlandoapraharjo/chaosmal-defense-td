@@ -9,10 +9,16 @@ var _tex_play = preload("res://UI/Pause&Play/play_buttonV2.png")
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	color_rect.visible = false
-	pause_button.pressed.connect(_toggle_pause)
+	if pause_button:
+		pause_button.process_mode = Node.PROCESS_MODE_ALWAYS
+		pause_button.pressed.connect(_toggle_pause)
+	if color_rect:
+		color_rect.process_mode = Node.PROCESS_MODE_ALWAYS
+		color_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		color_rect.visible = false
 	get_tree().paused = false
 	_update_button_appearance(false)
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):

@@ -43,8 +43,10 @@ var COLOR_VALID = Color(0.2, 0.8, 1.0, 0.5)
 var COLOR_INVALID = Color(1.0, 0.2, 0.2, 0.5)
 
 func _ready() -> void:
+	add_to_group("builder_controller")
 	_max_deployment = base_max_deployment
 	call_deferred("_connect_to_spawner")
+
 	
 	_ghost_material = ShaderMaterial.new()
 	var shader = preload("res://shaders/ghost_hologram.gdshader")
@@ -285,9 +287,12 @@ func _try_place_turret() -> void:
 			
 		if currency_manager and currency_manager.get_currency() < _turret_cost:
 			print("Not enough currency!")
-			var wave_ui = get_node_or_null("/root/World/WaveUI")
+			var wave_ui = get_tree().get_first_node_in_group("wave_ui")
+			if not wave_ui:
+				wave_ui = get_node_or_null("/root/World/WaveUI")
 			if wave_ui and wave_ui.has_method("show_insufficient_funds"):
 				wave_ui.show_insufficient_funds()
+
 			return
 			
 		if currency_manager:

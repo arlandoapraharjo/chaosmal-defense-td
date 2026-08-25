@@ -984,10 +984,11 @@
       "community": 99,
       "community_name": "GDScript Gameplay Logic",
       "norm_label": "wavemanager",
-      "description": "extends Node3D | funcs: setup, set_speed_multiplier, stop_spawning, wipe_all_active_enemies, get_game_stats | signals: wave_started, wave_completed",
+      "description": "extends Node3D | funcs: setup, trigger_first_wave_if_waiting, set_speed_multiplier, stop_spawning, wipe_all_active_enemies, get_game_stats | signals: wave_started, wave_completed",
       "_gd_extends": "Node3D",
       "_gd_functions": [
         "setup",
+        "trigger_first_wave_if_waiting",
         "set_speed_multiplier",
         "stop_spawning",
         "wipe_all_active_enemies",
