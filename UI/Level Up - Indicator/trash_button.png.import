@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://16dvkebrlult"
-path="res://.godot/imported/lvl_up.png-29fe7a200f39e44dcf1b3ea26d373ef5.ctex"
+uid="uid://byf7sb7tp28ag"
+path="res://.godot/imported/trash_button.png-979d016315aef1cbf5ffc79c901bef7e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/Level Up - Indicator/lvl_up.png"
-dest_files=["res://.godot/imported/lvl_up.png-29fe7a200f39e44dcf1b3ea26d373ef5.ctex"]
+source_file="res://UI/Level Up - Indicator/trash_button.png"
+dest_files=["res://.godot/imported/trash_button.png-979d016315aef1cbf5ffc79c901bef7e.ctex"]
 
 [params]
 

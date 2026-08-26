@@ -334,16 +334,6 @@
     "ast_hash": "fd1f4835b33bb03f3bfe05c39bde59fd",
     "semantic_hash": ""
   },
-  "UI/Level Up - Indicator/lvl_up.png": {
-    "mtime": 1786891025.4833014,
-    "ast_hash": "ee6cb932ff54c20d252dc5680970ed68",
-    "semantic_hash": ""
-  },
-  "UI/Level Up - Indicator/lvl_upNew.gif": {
-    "mtime": 1787047028.2613695,
-    "ast_hash": "04c7fc41ed1324daf49d5e432d1c560b",
-    "semantic_hash": ""
-  },
   "UI/Wave Indicator/intro waver.gif": {
     "mtime": 1787059092.3057356,
     "ast_hash": "3dff10d78be719d9d7a54da82bf2a4ae",
@@ -527,6 +517,11 @@
   "UI/Level Up - Indicator/upbutton_banner.png": {
     "mtime": 1787752549.4733396,
     "ast_hash": "e85c958ed80fd534d9f22f80afe95b23",
+    "semantic_hash": ""
+  },
+  "UI/Level Up - Indicator/trash_button.png": {
+    "mtime": 1787756511.2985764,
+    "ast_hash": "04e512b8834530a81906fd09d3a53420",
     "semantic_hash": ""
   }
 }

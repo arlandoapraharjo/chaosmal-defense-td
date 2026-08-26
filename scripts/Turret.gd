@@ -70,7 +70,7 @@ var _upgrade_area: Area3D = null
 
 var _sell_pivot: Node3D = null
 var _sell_banner_sprite: Sprite3D = null
-var _sell_icon_label: Label3D = null
+var _sell_sprite: Sprite3D = null
 var _sell_label: Label3D = null
 var _sell_area: Area3D = null
 
@@ -79,6 +79,7 @@ var _body_area: Area3D = null
 var _level_textures: Array[Texture2D] = []
 var _upgrade_banner_texture: Texture2D = null
 var _upgrade_texture: Texture2D = null
+var _sell_texture: Texture2D = null
 
 # Internal timer
 var _cooldown_timer: float = 0.0
@@ -188,6 +189,8 @@ func _process(delta: float) -> void:
 
 # Smoothly rotate the turret (Y-axis only) to face the target.
 func _rotate_toward_target(target: Node3D, delta: float) -> void:
+	if scale.length_squared() < 0.001:
+		return
 	var target_pos: Vector3 = target.global_transform.origin
 	var my_pos: Vector3 = global_transform.origin
 	# Flatten to horizontal plane
@@ -218,6 +221,8 @@ func _load_ui_textures() -> void:
 		_upgrade_texture = load("res://UI/Level Up - Indicator/upgrade_buttonnew.png") as Texture2D
 	elif ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_up.png"):
 		_upgrade_texture = load("res://UI/Level Up - Indicator/lvl_up.png") as Texture2D
+	if ResourceLoader.exists("res://UI/Level Up - Indicator/trash_button.png"):
+		_sell_texture = load("res://UI/Level Up - Indicator/trash_button.png") as Texture2D
 
 func _setup_selection_marker() -> void:
 	if is_ghost:
@@ -376,20 +381,19 @@ func _setup_3d_ui() -> void:
 		_sell_banner_sprite.texture = _upgrade_banner_texture
 	_sell_pivot.add_child(_sell_banner_sprite)
 	
-	# Recycle Icon (Left circular socket of banner)
-	_sell_icon_label = Label3D.new()
-	_sell_icon_label.name = "SellIconLabel"
-	_sell_icon_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	_sell_icon_label.no_depth_test = true
-	_sell_icon_label.render_priority = 10
-	_sell_icon_label.position = Vector3(0, 0, 0.005)
-	_sell_icon_label.offset = Vector2(-9, 0)
-	_sell_icon_label.text = "♻️"
-	_sell_icon_label.font_size = 18
-	_sell_icon_label.outline_size = 3
-	_sell_icon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_sell_icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_sell_pivot.add_child(_sell_icon_label)
+	# Trash / Recycle Button Icon (Left slot of banner, -9px 2D billboard offset)
+	_sell_sprite = Sprite3D.new()
+	_sell_sprite.name = "SellSprite"
+	_sell_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_sell_sprite.no_depth_test = true
+	_sell_sprite.render_priority = 10
+	_sell_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	_sell_sprite.pixel_size = 0.008
+	_sell_sprite.position = Vector3(0, 0, 0.005)
+	_sell_sprite.offset = Vector2(-9, 0)
+	if _sell_texture:
+		_sell_sprite.texture = _sell_texture
+	_sell_pivot.add_child(_sell_sprite)
 	
 	# Refund Label (Right slot of banner, vertically stacked: Coin on top, Refund number below)
 	_sell_label = Label3D.new()
@@ -455,17 +459,18 @@ func _update_3d_ui_positions(camera: Camera3D = null) -> void:
 		
 	var base_top = global_position + Vector3(0, base_h, 0)
 	
-	# Level badge: Top (Right edge aligned with banners' right edge at +1.29m)
+	# Level badge: Top (Right edge aligned with banners' right edge, above upgrade banner)
 	if _level_pivot and is_instance_valid(_level_pivot):
-		_level_pivot.global_position = base_top + cam_right * 0.41 + cam_up * 0.30
+		_level_pivot.global_position = base_top + cam_right * 0.41 + cam_up * 0.06
 		
 	# Upgrade button: Right Side (beside turret body)
 	if _upgrade_pivot and is_instance_valid(_upgrade_pivot):
 		_upgrade_pivot.global_position = base_top + cam_right * 1.05 - cam_up * 0.35 + cam_fwd * 0.10
 		
-	# Sell button: Right Side (directly below Upgrade button)
+	# Sell button: Right Side (takes upper slot if max level, otherwise lower slot)
 	if _sell_pivot and is_instance_valid(_sell_pivot):
-		_sell_pivot.global_position = base_top + cam_right * 1.05 - cam_up * 0.72 + cam_fwd * 0.10
+		var sell_up_offset: float = -0.35 if turret_level >= max_level else -0.72
+		_sell_pivot.global_position = base_top + cam_right * 1.05 + cam_up * sell_up_offset + cam_fwd * 0.10
 
 func _update_3d_ui() -> void:
 	if is_ghost or not is_instance_valid(_level_pivot):
@@ -575,10 +580,11 @@ func _input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 				return
 		
-		# 2. Recycle / Sell Button Click
+		# 2. Recycle / Sell Button Click (hits circular trash icon)
 		if _sell_pivot and is_instance_valid(_sell_pivot) and _sell_pivot.visible:
-			var sell_screen = camera.unproject_position(_sell_pivot.global_position)
-			if click_pos.distance_to(sell_screen) <= 45.0:
+			var icon_pos = _sell_sprite.global_position if is_instance_valid(_sell_sprite) else _sell_pivot.global_position
+			var sell_screen = camera.unproject_position(icon_pos)
+			if click_pos.distance_to(sell_screen) <= 40.0:
 				if builder and builder.has_method("notify_turret_interacted"):
 					builder.notify_turret_interacted()
 				if _sell_pivot and is_inside_tree():
@@ -606,18 +612,8 @@ func upgrade() -> bool:
 	_recalculate_stats()
 	_update_3d_ui()
 	
-	# Juicy visual feedback for upgrade
-	var tween: Tween = create_tween()
-	var original_scale: Vector3 = scale
-	tween.tween_property(self, "scale", original_scale * 1.20, 0.10).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_property(self, "scale", original_scale, 0.15).set_trans(Tween.TRANS_SINE)
-	
-	if _level_pivot and _level_pivot.visible:
-		var l_tween = create_tween()
-		l_tween.tween_property(_level_pivot, "scale", Vector3(1.45, 1.45, 1.45), 0.10).set_trans(Tween.TRANS_BACK)
-		l_tween.tween_property(_level_pivot, "scale", Vector3.ONE, 0.15)
-	
-	_spawn_upgrade_particles()
+	# Play the bright golden radiant glow upgrade animation
+	_play_upgrade_glow()
 	
 	return true
 
@@ -671,8 +667,51 @@ func sell() -> void:
 		
 	# Quick shrink effect and queue_free
 	var tw = create_tween()
-	tw.tween_property(self, "scale", Vector3.ZERO, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	tw.tween_property(self, "scale", Vector3(0.001, 0.001, 0.001), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	tw.tween_callback(queue_free)
+
+func _play_upgrade_glow() -> void:
+	if not is_inside_tree():
+		return
+		
+	# 1. Golden radiant OmniLight3D burst
+	var light = OmniLight3D.new()
+	light.light_color = Color(1.0, 0.90, 0.45)
+	light.light_energy = 6.0
+	light.omni_range = 5.0
+	light.position = Vector3(0, 0.8, 0)
+	add_child(light)
+	
+	var light_tween = create_tween()
+	light_tween.tween_property(light, "light_energy", 0.0, 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	light_tween.tween_callback(light.queue_free)
+	
+	# 2. Flash all MeshInstance3D models on the turret with bright golden radiant overlay
+	var meshes = find_children("*", "MeshInstance3D")
+	for m in meshes:
+		if m == _selection_marker or m.name == "SelectionRingMarker":
+			continue
+		var mi = m as MeshInstance3D
+		if not mi or not mi.mesh:
+			continue
+			
+		var orig_override = mi.material_override
+		var flash_mat = StandardMaterial3D.new()
+		flash_mat.albedo_color = Color(1.0, 0.92, 0.45, 0.92)
+		flash_mat.emission_enabled = true
+		flash_mat.emission = Color(1.0, 0.88, 0.35)
+		flash_mat.emission_energy_multiplier = 4.0
+		flash_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		flash_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		flash_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		mi.material_override = flash_mat
+		
+		var mat_tween = create_tween()
+		mat_tween.tween_property(flash_mat, "albedo_color:a", 0.0, 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		mat_tween.tween_callback(func():
+			if is_instance_valid(mi):
+				mi.material_override = orig_override
+		)
 
 func _spawn_upgrade_particles() -> void:
 	var part_scene = _hit_particle_scenes.get("turret", null)
