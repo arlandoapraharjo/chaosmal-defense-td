@@ -585,6 +585,8 @@ func _input(event: InputEvent) -> void:
 			var icon_pos = _sell_sprite.global_position if is_instance_valid(_sell_sprite) else _sell_pivot.global_position
 			var sell_screen = camera.unproject_position(icon_pos)
 			if click_pos.distance_to(sell_screen) <= 40.0:
+				if is_inside_tree() and get_viewport():
+					get_viewport().set_input_as_handled()
 				if builder and builder.has_method("notify_turret_interacted"):
 					builder.notify_turret_interacted()
 				if _sell_pivot and is_inside_tree():
@@ -592,7 +594,6 @@ func _input(event: InputEvent) -> void:
 					tw.tween_property(_sell_pivot, "scale", Vector3(0.85, 0.85, 0.85), 0.05)
 					tw.tween_property(_sell_pivot, "scale", Vector3(1.1, 1.1, 1.1), 0.12).set_trans(Tween.TRANS_BACK)
 				sell()
-				get_viewport().set_input_as_handled()
 				return
 
 # ── Upgrade & Sell Logic ───────────────────────────────────────────────────────
@@ -611,9 +612,6 @@ func upgrade() -> bool:
 	turret_level += 1
 	_recalculate_stats()
 	_update_3d_ui()
-	
-	# Play the bright golden radiant glow upgrade animation
-	_play_upgrade_glow()
 	
 	return true
 
@@ -670,55 +668,6 @@ func sell() -> void:
 	tw.tween_property(self, "scale", Vector3(0.001, 0.001, 0.001), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	tw.tween_callback(queue_free)
 
-func _play_upgrade_glow() -> void:
-	if not is_inside_tree():
-		return
-		
-	# 1. Golden radiant OmniLight3D burst
-	var light = OmniLight3D.new()
-	light.light_color = Color(1.0, 0.90, 0.45)
-	light.light_energy = 6.0
-	light.omni_range = 5.0
-	light.position = Vector3(0, 0.8, 0)
-	add_child(light)
-	
-	var light_tween = create_tween()
-	light_tween.tween_property(light, "light_energy", 0.0, 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	light_tween.tween_callback(light.queue_free)
-	
-	# 2. Flash all MeshInstance3D models on the turret with bright golden radiant overlay
-	var meshes = find_children("*", "MeshInstance3D")
-	for m in meshes:
-		if m == _selection_marker or m.name == "SelectionRingMarker":
-			continue
-		var mi = m as MeshInstance3D
-		if not mi or not mi.mesh:
-			continue
-			
-		var orig_override = mi.material_override
-		var flash_mat = StandardMaterial3D.new()
-		flash_mat.albedo_color = Color(1.0, 0.92, 0.45, 0.92)
-		flash_mat.emission_enabled = true
-		flash_mat.emission = Color(1.0, 0.88, 0.35)
-		flash_mat.emission_energy_multiplier = 4.0
-		flash_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		flash_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		flash_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-		mi.material_override = flash_mat
-		
-		var mat_tween = create_tween()
-		mat_tween.tween_property(flash_mat, "albedo_color:a", 0.0, 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		mat_tween.tween_callback(func():
-			if is_instance_valid(mi):
-				mi.material_override = orig_override
-		)
-
-func _spawn_upgrade_particles() -> void:
-	var part_scene = _hit_particle_scenes.get("turret", null)
-	if part_scene:
-		var p = part_scene.instantiate()
-		get_parent().add_child(p)
-		p.global_position = global_position + Vector3(0, 1.2, 0)
 
 func _flash_insufficient_funds() -> void:
 	if _upgrade_cost_label and is_inside_tree():
