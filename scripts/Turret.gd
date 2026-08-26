@@ -39,6 +39,45 @@ func _init() -> void:
 					_ammo_cache[key] = load(desert_path)
 	_ammo_scenes = _ammo_cache
 
+# Upgrade, placement & economic properties
+var turret_level: int = 1
+var max_level: int = 5
+var base_cost: int = 1
+var total_invested_cost: int = 1
+var grid_pos: Vector2i = Vector2i.ZERO
+var footprint_size: Vector2i = Vector2i(1, 1)
+var is_ghost: bool = false
+var is_selected: bool = false
+var _hover_grace_timer: float = 0.0
+const HOVER_PROXIMITY_RADIUS_PX: float = 160.0
+const HOVER_GRACE_DURATION: float = 0.35
+
+var attack_damage: float = 35.0
+var _base_attack_damage: float = 35.0
+var _base_attack_range: float = 1.5
+var _base_aoe_radius: float = 2.0
+
+# 3D Billboard UI & Selection Nodes
+var _ui_root: Node3D = null
+var _level_pivot: Node3D = null
+var _level_sprite: Sprite3D = null
+var _level_shadow_sprite: Sprite3D = null
+
+var _upgrade_pivot: Node3D = null
+var _upgrade_sprite: Sprite3D = null
+var _upgrade_shadow_sprite: Sprite3D = null
+var _upgrade_cost_label: Label3D = null
+var _upgrade_area: Area3D = null
+
+var _sell_pivot: Node3D = null
+var _sell_label: Label3D = null
+var _sell_area: Area3D = null
+
+var _body_area: Area3D = null
+
+var _level_textures: Array[Texture2D] = []
+var _upgrade_texture: Texture2D = null
+
 # Internal timer
 var _cooldown_timer: float = 0.0
 # Base cooldown — speed multiplier divides this to fire faster
@@ -58,14 +97,18 @@ var _recoil_node: Node3D = null
 func _ready() -> void:
 	_base_cooldown = cooldown
 	_base_attack_damage = attack_damage
+	_base_attack_range = attack_range
+	_base_aoe_radius = aoe_radius
+	total_invested_cost = base_cost
 	_auto_detect_weapon_type()
 	call_deferred("_capture_initial_facing")
 	call_deferred("_find_catapult_arm")
 	call_deferred("_find_recoil_barrel")
+	call_deferred("_setup_3d_ui")
 
 ## Apply a global speed multiplier — faster speed = shorter cooldown = higher fire rate.
 func set_speed_multiplier(multiplier: float) -> void:
-	var level_cooldown = _base_cooldown * (1.0 - (turret_level - 1) * 0.1)
+	var level_cooldown = _base_cooldown * (1.0 - (turret_level - 1) * 0.08)
 	cooldown = level_cooldown / max(multiplier, 0.1)
 
 func _capture_initial_facing() -> void:
@@ -106,6 +149,36 @@ func _get_valid_enemies() -> Array[Node3D]:
 	return enemies
 
 func _process(delta: float) -> void:
+	if is_ghost:
+		return
+
+	var camera = get_viewport().get_camera_3d()
+	if _ui_root and is_instance_valid(_ui_root):
+		_ui_root.global_position = global_position
+		_update_3d_ui_positions(camera)
+
+	# Screen-space proximity hover check for selected turret
+	if is_selected and camera:
+		var base_h: float = 1.4 if scale.y <= 1.5 else 2.0
+		var ui_anchor = global_position + Vector3(0, base_h + 0.5, 0)
+		var screen_pos = camera.unproject_position(ui_anchor)
+		var mouse_pos = get_viewport().get_mouse_position()
+		var dist_px = mouse_pos.distance_to(screen_pos)
+		
+		if dist_px <= HOVER_PROXIMITY_RADIUS_PX:
+			_hover_grace_timer = HOVER_GRACE_DURATION
+			_set_ui_visible(true)
+		else:
+			if _hover_grace_timer > 0.0:
+				_hover_grace_timer -= delta
+				if _hover_grace_timer <= 0.0:
+					_set_ui_visible(false)
+			else:
+				_set_ui_visible(false)
+	else:
+		_hover_grace_timer = 0.0
+		_set_ui_visible(false)
+
 	var enemies: Array[Node3D] = _get_valid_enemies()
 
 	if enemies.is_empty():
@@ -150,43 +223,445 @@ func _rotate_toward_target(target: Node3D, delta: float) -> void:
 	# Reapply scale after rotation
 	global_transform.basis = new_rot.scaled(current_scale)
 
-var attack_damage: float = 35.0
-var _base_attack_damage: float = 35.0
-var turret_level: int = 1
+# ── 3D UI & Selection System ──────────────────────────────────────────────────
+
+func _load_ui_textures() -> void:
+	_level_textures.clear()
+	for i in range(1, 6):
+		var p = "res://UI/Level Up - Indicator/lvl_%d.png" % i
+		if ResourceLoader.exists(p):
+			_level_textures.append(load(p) as Texture2D)
+	if ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_up.png"):
+		_upgrade_texture = load("res://UI/Level Up - Indicator/lvl_up.png") as Texture2D
+
+func _setup_3d_ui() -> void:
+	if is_ghost:
+		return
+	
+	_load_ui_textures()
+	
+	_ui_root = Node3D.new()
+	_ui_root.name = "TurretUIRoot"
+	_ui_root.top_level = true
+	_ui_root.global_position = global_position
+	add_child(_ui_root)
+	
+	var base_h: float = 1.4
+	if scale.y > 1.5:
+		base_h = 2.0 # Scale for larger heavy turrets
+	
+	# 1. Level Badge (Top Center)
+	_level_pivot = Node3D.new()
+	_level_pivot.name = "LevelPivot"
+	_level_pivot.visible = false
+	_ui_root.add_child(_level_pivot)
+	
+	_level_shadow_sprite = Sprite3D.new()
+	_level_shadow_sprite.name = "LevelShadow"
+	_level_shadow_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_level_shadow_sprite.no_depth_test = true
+	_level_shadow_sprite.render_priority = 9
+	_level_shadow_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	_level_shadow_sprite.pixel_size = 0.008
+	_level_shadow_sprite.modulate = Color(0.0, 0.0, 0.0, 0.6)
+	_level_shadow_sprite.position = Vector3(0.03, -0.03, -0.01)
+	_level_pivot.add_child(_level_shadow_sprite)
+	
+	_level_sprite = Sprite3D.new()
+	_level_sprite.name = "LevelSprite"
+	_level_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_level_sprite.no_depth_test = true
+	_level_sprite.render_priority = 10
+	_level_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	_level_sprite.pixel_size = 0.008
+	_level_pivot.add_child(_level_sprite)
+	
+	# 2. Upgrade Button & Cost Label (Bottom Right)
+	_upgrade_pivot = Node3D.new()
+	_upgrade_pivot.name = "UpgradePivot"
+	_upgrade_pivot.visible = false
+	_ui_root.add_child(_upgrade_pivot)
+	
+	_upgrade_shadow_sprite = Sprite3D.new()
+	_upgrade_shadow_sprite.name = "UpgradeShadow"
+	_upgrade_shadow_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_upgrade_shadow_sprite.no_depth_test = true
+	_upgrade_shadow_sprite.render_priority = 9
+	_upgrade_shadow_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	_upgrade_shadow_sprite.pixel_size = 0.008
+	_upgrade_shadow_sprite.modulate = Color(0.0, 0.0, 0.0, 0.6)
+	_upgrade_shadow_sprite.position = Vector3(0.03, -0.03, -0.01)
+	if _upgrade_texture:
+		_upgrade_shadow_sprite.texture = _upgrade_texture
+	_upgrade_pivot.add_child(_upgrade_shadow_sprite)
+	
+	_upgrade_sprite = Sprite3D.new()
+	_upgrade_sprite.name = "UpgradeSprite"
+	_upgrade_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_upgrade_sprite.no_depth_test = true
+	_upgrade_sprite.render_priority = 10
+	_upgrade_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	_upgrade_sprite.pixel_size = 0.008
+	if _upgrade_texture:
+		_upgrade_sprite.texture = _upgrade_texture
+	_upgrade_pivot.add_child(_upgrade_sprite)
+	
+	_upgrade_cost_label = Label3D.new()
+	_upgrade_cost_label.name = "UpgradeCostLabel"
+	_upgrade_cost_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_upgrade_cost_label.no_depth_test = true
+	_upgrade_cost_label.render_priority = 11
+	_upgrade_cost_label.position = Vector3(0, -0.28, 0)
+	_upgrade_cost_label.font_size = 18
+	_upgrade_cost_label.outline_size = 4
+	_upgrade_cost_label.modulate = Color(1.0, 0.9, 0.3, 1.0)
+	_upgrade_cost_label.outline_modulate = Color(0, 0, 0, 1.0)
+	_upgrade_pivot.add_child(_upgrade_cost_label)
+	
+	var up_area = Area3D.new()
+	up_area.name = "UpgradeArea"
+	var up_col = CollisionShape3D.new()
+	var up_box = BoxShape3D.new()
+	up_box.size = Vector3(0.85, 0.85, 0.85)
+	up_col.shape = up_box
+	up_area.add_child(up_col)
+	_upgrade_pivot.add_child(up_area)
+	_upgrade_area = up_area
+	# input_event NOT connected — screen-space _input() handles clicks
+	_upgrade_area.mouse_entered.connect(_on_upgrade_area_mouse_entered)
+	_upgrade_area.mouse_exited.connect(_on_upgrade_area_mouse_exited)
+	
+	# 3. Sell / Recycle Button (Bottom Left)
+	_sell_pivot = Node3D.new()
+	_sell_pivot.name = "SellPivot"
+	_sell_pivot.visible = false
+	_ui_root.add_child(_sell_pivot)
+	
+	_sell_label = Label3D.new()
+	_sell_label.name = "SellLabel"
+	_sell_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_sell_label.no_depth_test = true
+	_sell_label.render_priority = 11
+	_sell_label.font_size = 18
+	_sell_label.outline_size = 4
+	_sell_label.modulate = Color(0.4, 0.9, 1.0, 1.0)
+	_sell_label.outline_modulate = Color(0, 0, 0, 1.0)
+	_sell_pivot.add_child(_sell_label)
+	
+	var sell_area = Area3D.new()
+	sell_area.name = "SellArea"
+	var sell_col = CollisionShape3D.new()
+	var sell_box = BoxShape3D.new()
+	sell_box.size = Vector3(0.85, 0.85, 0.85)
+	sell_col.shape = sell_box
+	sell_area.add_child(sell_col)
+	_sell_pivot.add_child(sell_area)
+	_sell_area = sell_area
+	# input_event NOT connected — screen-space _input() handles clicks
+	_sell_area.mouse_entered.connect(_on_sell_area_mouse_entered)
+	_sell_area.mouse_exited.connect(_on_sell_area_mouse_exited)
+	
+	# 4. Clickable Body Area for Selecting Turret
+	_body_area = Area3D.new()
+	_body_area.name = "TurretBodyArea"
+	var body_col = CollisionShape3D.new()
+	var body_box = BoxShape3D.new()
+	body_box.size = Vector3(footprint_size.x * 1.1, base_h + 0.2, footprint_size.y * 1.1)
+	body_col.shape = body_box
+	body_col.position = Vector3(0, (base_h + 0.2) / 2.0, 0)
+	_body_area.add_child(body_col)
+	add_child(_body_area)
+	_body_area.input_event.connect(_on_body_area_input_event)
+	
+	_update_3d_ui()
+
+func _update_3d_ui_positions(camera: Camera3D = null) -> void:
+	if not _ui_root or not is_instance_valid(_ui_root):
+		return
+	if not camera:
+		camera = get_viewport().get_camera_3d()
+	if not camera:
+		return
+		
+	var cam_basis = camera.global_transform.basis
+	var cam_right = cam_basis.x.normalized()
+	var cam_up = cam_basis.y.normalized()
+	var cam_fwd = -cam_basis.z.normalized()
+	
+	var base_h: float = 1.4
+	if scale.y > 1.5:
+		base_h = 2.0
+		
+	var base_top = global_position + Vector3(0, base_h, 0)
+	
+	# Level badge: Top Center (strictly above buttons)
+	if _level_pivot and is_instance_valid(_level_pivot):
+		_level_pivot.global_position = base_top + cam_up * 1.10
+		
+	# Upgrade button: Bottom Right (offset right and below level badge, pushed forward along camera ray)
+	if _upgrade_pivot and is_instance_valid(_upgrade_pivot):
+		_upgrade_pivot.global_position = base_top + cam_right * 0.60 + cam_up * 0.30 + cam_fwd * 0.10
+		
+	# Sell button: Bottom Left (offset left and below level badge, pushed forward along camera ray)
+	if _sell_pivot and is_instance_valid(_sell_pivot):
+		_sell_pivot.global_position = base_top - cam_right * 0.60 + cam_up * 0.30 + cam_fwd * 0.10
+
+func _update_3d_ui() -> void:
+	if is_ghost or not is_instance_valid(_level_pivot):
+		return
+	
+	# Update level badge texture
+	if _level_sprite and not _level_textures.is_empty():
+		var idx = clamp(turret_level - 1, 0, _level_textures.size() - 1)
+		var tex = _level_textures[idx]
+		_level_sprite.texture = tex
+		if _level_shadow_sprite:
+			_level_shadow_sprite.texture = tex
+	
+	# Update upgrade cost label and visibility
+	if _upgrade_cost_label:
+		if turret_level >= max_level:
+			_upgrade_cost_label.text = "MAX"
+			_upgrade_cost_label.modulate = Color(0.6, 0.8, 1.0)
+			if _upgrade_pivot:
+				_upgrade_pivot.visible = false
+		else:
+			var cost = get_upgrade_cost()
+			_upgrade_cost_label.text = "⚡ %d" % cost
+			_upgrade_cost_label.modulate = Color(1.0, 0.9, 0.3)
+	
+	# Update sell refund label
+	if _sell_label:
+		var refund = get_sell_refund()
+		_sell_label.text = "♻️ +%d" % refund
+
+func _set_ui_visible(show: bool) -> void:
+	if is_ghost:
+		return
+	
+	if show:
+		if _level_pivot and not _level_pivot.visible:
+			_level_pivot.visible = true
+			_level_pivot.scale = Vector3.ONE
+			
+		if _upgrade_pivot and not _upgrade_pivot.visible and turret_level < max_level:
+			_upgrade_pivot.visible = true
+			_upgrade_pivot.scale = Vector3.ONE
+			
+		if _sell_pivot and not _sell_pivot.visible:
+			_sell_pivot.visible = true
+			_sell_pivot.scale = Vector3.ONE
+	else:
+		if _level_pivot:
+			_level_pivot.visible = false
+		if _upgrade_pivot:
+			_upgrade_pivot.visible = false
+		if _sell_pivot:
+			_sell_pivot.visible = false
+
+func set_selected(selected: bool) -> void:
+	if is_ghost:
+		return
+	is_selected = selected
+	
+	if is_selected:
+		_hover_grace_timer = HOVER_GRACE_DURATION
+		_set_ui_visible(true)
+	else:
+		_hover_grace_timer = 0.0
+		_set_ui_visible(false)
+
+# ── Screen-Space Precise Click Engine ──────────────────────────────────────────
+# Uses _input (not _unhandled_input) so it fires BEFORE Area3D signals can
+# consume the event. The upgrade/sell pivots are pure visual nodes — their
+# Area3D's are only kept for hover animations, not for click detection.
+
+func _input(event: InputEvent) -> void:
+	if is_ghost or not is_selected:
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var camera = get_viewport().get_camera_3d()
+		if not camera:
+			return
+		var click_pos: Vector2 = event.position
+		var builder = get_tree().get_first_node_in_group("builder_controller")
+		if not builder:
+			builder = get_node_or_null("/root/World/BuilderController")
+		
+		# 1. Upgrade Button Click — check first, highest priority
+		if _upgrade_pivot and is_instance_valid(_upgrade_pivot) and _upgrade_pivot.visible and turret_level < max_level:
+			var up_screen = camera.unproject_position(_upgrade_pivot.global_position)
+			if click_pos.distance_to(up_screen) <= 55.0:
+				if builder and builder.has_method("notify_turret_interacted"):
+					builder.notify_turret_interacted()
+				if _upgrade_sprite and is_inside_tree():
+					var tw = create_tween()
+					tw.tween_property(_upgrade_sprite, "scale", Vector3(0.75, 0.75, 0.75), 0.05)
+					tw.tween_property(_upgrade_sprite, "scale", Vector3.ONE, 0.12).set_trans(Tween.TRANS_BACK)
+				var success = TurretUpgradeManager.instance.try_upgrade_turret(self) if TurretUpgradeManager.instance else upgrade()
+				if not success:
+					_flash_insufficient_funds()
+				get_viewport().set_input_as_handled()
+				return
+		
+		# 2. Recycle / Sell Button Click
+		if _sell_pivot and is_instance_valid(_sell_pivot) and _sell_pivot.visible:
+			var sell_screen = camera.unproject_position(_sell_pivot.global_position)
+			if click_pos.distance_to(sell_screen) <= 55.0:
+				if builder and builder.has_method("notify_turret_interacted"):
+					builder.notify_turret_interacted()
+				sell()
+				get_viewport().set_input_as_handled()
+				return
+
+# ── Upgrade & Sell Logic ───────────────────────────────────────────────────────
 
 func get_upgrade_cost() -> int:
-	if turret_level >= 3:
+	if turret_level >= max_level:
 		return 0
-	if TurretUpgradeManager.instance:
-		return TurretUpgradeManager.instance.UPGRADE_COSTS[turret_level - 1]
-	return 0
+	return TurretUpgradeManager.calculate_upgrade_cost(base_cost, turret_level)
 
 func upgrade() -> bool:
-	if turret_level >= 3:
+	if turret_level >= max_level:
 		return false
+	
+	var cost = get_upgrade_cost()
+	total_invested_cost += cost
 	turret_level += 1
 	_recalculate_stats()
+	_update_3d_ui()
 	
-	# Visual feedback for upgrade
+	# Juicy visual feedback for upgrade
 	var tween: Tween = create_tween()
 	var original_scale: Vector3 = scale
-	tween.tween_property(self, "scale", original_scale * 1.2, 0.15).set_trans(Tween.TRANS_BACK)
-	tween.tween_property(self, "scale", original_scale, 0.25)
+	tween.tween_property(self, "scale", original_scale * 1.20, 0.10).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "scale", original_scale, 0.15).set_trans(Tween.TRANS_SINE)
+	
+	if _level_pivot and _level_pivot.visible:
+		var l_tween = create_tween()
+		l_tween.tween_property(_level_pivot, "scale", Vector3(1.45, 1.45, 1.45), 0.10).set_trans(Tween.TRANS_BACK)
+		l_tween.tween_property(_level_pivot, "scale", Vector3.ONE, 0.15)
+	
+	_spawn_upgrade_particles()
 	
 	return true
 
 func _recalculate_stats() -> void:
-	attack_damage = _base_attack_damage * (1.0 + (turret_level - 1) * 0.4)
+	attack_damage = _base_attack_damage * (1.0 + (turret_level - 1) * 0.30)
+	
+	# Attack range scaling (+5% at lvl 3, +10% total at lvl 5)
+	var range_mult: float = 1.0
+	if turret_level >= 5:
+		range_mult = 1.10
+	elif turret_level >= 3:
+		range_mult = 1.05
+	attack_range = _base_attack_range * range_mult
+	
+	# AoE radius scaling (+10% per level)
+	if is_aoe:
+		aoe_radius = _base_aoe_radius * (1.0 + (turret_level - 1) * 0.10)
 	
 	# Current global speed multiplier
 	var current_multiplier = 1.0
 	var speed_toggle = SpeedToggle.instance if SpeedToggle.instance else get_tree().get_first_node_in_group("speed_toggle")
 	if speed_toggle and speed_toggle.has_method("get_current_multiplier"):
 		current_multiplier = speed_toggle.get_current_multiplier()
-
 		
-	var level_cooldown: float = _base_cooldown * (1.0 - (turret_level - 1) * 0.1)
+	var level_cooldown: float = _base_cooldown * (1.0 - (turret_level - 1) * 0.08)
 	cooldown = level_cooldown / max(current_multiplier, 0.1)
+
+func get_sell_refund() -> int:
+	return TurretUpgradeManager.calculate_sell_refund(total_invested_cost)
+
+func sell() -> void:
+	var refund = get_sell_refund()
+	if CurrencyManager.instance:
+		CurrencyManager.instance.add_currency(refund)
+	
+	# Free grid cells in map generator
+	var map_gen = get_parent()
+	if map_gen and map_gen.has_method("free_cell"):
+		for dx in range(footprint_size.x):
+			for dz in range(footprint_size.y):
+				map_gen.free_cell(grid_pos + Vector2i(dx, dz))
+				
+	var builder = get_tree().get_first_node_in_group("builder_controller")
+	if not builder:
+		builder = get_node_or_null("/root/World/BuilderController")
+	if builder and builder.has_method("on_turret_sold"):
+		builder.on_turret_sold(self)
+		
+	if TurretUpgradeManager.instance:
+		TurretUpgradeManager.instance.turret_sold.emit(self, refund)
+		
+	# Quick shrink effect and queue_free
+	var tw = create_tween()
+	tw.tween_property(self, "scale", Vector3.ZERO, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	tw.tween_callback(queue_free)
+
+func _spawn_upgrade_particles() -> void:
+	var part_scene = _hit_particle_scenes.get("turret", null)
+	if part_scene:
+		var p = part_scene.instantiate()
+		get_parent().add_child(p)
+		p.global_position = global_position + Vector3(0, 1.2, 0)
+
+func _flash_insufficient_funds() -> void:
+	if _upgrade_cost_label and is_inside_tree():
+		var tw = create_tween()
+		tw.tween_property(_upgrade_cost_label, "modulate", Color(1.0, 0.2, 0.2, 1.0), 0.08)
+		tw.tween_property(_upgrade_cost_label, "modulate", Color(1.0, 0.9, 0.3, 1.0), 0.35)
+
+# ── Area3D Input Event Callbacks ──────────────────────────────────────────────
+
+func _on_body_area_input_event(_camera: Node, event: InputEvent, _pos: Vector3, _normal: Vector3, _shape_idx: int) -> void:
+	if is_ghost:
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var builder = get_tree().get_first_node_in_group("builder_controller")
+		if not builder:
+			builder = get_node_or_null("/root/World/BuilderController")
+		if builder:
+			if builder.get("_is_building") == true:
+				return # Don't select if player is currently in placement mode
+			if builder.has_method("select_turret"):
+				builder.select_turret(self)
+				get_viewport().set_input_as_handled()
+				return
+		set_selected(not is_selected)
+		get_viewport().set_input_as_handled()
+
+# Note: _on_upgrade_area_input_event and _on_sell_area_input_event are intentionally
+# removed — click detection is handled by the screen-space engine in _input().
+# The Area3Ds below are kept ONLY for hover scale animations.
+
+func _on_upgrade_area_mouse_entered() -> void:
+	if is_ghost or not is_selected:
+		return
+	if turret_level < max_level and _upgrade_sprite:
+		var tw = create_tween()
+		tw.tween_property(_upgrade_sprite, "scale", Vector3(1.15, 1.15, 1.15), 0.1).set_trans(Tween.TRANS_QUAD)
+
+func _on_upgrade_area_mouse_exited() -> void:
+	if is_ghost or not is_selected:
+		return
+	if _upgrade_sprite:
+		var tw = create_tween()
+		tw.tween_property(_upgrade_sprite, "scale", Vector3.ONE, 0.15).set_trans(Tween.TRANS_QUAD)
+
+func _on_sell_area_mouse_entered() -> void:
+	if is_ghost or not is_selected:
+		return
+	if _sell_label:
+		var tw = create_tween()
+		tw.tween_property(_sell_label, "scale", Vector3(1.15, 1.15, 1.15), 0.1).set_trans(Tween.TRANS_QUAD)
+
+func _on_sell_area_mouse_exited() -> void:
+	if is_ghost or not is_selected:
+		return
+	if _sell_label:
+		var tw = create_tween()
+		tw.tween_property(_sell_label, "scale", Vector3.ONE, 0.15).set_trans(Tween.TRANS_QUAD)
 
 
 func _trigger_single_target_attack(target: Node3D) -> void:

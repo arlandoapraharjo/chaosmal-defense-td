@@ -151,6 +151,9 @@ func is_buildable(grid_pos: Vector2i) -> bool:
 func occupy_cell(grid_pos: Vector2i) -> void:
 	occupied_cells[grid_pos] = true
 
+func free_cell(grid_pos: Vector2i) -> void:
+	occupied_cells.erase(grid_pos)
+
 static var _current_biome_index: int = 0
 
 func _pick_biome() -> BiomeData:

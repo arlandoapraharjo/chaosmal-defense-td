@@ -74,7 +74,11 @@ func get_max_deployment() -> int:
 func get_current_deployment() -> int:
 	return _current_deployment
 
+var _selected_turret: Node3D = null
+
 func start_building(_index: int, turret_scene: PackedScene, attack_range: float = 0.0, extra_data: Dictionary = {}) -> void:
+	deselect_turret()
+
 	if not map_generator:
 		push_warning("BuilderController: map_generator is not assigned!")
 		return
@@ -108,6 +112,7 @@ func start_building(_index: int, turret_scene: PackedScene, attack_range: float 
 		push_error("Failed to load Turret script at res://scripts/Turret.gd")
 	else:
 		_ghost_instance.set_script(turret_script)
+		_ghost_instance.is_ghost = true
 		_ghost_instance.attack_range = _attack_range
 		_ghost_instance.min_attack_range = _min_attack_range
 		_ghost_instance.is_half_circle = _is_half_circle
@@ -135,8 +140,48 @@ func stop_building(do_emit_signal: bool = true) -> void:
 	if do_emit_signal:
 		building_stopped.emit()
 
+var _turret_interacted_frame: int = -1
+
+func notify_turret_interacted() -> void:
+	_turret_interacted_frame = Engine.get_process_frames()
+
+func select_turret(turret: Node3D) -> void:
+	if _is_building:
+		return
+	_turret_interacted_frame = Engine.get_process_frames()
+	if _selected_turret and _selected_turret != turret and is_instance_valid(_selected_turret):
+		if _selected_turret.has_method("set_selected"):
+			_selected_turret.set_selected(false)
+	_selected_turret = turret
+	if is_instance_valid(_selected_turret) and _selected_turret.has_method("set_selected"):
+		_selected_turret.set_selected(true)
+
+func deselect_turret() -> void:
+	if _selected_turret and is_instance_valid(_selected_turret):
+		if _selected_turret.has_method("set_selected"):
+			_selected_turret.set_selected(false)
+	_selected_turret = null
+
+func on_turret_sold(turret: Node3D) -> void:
+	if _selected_turret == turret:
+		_selected_turret = null
+	_placed_turrets.erase(turret)
+	_current_deployment = maxi(0, _current_deployment - 1)
+	total_deployment_updated.emit(_current_deployment, _max_deployment)
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not _is_building:
+		if event.is_action_pressed("ui_cancel") or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed):
+			if _selected_turret:
+				deselect_turret()
+				get_viewport().set_input_as_handled()
+		elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			# If this click was consumed by a turret or upgrade button this frame, do not deselect
+			if _turret_interacted_frame == Engine.get_process_frames():
+				return
+			# Otherwise clicking empty terrain deselects the current turret
+			if _selected_turret:
+				deselect_turret()
 		return
 
 	if event.is_action_pressed("ui_cancel") or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed):
@@ -306,6 +351,10 @@ func _try_place_turret() -> void:
 		var turret_script = load("res://scripts/Turret.gd")
 		if turret_script != null:
 			new_turret.set_script(turret_script)
+			new_turret.base_cost = _turret_cost
+			new_turret.total_invested_cost = _turret_cost
+			new_turret.grid_pos = grid_pos
+			new_turret.footprint_size = _footprint_size
 			new_turret.attack_range = _attack_range
 			new_turret.min_attack_range = _min_attack_range
 			new_turret.is_half_circle = _is_half_circle
