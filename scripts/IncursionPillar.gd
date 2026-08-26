@@ -22,7 +22,7 @@ signal pillar_destroyed
 @export var indicator_position: Vector3 = Vector3(2.4, 2.8, 0)
 @export var indicator_pixel_size: float = 0.01
 @export var upgrade_btn_position: Vector3 = Vector3(1.25, 1.25, 0)
-@export var upgrade_btn_pixel_size: float = 0.01
+@export var upgrade_btn_pixel_size: float = 0.008
 
 @export_group("UI Drop Shadow")
 @export var shadow_offset: Vector2 = Vector2(0.04, -0.04) # X (right), Y (down) offset in 3D units
@@ -40,12 +40,13 @@ var hp_label: Label = null
 var hp_sprite: Sprite3D = null
 
 var upgrade_pivot: Node3D = null
+var upgrade_banner_sprite: Sprite3D = null
 var upgrade_sprite: Sprite3D = null
-var upgrade_shadow_sprite: Sprite3D = null
 var upgrade_cost_label: Label3D = null
 var upgrade_area: Area3D = null
 
 var level_textures: Array[Texture2D] = []
+var upgrade_banner_texture: Texture2D = null
 var upgrade_texture: Texture2D = null
 
 var particles: GPUParticles3D = null
@@ -84,8 +85,12 @@ func _load_textures() -> void:
 		if tex:
 			level_textures.append(tex)
 	
-	# Load level up button texture
-	if ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_up.png"):
+	# Load banner and level up button texture
+	if ResourceLoader.exists("res://UI/Level Up - Indicator/upbutton_banner.png"):
+		upgrade_banner_texture = load("res://UI/Level Up - Indicator/upbutton_banner.png") as Texture2D
+	if ResourceLoader.exists("res://UI/Level Up - Indicator/upgrade_buttonnew.png"):
+		upgrade_texture = load("res://UI/Level Up - Indicator/upgrade_buttonnew.png") as Texture2D
+	elif ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_up.png"):
 		upgrade_texture = load("res://UI/Level Up - Indicator/lvl_up.png") as Texture2D
 	elif ResourceLoader.exists("res://ui/lvl indicator/lvl_up.png"):
 		upgrade_texture = load("res://ui/lvl indicator/lvl_up.png") as Texture2D
@@ -220,21 +225,19 @@ func _setup_ui() -> void:
 	upgrade_pivot.position = upgrade_btn_position
 	add_child(upgrade_pivot)
 
-	# Button Shadow Sprite
-	upgrade_shadow_sprite = Sprite3D.new()
-	upgrade_shadow_sprite.name = "UpgradeShadowSprite"
-	upgrade_shadow_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	upgrade_shadow_sprite.no_depth_test = true
-	upgrade_shadow_sprite.render_priority = 9
-	upgrade_shadow_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	upgrade_shadow_sprite.pixel_size = upgrade_btn_pixel_size
-	upgrade_shadow_sprite.modulate = shadow_color
-	upgrade_shadow_sprite.position = Vector3(shadow_offset.x, shadow_offset.y, -0.01)
-	if upgrade_texture:
-		upgrade_shadow_sprite.texture = upgrade_texture
-	upgrade_pivot.add_child(upgrade_shadow_sprite)
+	# Banner Background Sprite
+	upgrade_banner_sprite = Sprite3D.new()
+	upgrade_banner_sprite.name = "UpgradeBannerSprite"
+	upgrade_banner_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	upgrade_banner_sprite.no_depth_test = true
+	upgrade_banner_sprite.render_priority = 9
+	upgrade_banner_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	upgrade_banner_sprite.pixel_size = upgrade_btn_pixel_size
+	if upgrade_banner_texture:
+		upgrade_banner_sprite.texture = upgrade_banner_texture
+	upgrade_pivot.add_child(upgrade_banner_sprite)
 
-	# Main Upgrade Button Sprite
+	# Main Upgrade Button Sprite (Left slot of banner, -14.5px 2D billboard offset)
 	upgrade_sprite = Sprite3D.new()
 	upgrade_sprite.name = "UpgradeSprite"
 	upgrade_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -242,29 +245,36 @@ func _setup_ui() -> void:
 	upgrade_sprite.render_priority = 10
 	upgrade_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	upgrade_sprite.pixel_size = upgrade_btn_pixel_size
+	upgrade_sprite.position = Vector3(0, 0, 0.005)
+	upgrade_sprite.offset = Vector2(-9, 0)
 	if upgrade_texture:
 		upgrade_sprite.texture = upgrade_texture
 	upgrade_pivot.add_child(upgrade_sprite)
 
-	# Cost Label positioned right below the Upgrade Sprite
+	# Cost Label (Right slot of banner, vertically stacked: Coin on top, Cost number below)
 	upgrade_cost_label = Label3D.new()
 	upgrade_cost_label.name = "UpgradeCostLabel"
 	upgrade_cost_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	upgrade_cost_label.no_depth_test = true
 	upgrade_cost_label.render_priority = 11
-	upgrade_cost_label.font_size = 28
-	upgrade_cost_label.outline_size = 8
+	upgrade_cost_label.position = Vector3(0, 0, 0.01)
+	upgrade_cost_label.offset = Vector2(30, 0)
+	upgrade_cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	upgrade_cost_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	upgrade_cost_label.line_spacing = 0.0
+	upgrade_cost_label.font_size = 14
+	upgrade_cost_label.outline_size = 4
 	upgrade_cost_label.outline_modulate = Color(0.05, 0.04, 0.02, 1.0)
 	upgrade_cost_label.modulate = Color(1.0, 0.9, 0.3, 1.0) # Gold
-	upgrade_cost_label.position = Vector3(0, -0.6, 0)
 	upgrade_pivot.add_child(upgrade_cost_label)
 
-	# Clickable Area3D for upgrade button
+	# Clickable Area3D strictly for the circular button icon
 	upgrade_area = Area3D.new()
 	upgrade_area.name = "UpgradeArea"
+	upgrade_area.position = Vector3(-0.145, 0, 0)
 	var col_shape = CollisionShape3D.new()
 	var box = BoxShape3D.new()
-	box.size = Vector3(1.2, 1.5, 0.5)
+	box.size = Vector3(0.45, 0.45, 0.45)
 	col_shape.shape = box
 	upgrade_area.add_child(col_shape)
 	upgrade_pivot.add_child(upgrade_area)
@@ -486,30 +496,22 @@ func _on_indicator_area_mouse_exited() -> void:
 			tween.tween_property(level_shadow_sprite, "position", Vector3(shadow_offset.x, shadow_offset.y, -0.01), 0.15)
 
 func _on_upgrade_area_mouse_entered() -> void:
-	if current_level >= max_level or not is_instance_valid(upgrade_sprite) or not is_inside_tree():
+	if current_level >= max_level or not is_instance_valid(upgrade_pivot) or not is_inside_tree():
 		return
 	var tween = create_tween()
 	if tween:
-		tween.set_parallel(true)
-		var tw = tween.tween_property(upgrade_sprite, "scale", Vector3(0.9, 0.9, 0.9), 0.1)
+		var tw = tween.tween_property(upgrade_pivot, "scale", Vector3(1.1, 1.1, 1.1), 0.1)
 		if tw:
 			tw.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		if upgrade_shadow_sprite:
-			tween.tween_property(upgrade_shadow_sprite, "scale", Vector3(0.9, 0.9, 0.9), 0.1)
-			tween.tween_property(upgrade_shadow_sprite, "position", Vector3(shadow_offset.x * 0.5, shadow_offset.y * 0.5, -0.01), 0.1)
 
 func _on_upgrade_area_mouse_exited() -> void:
-	if not is_instance_valid(upgrade_sprite) or not is_inside_tree():
+	if not is_instance_valid(upgrade_pivot) or not is_inside_tree():
 		return
 	var tween = create_tween()
 	if tween:
-		tween.set_parallel(true)
-		var tw = tween.tween_property(upgrade_sprite, "scale", Vector3(1.0, 1.0, 1.0), 0.15)
+		var tw = tween.tween_property(upgrade_pivot, "scale", Vector3.ONE, 0.15)
 		if tw:
 			tw.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		if upgrade_shadow_sprite:
-			tween.tween_property(upgrade_shadow_sprite, "scale", Vector3(1.0, 1.0, 1.0), 0.15)
-			tween.tween_property(upgrade_shadow_sprite, "position", Vector3(shadow_offset.x, shadow_offset.y, -0.01), 0.15)
 
 func get_upgrade_cost() -> int:
 	if current_level >= max_level:
@@ -549,7 +551,7 @@ func _update_ui() -> void:
 			if upgrade_area:
 				upgrade_area.input_ray_pickable = true
 			var cost = get_upgrade_cost()
-			upgrade_cost_label.text = "⚡ %d" % cost
+			upgrade_cost_label.text = "🪙\n%d" % cost
 
 func _update_effects() -> void:
 	if glow_light and is_inside_tree():
@@ -574,11 +576,11 @@ func _update_effects() -> void:
 
 func _on_upgrade_area_input_event(_camera: Node, event: InputEvent, _position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		if upgrade_sprite and is_inside_tree():
+		if upgrade_pivot and is_inside_tree():
 			var tween = create_tween()
 			if tween:
-				tween.tween_property(upgrade_sprite, "scale", Vector3(0.8, 0.8, 0.8), 0.06)
-				tween.tween_property(upgrade_sprite, "scale", Vector3(0.9, 0.9, 0.9), 0.1)
+				tween.tween_property(upgrade_pivot, "scale", Vector3(0.85, 0.85, 0.85), 0.05)
+				tween.tween_property(upgrade_pivot, "scale", Vector3(1.1, 1.1, 1.1), 0.12).set_trans(Tween.TRANS_BACK)
 		try_upgrade()
 
 func try_upgrade() -> bool:

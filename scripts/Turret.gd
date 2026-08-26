@@ -48,9 +48,8 @@ var grid_pos: Vector2i = Vector2i.ZERO
 var footprint_size: Vector2i = Vector2i(1, 1)
 var is_ghost: bool = false
 var is_selected: bool = false
-var _hover_grace_timer: float = 0.0
-const HOVER_PROXIMITY_RADIUS_PX: float = 160.0
-const HOVER_GRACE_DURATION: float = 0.35
+var _selection_marker: MeshInstance3D = null
+var _selection_tween: Tween = null
 
 var attack_damage: float = 35.0
 var _base_attack_damage: float = 35.0
@@ -64,18 +63,21 @@ var _level_sprite: Sprite3D = null
 var _level_shadow_sprite: Sprite3D = null
 
 var _upgrade_pivot: Node3D = null
+var _upgrade_banner_sprite: Sprite3D = null
 var _upgrade_sprite: Sprite3D = null
-var _upgrade_shadow_sprite: Sprite3D = null
 var _upgrade_cost_label: Label3D = null
 var _upgrade_area: Area3D = null
 
 var _sell_pivot: Node3D = null
+var _sell_banner_sprite: Sprite3D = null
+var _sell_icon_label: Label3D = null
 var _sell_label: Label3D = null
 var _sell_area: Area3D = null
 
 var _body_area: Area3D = null
 
 var _level_textures: Array[Texture2D] = []
+var _upgrade_banner_texture: Texture2D = null
 var _upgrade_texture: Texture2D = null
 
 # Internal timer
@@ -105,6 +107,7 @@ func _ready() -> void:
 	call_deferred("_find_catapult_arm")
 	call_deferred("_find_recoil_barrel")
 	call_deferred("_setup_3d_ui")
+	call_deferred("_setup_selection_marker")
 
 ## Apply a global speed multiplier — faster speed = shorter cooldown = higher fire rate.
 func set_speed_multiplier(multiplier: float) -> void:
@@ -153,31 +156,9 @@ func _process(delta: float) -> void:
 		return
 
 	var camera = get_viewport().get_camera_3d()
-	if _ui_root and is_instance_valid(_ui_root):
+	if _ui_root and is_instance_valid(_ui_root) and is_selected:
 		_ui_root.global_position = global_position
 		_update_3d_ui_positions(camera)
-
-	# Screen-space proximity hover check for selected turret
-	if is_selected and camera:
-		var base_h: float = 1.4 if scale.y <= 1.5 else 2.0
-		var ui_anchor = global_position + Vector3(0, base_h + 0.5, 0)
-		var screen_pos = camera.unproject_position(ui_anchor)
-		var mouse_pos = get_viewport().get_mouse_position()
-		var dist_px = mouse_pos.distance_to(screen_pos)
-		
-		if dist_px <= HOVER_PROXIMITY_RADIUS_PX:
-			_hover_grace_timer = HOVER_GRACE_DURATION
-			_set_ui_visible(true)
-		else:
-			if _hover_grace_timer > 0.0:
-				_hover_grace_timer -= delta
-				if _hover_grace_timer <= 0.0:
-					_set_ui_visible(false)
-			else:
-				_set_ui_visible(false)
-	else:
-		_hover_grace_timer = 0.0
-		_set_ui_visible(false)
 
 	var enemies: Array[Node3D] = _get_valid_enemies()
 
@@ -231,8 +212,44 @@ func _load_ui_textures() -> void:
 		var p = "res://UI/Level Up - Indicator/lvl_%d.png" % i
 		if ResourceLoader.exists(p):
 			_level_textures.append(load(p) as Texture2D)
-	if ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_up.png"):
+	if ResourceLoader.exists("res://UI/Level Up - Indicator/upbutton_banner.png"):
+		_upgrade_banner_texture = load("res://UI/Level Up - Indicator/upbutton_banner.png") as Texture2D
+	if ResourceLoader.exists("res://UI/Level Up - Indicator/upgrade_buttonnew.png"):
+		_upgrade_texture = load("res://UI/Level Up - Indicator/upgrade_buttonnew.png") as Texture2D
+	elif ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_up.png"):
 		_upgrade_texture = load("res://UI/Level Up - Indicator/lvl_up.png") as Texture2D
+
+func _setup_selection_marker() -> void:
+	if is_ghost:
+		return
+	if _selection_marker and is_instance_valid(_selection_marker):
+		return
+	_selection_marker = MeshInstance3D.new()
+	_selection_marker.name = "SelectionRingMarker"
+	_selection_marker.visible = is_selected
+	
+	var torus = TorusMesh.new()
+	var outer_r = max(footprint_size.x, footprint_size.y) * 0.75
+	var inner_r = outer_r - 0.10
+	torus.inner_radius = inner_r
+	torus.outer_radius = outer_r
+	torus.rings = 32
+	torus.ring_segments = 16
+	_selection_marker.mesh = torus
+	
+	var mat = StandardMaterial3D.new()
+	mat.albedo_color = Color(0.15, 0.95, 0.45, 0.9) # Bright Emerald green
+	mat.emission_enabled = true
+	mat.emission = Color(0.15, 0.95, 0.45, 1.0)
+	mat.emission_energy_multiplier = 2.0
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat.no_depth_test = true
+	mat.render_priority = 10
+	_selection_marker.material_override = mat
+	_selection_marker.position = Vector3(0, 0.10, 0)
+	add_child(_selection_marker)
 
 func _setup_3d_ui() -> void:
 	if is_ghost:
@@ -243,8 +260,9 @@ func _setup_3d_ui() -> void:
 	_ui_root = Node3D.new()
 	_ui_root.name = "TurretUIRoot"
 	_ui_root.top_level = true
-	_ui_root.global_position = global_position
 	add_child(_ui_root)
+	if is_inside_tree():
+		_ui_root.global_position = global_position
 	
 	var base_h: float = 1.4
 	if scale.y > 1.5:
@@ -276,25 +294,25 @@ func _setup_3d_ui() -> void:
 	_level_sprite.pixel_size = 0.008
 	_level_pivot.add_child(_level_sprite)
 	
-	# 2. Upgrade Button & Cost Label (Bottom Right)
+	# 2. Upgrade Button & Cost Label Banner (Bottom Right)
 	_upgrade_pivot = Node3D.new()
 	_upgrade_pivot.name = "UpgradePivot"
 	_upgrade_pivot.visible = false
 	_ui_root.add_child(_upgrade_pivot)
 	
-	_upgrade_shadow_sprite = Sprite3D.new()
-	_upgrade_shadow_sprite.name = "UpgradeShadow"
-	_upgrade_shadow_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	_upgrade_shadow_sprite.no_depth_test = true
-	_upgrade_shadow_sprite.render_priority = 9
-	_upgrade_shadow_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	_upgrade_shadow_sprite.pixel_size = 0.008
-	_upgrade_shadow_sprite.modulate = Color(0.0, 0.0, 0.0, 0.6)
-	_upgrade_shadow_sprite.position = Vector3(0.03, -0.03, -0.01)
-	if _upgrade_texture:
-		_upgrade_shadow_sprite.texture = _upgrade_texture
-	_upgrade_pivot.add_child(_upgrade_shadow_sprite)
+	# Background Banner
+	_upgrade_banner_sprite = Sprite3D.new()
+	_upgrade_banner_sprite.name = "UpgradeBanner"
+	_upgrade_banner_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_upgrade_banner_sprite.no_depth_test = true
+	_upgrade_banner_sprite.render_priority = 9
+	_upgrade_banner_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	_upgrade_banner_sprite.pixel_size = 0.008
+	if _upgrade_banner_texture:
+		_upgrade_banner_sprite.texture = _upgrade_banner_texture
+	_upgrade_pivot.add_child(_upgrade_banner_sprite)
 	
+	# Circular Upgrade Button Icon (Left slot of banner, -9px 2D billboard offset)
 	_upgrade_sprite = Sprite3D.new()
 	_upgrade_sprite.name = "UpgradeSprite"
 	_upgrade_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -302,27 +320,36 @@ func _setup_3d_ui() -> void:
 	_upgrade_sprite.render_priority = 10
 	_upgrade_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	_upgrade_sprite.pixel_size = 0.008
+	_upgrade_sprite.position = Vector3(0, 0, 0.005)
+	_upgrade_sprite.offset = Vector2(-9, 0)
 	if _upgrade_texture:
 		_upgrade_sprite.texture = _upgrade_texture
 	_upgrade_pivot.add_child(_upgrade_sprite)
 	
+	# Cost Label (Right slot of banner, vertically stacked: Coin on top, Cost number below)
 	_upgrade_cost_label = Label3D.new()
 	_upgrade_cost_label.name = "UpgradeCostLabel"
 	_upgrade_cost_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	_upgrade_cost_label.no_depth_test = true
 	_upgrade_cost_label.render_priority = 11
-	_upgrade_cost_label.position = Vector3(0, -0.28, 0)
-	_upgrade_cost_label.font_size = 18
-	_upgrade_cost_label.outline_size = 4
+	_upgrade_cost_label.position = Vector3(0, 0, 0.01)
+	_upgrade_cost_label.offset = Vector2(30, 0)
+	_upgrade_cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_upgrade_cost_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_upgrade_cost_label.line_spacing = 0.0
+	_upgrade_cost_label.font_size = 14
+	_upgrade_cost_label.outline_size = 3
 	_upgrade_cost_label.modulate = Color(1.0, 0.9, 0.3, 1.0)
 	_upgrade_cost_label.outline_modulate = Color(0, 0, 0, 1.0)
 	_upgrade_pivot.add_child(_upgrade_cost_label)
 	
+	# Clickable / Hover Area strictly over the circular button icon
 	var up_area = Area3D.new()
 	up_area.name = "UpgradeArea"
+	up_area.position = Vector3(-0.116, 0, 0)
 	var up_col = CollisionShape3D.new()
 	var up_box = BoxShape3D.new()
-	up_box.size = Vector3(0.85, 0.85, 0.85)
+	up_box.size = Vector3(0.35, 0.35, 0.35)
 	up_col.shape = up_box
 	up_area.add_child(up_col)
 	_upgrade_pivot.add_child(up_area)
@@ -337,22 +364,56 @@ func _setup_3d_ui() -> void:
 	_sell_pivot.visible = false
 	_ui_root.add_child(_sell_pivot)
 	
+	# Background Banner
+	_sell_banner_sprite = Sprite3D.new()
+	_sell_banner_sprite.name = "SellBanner"
+	_sell_banner_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_sell_banner_sprite.no_depth_test = true
+	_sell_banner_sprite.render_priority = 9
+	_sell_banner_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	_sell_banner_sprite.pixel_size = 0.008
+	if _upgrade_banner_texture:
+		_sell_banner_sprite.texture = _upgrade_banner_texture
+	_sell_pivot.add_child(_sell_banner_sprite)
+	
+	# Recycle Icon (Left circular socket of banner)
+	_sell_icon_label = Label3D.new()
+	_sell_icon_label.name = "SellIconLabel"
+	_sell_icon_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_sell_icon_label.no_depth_test = true
+	_sell_icon_label.render_priority = 10
+	_sell_icon_label.position = Vector3(0, 0, 0.005)
+	_sell_icon_label.offset = Vector2(-9, 0)
+	_sell_icon_label.text = "♻️"
+	_sell_icon_label.font_size = 18
+	_sell_icon_label.outline_size = 3
+	_sell_icon_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_sell_icon_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_sell_pivot.add_child(_sell_icon_label)
+	
+	# Refund Label (Right slot of banner, vertically stacked: Coin on top, Refund number below)
 	_sell_label = Label3D.new()
 	_sell_label.name = "SellLabel"
 	_sell_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	_sell_label.no_depth_test = true
 	_sell_label.render_priority = 11
-	_sell_label.font_size = 18
-	_sell_label.outline_size = 4
+	_sell_label.position = Vector3(0, 0, 0.01)
+	_sell_label.offset = Vector2(30, 0)
+	_sell_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_sell_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_sell_label.line_spacing = 0.0
+	_sell_label.font_size = 14
+	_sell_label.outline_size = 3
 	_sell_label.modulate = Color(0.4, 0.9, 1.0, 1.0)
 	_sell_label.outline_modulate = Color(0, 0, 0, 1.0)
 	_sell_pivot.add_child(_sell_label)
 	
 	var sell_area = Area3D.new()
 	sell_area.name = "SellArea"
+	sell_area.position = Vector3(-0.072, 0, 0)
 	var sell_col = CollisionShape3D.new()
 	var sell_box = BoxShape3D.new()
-	sell_box.size = Vector3(0.85, 0.85, 0.85)
+	sell_box.size = Vector3(0.35, 0.35, 0.35)
 	sell_col.shape = sell_box
 	sell_area.add_child(sell_col)
 	_sell_pivot.add_child(sell_area)
@@ -388,23 +449,23 @@ func _update_3d_ui_positions(camera: Camera3D = null) -> void:
 	var cam_up = cam_basis.y.normalized()
 	var cam_fwd = -cam_basis.z.normalized()
 	
-	var base_h: float = 1.4
+	var base_h: float = 1.05
 	if scale.y > 1.5:
-		base_h = 2.0
+		base_h = 1.50
 		
 	var base_top = global_position + Vector3(0, base_h, 0)
 	
-	# Level badge: Top Center (strictly above buttons)
+	# Level badge: Top (Right edge aligned with banners' right edge at +1.29m)
 	if _level_pivot and is_instance_valid(_level_pivot):
-		_level_pivot.global_position = base_top + cam_up * 1.10
+		_level_pivot.global_position = base_top + cam_right * 0.41 + cam_up * 0.30
 		
-	# Upgrade button: Bottom Right (offset right and below level badge, pushed forward along camera ray)
+	# Upgrade button: Right Side (beside turret body)
 	if _upgrade_pivot and is_instance_valid(_upgrade_pivot):
-		_upgrade_pivot.global_position = base_top + cam_right * 0.60 + cam_up * 0.30 + cam_fwd * 0.10
+		_upgrade_pivot.global_position = base_top + cam_right * 1.05 - cam_up * 0.35 + cam_fwd * 0.10
 		
-	# Sell button: Bottom Left (offset left and below level badge, pushed forward along camera ray)
+	# Sell button: Right Side (directly below Upgrade button)
 	if _sell_pivot and is_instance_valid(_sell_pivot):
-		_sell_pivot.global_position = base_top - cam_right * 0.60 + cam_up * 0.30 + cam_fwd * 0.10
+		_sell_pivot.global_position = base_top + cam_right * 1.05 - cam_up * 0.72 + cam_fwd * 0.10
 
 func _update_3d_ui() -> void:
 	if is_ghost or not is_instance_valid(_level_pivot):
@@ -427,13 +488,13 @@ func _update_3d_ui() -> void:
 				_upgrade_pivot.visible = false
 		else:
 			var cost = get_upgrade_cost()
-			_upgrade_cost_label.text = "⚡ %d" % cost
+			_upgrade_cost_label.text = "🪙\n%d" % cost
 			_upgrade_cost_label.modulate = Color(1.0, 0.9, 0.3)
 	
 	# Update sell refund label
 	if _sell_label:
 		var refund = get_sell_refund()
-		_sell_label.text = "♻️ +%d" % refund
+		_sell_label.text = "🪙\n+%d" % refund
 
 func _set_ui_visible(show: bool) -> void:
 	if is_ghost:
@@ -463,13 +524,22 @@ func set_selected(selected: bool) -> void:
 	if is_ghost:
 		return
 	is_selected = selected
+	_set_ui_visible(selected)
 	
-	if is_selected:
-		_hover_grace_timer = HOVER_GRACE_DURATION
-		_set_ui_visible(true)
-	else:
-		_hover_grace_timer = 0.0
-		_set_ui_visible(false)
+	if not _selection_marker or not is_instance_valid(_selection_marker):
+		_setup_selection_marker()
+		
+	if _selection_marker and is_instance_valid(_selection_marker):
+		_selection_marker.visible = selected
+		if _selection_tween and _selection_tween.is_valid():
+			_selection_tween.kill()
+		if selected and is_inside_tree():
+			_selection_marker.scale = Vector3.ONE
+			_selection_tween = create_tween().set_loops()
+			_selection_tween.tween_property(_selection_marker, "scale", Vector3(1.06, 1.0, 1.06), 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			_selection_tween.tween_property(_selection_marker, "scale", Vector3.ONE, 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		else:
+			_selection_marker.scale = Vector3.ONE
 
 # ── Screen-Space Precise Click Engine ──────────────────────────────────────────
 # Uses _input (not _unhandled_input) so it fires BEFORE Area3D signals can
@@ -488,16 +558,17 @@ func _input(event: InputEvent) -> void:
 		if not builder:
 			builder = get_node_or_null("/root/World/BuilderController")
 		
-		# 1. Upgrade Button Click — check first, highest priority
+		# 1. Upgrade Button Click — check first, highest priority (hits circular icon)
 		if _upgrade_pivot and is_instance_valid(_upgrade_pivot) and _upgrade_pivot.visible and turret_level < max_level:
-			var up_screen = camera.unproject_position(_upgrade_pivot.global_position)
-			if click_pos.distance_to(up_screen) <= 55.0:
+			var icon_pos = _upgrade_sprite.global_position if is_instance_valid(_upgrade_sprite) else _upgrade_pivot.global_position
+			var up_screen = camera.unproject_position(icon_pos)
+			if click_pos.distance_to(up_screen) <= 40.0:
 				if builder and builder.has_method("notify_turret_interacted"):
 					builder.notify_turret_interacted()
-				if _upgrade_sprite and is_inside_tree():
+				if _upgrade_pivot and is_inside_tree():
 					var tw = create_tween()
-					tw.tween_property(_upgrade_sprite, "scale", Vector3(0.75, 0.75, 0.75), 0.05)
-					tw.tween_property(_upgrade_sprite, "scale", Vector3.ONE, 0.12).set_trans(Tween.TRANS_BACK)
+					tw.tween_property(_upgrade_pivot, "scale", Vector3(0.85, 0.85, 0.85), 0.05)
+					tw.tween_property(_upgrade_pivot, "scale", Vector3(1.1, 1.1, 1.1), 0.12).set_trans(Tween.TRANS_BACK)
 				var success = TurretUpgradeManager.instance.try_upgrade_turret(self) if TurretUpgradeManager.instance else upgrade()
 				if not success:
 					_flash_insufficient_funds()
@@ -507,9 +578,13 @@ func _input(event: InputEvent) -> void:
 		# 2. Recycle / Sell Button Click
 		if _sell_pivot and is_instance_valid(_sell_pivot) and _sell_pivot.visible:
 			var sell_screen = camera.unproject_position(_sell_pivot.global_position)
-			if click_pos.distance_to(sell_screen) <= 55.0:
+			if click_pos.distance_to(sell_screen) <= 45.0:
 				if builder and builder.has_method("notify_turret_interacted"):
 					builder.notify_turret_interacted()
+				if _sell_pivot and is_inside_tree():
+					var tw = create_tween()
+					tw.tween_property(_sell_pivot, "scale", Vector3(0.85, 0.85, 0.85), 0.05)
+					tw.tween_property(_sell_pivot, "scale", Vector3(1.1, 1.1, 1.1), 0.12).set_trans(Tween.TRANS_BACK)
 				sell()
 				get_viewport().set_input_as_handled()
 				return
@@ -638,30 +713,30 @@ func _on_body_area_input_event(_camera: Node, event: InputEvent, _pos: Vector3, 
 func _on_upgrade_area_mouse_entered() -> void:
 	if is_ghost or not is_selected:
 		return
-	if turret_level < max_level and _upgrade_sprite:
+	if turret_level < max_level and _upgrade_pivot:
 		var tw = create_tween()
-		tw.tween_property(_upgrade_sprite, "scale", Vector3(1.15, 1.15, 1.15), 0.1).set_trans(Tween.TRANS_QUAD)
+		tw.tween_property(_upgrade_pivot, "scale", Vector3(1.1, 1.1, 1.1), 0.1).set_trans(Tween.TRANS_QUAD)
 
 func _on_upgrade_area_mouse_exited() -> void:
 	if is_ghost or not is_selected:
 		return
-	if _upgrade_sprite:
+	if _upgrade_pivot:
 		var tw = create_tween()
-		tw.tween_property(_upgrade_sprite, "scale", Vector3.ONE, 0.15).set_trans(Tween.TRANS_QUAD)
+		tw.tween_property(_upgrade_pivot, "scale", Vector3.ONE, 0.15).set_trans(Tween.TRANS_QUAD)
 
 func _on_sell_area_mouse_entered() -> void:
 	if is_ghost or not is_selected:
 		return
-	if _sell_label:
+	if _sell_pivot:
 		var tw = create_tween()
-		tw.tween_property(_sell_label, "scale", Vector3(1.15, 1.15, 1.15), 0.1).set_trans(Tween.TRANS_QUAD)
+		tw.tween_property(_sell_pivot, "scale", Vector3(1.1, 1.1, 1.1), 0.1).set_trans(Tween.TRANS_QUAD)
 
 func _on_sell_area_mouse_exited() -> void:
 	if is_ghost or not is_selected:
 		return
-	if _sell_label:
+	if _sell_pivot:
 		var tw = create_tween()
-		tw.tween_property(_sell_label, "scale", Vector3.ONE, 0.15).set_trans(Tween.TRANS_QUAD)
+		tw.tween_property(_sell_pivot, "scale", Vector3.ONE, 0.15).set_trans(Tween.TRANS_QUAD)
 
 
 func _trigger_single_target_attack(target: Node3D) -> void:

@@ -513,5 +513,20 @@
     "mtime": 1787464670.76235,
     "ast_hash": "83ba41975d0991794dae669d3c653144",
     "semantic_hash": ""
+  },
+  "UI/Level Up - Indicator/upgrade_buttonnew.png": {
+    "mtime": 1787751214.9746687,
+    "ast_hash": "b60eeae1f40dc0a756861b0d52ecea4c",
+    "semantic_hash": ""
+  },
+  "UI/Level Up - Indicator/upgrade_buttonnew1.png": {
+    "mtime": 1787751286.988925,
+    "ast_hash": "a1d6bf2c875533539fdd02883fe38de1",
+    "semantic_hash": ""
+  },
+  "UI/Level Up - Indicator/upbutton_banner.png": {
+    "mtime": 1787752549.4733396,
+    "ast_hash": "e85c958ed80fd534d9f22f80afe95b23",
+    "semantic_hash": ""
   }
 }
