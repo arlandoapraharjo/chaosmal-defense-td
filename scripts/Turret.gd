@@ -48,8 +48,9 @@ var grid_pos: Vector2i = Vector2i.ZERO
 var footprint_size: Vector2i = Vector2i(1, 1)
 var is_ghost: bool = false
 var is_selected: bool = false
-var _selection_marker: MeshInstance3D = null
+var _selection_light: SpotLight3D = null
 var _selection_tween: Tween = null
+var _recycle_lock_timer: float = 0.0
 
 var attack_damage: float = 35.0
 var _base_attack_damage: float = 35.0
@@ -173,6 +174,9 @@ func _process(delta: float) -> void:
 	if is_instance_valid(_current_target):
 		_rotate_toward_target(_current_target, delta)
 
+	if _recycle_lock_timer > 0.0:
+		_recycle_lock_timer -= delta
+
 	if _cooldown_timer > 0.0:
 		_cooldown_timer -= delta
 		return
@@ -227,34 +231,24 @@ func _load_ui_textures() -> void:
 func _setup_selection_marker() -> void:
 	if is_ghost:
 		return
-	if _selection_marker and is_instance_valid(_selection_marker):
+	if _selection_light and is_instance_valid(_selection_light):
 		return
-	_selection_marker = MeshInstance3D.new()
-	_selection_marker.name = "SelectionRingMarker"
-	_selection_marker.visible = is_selected
+	_selection_light = SpotLight3D.new()
+	_selection_light.name = "SelectionSpotLight"
+	_selection_light.visible = is_selected
+	_selection_light.light_color = Color(1.0, 0.98, 0.92) # Crisp stage spotlight
+	_selection_light.light_energy = 4.5
+	_selection_light.spot_range = 6.0
+	_selection_light.spot_angle = 15.0 # Tight focused pin-spot (~1.5m pool)
+	_selection_light.spot_angle_attenuation = 0.8
+	_selection_light.spot_attenuation = 0.8
 	
-	var torus = TorusMesh.new()
-	var outer_r = max(footprint_size.x, footprint_size.y) * 0.75
-	var inner_r = outer_r - 0.10
-	torus.inner_radius = inner_r
-	torus.outer_radius = outer_r
-	torus.rings = 32
-	torus.ring_segments = 16
-	_selection_marker.mesh = torus
-	
-	var mat = StandardMaterial3D.new()
-	mat.albedo_color = Color(0.15, 0.95, 0.45, 0.9) # Bright Emerald green
-	mat.emission_enabled = true
-	mat.emission = Color(0.15, 0.95, 0.45, 1.0)
-	mat.emission_energy_multiplier = 2.0
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	mat.no_depth_test = true
-	mat.render_priority = 10
-	_selection_marker.material_override = mat
-	_selection_marker.position = Vector3(0, 0.10, 0)
-	add_child(_selection_marker)
+	var base_h: float = 3.0
+	if scale.y > 1.5:
+		base_h = 3.8
+	_selection_light.position = Vector3(0, base_h, 0)
+	_selection_light.rotation_degrees = Vector3(-90, 0, 0) # Points straight down onto turret like a stage spotlight
+	add_child(_selection_light)
 
 func _setup_3d_ui() -> void:
 	if is_ghost:
@@ -531,20 +525,19 @@ func set_selected(selected: bool) -> void:
 	is_selected = selected
 	_set_ui_visible(selected)
 	
-	if not _selection_marker or not is_instance_valid(_selection_marker):
+	if not _selection_light or not is_instance_valid(_selection_light):
 		_setup_selection_marker()
 		
-	if _selection_marker and is_instance_valid(_selection_marker):
-		_selection_marker.visible = selected
+	if _selection_light and is_instance_valid(_selection_light):
+		_selection_light.visible = selected
 		if _selection_tween and _selection_tween.is_valid():
 			_selection_tween.kill()
 		if selected and is_inside_tree():
-			_selection_marker.scale = Vector3.ONE
-			_selection_tween = create_tween().set_loops()
-			_selection_tween.tween_property(_selection_marker, "scale", Vector3(1.06, 1.0, 1.06), 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-			_selection_tween.tween_property(_selection_marker, "scale", Vector3.ONE, 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			_selection_light.light_energy = 0.5
+			_selection_tween = create_tween()
+			_selection_tween.tween_property(_selection_light, "light_energy", 4.5, 0.15).set_trans(Tween.TRANS_QUAD)
 		else:
-			_selection_marker.scale = Vector3.ONE
+			_selection_light.light_energy = 4.5
 
 # ── Screen-Space Precise Click Engine ──────────────────────────────────────────
 # Uses _input (not _unhandled_input) so it fires BEFORE Area3D signals can
@@ -585,6 +578,11 @@ func _input(event: InputEvent) -> void:
 			var icon_pos = _sell_sprite.global_position if is_instance_valid(_sell_sprite) else _sell_pivot.global_position
 			var sell_screen = camera.unproject_position(icon_pos)
 			if click_pos.distance_to(sell_screen) <= 40.0:
+				if _recycle_lock_timer > 0.0:
+					# Accidental spam-click protection immediately after reaching Level 5
+					if is_inside_tree() and get_viewport():
+						get_viewport().set_input_as_handled()
+					return
 				if is_inside_tree() and get_viewport():
 					get_viewport().set_input_as_handled()
 				if builder and builder.has_method("notify_turret_interacted"):
@@ -612,6 +610,10 @@ func upgrade() -> bool:
 	turret_level += 1
 	_recalculate_stats()
 	_update_3d_ui()
+	
+	# Activate click protection when reaching max level
+	if turret_level >= max_level:
+		_recycle_lock_timer = 0.5
 	
 	return true
 
