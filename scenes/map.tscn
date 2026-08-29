@@ -100,10 +100,6 @@ shadow_enabled = true
 directional_shadow_mode = 0
 directional_shadow_max_distance = 60.0
 
-[node name="SubViewport" type="SubViewport" parent="." unique_id=1033910215]
-use_hdr_2d = true
-size = Vector2i(1152, 648)
-
 [node name="TurretHotbar" parent="." unique_id=730426218 instance=ExtResource("9_6k6j1")]
 
 [node name="BuilderController" type="Node" parent="." unique_id=1232673061 node_paths=PackedStringArray("map_generator")]

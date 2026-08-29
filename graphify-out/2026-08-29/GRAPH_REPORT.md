@@ -1,4 +1,4 @@
-# Graph Report - C:\Users\user\repos\IGI-Code-Circus  (2026-08-29)
+# Graph Report - C:\Users\user\repos\IGI-Code-Circus  (2026-08-25)
 
 ## Corpus Check
 - cluster-only mode — file stats not available

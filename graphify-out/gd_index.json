@@ -70,13 +70,13 @@
       ],
       "loads": [
         {
-          "line": 98,
+          "line": 99,
           "raw": "res://UI/Turret Hotbar/turret_slot.png",
           "path": "UI/Turret Hotbar/turret_slot.png",
           "call": "preload"
         },
         {
-          "line": 247,
+          "line": 248,
           "raw": "res://UI/Turret Hotbar/turret_slot.png",
           "path": "UI/Turret Hotbar/turret_slot.png",
           "call": "preload"
@@ -621,6 +621,26 @@
           ]
         },
         {
+          "name": "notify_turret_interacted",
+          "params": []
+        },
+        {
+          "name": "select_turret",
+          "params": [
+            "turret"
+          ]
+        },
+        {
+          "name": "deselect_turret",
+          "params": []
+        },
+        {
+          "name": "on_turret_sold",
+          "params": [
+            "turret"
+          ]
+        },
+        {
           "name": "set_speed_multiplier",
           "params": [
             "multiplier"
@@ -635,13 +655,13 @@
           "call": "preload"
         },
         {
-          "line": 106,
+          "line": 110,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
         },
         {
-          "line": 306,
+          "line": 355,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
@@ -906,37 +926,49 @@
       ],
       "loads": [
         {
-          "line": 89,
+          "line": 90,
+          "raw": "res://UI/Level Up - Indicator/upbutton_banner.png",
+          "path": "UI/Level Up - Indicator/upbutton_banner.png",
+          "call": "load"
+        },
+        {
+          "line": 92,
+          "raw": "res://UI/Level Up - Indicator/upgrade_buttonnew.png",
+          "path": "UI/Level Up - Indicator/upgrade_buttonnew.png",
+          "call": "load"
+        },
+        {
+          "line": 94,
           "raw": "res://UI/Level Up - Indicator/lvl_up.png",
           "path": "UI/Level Up - Indicator/lvl_up.png",
           "call": "load"
         },
         {
-          "line": 91,
+          "line": 96,
           "raw": "res://ui/lvl indicator/lvl_up.png",
           "path": "ui/lvl indicator/lvl_up.png",
           "call": "load"
         },
         {
-          "line": 99,
+          "line": 104,
           "raw": "res://assets/Models/GLB format/tower-round-crystals.glb",
           "path": "assets/Models/GLB format/tower-round-crystals.glb",
           "call": "load"
         },
         {
-          "line": 413,
+          "line": 424,
           "raw": "res://scenes/pillar_hit_particle.tscn",
           "path": "scenes/pillar_hit_particle.tscn",
           "call": "load"
         },
         {
-          "line": 424,
+          "line": 435,
           "raw": "res://scenes/pillar_destruction.tscn",
           "path": "scenes/pillar_destruction.tscn",
           "call": "load"
         },
         {
-          "line": 647,
+          "line": 650,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -1005,6 +1037,12 @@
           "params": [
             "grid_pos"
           ]
+        },
+        {
+          "name": "free_cell",
+          "params": [
+            "grid_pos"
+          ]
         }
       ],
       "loads": [
@@ -1021,19 +1059,19 @@
           "call": "preload"
         },
         {
-          "line": 680,
+          "line": 683,
           "raw": "res://shaders/tree_sway.gdshader",
           "path": "shaders/tree_sway.gdshader",
           "call": "preload"
         },
         {
-          "line": 1008,
+          "line": 1011,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 1014,
+          "line": 1017,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
@@ -1178,11 +1216,25 @@
           ]
         },
         {
+          "name": "set_selected",
+          "params": [
+            "selected"
+          ]
+        },
+        {
           "name": "get_upgrade_cost",
           "params": []
         },
         {
           "name": "upgrade",
+          "params": []
+        },
+        {
+          "name": "get_sell_refund",
+          "params": []
+        },
+        {
+          "name": "sell",
           "params": []
         },
         {
@@ -1192,31 +1244,55 @@
       ],
       "loads": [
         {
-          "line": 210,
+          "line": 223,
+          "raw": "res://UI/Level Up - Indicator/upbutton_banner.png",
+          "path": "UI/Level Up - Indicator/upbutton_banner.png",
+          "call": "load"
+        },
+        {
+          "line": 225,
+          "raw": "res://UI/Level Up - Indicator/upgrade_buttonnew.png",
+          "path": "UI/Level Up - Indicator/upgrade_buttonnew.png",
+          "call": "load"
+        },
+        {
+          "line": 227,
+          "raw": "res://UI/Level Up - Indicator/lvl_up.png",
+          "path": "UI/Level Up - Indicator/lvl_up.png",
+          "call": "load"
+        },
+        {
+          "line": 229,
+          "raw": "res://UI/Level Up - Indicator/trash_button.png",
+          "path": "UI/Level Up - Indicator/trash_button.png",
+          "call": "load"
+        },
+        {
+          "line": 753,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 211,
+          "line": 754,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 212,
+          "line": 755,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 213,
+          "line": 756,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 214,
+          "line": 757,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"
@@ -1243,6 +1319,13 @@
           "params": [
             "turret: Node3D",
             "new_level: int"
+          ]
+        },
+        {
+          "name": "turret_sold",
+          "params": [
+            "turret: Node3D",
+            "refund: int"
           ]
         }
       ],

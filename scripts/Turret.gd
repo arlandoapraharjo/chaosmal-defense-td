@@ -570,7 +570,8 @@ func _input(event: InputEvent) -> void:
 				var success = TurretUpgradeManager.instance.try_upgrade_turret(self) if TurretUpgradeManager.instance else upgrade()
 				if not success:
 					_flash_insufficient_funds()
-				get_viewport().set_input_as_handled()
+				if is_inside_tree() and get_viewport():
+					get_viewport().set_input_as_handled()
 				return
 		
 		# 2. Recycle / Sell Button Click (hits circular trash icon)
@@ -691,10 +692,12 @@ func _on_body_area_input_event(_camera: Node, event: InputEvent, _pos: Vector3, 
 				return # Don't select if player is currently in placement mode
 			if builder.has_method("select_turret"):
 				builder.select_turret(self)
-				get_viewport().set_input_as_handled()
+				if is_inside_tree() and get_viewport():
+					get_viewport().set_input_as_handled()
 				return
 		set_selected(not is_selected)
-		get_viewport().set_input_as_handled()
+		if is_inside_tree() and get_viewport():
+			get_viewport().set_input_as_handled()
 
 # Note: _on_upgrade_area_input_event and _on_sell_area_input_event are intentionally
 # removed — click detection is handled by the screen-space engine in _input().
@@ -797,8 +800,14 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 			ammo_instance.rotate_y(deg_to_rad(180.0))
 
 
-	var tween: Tween = create_tween()
-	if weapon_type == "catapult":
+	var current_weapon_type: String = weapon_type
+	var current_damage: float = attack_damage
+	var current_aoe_radius: float = aoe_radius
+	var hit_scene: PackedScene = _hit_particle_scenes.get(current_weapon_type, _hit_particle_scenes.get("turret", null))
+	var parent_for_hit: Node = scene_root if scene_root else get_parent()
+
+	var tween: Tween = ammo_instance.create_tween()
+	if current_weapon_type == "catapult":
 		# Parabolic arc trajectory for boulder ammo
 		var arc_height: float = maxf(1.0, distance * 0.5)
 		tween.tween_method(func(progress: float):
@@ -813,24 +822,25 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 		tween.tween_property(ammo_instance, "global_position", target_pos, flight_time)
 
 	tween.tween_callback(func():
-		if weapon_type == "catapult":
-			var ground_impact_pos = Vector3(target_pos.x, 0.0, target_pos.z)
-			_spawn_hit_particle(ground_impact_pos, "catapult")
-		else:
-			var impact_pos = target_pos + Vector3(0, 0.3, 0)
-			_spawn_hit_particle(impact_pos, weapon_type)
+		if is_instance_valid(parent_for_hit) and hit_scene:
+			var hit_part = hit_scene.instantiate()
+			parent_for_hit.add_child(hit_part)
+			if current_weapon_type == "catapult":
+				hit_part.global_position = Vector3(target_pos.x, 0.0, target_pos.z)
+			else:
+				hit_part.global_position = target_pos + Vector3(0, 0.3, 0)
 
 		if is_instance_valid(target_enemy) and target_enemy.has_method("take_damage"):
-			target_enemy.take_damage(attack_damage)
+			target_enemy.take_damage(current_damage)
 		elif not aoe_enemies.is_empty():
 			# Re-check enemy positions at impact time — only damage those
 			# actually near the impact point, not every enemy in turret range.
-			var aoe_radius_sq: float = aoe_radius * aoe_radius
+			var aoe_radius_sq: float = current_aoe_radius * current_aoe_radius
 			for enemy in aoe_enemies:
 				if is_instance_valid(enemy) and enemy.has_method("take_damage"):
 					var dist_sq: float = enemy.global_transform.origin.distance_squared_to(target_pos)
 					if dist_sq <= aoe_radius_sq:
-						enemy.take_damage(attack_damage)
+						enemy.take_damage(current_damage)
 
 		if is_instance_valid(ammo_instance):
 			ammo_instance.queue_free()

@@ -94,6 +94,7 @@ func _ready() -> void:
 	mouse_exited.connect(_on_mouse_exited)
 	gui_input.connect(_on_gui_input)
 	sub_viewport.own_world_3d = true
+	sub_viewport.gui_disable_input = true
 	if bg_texture and bg_texture.texture == null:
 		bg_texture.texture = preload("res://UI/Turret Hotbar/turret_slot.png")
 	if turret_scene != null:

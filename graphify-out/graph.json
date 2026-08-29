@@ -544,11 +544,12 @@
       "community": 8,
       "community_name": "MapGenerator",
       "norm_label": "mapgenerator",
-      "description": "extends Node3D | funcs: is_buildable, occupy_cell | signals: biome_changed",
+      "description": "extends Node3D | funcs: is_buildable, occupy_cell, free_cell | signals: biome_changed",
       "_gd_extends": "Node3D",
       "_gd_functions": [
         "is_buildable",
-        "occupy_cell"
+        "occupy_cell",
+        "free_cell"
       ],
       "_gd_signals": [
         "biome_changed"
@@ -646,12 +647,15 @@
       "community": 98,
       "community_name": "HitParticle",
       "norm_label": "turret",
-      "description": "extends Node3D | funcs: set_speed_multiplier, get_upgrade_cost, upgrade, reset_cooldown",
+      "description": "extends Node3D | funcs: set_speed_multiplier, set_selected, get_upgrade_cost, upgrade, get_sell_refund, sell ...",
       "_gd_extends": "Node3D",
       "_gd_functions": [
         "set_speed_multiplier",
+        "set_selected",
         "get_upgrade_cost",
         "upgrade",
+        "get_sell_refund",
+        "sell",
         "reset_cooldown"
       ],
       "_gd_signals": [],
@@ -670,13 +674,17 @@
       "community": 98,
       "community_name": "HitParticle",
       "norm_label": "buildercontroller",
-      "description": "extends Node | funcs: get_max_deployment, get_current_deployment, start_building, stop_building, set_speed_multiplier | signals: building_stopped, turret_placed, total_deployment_updated",
+      "description": "extends Node | funcs: get_max_deployment, get_current_deployment, start_building, stop_building, notify_turret_interacted, select_turret ... | signals: building_stopped, turret_placed, total_deployment_updated",
       "_gd_extends": "Node",
       "_gd_functions": [
         "get_max_deployment",
         "get_current_deployment",
         "start_building",
         "stop_building",
+        "notify_turret_interacted",
+        "select_turret",
+        "deselect_turret",
+        "on_turret_sold",
         "set_speed_multiplier"
       ],
       "_gd_signals": [
@@ -1083,13 +1091,14 @@
       "community": 14,
       "community_name": "TurretUpgradeManager",
       "norm_label": "turretupgrademanager",
-      "description": "extends Node | funcs: try_upgrade_turret | signals: turret_upgraded",
+      "description": "extends Node | funcs: try_upgrade_turret | signals: turret_upgraded, turret_sold",
       "_gd_extends": "Node",
       "_gd_functions": [
         "try_upgrade_turret"
       ],
       "_gd_signals": [
-        "turret_upgraded"
+        "turret_upgraded",
+        "turret_sold"
       ],
       "_gd_exports": [],
       "id": "gdscript_scripts_turretupgrademanager"

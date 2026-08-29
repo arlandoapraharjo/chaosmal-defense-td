@@ -294,6 +294,7 @@ func _setup_health_bar() -> void:
 	hp_viewport.name = "HPViewport"
 	hp_viewport.size = Vector2i(200, 36)
 	hp_viewport.transparent_bg = true
+	hp_viewport.gui_disable_input = true
 	hp_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(hp_viewport)
 

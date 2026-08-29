@@ -174,7 +174,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.is_action_pressed("ui_cancel") or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed):
 			if _selected_turret:
 				deselect_turret()
-				get_viewport().set_input_as_handled()
+				if is_inside_tree() and get_viewport():
+					get_viewport().set_input_as_handled()
 		elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			# If this click was consumed by a turret or upgrade button this frame, do not deselect
 			if _turret_interacted_frame == Engine.get_process_frames():
@@ -186,7 +187,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	if event.is_action_pressed("ui_cancel") or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed):
 		stop_building()
-		get_viewport().set_input_as_handled()
+		if is_inside_tree() and get_viewport():
+			get_viewport().set_input_as_handled()
 		return
 
 	if event is InputEventKey and event.keycode == KEY_SPACE and event.pressed and not event.echo:
@@ -194,12 +196,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		if _ghost_instance:
 			_ghost_instance.rotation_degrees.y = _ghost_rotation_deg
 		_range_marker_node.rotation_degrees.y = _ghost_rotation_deg
-		get_viewport().set_input_as_handled()
+		if is_inside_tree() and get_viewport():
+			get_viewport().set_input_as_handled()
 		return
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		_try_place_turret()
-		get_viewport().set_input_as_handled()
+		if is_inside_tree() and get_viewport():
+			get_viewport().set_input_as_handled()
 		return
 
 func _is_footprint_buildable(grid_pos: Vector2i, footprint: Vector2i) -> bool:
