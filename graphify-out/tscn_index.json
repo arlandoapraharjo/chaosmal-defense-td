@@ -1,8 +1,8 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scenes": 38,
-    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
+    "total_scenes": 41,
+    "root": "C:\\igi-dev-code-circus"
   },
   "scenes": [
     {
@@ -944,6 +944,7 @@
           "path": "scripts/HitParticle.gd",
           "raw_path": "res://scripts/HitParticle.gd",
           "type": "Script",
+          "uid": "uid://8tlg6mgg5lpv",
           "id": "1_hitcanon"
         }
       ],
@@ -1335,6 +1336,93 @@
       ]
     },
     {
+      "file": "scenes/turret_dismantle_particle.tscn",
+      "scene_uid": null,
+      "ext_resources": [
+        {
+          "path": "scripts/TurretDismantleParticle.gd",
+          "raw_path": "res://scripts/TurretDismantleParticle.gd",
+          "type": "Script",
+          "id": "1_dismantle"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "TurretDismantleParticle",
+          "type": "Node3D"
+        },
+        {
+          "name": "Debris",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Smoke",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Sparks",
+          "type": "GPUParticles3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/turret_placement_particle.tscn",
+      "scene_uid": "uid://cnnlcqoo054o3",
+      "ext_resources": [
+        {
+          "path": "scripts/TurretPlacementParticle.gd",
+          "raw_path": "res://scripts/TurretPlacementParticle.gd",
+          "type": "Script",
+          "uid": "uid://bo011fx5krx0v",
+          "id": "1_place"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "TurretPlacementParticle",
+          "type": "Node3D"
+        },
+        {
+          "name": "Pebbles",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ImpactDust",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Sparks",
+          "type": "GPUParticles3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/upgrade_celebration_particle.tscn",
+      "scene_uid": null,
+      "ext_resources": [
+        {
+          "path": "scripts/UpgradeCelebrationParticle.gd",
+          "raw_path": "res://scripts/UpgradeCelebrationParticle.gd",
+          "type": "Script",
+          "id": "1_upg"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "UpgradeCelebrationParticle",
+          "type": "Node3D"
+        },
+        {
+          "name": "Sparkles",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "RisingEmbers",
+          "type": "GPUParticles3D"
+        }
+      ]
+    },
+    {
       "file": "shaders/pilarshockwave.tscn",
       "scene_uid": "uid://bgkc6w62c7pe5",
       "ext_resources": [
@@ -1578,6 +1666,15 @@
     ],
     "addons/Materials/leaves_mat_thin_snow.tres": [
       "scenes/thin_tree_snow.tscn"
+    ],
+    "scripts/TurretDismantleParticle.gd": [
+      "scenes/turret_dismantle_particle.tscn"
+    ],
+    "scripts/TurretPlacementParticle.gd": [
+      "scenes/turret_placement_particle.tscn"
+    ],
+    "scripts/UpgradeCelebrationParticle.gd": [
+      "scenes/upgrade_celebration_particle.tscn"
     ]
   }
 }

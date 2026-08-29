@@ -1,8 +1,8 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scripts": 27,
-    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
+    "total_scripts": 31,
+    "root": "C:\\igi-dev-code-circus"
   },
   "scripts": [
     {
@@ -240,31 +240,31 @@
           "call": "preload"
         },
         {
-          "line": 106,
+          "line": 105,
           "raw": "res://assets/Models/GLB format/desert/weapon-ballista.glb",
           "path": "assets/Models/GLB format/desert/weapon-ballista.glb",
           "call": "preload"
         },
         {
-          "line": 115,
+          "line": 114,
           "raw": "res://assets/Models/GLB format/desert/weapon-catapult.glb",
           "path": "assets/Models/GLB format/desert/weapon-catapult.glb",
           "call": "preload"
         },
         {
-          "line": 126,
+          "line": 125,
           "raw": "res://assets/Models/GLB format/weapon-turret.glb",
           "path": "assets/Models/GLB format/weapon-turret.glb",
           "call": "preload"
         },
         {
-          "line": 197,
+          "line": 196,
           "raw": "res://UI/Turret Hotbar/Thotbar_toggle.png",
           "path": "UI/Turret Hotbar/Thotbar_toggle.png",
           "call": "preload"
         },
         {
-          "line": 198,
+          "line": 197,
           "raw": "res://UI/Turret Hotbar/Dhotbar_toggle2.png",
           "path": "UI/Turret Hotbar/Dhotbar_toggle2.png",
           "call": "preload"
@@ -649,19 +649,25 @@
       ],
       "loads": [
         {
-          "line": 52,
+          "line": 5,
+          "raw": "res://scenes/turret_placement_particle.tscn",
+          "path": "scenes/turret_placement_particle.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 54,
           "raw": "res://shaders/ghost_hologram.gdshader",
           "path": "shaders/ghost_hologram.gdshader",
           "call": "preload"
         },
         {
-          "line": 110,
+          "line": 112,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
         },
         {
-          "line": 355,
+          "line": 357,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
@@ -1206,6 +1212,10 @@
           "params": []
         },
         {
+          "name": "play_placement_landing_animation",
+          "params": []
+        },
+        {
           "name": "get_sell_refund",
           "params": []
         },
@@ -1220,31 +1230,43 @@
       ],
       "loads": [
         {
-          "line": 904,
+          "line": 88,
+          "raw": "res://scenes/upgrade_celebration_particle.tscn",
+          "path": "scenes/upgrade_celebration_particle.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 89,
+          "raw": "res://scenes/turret_dismantle_particle.tscn",
+          "path": "scenes/turret_dismantle_particle.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 1053,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 905,
+          "line": 1054,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 906,
+          "line": 1055,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 907,
+          "line": 1056,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 908,
+          "line": 1057,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"
@@ -1260,6 +1282,112 @@
           "type": "bool"
         }
       ]
+    },
+    {
+      "file": "scripts/TurretDismantleParticle.gd",
+      "class_name": "TurretDismantleParticle",
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "scripts/TurretHighlighter.gd",
+      "class_name": "TurretHighlighter",
+      "extends": "Node",
+      "signals": [],
+      "functions": [
+        {
+          "name": "setup",
+          "params": [
+            "target_node",
+            "initial_level"
+          ]
+        },
+        {
+          "name": "set_hovered",
+          "params": [
+            "hovered"
+          ]
+        },
+        {
+          "name": "set_selected",
+          "params": [
+            "selected",
+            "level"
+          ]
+        },
+        {
+          "name": "play_upgrade_pulse",
+          "params": [
+            "new_level",
+            "duration"
+          ]
+        },
+        {
+          "name": "clear_highlight",
+          "params": []
+        }
+      ],
+      "loads": [
+        {
+          "line": 18,
+          "raw": "res://shaders/outline_material.tres",
+          "path": "shaders/outline_material.tres",
+          "call": "preload"
+        },
+        {
+          "line": 57,
+          "raw": "res://shaders/outline_pixel_perfect.gdshader",
+          "path": "shaders/outline_pixel_perfect.gdshader",
+          "call": "load"
+        },
+        {
+          "line": 67,
+          "raw": "res://shaders/outline_pixel_perfect.gdshader",
+          "path": "shaders/outline_pixel_perfect.gdshader",
+          "call": "load"
+        }
+      ],
+      "exports": [
+        {
+          "name": "outline_material_res",
+          "type": "ShaderMaterial"
+        },
+        {
+          "name": "idle_width",
+          "type": "float"
+        },
+        {
+          "name": "selected_width",
+          "type": "float"
+        },
+        {
+          "name": "hover_extra_width",
+          "type": "float"
+        },
+        {
+          "name": "upgrade_pulse_width",
+          "type": "float"
+        }
+      ]
+    },
+    {
+      "file": "scripts/TurretPlacementParticle.gd",
+      "class_name": "TurretPlacementParticle",
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [
+        {
+          "name": "setup_footprint",
+          "params": [
+            "footprint"
+          ]
+        }
+      ],
+      "loads": [],
+      "exports": []
     },
     {
       "file": "scripts/TurretUpgradeManager.gd",
@@ -1291,6 +1419,27 @@
       ],
       "loads": [],
       "exports": []
+    },
+    {
+      "file": "scripts/UpgradeCelebrationParticle.gd",
+      "class_name": "UpgradeCelebrationParticle",
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [
+        {
+          "name": "setup_color",
+          "params": [
+            "color"
+          ]
+        }
+      ],
+      "loads": [],
+      "exports": [
+        {
+          "name": "default_color",
+          "type": "Color"
+        }
+      ]
     },
     {
       "file": "scripts/WaveManager.gd",

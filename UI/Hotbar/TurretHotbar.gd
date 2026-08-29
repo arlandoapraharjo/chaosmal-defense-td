@@ -96,7 +96,6 @@ const TURRET_ASSETS: Array[Dictionary] = [
 		"scene": preload("res://assets/Models/GLB format/desert/weapon-cannon.glb"),
 		"name": "Cannon",
 		"attack_range": 2.5,
-		"is_half_circle": true,
 		"weapon_type": "cannon",
 		"attack_damage": 60.0,
 		"cooldown": 1.5,
