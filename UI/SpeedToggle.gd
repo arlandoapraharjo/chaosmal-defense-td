@@ -10,6 +10,12 @@ static var instance: SpeedToggle = null
 
 const SPEEDS: Array[float] = [1.0, 2.0, 4.0]
 
+const TEXTURES: Array[Texture2D] = [
+	preload("res://UI/Speedup/speed_1x.png"),
+	preload("res://UI/Speedup/speed_2x.png"),
+	preload("res://UI/Speedup/speed_4x.png")
+]
+
 var _textures: Array[Texture2D] = []
 var _current_index: int = 0
 var _speed_button: TextureButton = null
@@ -22,7 +28,7 @@ func _ready() -> void:
 	instance = self
 	add_to_group("speed_toggle")
 
-	_load_textures()
+	_textures = TEXTURES.duplicate()
 
 	_setup_button()
 	Engine.time_scale = SPEEDS[_current_index]

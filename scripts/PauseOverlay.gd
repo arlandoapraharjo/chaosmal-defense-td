@@ -23,7 +23,8 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		_toggle_pause()
-		get_viewport().set_input_as_handled()
+		if is_inside_tree() and get_viewport():
+			get_viewport().set_input_as_handled()
 
 func _toggle_pause() -> void:
 	var is_paused = not get_tree().paused

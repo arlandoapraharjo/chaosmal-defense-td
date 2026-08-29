@@ -355,7 +355,26 @@
           "params": []
         }
       ],
-      "loads": [],
+      "loads": [
+        {
+          "line": 14,
+          "raw": "res://UI/Speedup/speed_1x.png",
+          "path": "UI/Speedup/speed_1x.png",
+          "call": "preload"
+        },
+        {
+          "line": 15,
+          "raw": "res://UI/Speedup/speed_2x.png",
+          "path": "UI/Speedup/speed_2x.png",
+          "call": "preload"
+        },
+        {
+          "line": 16,
+          "raw": "res://UI/Speedup/speed_4x.png",
+          "path": "UI/Speedup/speed_4x.png",
+          "call": "preload"
+        }
+      ],
       "exports": []
     },
     {

@@ -121,11 +121,11 @@ func _animate_presentation(panel_bg: Color, border_glow: Color) -> void:
 
 func _on_retry_pressed() -> void:
 	get_tree().paused = false
-	get_tree().reload_current_scene()
+	get_tree().reload_current_scene.call_deferred()
 
 func _on_menu_pressed() -> void:
 	get_tree().paused = false
 	if ResourceLoader.exists("res://UI/Menus/MainMenu.tscn"):
-		get_tree().change_scene_to_file("res://UI/Menus/MainMenu.tscn")
+		get_tree().change_scene_to_file.call_deferred("res://UI/Menus/MainMenu.tscn")
 	else:
-		get_tree().reload_current_scene()
+		get_tree().reload_current_scene.call_deferred()
