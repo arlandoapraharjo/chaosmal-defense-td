@@ -2,6 +2,8 @@ extends Node
 
 ## Controller that handles grid-snapping turret placement on the map.
 
+const PLACEMENT_PARTICLE_SCENE = preload("res://scenes/turret_placement_particle.tscn")
+
 @export var map_generator: Node3D
 @export var turret_y_offset: float = 0.1
 
@@ -378,6 +380,18 @@ func _try_place_turret() -> void:
 			new_turret.position = Vector3(grid_pos.x, turret_y_offset, grid_pos.y)
 
 		print("Placed turret: attack_range=", _attack_range, " footprint=", _footprint_size)
+		
+		# Spawn placement particle effect
+		if PLACEMENT_PARTICLE_SCENE:
+			var place_part = PLACEMENT_PARTICLE_SCENE.instantiate()
+			map_generator.add_child(place_part)
+			place_part.global_position = new_turret.global_position
+			if place_part.has_method("setup_footprint"):
+				place_part.setup_footprint(_footprint_size)
+
+		# Trigger snappy placement landing bounce
+		if new_turret.has_method("play_placement_landing_animation"):
+			new_turret.play_placement_landing_animation()
 		
 		# Apply current speed multiplier to the newly placed turret
 		if new_turret.has_method("set_speed_multiplier"):

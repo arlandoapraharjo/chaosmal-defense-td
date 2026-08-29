@@ -19,6 +19,7 @@ extends Node3D
 # Ammo scenes — preloaded once at parse time, not load()'d per shot
 var _ammo_scenes: Dictionary = {}
 static var _ammo_cache: Dictionary = {}
+static var _ui_texture_cache: Dictionary = {}
 
 func _init() -> void:
 	if _ammo_cache.is_empty():
@@ -48,9 +49,11 @@ var grid_pos: Vector2i = Vector2i.ZERO
 var footprint_size: Vector2i = Vector2i(1, 1)
 var is_ghost: bool = false
 var is_selected: bool = false
-var _selection_light: SpotLight3D = null
-var _selection_tween: Tween = null
+var _highlighter: TurretHighlighter = null
 var _recycle_lock_timer: float = 0.0
+var _base_scale: Vector3 = Vector3.ONE
+var _bounce_tween: Tween = null
+var _ui_pop_tween: Tween = null
 
 var attack_damage: float = 35.0
 var _base_attack_damage: float = 35.0
@@ -82,6 +85,9 @@ var _upgrade_banner_texture: Texture2D = null
 var _upgrade_texture: Texture2D = null
 var _sell_texture: Texture2D = null
 
+const UPGRADE_CELEBRATION_SCENE := preload("res://scenes/upgrade_celebration_particle.tscn")
+const DISMANTLE_PARTICLE_SCENE := preload("res://scenes/turret_dismantle_particle.tscn")
+
 # Hold-to-Recycle (Level 5 Protection)
 const RECYCLE_HOLD_DURATION: float = 0.5
 var _is_holding_recycle: bool = false
@@ -106,6 +112,7 @@ var _recoil_tween: Tween = null
 var _recoil_node: Node3D = null
 
 func _ready() -> void:
+	_base_scale = scale
 	_base_cooldown = cooldown
 	_base_attack_damage = attack_damage
 	_base_attack_range = attack_range
@@ -115,8 +122,16 @@ func _ready() -> void:
 	call_deferred("_capture_initial_facing")
 	call_deferred("_find_catapult_arm")
 	call_deferred("_find_recoil_barrel")
-	call_deferred("_setup_3d_ui")
-	call_deferred("_setup_selection_marker")
+	# Spread heavy init work across frames to avoid placement lag
+	call_deferred("_deferred_init_spread")
+
+func _deferred_init_spread() -> void:
+	if is_ghost:
+		return
+	_setup_3d_ui()
+	if is_inside_tree():
+		await get_tree().process_frame
+	_setup_highlighter()
 
 ## Apply a global speed multiplier — faster speed = shorter cooldown = higher fire rate.
 func set_speed_multiplier(multiplier: float) -> void:
@@ -137,7 +152,6 @@ func _auto_detect_weapon_type() -> void:
 	var path_or_name: String = scene_file_path.to_lower() if scene_file_path != "" else name.to_lower()
 	if path_or_name.find("cannon") != -1:
 		weapon_type = "cannon"
-		is_half_circle = true
 	elif path_or_name.find("ballista") != -1:
 		weapon_type = "ballista"
 	elif path_or_name.find("catapult") != -1:
@@ -261,6 +275,14 @@ static func _load_texture_file(res_path: String) -> Texture2D:
 	return null
 
 func _load_ui_textures() -> void:
+	# Use static cache — textures load from disk only once across all turrets
+	if _ui_texture_cache.has("loaded"):
+		_level_textures = _ui_texture_cache.get("level_textures", []).duplicate()
+		_upgrade_banner_texture = _ui_texture_cache.get("upgrade_banner", null)
+		_upgrade_texture = _ui_texture_cache.get("upgrade", null)
+		_sell_texture = _ui_texture_cache.get("sell", null)
+		return
+	
 	_level_textures.clear()
 	for i in range(1, 6):
 		var tex = _load_texture_file("res://UI/Level Up - Indicator/turret_level_%d.png" % i)
@@ -273,28 +295,24 @@ func _load_ui_textures() -> void:
 	if not _upgrade_texture:
 		_upgrade_texture = _load_texture_file("res://UI/Level Up - Indicator/lvl_up.png")
 	_sell_texture = _load_texture_file("res://UI/Level Up - Indicator/trash_button.png")
+	
+	# Cache for future turrets
+	_ui_texture_cache["level_textures"] = _level_textures.duplicate()
+	_ui_texture_cache["upgrade_banner"] = _upgrade_banner_texture
+	_ui_texture_cache["upgrade"] = _upgrade_texture
+	_ui_texture_cache["sell"] = _sell_texture
+	_ui_texture_cache["loaded"] = true
 
-func _setup_selection_marker() -> void:
+func _setup_highlighter() -> void:
 	if is_ghost:
 		return
-	if _selection_light and is_instance_valid(_selection_light):
-		return
-	_selection_light = SpotLight3D.new()
-	_selection_light.name = "SelectionSpotLight"
-	_selection_light.visible = is_selected
-	_selection_light.light_color = Color(1.0, 0.98, 0.92) # Crisp stage spotlight
-	_selection_light.light_energy = 4.5
-	_selection_light.spot_range = 6.0
-	_selection_light.spot_angle = 15.0 # Tight focused pin-spot (~1.5m pool)
-	_selection_light.spot_angle_attenuation = 0.8
-	_selection_light.spot_attenuation = 0.8
-	
-	var base_h: float = 3.0
-	if scale.y > 1.5:
-		base_h = 3.8
-	_selection_light.position = Vector3(0, base_h, 0)
-	_selection_light.rotation_degrees = Vector3(-90, 0, 0) # Points straight down onto turret like a stage spotlight
-	add_child(_selection_light)
+	if _highlighter == null or not is_instance_valid(_highlighter):
+		_highlighter = TurretHighlighter.new()
+		_highlighter.name = "TurretHighlighter"
+		add_child(_highlighter)
+		_highlighter.setup(self, turret_level)
+		if is_selected:
+			_highlighter.set_selected(true, turret_level)
 
 func _setup_3d_ui() -> void:
 	if is_ghost:
@@ -542,19 +560,81 @@ void fragment() {
 	_sell_area.mouse_entered.connect(_on_sell_area_mouse_entered)
 	_sell_area.mouse_exited.connect(_on_sell_area_mouse_exited)
 	
-	# 4. Clickable Body Area for Selecting Turret
+	# 4. Clickable Body Area for Selecting Turret (AABB-based Box Hitbox)
+	# Uses a fast AABB union instead of expensive per-mesh convex hull generation
 	_body_area = Area3D.new()
 	_body_area.name = "TurretBodyArea"
+	
+	var meshes: Array[MeshInstance3D] = []
+	_collect_mesh_instances(self, meshes)
+	var combined_aabb: AABB = AABB()
+	var has_aabb: bool = false
+	for m in meshes:
+		if m.mesh:
+			var mesh_aabb = m.mesh.get_aabb()
+			var rel_xform = global_transform.affine_inverse() * m.global_transform
+			var transformed_aabb = rel_xform * mesh_aabb
+			if not has_aabb:
+				combined_aabb = transformed_aabb
+				has_aabb = true
+			else:
+				combined_aabb = combined_aabb.merge(transformed_aabb)
+	
 	var body_col = CollisionShape3D.new()
 	var body_box = BoxShape3D.new()
-	body_box.size = Vector3(footprint_size.x * 1.1, base_h + 0.2, footprint_size.y * 1.1)
+	if has_aabb:
+		body_box.size = combined_aabb.size
+		body_col.position = combined_aabb.position + combined_aabb.size * 0.5
+	else:
+		body_box.size = Vector3(0.85, base_h, 0.85)
+		body_col.position = Vector3(0, base_h / 2.0, 0)
 	body_col.shape = body_box
-	body_col.position = Vector3(0, (base_h + 0.2) / 2.0, 0)
 	_body_area.add_child(body_col)
+	
 	add_child(_body_area)
 	_body_area.input_event.connect(_on_body_area_input_event)
+	_body_area.mouse_entered.connect(_on_body_area_mouse_entered)
+	_body_area.mouse_exited.connect(_on_body_area_mouse_exited)
 	
 	_update_3d_ui()
+
+func _on_body_area_mouse_entered() -> void:
+	if is_ghost:
+		return
+	var builder = get_tree().get_first_node_in_group("builder_controller")
+	if not builder:
+		builder = get_node_or_null("/root/World/BuilderController")
+	if builder and builder.get("_is_building") == true:
+		return
+	if not _highlighter or not is_instance_valid(_highlighter):
+		_setup_highlighter()
+	if _highlighter and is_instance_valid(_highlighter):
+		_highlighter.set_hovered(true)
+
+func _on_body_area_mouse_exited() -> void:
+	if is_ghost:
+		return
+	if _highlighter and is_instance_valid(_highlighter):
+		_highlighter.set_hovered(false)
+
+func _on_body_area_input_event(camera: Camera3D, event: InputEvent, _pos: Vector3, _normal: Vector3, _shape_idx: int) -> void:
+	if is_ghost:
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var builder = get_tree().get_first_node_in_group("builder_controller")
+		if not builder:
+			builder = get_node_or_null("/root/World/BuilderController")
+		if builder:
+			if builder.get("_is_building") == true:
+				return
+			if builder.has_method("select_turret"):
+				builder.select_turret(self)
+				if is_inside_tree() and get_viewport():
+					get_viewport().set_input_as_handled()
+				return
+		set_selected(not is_selected)
+		if is_inside_tree() and get_viewport():
+			get_viewport().set_input_as_handled()
 
 func _update_3d_ui_positions(camera: Camera3D = null) -> void:
 	if not _ui_root or not is_instance_valid(_ui_root):
@@ -621,26 +701,63 @@ func _set_ui_visible(show: bool) -> void:
 	if is_ghost:
 		return
 	
+	# Kill any existing UI animation tweens
+	if _ui_pop_tween and _ui_pop_tween.is_valid():
+		_ui_pop_tween.kill()
+	
 	if show:
-		if _level_pivot and not _level_pivot.visible:
+		# Subnautica-style staggered pop-in: each element scales from 0 → overshoot → settle
+		_ui_pop_tween = create_tween()
+		_ui_pop_tween.set_parallel(true)
+		
+		# Level badge pops in first (delay 0.0s)
+		if _level_pivot and is_instance_valid(_level_pivot):
 			_level_pivot.visible = true
-			_level_pivot.scale = Vector3.ONE
-			
-		if _upgrade_pivot and not _upgrade_pivot.visible and turret_level < max_level:
+			_level_pivot.scale = Vector3.ZERO
+			_ui_pop_tween.tween_property(_level_pivot, "scale", Vector3(1.12, 1.12, 1.12), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(0.0)
+		
+		# Upgrade button pops in second (delay 0.04s)
+		if _upgrade_pivot and is_instance_valid(_upgrade_pivot) and turret_level < max_level:
 			_upgrade_pivot.visible = true
-			_upgrade_pivot.scale = Vector3.ONE
-			
-		if _sell_pivot and not _sell_pivot.visible:
+			_upgrade_pivot.scale = Vector3.ZERO
+			_ui_pop_tween.tween_property(_upgrade_pivot, "scale", Vector3(1.12, 1.12, 1.12), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(0.04)
+		
+		# Sell button pops in third (delay 0.08s)
+		if _sell_pivot and is_instance_valid(_sell_pivot):
 			_sell_pivot.visible = true
-			_sell_pivot.scale = Vector3.ONE
+			_sell_pivot.scale = Vector3.ZERO
+			_ui_pop_tween.tween_property(_sell_pivot, "scale", Vector3(1.12, 1.12, 1.12), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(0.08)
+		
+		# Settle all elements to exactly 1.0 after the overshoot
+		_ui_pop_tween.chain().set_parallel(true)
+		if _level_pivot and is_instance_valid(_level_pivot):
+			_ui_pop_tween.tween_property(_level_pivot, "scale", Vector3.ONE, 0.06).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		if _upgrade_pivot and is_instance_valid(_upgrade_pivot) and turret_level < max_level:
+			_ui_pop_tween.tween_property(_upgrade_pivot, "scale", Vector3.ONE, 0.06).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		if _sell_pivot and is_instance_valid(_sell_pivot):
+			_ui_pop_tween.tween_property(_sell_pivot, "scale", Vector3.ONE, 0.06).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	else:
 		_cancel_recycle_hold()
-		if _level_pivot:
-			_level_pivot.visible = false
-		if _upgrade_pivot:
-			_upgrade_pivot.visible = false
-		if _sell_pivot:
-			_sell_pivot.visible = false
+		# Smooth pop-out: shrink to 0 then hide
+		_ui_pop_tween = create_tween()
+		_ui_pop_tween.set_parallel(true)
+		
+		if _level_pivot and is_instance_valid(_level_pivot) and _level_pivot.visible:
+			_ui_pop_tween.tween_property(_level_pivot, "scale", Vector3.ZERO, 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+		if _upgrade_pivot and is_instance_valid(_upgrade_pivot) and _upgrade_pivot.visible:
+			_ui_pop_tween.tween_property(_upgrade_pivot, "scale", Vector3.ZERO, 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN).set_delay(0.02)
+		if _sell_pivot and is_instance_valid(_sell_pivot) and _sell_pivot.visible:
+			_ui_pop_tween.tween_property(_sell_pivot, "scale", Vector3.ZERO, 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN).set_delay(0.04)
+		
+		# Hide after shrink completes
+		_ui_pop_tween.chain().tween_callback(func():
+			if _level_pivot and is_instance_valid(_level_pivot):
+				_level_pivot.visible = false
+			if _upgrade_pivot and is_instance_valid(_upgrade_pivot):
+				_upgrade_pivot.visible = false
+			if _sell_pivot and is_instance_valid(_sell_pivot):
+				_sell_pivot.visible = false
+		)
 
 func _cancel_recycle_hold() -> void:
 	_is_holding_recycle = false
@@ -660,19 +777,11 @@ func set_selected(selected: bool) -> void:
 	if not selected:
 		_cancel_recycle_hold()
 	
-	if not _selection_light or not is_instance_valid(_selection_light):
-		_setup_selection_marker()
+	if not _highlighter or not is_instance_valid(_highlighter):
+		_setup_highlighter()
 		
-	if _selection_light and is_instance_valid(_selection_light):
-		_selection_light.visible = selected
-		if _selection_tween and _selection_tween.is_valid():
-			_selection_tween.kill()
-		if selected and is_inside_tree():
-			_selection_light.light_energy = 0.5
-			_selection_tween = create_tween()
-			_selection_tween.tween_property(_selection_light, "light_energy", 4.5, 0.15).set_trans(Tween.TRANS_QUAD)
-		else:
-			_selection_light.light_energy = 4.5
+	if _highlighter and is_instance_valid(_highlighter):
+		_highlighter.set_selected(selected, turret_level)
 
 # ── Screen-Space Precise Click Engine ──────────────────────────────────────────
 # Uses _input (not _unhandled_input) so it fires BEFORE Area3D signals can
@@ -763,11 +872,59 @@ func upgrade() -> bool:
 	_recalculate_stats()
 	_update_3d_ui()
 	
+	# 1. Outline Rarity Flare Pulse
+	if _highlighter and is_instance_valid(_highlighter):
+		_highlighter.play_upgrade_pulse(turret_level)
+		
+	# 2. 3D Sparkle Particle Burst tinted to rarity color
+	_spawn_upgrade_celebration()
+	
+	# 3. Model Squash-and-Stretch Spring Bounce Animation
+	_play_upgrade_bounce()
+	
 	# Activate click protection when reaching max level
 	if turret_level >= max_level:
 		_recycle_lock_timer = 0.5
 	
 	return true
+
+func _spawn_upgrade_celebration() -> void:
+	if UPGRADE_CELEBRATION_SCENE:
+		var part = UPGRADE_CELEBRATION_SCENE.instantiate()
+		var scene_root = get_tree().current_scene
+		if scene_root:
+			scene_root.add_child(part)
+		else:
+			get_parent().add_child(part)
+		part.global_position = global_position + Vector3(0, 0.2, 0)
+		if part.has_method("setup_color"):
+			var rarity_color = TurretHighlighter.get_rarity_color(turret_level)
+			part.setup_color(rarity_color)
+
+func _play_upgrade_bounce() -> void:
+	if is_inside_tree():
+		if _bounce_tween and _bounce_tween.is_valid():
+			_bounce_tween.kill()
+		scale = _base_scale
+		_bounce_tween = create_tween()
+		# Phase 1: Quick anticipation squash
+		_bounce_tween.tween_property(self, "scale", Vector3(_base_scale.x * 1.20, _base_scale.y * 0.80, _base_scale.z * 1.20), 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		# Phase 2: Overshoot stretch upwards
+		_bounce_tween.tween_property(self, "scale", Vector3(_base_scale.x * 0.92, _base_scale.y * 1.15, _base_scale.z * 0.92), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		# Phase 3: Settle smoothly back to original base scale
+		_bounce_tween.tween_property(self, "scale", _base_scale, 0.18).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+
+## Subtle micro-thud when turret is placed down on the map
+func play_placement_landing_animation() -> void:
+	if is_inside_tree():
+		if _bounce_tween and _bounce_tween.is_valid():
+			_bounce_tween.kill()
+		scale = _base_scale
+		_bounce_tween = create_tween()
+		# Gentle 5% landing compress
+		_bounce_tween.tween_property(self, "scale", Vector3(_base_scale.x * 1.04, _base_scale.y * 0.95, _base_scale.z * 1.04), 0.05).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		# Smooth settle back to base scale
+		_bounce_tween.tween_property(self, "scale", _base_scale, 0.10).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _recalculate_stats() -> void:
 	attack_damage = _base_attack_damage * (1.0 + (turret_level - 1) * 0.30)
@@ -817,10 +974,23 @@ func sell() -> void:
 	if TurretUpgradeManager.instance:
 		TurretUpgradeManager.instance.turret_sold.emit(self, refund)
 		
+	# Spawn dismantle particle effect at turret position before shrinking
+	_spawn_dismantle_particle()
+	
 	# Quick shrink effect and queue_free
 	var tw = create_tween()
 	tw.tween_property(self, "scale", Vector3(0.001, 0.001, 0.001), 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	tw.tween_callback(queue_free)
+
+func _spawn_dismantle_particle() -> void:
+	if DISMANTLE_PARTICLE_SCENE:
+		var part = DISMANTLE_PARTICLE_SCENE.instantiate()
+		var scene_root = get_tree().current_scene
+		if scene_root:
+			scene_root.add_child(part)
+		else:
+			get_parent().add_child(part)
+		part.global_position = global_position + Vector3(0, 0.15, 0)
 
 
 func _flash_insufficient_funds() -> void:
@@ -828,27 +998,6 @@ func _flash_insufficient_funds() -> void:
 		var tw = create_tween()
 		tw.tween_property(_upgrade_cost_label, "modulate", Color(1.0, 0.2, 0.2, 1.0), 0.08)
 		tw.tween_property(_upgrade_cost_label, "modulate", Color(1.0, 0.9, 0.3, 1.0), 0.35)
-
-# ── Area3D Input Event Callbacks ──────────────────────────────────────────────
-
-func _on_body_area_input_event(_camera: Node, event: InputEvent, _pos: Vector3, _normal: Vector3, _shape_idx: int) -> void:
-	if is_ghost:
-		return
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var builder = get_tree().get_first_node_in_group("builder_controller")
-		if not builder:
-			builder = get_node_or_null("/root/World/BuilderController")
-		if builder:
-			if builder.get("_is_building") == true:
-				return # Don't select if player is currently in placement mode
-			if builder.has_method("select_turret"):
-				builder.select_turret(self)
-				if is_inside_tree() and get_viewport():
-					get_viewport().set_input_as_handled()
-				return
-		set_selected(not is_selected)
-		if is_inside_tree() and get_viewport():
-			get_viewport().set_input_as_handled()
 
 # Note: _on_upgrade_area_input_event and _on_sell_area_input_event are intentionally
 # removed — click detection is handled by the screen-space engine in _input().
