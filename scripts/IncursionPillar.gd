@@ -18,10 +18,10 @@ signal pillar_destroyed
 
 # --- UI & Drop Shadow Customization (@export) ---
 @export_group("UI Layout & Sizing")
-@export var hp_bar_position: Vector3 = Vector3(2.4, 3.65, 0)
-@export var indicator_position: Vector3 = Vector3(2.4, 2.8, 0)
-@export var indicator_pixel_size: float = 0.01
-@export var upgrade_btn_position: Vector3 = Vector3(1.25, 1.25, 0)
+@export var hp_bar_position: Vector3 = Vector3(0.0, 3.6, 0.0)
+@export var indicator_position: Vector3 = Vector3(1.4, 2.8, 0.0)
+@export var indicator_pixel_size: float = 0.014
+@export var upgrade_btn_position: Vector3 = Vector3(1.4, 1.4, 0.0)
 @export var upgrade_btn_pixel_size: float = 0.008
 
 @export_group("UI Drop Shadow")
@@ -40,6 +40,7 @@ var hp_label: Label = null
 var hp_sprite: Sprite3D = null
 
 var upgrade_pivot: Node3D = null
+var upgrade_shadow_sprite: Sprite3D = null
 var upgrade_banner_sprite: Sprite3D = null
 var upgrade_sprite: Sprite3D = null
 var upgrade_cost_label: Label3D = null
@@ -70,30 +71,36 @@ func set_ui_visible(is_vis: bool) -> void:
 	if upgrade_pivot: upgrade_pivot.visible = is_vis
 
 
+static func _load_texture_file(res_path: String) -> Texture2D:
+	if ResourceLoader.exists(res_path):
+		var res = load(res_path)
+		if res is Texture2D:
+			return res
+	var global_p = ProjectSettings.globalize_path(res_path)
+	var check_path = global_p if FileAccess.file_exists(global_p) else res_path
+	if FileAccess.file_exists(check_path):
+		var img = Image.load_from_file(check_path)
+		if img and not img.is_empty():
+			return ImageTexture.create_from_image(img)
+	return null
+
 func _load_textures() -> void:
 	level_textures.clear()
 	# Load level indicator textures (lvl_1 to lvl_5)
 	for i in range(1, 6):
-		var tex: Texture2D = null
-		if ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_%d.png" % i):
-			tex = load("res://UI/Level Up - Indicator/lvl_%d.png" % i) as Texture2D
-		elif ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_%d.gif" % i):
-			tex = load("res://UI/Level Up - Indicator/lvl_%d.gif" % i) as Texture2D
-		elif ResourceLoader.exists("res://ui/lvl indicator/lvl_%d.png" % i):
-			tex = load("res://ui/lvl indicator/lvl_%d.png" % i) as Texture2D
-		
+		var tex: Texture2D = _load_texture_file("res://UI/Level Up - Indicator/turret_level_%d.png" % i)
+		if not tex:
+			tex = _load_texture_file("res://UI/Level Up - Indicator/lvl_%d.png" % i)
+		if not tex:
+			tex = _load_texture_file("res://UI/Level Up - Indicator/lvl_%d.gif" % i)
 		if tex:
 			level_textures.append(tex)
 	
 	# Load banner and level up button texture
-	if ResourceLoader.exists("res://UI/Level Up - Indicator/upbutton_banner.png"):
-		upgrade_banner_texture = load("res://UI/Level Up - Indicator/upbutton_banner.png") as Texture2D
-	if ResourceLoader.exists("res://UI/Level Up - Indicator/upgrade_buttonnew.png"):
-		upgrade_texture = load("res://UI/Level Up - Indicator/upgrade_buttonnew.png") as Texture2D
-	elif ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_up.png"):
-		upgrade_texture = load("res://UI/Level Up - Indicator/lvl_up.png") as Texture2D
-	elif ResourceLoader.exists("res://ui/lvl indicator/lvl_up.png"):
-		upgrade_texture = load("res://ui/lvl indicator/lvl_up.png") as Texture2D
+	upgrade_banner_texture = _load_texture_file("res://UI/Level Up - Indicator/upbutton_banner.png")
+	upgrade_texture = _load_texture_file("res://UI/Level Up - Indicator/upgrade_buttonnew.png")
+	if not upgrade_texture:
+		upgrade_texture = _load_texture_file("res://UI/Level Up - Indicator/lvl_up.png")
 
 func _process(delta: float) -> void:
 	for part in spinning_parts:
@@ -225,6 +232,20 @@ func _setup_ui() -> void:
 	upgrade_pivot.position = upgrade_btn_position
 	add_child(upgrade_pivot)
 
+	# Banner Drop Shadow Sprite
+	upgrade_shadow_sprite = Sprite3D.new()
+	upgrade_shadow_sprite.name = "UpgradeShadowSprite"
+	upgrade_shadow_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	upgrade_shadow_sprite.no_depth_test = true
+	upgrade_shadow_sprite.render_priority = 8
+	upgrade_shadow_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	upgrade_shadow_sprite.pixel_size = upgrade_btn_pixel_size
+	upgrade_shadow_sprite.modulate = shadow_color
+	upgrade_shadow_sprite.position = Vector3(shadow_offset.x * 0.5, shadow_offset.y * 0.5, -0.01)
+	if upgrade_banner_texture:
+		upgrade_shadow_sprite.texture = upgrade_banner_texture
+	upgrade_pivot.add_child(upgrade_shadow_sprite)
+
 	# Banner Background Sprite
 	upgrade_banner_sprite = Sprite3D.new()
 	upgrade_banner_sprite.name = "UpgradeBannerSprite"
@@ -286,7 +307,7 @@ func _setup_ui() -> void:
 func _setup_health_bar() -> void:
 	hp_pivot = Node3D.new()
 	hp_pivot.name = "HealthBarPivot"
-	hp_pivot.position = hp_bar_position
+	hp_pivot.position = Vector3(hp_bar_position.x, hp_bar_position.y + (current_level - 1) * 0.5, hp_bar_position.z)
 	add_child(hp_pivot)
 
 	# SubViewport to render clean, customized 2D progress bar in 3D
@@ -549,6 +570,11 @@ func _update_ui() -> void:
 				upgrade_area.input_ray_pickable = false
 		else:
 			upgrade_pivot.visible = true
+			if upgrade_shadow_sprite and upgrade_banner_texture:
+				upgrade_shadow_sprite.texture = upgrade_banner_texture
+				upgrade_shadow_sprite.visible = true
+			if upgrade_banner_sprite and upgrade_banner_texture:
+				upgrade_banner_sprite.texture = upgrade_banner_texture
 			if upgrade_area:
 				upgrade_area.input_ray_pickable = true
 			var cost = get_upgrade_cost()
@@ -615,6 +641,12 @@ func _on_upgraded() -> void:
 			if tw:
 				tw.set_trans(Tween.TRANS_BACK)
 			tween.tween_property(visual_model, "scale", target_scale, 0.3)
+
+	if hp_pivot and is_inside_tree():
+		var target_hp_y = hp_bar_position.y + (current_level - 1) * 0.5
+		var hp_tw = create_tween()
+		if hp_tw:
+			hp_tw.tween_property(hp_pivot, "position:y", target_hp_y, 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
 	if current_level >= max_level:
 		_trigger_endgame_victory()

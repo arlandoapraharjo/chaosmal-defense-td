@@ -926,49 +926,25 @@
       ],
       "loads": [
         {
-          "line": 90,
-          "raw": "res://UI/Level Up - Indicator/upbutton_banner.png",
-          "path": "UI/Level Up - Indicator/upbutton_banner.png",
-          "call": "load"
-        },
-        {
-          "line": 92,
-          "raw": "res://UI/Level Up - Indicator/upgrade_buttonnew.png",
-          "path": "UI/Level Up - Indicator/upgrade_buttonnew.png",
-          "call": "load"
-        },
-        {
-          "line": 94,
-          "raw": "res://UI/Level Up - Indicator/lvl_up.png",
-          "path": "UI/Level Up - Indicator/lvl_up.png",
-          "call": "load"
-        },
-        {
-          "line": 96,
-          "raw": "res://ui/lvl indicator/lvl_up.png",
-          "path": "ui/lvl indicator/lvl_up.png",
-          "call": "load"
-        },
-        {
-          "line": 104,
+          "line": 111,
           "raw": "res://assets/Models/GLB format/tower-round-crystals.glb",
           "path": "assets/Models/GLB format/tower-round-crystals.glb",
           "call": "load"
         },
         {
-          "line": 424,
+          "line": 445,
           "raw": "res://scenes/pillar_hit_particle.tscn",
           "path": "scenes/pillar_hit_particle.tscn",
           "call": "load"
         },
         {
-          "line": 435,
+          "line": 456,
           "raw": "res://scenes/pillar_destruction.tscn",
           "path": "scenes/pillar_destruction.tscn",
           "call": "load"
         },
         {
-          "line": 650,
+          "line": 682,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -1244,55 +1220,31 @@
       ],
       "loads": [
         {
-          "line": 223,
-          "raw": "res://UI/Level Up - Indicator/upbutton_banner.png",
-          "path": "UI/Level Up - Indicator/upbutton_banner.png",
-          "call": "load"
-        },
-        {
-          "line": 225,
-          "raw": "res://UI/Level Up - Indicator/upgrade_buttonnew.png",
-          "path": "UI/Level Up - Indicator/upgrade_buttonnew.png",
-          "call": "load"
-        },
-        {
-          "line": 227,
-          "raw": "res://UI/Level Up - Indicator/lvl_up.png",
-          "path": "UI/Level Up - Indicator/lvl_up.png",
-          "call": "load"
-        },
-        {
-          "line": 229,
-          "raw": "res://UI/Level Up - Indicator/trash_button.png",
-          "path": "UI/Level Up - Indicator/trash_button.png",
-          "call": "load"
-        },
-        {
-          "line": 753,
+          "line": 904,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 754,
+          "line": 905,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 755,
+          "line": 906,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 756,
+          "line": 907,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 757,
+          "line": 908,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"

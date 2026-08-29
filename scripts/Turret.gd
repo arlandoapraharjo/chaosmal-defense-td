@@ -82,6 +82,13 @@ var _upgrade_banner_texture: Texture2D = null
 var _upgrade_texture: Texture2D = null
 var _sell_texture: Texture2D = null
 
+# Hold-to-Recycle (Level 5 Protection)
+const RECYCLE_HOLD_DURATION: float = 0.5
+var _is_holding_recycle: bool = false
+var _recycle_hold_timer: float = 0.0
+var _recycle_bar_sprite: Sprite3D = null
+var _recycle_bar_mat: ShaderMaterial = null
+
 # Internal timer
 var _cooldown_timer: float = 0.0
 # Base cooldown — speed multiplier divides this to fire faster
@@ -174,6 +181,33 @@ func _process(delta: float) -> void:
 	if is_instance_valid(_current_target):
 		_rotate_toward_target(_current_target, delta)
 
+	# --- Hold-to-Recycle Progress Processing (Level 5 Protection) ---
+	if _is_holding_recycle:
+		var valid_cursor: bool = true
+		if camera and is_instance_valid(_sell_sprite):
+			var icon_pos = _sell_sprite.global_position
+			var sell_screen = camera.unproject_position(icon_pos)
+			var mouse_pos = get_viewport().get_mouse_position()
+			if mouse_pos.distance_to(sell_screen) > 55.0:
+				valid_cursor = false
+		if not valid_cursor or not is_selected or not is_inside_tree() or turret_level < max_level:
+			_cancel_recycle_hold()
+		else:
+			_recycle_hold_timer += delta
+			var progress: float = clampf(_recycle_hold_timer / RECYCLE_HOLD_DURATION, 0.0, 1.0)
+			if _recycle_bar_mat:
+				_recycle_bar_mat.set_shader_parameter("progress", progress)
+			if _recycle_bar_sprite:
+				_recycle_bar_sprite.visible = true
+			if _sell_sprite:
+				var press_scale = 1.0 - progress * 0.12 # Tactile press-in while charging
+				_sell_sprite.scale = Vector3(press_scale, press_scale, press_scale)
+			
+			if _recycle_hold_timer >= RECYCLE_HOLD_DURATION:
+				_cancel_recycle_hold()
+				sell()
+				return
+
 	if _recycle_lock_timer > 0.0:
 		_recycle_lock_timer -= delta
 
@@ -213,20 +247,32 @@ func _rotate_toward_target(target: Node3D, delta: float) -> void:
 
 # ── 3D UI & Selection System ──────────────────────────────────────────────────
 
+static func _load_texture_file(res_path: String) -> Texture2D:
+	if ResourceLoader.exists(res_path):
+		var res = load(res_path)
+		if res is Texture2D:
+			return res
+	var global_p = ProjectSettings.globalize_path(res_path)
+	var check_path = global_p if FileAccess.file_exists(global_p) else res_path
+	if FileAccess.file_exists(check_path):
+		var img = Image.load_from_file(check_path)
+		if img and not img.is_empty():
+			return ImageTexture.create_from_image(img)
+	return null
+
 func _load_ui_textures() -> void:
 	_level_textures.clear()
 	for i in range(1, 6):
-		var p = "res://UI/Level Up - Indicator/lvl_%d.png" % i
-		if ResourceLoader.exists(p):
-			_level_textures.append(load(p) as Texture2D)
-	if ResourceLoader.exists("res://UI/Level Up - Indicator/upbutton_banner.png"):
-		_upgrade_banner_texture = load("res://UI/Level Up - Indicator/upbutton_banner.png") as Texture2D
-	if ResourceLoader.exists("res://UI/Level Up - Indicator/upgrade_buttonnew.png"):
-		_upgrade_texture = load("res://UI/Level Up - Indicator/upgrade_buttonnew.png") as Texture2D
-	elif ResourceLoader.exists("res://UI/Level Up - Indicator/lvl_up.png"):
-		_upgrade_texture = load("res://UI/Level Up - Indicator/lvl_up.png") as Texture2D
-	if ResourceLoader.exists("res://UI/Level Up - Indicator/trash_button.png"):
-		_sell_texture = load("res://UI/Level Up - Indicator/trash_button.png") as Texture2D
+		var tex = _load_texture_file("res://UI/Level Up - Indicator/turret_level_%d.png" % i)
+		if not tex:
+			tex = _load_texture_file("res://UI/Level Up - Indicator/turret_level_%d.gif" % i)
+		if tex:
+			_level_textures.append(tex)
+	_upgrade_banner_texture = _load_texture_file("res://UI/Level Up - Indicator/upbutton_banner.png")
+	_upgrade_texture = _load_texture_file("res://UI/Level Up - Indicator/upgrade_buttonnew.png")
+	if not _upgrade_texture:
+		_upgrade_texture = _load_texture_file("res://UI/Level Up - Indicator/lvl_up.png")
+	_sell_texture = _load_texture_file("res://UI/Level Up - Indicator/trash_button.png")
 
 func _setup_selection_marker() -> void:
 	if is_ghost:
@@ -281,7 +327,7 @@ func _setup_3d_ui() -> void:
 	_level_shadow_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	_level_shadow_sprite.pixel_size = 0.008
 	_level_shadow_sprite.modulate = Color(0.0, 0.0, 0.0, 0.6)
-	_level_shadow_sprite.position = Vector3(0.03, -0.03, -0.01)
+	_level_shadow_sprite.position = Vector3(0.015, -0.015, -0.01)
 	_level_pivot.add_child(_level_shadow_sprite)
 	
 	_level_sprite = Sprite3D.new()
@@ -389,6 +435,82 @@ func _setup_3d_ui() -> void:
 		_sell_sprite.texture = _sell_texture
 	_sell_pivot.add_child(_sell_sprite)
 	
+	# Horizontal Progress Charge Bar (Level 5 Hold-to-Recycle - Positioned on Top of Banner)
+	_recycle_bar_sprite = Sprite3D.new()
+	_recycle_bar_sprite.name = "RecycleBarSprite"
+	_recycle_bar_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_recycle_bar_sprite.no_depth_test = true
+	_recycle_bar_sprite.render_priority = 25
+	_recycle_bar_sprite.sorting_offset = 5.0
+	_recycle_bar_sprite.pixel_size = 0.007
+	_recycle_bar_sprite.position = Vector3(0, 0.28, 0.02)
+	_recycle_bar_sprite.offset = Vector2(0, 0)
+	
+	var bar_img = Image.create(64, 12, false, Image.FORMAT_RGBA8)
+	bar_img.fill(Color.WHITE)
+	_recycle_bar_sprite.texture = ImageTexture.create_from_image(bar_img)
+	
+	var bar_sh = Shader.new()
+	bar_sh.code = """
+shader_type spatial;
+render_mode unshaded, cull_disabled, depth_test_disabled;
+
+uniform float progress : hint_range(0.0, 1.0) = 0.0;
+uniform vec4 bg_color : source_color = vec4(0.05, 0.06, 0.09, 0.95);
+uniform vec4 fill_start : source_color = vec4(0.2, 0.95, 1.0, 1.0);
+uniform vec4 fill_end : source_color = vec4(1.0, 0.35, 0.2, 1.0);
+uniform vec4 border_color : source_color = vec4(0.35, 0.45, 0.60, 1.0);
+
+void vertex() {
+	// Full camera billboard matching BaseMaterial3D.BILLBOARD_ENABLED
+	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(
+		INV_VIEW_MATRIX[0] * length(MODEL_MATRIX[0].xyz),
+		INV_VIEW_MATRIX[1] * length(MODEL_MATRIX[1].xyz),
+		INV_VIEW_MATRIX[2] * length(MODEL_MATRIX[2].xyz),
+		MODEL_MATRIX[3]
+	);
+	MODELVIEW_NORMAL_MATRIX = mat3(MODELVIEW_MATRIX);
+}
+
+void fragment() {
+	vec2 uv = UV;
+	float aspect = 64.0 / 12.0;
+	vec2 p = vec2((uv.x - 0.5) * aspect, uv.y - 0.5);
+	float radius = 0.42;
+	float half_w = (aspect - 1.0) * 0.5;
+	float d = length(vec2(max(abs(p.x) - half_w, 0.0), p.y)) - radius;
+	
+	if (d > 0.0) {
+		discard;
+	}
+	
+	// Rounded border stroke
+	if (d > -0.08) {
+		ALBEDO = border_color.rgb;
+		ALPHA = border_color.a;
+	} else {
+		// Interior fill
+		float fill_x = clamp((uv.x - 0.04) / 0.92, 0.0, 1.0);
+		if (fill_x <= progress && progress > 0.001) {
+			vec4 col = mix(fill_start, fill_end, progress);
+			float shine = clamp((0.5 - abs(uv.y - 0.3)) * 0.4, 0.0, 0.3);
+			ALBEDO = col.rgb + vec3(shine);
+			ALPHA = col.a;
+		} else {
+			ALBEDO = bg_color.rgb;
+			ALPHA = bg_color.a;
+		}
+	}
+}
+"""
+	_recycle_bar_mat = ShaderMaterial.new()
+	_recycle_bar_mat.shader = bar_sh
+	_recycle_bar_mat.render_priority = 25
+	_recycle_bar_mat.set_shader_parameter("progress", 0.0)
+	_recycle_bar_sprite.material_override = _recycle_bar_mat
+	_recycle_bar_sprite.visible = false
+	_sell_pivot.add_child(_recycle_bar_sprite)
+	
 	# Refund Label (Right slot of banner, vertically stacked: Coin on top, Refund number below)
 	_sell_label = Label3D.new()
 	_sell_label.name = "SellLabel"
@@ -453,18 +575,18 @@ func _update_3d_ui_positions(camera: Camera3D = null) -> void:
 		
 	var base_top = global_position + Vector3(0, base_h, 0)
 	
-	# Level badge: Top (Right edge aligned with banners' right edge, above upgrade banner)
-	if _level_pivot and is_instance_valid(_level_pivot):
-		_level_pivot.global_position = base_top + cam_right * 0.41 + cam_up * 0.06
-		
 	# Upgrade button: Right Side (beside turret body)
 	if _upgrade_pivot and is_instance_valid(_upgrade_pivot):
-		_upgrade_pivot.global_position = base_top + cam_right * 1.05 - cam_up * 0.35 + cam_fwd * 0.10
+		_upgrade_pivot.global_position = base_top + cam_right * 0.70 - cam_up * 0.35 + cam_fwd * 0.10
 		
 	# Sell button: Right Side (takes upper slot if max level, otherwise lower slot)
 	if _sell_pivot and is_instance_valid(_sell_pivot):
 		var sell_up_offset: float = -0.35 if turret_level >= max_level else -0.72
-		_sell_pivot.global_position = base_top + cam_right * 1.05 + cam_up * sell_up_offset + cam_fwd * 0.10
+		_sell_pivot.global_position = base_top + cam_right * 0.70 + cam_up * sell_up_offset + cam_fwd * 0.10
+
+	# Standing level banner: Right Side of Upgrade & Sell buttons (fixed vertical position)
+	if _level_pivot and is_instance_valid(_level_pivot):
+		_level_pivot.global_position = base_top + cam_right * 1.15 - cam_up * 0.535 + cam_fwd * 0.10
 
 func _update_3d_ui() -> void:
 	if is_ghost or not is_instance_valid(_level_pivot):
@@ -512,6 +634,7 @@ func _set_ui_visible(show: bool) -> void:
 			_sell_pivot.visible = true
 			_sell_pivot.scale = Vector3.ONE
 	else:
+		_cancel_recycle_hold()
 		if _level_pivot:
 			_level_pivot.visible = false
 		if _upgrade_pivot:
@@ -519,11 +642,23 @@ func _set_ui_visible(show: bool) -> void:
 		if _sell_pivot:
 			_sell_pivot.visible = false
 
+func _cancel_recycle_hold() -> void:
+	_is_holding_recycle = false
+	_recycle_hold_timer = 0.0
+	if _recycle_bar_mat:
+		_recycle_bar_mat.set_shader_parameter("progress", 0.0)
+	if _recycle_bar_sprite:
+		_recycle_bar_sprite.visible = false
+	if _sell_sprite and is_inside_tree():
+		_sell_sprite.scale = Vector3.ONE
+
 func set_selected(selected: bool) -> void:
 	if is_ghost:
 		return
 	is_selected = selected
 	_set_ui_visible(selected)
+	if not selected:
+		_cancel_recycle_hold()
 	
 	if not _selection_light or not is_instance_valid(_selection_light):
 		_setup_selection_marker()
@@ -546,8 +681,17 @@ func set_selected(selected: bool) -> void:
 
 func _input(event: InputEvent) -> void:
 	if is_ghost or not is_selected:
+		if _is_holding_recycle:
+			_cancel_recycle_hold()
 		return
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+	
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if not event.pressed:
+			# Left mouse released -> cancel hold if active
+			if _is_holding_recycle:
+				_cancel_recycle_hold()
+			return
+
 		var camera = get_viewport().get_camera_3d()
 		if not camera:
 			return
@@ -579,21 +723,28 @@ func _input(event: InputEvent) -> void:
 			var icon_pos = _sell_sprite.global_position if is_instance_valid(_sell_sprite) else _sell_pivot.global_position
 			var sell_screen = camera.unproject_position(icon_pos)
 			if click_pos.distance_to(sell_screen) <= 40.0:
-				if _recycle_lock_timer > 0.0:
-					# Accidental spam-click protection immediately after reaching Level 5
-					if is_inside_tree() and get_viewport():
-						get_viewport().set_input_as_handled()
-					return
 				if is_inside_tree() and get_viewport():
 					get_viewport().set_input_as_handled()
 				if builder and builder.has_method("notify_turret_interacted"):
 					builder.notify_turret_interacted()
-				if _sell_pivot and is_inside_tree():
-					var tw = create_tween()
-					tw.tween_property(_sell_pivot, "scale", Vector3(0.85, 0.85, 0.85), 0.05)
-					tw.tween_property(_sell_pivot, "scale", Vector3(1.1, 1.1, 1.1), 0.12).set_trans(Tween.TRANS_BACK)
-				sell()
-				return
+				
+				if turret_level >= max_level:
+					# Level 5 requires 0.6s hold to confirm
+					_is_holding_recycle = true
+					_recycle_hold_timer = 0.0
+					if _recycle_bar_sprite:
+						_recycle_bar_sprite.visible = true
+					if _recycle_bar_mat:
+						_recycle_bar_mat.set_shader_parameter("progress", 0.0)
+					return
+				else:
+					# Levels 1-4: Instant click
+					if _sell_pivot and is_inside_tree():
+						var tw = create_tween()
+						tw.tween_property(_sell_pivot, "scale", Vector3(0.85, 0.85, 0.85), 0.05)
+						tw.tween_property(_sell_pivot, "scale", Vector3(1.1, 1.1, 1.1), 0.12).set_trans(Tween.TRANS_BACK)
+					sell()
+					return
 
 # ── Upgrade & Sell Logic ───────────────────────────────────────────────────────
 

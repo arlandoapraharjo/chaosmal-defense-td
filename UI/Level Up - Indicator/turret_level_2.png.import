@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcbmcjh7w666v"
-path="res://.godot/imported/lvl_2.png-b7e745f52f20154198ffd2f86c1d22fe.ctex"
+uid="uid://bbcjxlhmm24lo"
+path="res://.godot/imported/turret_level_2.png-66affa420ef416cf23fd7a09074aea8f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/Level Up - Indicator/lvl_2.png"
-dest_files=["res://.godot/imported/lvl_2.png-b7e745f52f20154198ffd2f86c1d22fe.ctex"]
+source_file="res://UI/Level Up - Indicator/turret_level_2.png"
+dest_files=["res://.godot/imported/turret_level_2.png-66affa420ef416cf23fd7a09074aea8f.ctex"]
 
 [params]
 
