@@ -2,16 +2,18 @@ extends CanvasLayer
 class_name GameOverOverlay
 
 @onready var backdrop: ColorRect = $Backdrop
-@onready var modal_panel: PanelContainer = $CenterContainer/ModalPanel
-@onready var title_label: Label = $CenterContainer/ModalPanel/VBoxContainer/TitleLabel
-@onready var subtitle_label: Label = $CenterContainer/ModalPanel/VBoxContainer/SubtitleLabel
+@onready var modal_container: VBoxContainer = $CenterContainer/ModalContainer
+@onready var banner_rect: TextureRect = $CenterContainer/ModalContainer/BannerRect
+@onready var title_label: Label = $CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/TitleLabel
 
-@onready var wave_stat_label: Label = $CenterContainer/ModalPanel/VBoxContainer/StatsGrid/WaveValLabel
-@onready var enemies_stat_label: Label = $CenterContainer/ModalPanel/VBoxContainer/StatsGrid/EnemiesValLabel
-@onready var currency_stat_label: Label = $CenterContainer/ModalPanel/VBoxContainer/StatsGrid/CurrencyValLabel
+@onready var wave_stat_label: Label = $CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid/WaveValLabel
+@onready var enemies_stat_label: Label = $CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid/EnemiesValLabel
+@onready var currency_stat_label: Label = $CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid/CurrencyValLabel
 
-@onready var retry_button: Button = $CenterContainer/ModalPanel/VBoxContainer/ButtonContainer/RetryButton
-@onready var menu_button: Button = $CenterContainer/ModalPanel/VBoxContainer/ButtonContainer/MenuButton
+@onready var retry_button: TextureButton = $CenterContainer/ModalContainer/ButtonContainer/RetryButton
+@onready var retry_label: Label = $CenterContainer/ModalContainer/ButtonContainer/RetryButton/HBox/RetryLabel
+@onready var menu_button: TextureButton = $CenterContainer/ModalContainer/ButtonContainer/MenuButton
+@onready var menu_label: Label = $CenterContainer/ModalContainer/ButtonContainer/MenuButton/HBox/MenuLabel
 
 var _is_victory: bool = false
 
@@ -27,16 +29,16 @@ func _ready() -> void:
 		menu_button.pressed.connect(_on_menu_pressed)
 		_setup_button_effects(menu_button)
 
-func _setup_button_effects(btn: Button) -> void:
-	btn.pivot_offset = btn.size / 2.0
+func _setup_button_effects(btn: Control) -> void:
+	btn.pivot_offset = Vector2(55, 18)
 	btn.mouse_entered.connect(func():
 		if not is_inside_tree():
 			return
 		var tween = create_tween()
 		if tween:
-			var tw = tween.tween_property(btn, "scale", Vector2(1.05, 1.05), 0.1)
+			var tw = tween.tween_property(btn, "scale", Vector2(1.08, 1.08), 0.12)
 			if tw:
-				tw.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+				tw.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	)
 	btn.mouse_exited.connect(func():
 		if not is_inside_tree():
@@ -55,12 +57,11 @@ func show_victory(stats: Dictionary = {}) -> void:
 	
 	title_label.text = "🏆 VICTORY!"
 	title_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.2)) # Gold
-	subtitle_label.text = "The Incursion Pillar has reached maximum power and purified the realm!"
 	
-	if retry_button:
-		retry_button.text = "🔄 Play Again"
+	if retry_label:
+		retry_label.text = "Play Again"
 		
-	_animate_presentation(Color(0.12, 0.08, 0.25, 0.85), Color(0.6, 0.35, 1.0))
+	_animate_presentation(Color(1.0, 0.85, 0.2))
 
 func show_defeat(stats: Dictionary = {}) -> void:
 	_is_victory = false
@@ -69,12 +70,11 @@ func show_defeat(stats: Dictionary = {}) -> void:
 	
 	title_label.text = "💀 DEFEAT!"
 	title_label.add_theme_color_override("font_color", Color(1.0, 0.25, 0.25)) # Crimson
-	subtitle_label.text = "The Incursion Pillar has been overwhelmed and destroyed by invaders."
 	
-	if retry_button:
-		retry_button.text = "🔄 Retry"
+	if retry_label:
+		retry_label.text = "Retry"
 		
-	_animate_presentation(Color(0.18, 0.05, 0.06, 0.88), Color(0.9, 0.2, 0.2))
+	_animate_presentation(Color(1.0, 0.25, 0.25))
 
 func _populate_stats(stats: Dictionary) -> void:
 	var waves = stats.get("waves_cleared", 0)
@@ -88,36 +88,21 @@ func _populate_stats(stats: Dictionary) -> void:
 	if currency_stat_label:
 		currency_stat_label.text = "⚡ %d Essence" % cur
 
-func _animate_presentation(panel_bg: Color, border_glow: Color) -> void:
+func _animate_presentation(_accent_color: Color) -> void:
 	# Animate backdrop fade
 	if backdrop:
 		backdrop.modulate.a = 0.0
 		var fade_tween = create_tween()
-		fade_tween.tween_property(backdrop, "modulate:a", 1.0, 0.4)
+		fade_tween.tween_property(backdrop, "modulate:a", 1.0, 0.35)
 		
-	# Apply card stylebox
-	if modal_panel:
-		var style = StyleBoxFlat.new()
-		style.bg_color = panel_bg
-		style.border_color = border_glow
-		style.set_border_width_all(3)
-		style.set_corner_radius_all(14)
-		style.shadow_color = Color(0, 0, 0, 0.7)
-		style.shadow_size = 20
-		style.content_margin_left = 32
-		style.content_margin_top = 28
-		style.content_margin_right = 32
-		style.content_margin_bottom = 28
-		modal_panel.add_theme_stylebox_override("panel", style)
-		
-		# Animate pop-in
-		modal_panel.pivot_offset = modal_panel.size / 2.0
-		modal_panel.scale = Vector2(0.7, 0.7)
-		modal_panel.modulate.a = 0.0
+	if modal_container:
+		modal_container.pivot_offset = Vector2(200, 118)
+		modal_container.scale = Vector2(0.65, 0.65)
+		modal_container.modulate.a = 0.0
 		var pop_tween = create_tween()
 		pop_tween.set_parallel(true)
-		pop_tween.tween_property(modal_panel, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		pop_tween.tween_property(modal_panel, "modulate:a", 1.0, 0.25)
+		pop_tween.tween_property(modal_container, "scale", Vector2.ONE, 0.38).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		pop_tween.tween_property(modal_container, "modulate:a", 1.0, 0.22)
 
 func _on_retry_pressed() -> void:
 	get_tree().paused = false

@@ -1,10 +1,10 @@
-# Graph Report - C:\Users\user\repos\IGI-Code-Circus  (2026-08-25)
+# Graph Report - C:\Users\user\repos\IGI-Code-Circus  (2026-08-29)
 
 ## Corpus Check
 - cluster-only mode — file stats not available
 
 ## Summary
-- 100 nodes · 72 edges · 36 communities (9 shown, 27 thin omitted)
+- 107 nodes · 78 edges · 38 communities (10 shown, 28 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
@@ -24,9 +24,11 @@
 - MapGenerator
 - IncursionPillar
 - TurretHotbar
+- BuilderController
 - animation_player
 - BiomeManager
 - EnemyDetector
+- TurretHighlighter
 - TurretUpgradeManager
 - HotbarTheme
 - Bush2Glb3 Scene
@@ -47,15 +49,15 @@
 - Thin Tree Scene
 - Thin Tree Snow Scene
 - Pilarshockwave Scene
-- HitParticle
+- Turret
 - Map Scene
 
 ## God Nodes (most connected - your core abstractions)
 1. `Map Scene` - 13 edges
 2. `Game Scaling Stats — Hard Mode Redesign (v2)` - 8 edges
-3. `Project Documentation & Recent Updates` - 6 edges
-4. `HitParticle` - 6 edges
-5. `Turret` - 5 edges
+3. `Turret` - 7 edges
+4. `Project Documentation & Recent Updates` - 6 edges
+5. `HitParticle` - 6 edges
 6. `Biome Setup Guide` - 4 edges
 7. `How to create a new BiomeData resource` - 4 edges
 8. `IncursionPillar` - 4 edges
@@ -63,8 +65,6 @@
 10. `Known biome asset paths` - 3 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Map Scene` --references--> `BuilderController`  [EXTRACTED]
-  scenes/map.tscn → scripts/BuilderController.gd
 - `Map Scene` --references--> `CameraController`  [EXTRACTED]
   scenes/map.tscn → scripts/CameraController.gd
 - `Pillar Hit Particle Scene` --references--> `HitParticle`  [EXTRACTED]
@@ -73,11 +73,13 @@
   scenes/map.tscn → UI/Hotbar/TurretHotbar.tscn
 - `MainMenu` --loads--> `Map Scene`  [EXTRACTED]
   UI/Menus/MainMenu.gd → scenes/map.tscn
+- `Map Scene` --references--> `BiomeData`  [EXTRACTED]
+  scenes/map.tscn → biomes/BiomeData.gd
 
 ## Import Cycles
 - None detected.
 
-## Communities (36 total, 27 thin omitted)
+## Communities (38 total, 28 thin omitted)
 
 ### Community 1 - "Project Documentation & Recent Updates"
 Cohesion: 0.29
@@ -103,29 +105,33 @@ Nodes (6): IncursionPillar, PillarDestructionParticle, PillarShockwave, Pillar D
 Cohesion: 0.50
 Nodes (4): HotbarSlot, TurretHotbar, Hotbarslot Scene, Turrethotbar Scene
 
-### Community 98 - "HitParticle"
-Cohesion: 0.24
-Nodes (10): BoulderImpact, BuilderController, HitParticle, Turret, Ballista Hit Particle Scene, Boulder Impact Scene, Cannon Hit Particle Scene, Hit Particle Scene (+2 more)
+### Community 11 - "BuilderController"
+Cohesion: 0.67
+Nodes (3): BuilderController, TurretPlacementParticle, Turret Placement Particle Scene
+
+### Community 98 - "Turret"
+Cohesion: 0.18
+Nodes (13): BoulderImpact, HitParticle, Turret, TurretDismantleParticle, UpgradeCelebrationParticle, Ballista Hit Particle Scene, Boulder Impact Scene, Cannon Hit Particle Scene (+5 more)
 
 ### Community 99 - "Map Scene"
 Cohesion: 0.12
 Nodes (16): BiomeData, CurrencyManager, GameOverOverlay, PauseOverlay, World, CurrencyUI, MainMenu, SpeedToggle (+8 more)
 
 ## Knowledge Gaps
-- **61 isolated node(s):** `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation`, `Enemy Movement`, `Enemy Pathing & Coordinate Alignment` (+56 more)
+- **65 isolated node(s):** `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation`, `Enemy Movement`, `Enemy Pathing & Coordinate Alignment` (+60 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **27 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **28 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Map Scene` connect `Map Scene` to `MapGenerator`, `HitParticle`, `TurretHotbar`?**
-  _High betweenness centrality (0.130) - this node is a cross-community bridge._
-- **Why does `MapGenerator` connect `MapGenerator` to `IncursionPillar`, `Map Scene`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
-- **Why does `IncursionPillar` connect `IncursionPillar` to `MapGenerator`?**
-  _High betweenness centrality (0.045) - this node is a cross-community bridge._
+- **Why does `Map Scene` connect `Map Scene` to `MapGenerator`, `TurretHotbar`, `BuilderController`?**
+  _High betweenness centrality (0.143) - this node is a cross-community bridge._
+- **Why does `BuilderController` connect `BuilderController` to `Turret`, `Map Scene`?**
+  _High betweenness centrality (0.072) - this node is a cross-community bridge._
+- **Why does `Turret` connect `Turret` to `BuilderController`?**
+  _High betweenness centrality (0.071) - this node is a cross-community bridge._
 - **What connects `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation` to the rest of the system?**
-  _61 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _65 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Map Scene` be split into smaller, more focused modules?**
   _Cohesion score 0.125 - nodes in this community are weakly interconnected._

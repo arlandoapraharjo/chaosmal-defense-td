@@ -2,7 +2,7 @@
   "_meta": {
     "generated_by": "godot_index.py",
     "total_scenes": 41,
-    "root": "C:\\igi-dev-code-circus"
+    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scenes": [
     {
@@ -456,6 +456,30 @@
           "raw_path": "res://scripts/GameOverOverlay.gd",
           "type": "Script",
           "id": "1_script"
+        },
+        {
+          "path": "UI/Endgame Banner/endgame_banner.png",
+          "raw_path": "res://UI/Endgame Banner/endgame_banner.png",
+          "type": "Texture2D",
+          "id": "2_banner"
+        },
+        {
+          "path": "UI/Level Up - Indicator/upbutton_banner.png",
+          "raw_path": "res://UI/Level Up - Indicator/upbutton_banner.png",
+          "type": "Texture2D",
+          "id": "3_btn_bg"
+        },
+        {
+          "path": "UI/Level Up - Indicator/upgrade_buttonnew.png",
+          "raw_path": "res://UI/Level Up - Indicator/upgrade_buttonnew.png",
+          "type": "Texture2D",
+          "id": "4_up_icon"
+        },
+        {
+          "path": "UI/Level Up - Indicator/trash_button.png",
+          "raw_path": "res://UI/Level Up - Indicator/trash_button.png",
+          "type": "Texture2D",
+          "id": "5_trash_icon"
         }
       ],
       "nodes_preview": [
@@ -472,12 +496,12 @@
           "type": "CenterContainer"
         },
         {
-          "name": "ModalPanel",
-          "type": "PanelContainer"
+          "name": "ModalContainer",
+          "type": "VBoxContainer"
         },
         {
-          "name": "VBoxContainer",
-          "type": "VBoxContainer"
+          "name": "BannerRect",
+          "type": "TextureRect"
         }
       ]
     },
@@ -1526,6 +1550,18 @@
       "scenes/map.tscn"
     ],
     "scripts/GameOverOverlay.gd": [
+      "scenes/GameOverOverlay.tscn"
+    ],
+    "UI/Endgame Banner/endgame_banner.png": [
+      "scenes/GameOverOverlay.tscn"
+    ],
+    "UI/Level Up - Indicator/upbutton_banner.png": [
+      "scenes/GameOverOverlay.tscn"
+    ],
+    "UI/Level Up - Indicator/upgrade_buttonnew.png": [
+      "scenes/GameOverOverlay.tscn"
+    ],
+    "UI/Level Up - Indicator/trash_button.png": [
       "scenes/GameOverOverlay.tscn"
     ],
     "scripts/PauseOverlay.gd": [

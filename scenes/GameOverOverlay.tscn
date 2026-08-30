@@ -1,6 +1,10 @@
-[gd_scene format=3 uid="uid://cx8v4qm5pak21"]
+[gd_scene load_steps=6 format=3 uid="uid://cx8v4qm5pak21"]
 
 [ext_resource type="Script" path="res://scripts/GameOverOverlay.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://UI/Endgame Banner/endgame_banner.png" id="2_banner"]
+[ext_resource type="Texture2D" path="res://UI/Level Up - Indicator/upbutton_banner.png" id="3_btn_bg"]
+[ext_resource type="Texture2D" path="res://UI/Level Up - Indicator/upgrade_buttonnew.png" id="4_up_icon"]
+[ext_resource type="Texture2D" path="res://UI/Level Up - Indicator/trash_button.png" id="5_trash_icon"]
 
 [node name="GameOverOverlay" type="CanvasLayer"]
 process_mode = 3
@@ -13,7 +17,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.7)
+mouse_filter = 2
+color = Color(0, 0, 0, 0.75)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = 15
@@ -21,93 +26,181 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="ModalPanel" type="PanelContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(460, 360)
+[node name="ModalContainer" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/ModalPanel"]
+[node name="BannerRect" type="TextureRect" parent="CenterContainer/ModalContainer"]
+custom_minimum_size = Vector2(400, 185)
 layout_mode = 2
-theme_override_constants/separation = 14
+texture = ExtResource("2_banner")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/ModalPanel/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/ModalContainer/BannerRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/ModalContainer/BannerRect/MarginContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "🏆 VICTORY!"
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 24
+text = "VICTORY!"
 horizontal_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="CenterContainer/ModalPanel/VBoxContainer"]
-custom_minimum_size = Vector2(380, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.82, 0.85, 1)
-theme_override_font_sizes/font_size = 14
-text = "The Incursion Pillar has reached maximum power and purified the realm!"
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/ModalPanel/VBoxContainer"]
-layout_mode = 2
-
-[node name="StatsGrid" type="GridContainer" parent="CenterContainer/ModalPanel/VBoxContainer"]
+[node name="StatsGrid" type="GridContainer" parent="CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/h_separation = 30
-theme_override_constants/v_separation = 10
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 6
 columns = 2
 
-[node name="WaveTitleLabel" type="Label" parent="CenterContainer/ModalPanel/VBoxContainer/StatsGrid"]
+[node name="WaveTitleLabel" type="Label" parent="CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.75, 0.8, 1)
-theme_override_font_sizes/font_size = 15
-text = "Waves Survived:"
+theme_override_colors/font_color = Color(0.8, 0.85, 0.95, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 14
+text = "Waves Cleared:"
 
-[node name="WaveValLabel" type="Label" parent="CenterContainer/ModalPanel/VBoxContainer/StatsGrid"]
+[node name="WaveValLabel" type="Label" parent="CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 14
 text = "0 Waves"
 horizontal_alignment = 2
 
-[node name="EnemiesTitleLabel" type="Label" parent="CenterContainer/ModalPanel/VBoxContainer/StatsGrid"]
+[node name="EnemiesTitleLabel" type="Label" parent="CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.75, 0.8, 1)
-theme_override_font_sizes/font_size = 15
-text = "Invaders Annihilated:"
+theme_override_colors/font_color = Color(0.8, 0.85, 0.95, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 14
+text = "Invaders Defeated:"
 
-[node name="EnemiesValLabel" type="Label" parent="CenterContainer/ModalPanel/VBoxContainer/StatsGrid"]
+[node name="EnemiesValLabel" type="Label" parent="CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 14
 text = "0 Defeated"
 horizontal_alignment = 2
 
-[node name="CurrencyTitleLabel" type="Label" parent="CenterContainer/ModalPanel/VBoxContainer/StatsGrid"]
+[node name="CurrencyTitleLabel" type="Label" parent="CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.75, 0.8, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.8, 0.85, 0.95, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 14
 text = "Final Essence:"
 
-[node name="CurrencyValLabel" type="Label" parent="CenterContainer/ModalPanel/VBoxContainer/StatsGrid"]
+[node name="CurrencyValLabel" type="Label" parent="CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 14
 text = "⚡ 0 Essence"
 horizontal_alignment = 2
 
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/ModalPanel/VBoxContainer"]
+[node name="ButtonContainer" type="HBoxContainer" parent="CenterContainer/ModalContainer"]
 layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 2
 
-[node name="ButtonContainer" type="HBoxContainer" parent="CenterContainer/ModalPanel/VBoxContainer"]
+[node name="RetryButton" type="TextureButton" parent="CenterContainer/ModalContainer/ButtonContainer"]
+custom_minimum_size = Vector2(110, 36)
 layout_mode = 2
-theme_override_constants/separation = 16
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("3_btn_bg")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="HBox" type="HBoxContainer" parent="CenterContainer/ModalContainer/ButtonContainer/RetryButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
 alignment = 1
 
-[node name="RetryButton" type="Button" parent="CenterContainer/ModalPanel/VBoxContainer/ButtonContainer"]
-custom_minimum_size = Vector2(170, 46)
+[node name="Icon" type="TextureRect" parent="CenterContainer/ModalContainer/ButtonContainer/RetryButton/HBox"]
+custom_minimum_size = Vector2(22, 22)
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "🔄 Play Again"
+mouse_filter = 2
+texture = ExtResource("4_up_icon")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="MenuButton" type="Button" parent="CenterContainer/ModalPanel/VBoxContainer/ButtonContainer"]
-custom_minimum_size = Vector2(170, 46)
+[node name="RetryLabel" type="Label" parent="CenterContainer/ModalContainer/ButtonContainer/RetryButton/HBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
-text = "🏠 Main Menu"
+mouse_filter = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 13
+text = "Play Again"
+
+[node name="MenuButton" type="TextureButton" parent="CenterContainer/ModalContainer/ButtonContainer"]
+custom_minimum_size = Vector2(110, 36)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("3_btn_bg")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="HBox" type="HBoxContainer" parent="CenterContainer/ModalContainer/ButtonContainer/MenuButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="CenterContainer/ModalContainer/ButtonContainer/MenuButton/HBox"]
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_trash_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MenuLabel" type="Label" parent="CenterContainer/ModalContainer/ButtonContainer/MenuButton/HBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 13
+text = "Main Menu"
