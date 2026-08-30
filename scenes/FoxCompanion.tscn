@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dcwtq3v7rkys2"]
+
+[ext_resource type="Script" path="res://scripts/FoxCompanion.gd" id="1_fox_script"]
+
+[node name="FoxCompanion" type="CharacterBody3D" groups=["fox_companion"]]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_fox_script")

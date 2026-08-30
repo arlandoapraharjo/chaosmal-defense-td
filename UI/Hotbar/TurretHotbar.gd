@@ -199,32 +199,38 @@ const TOGGLE_TEX_CLOSE := preload("res://UI/Turret Hotbar/Dhotbar_toggle2.png")
 func _setup_popup() -> void:
 	# Wait one frame so the panel has its final size
 	await get_tree().process_frame
+	if not is_inside_tree() or not hotbar_panel:
+		return
 
-	# Store the panel's "open" Y position and hide it off-screen
-	_panel_target_y = hotbar_panel.position.y
-	hotbar_panel.position.y = hotbar_panel.position.y + hotbar_panel.size.y + 20
+	var vp_h = get_viewport().get_visible_rect().size.y
+	_panel_target_y = vp_h - hotbar_panel.size.y - 8
+
+	# Hide it off-screen at the bottom
+	hotbar_panel.position.y = vp_h + 20
 	hotbar_panel.visible = true
+	_is_open = false
 
 	# Create the toggle button
-	_toggle_btn = Button.new()
-	_toggle_btn.text = ""
-	_toggle_btn.custom_minimum_size = Vector2(64, 32)
-	_toggle_btn.pressed.connect(_toggle_hotbar)
-	_toggle_btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
-	_apply_toggle_style()
+	if _toggle_btn == null:
+		_toggle_btn = Button.new()
+		_toggle_btn.text = ""
+		_toggle_btn.custom_minimum_size = Vector2(64, 32)
+		_toggle_btn.pressed.connect(_toggle_hotbar)
+		_toggle_btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+		_apply_toggle_style()
 
-	# Add as a sibling control so it lives in the same CanvasLayer
-	add_child(_toggle_btn)
-	# Position it at bottom center
-	_toggle_btn.anchor_left = 0.5
-	_toggle_btn.anchor_right = 0.5
-	_toggle_btn.anchor_top = 1.0
-	_toggle_btn.anchor_bottom = 1.0
-	_toggle_btn.offset_left = -32
-	_toggle_btn.offset_right = 32
-	_toggle_btn.offset_top = toggle_offset_top
-	_toggle_btn.offset_bottom = 0
-	_toggle_btn.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		add_child(_toggle_btn)
+		_toggle_btn.anchor_left = 0.5
+		_toggle_btn.anchor_right = 0.5
+		_toggle_btn.anchor_top = 1.0
+		_toggle_btn.anchor_bottom = 1.0
+		_toggle_btn.offset_left = -32
+		_toggle_btn.offset_right = 32
+		_toggle_btn.offset_top = toggle_offset_top
+		_toggle_btn.offset_bottom = 0
+		_toggle_btn.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	else:
+		_apply_toggle_style()
 
 func _apply_toggle_style() -> void:
 	if not _toggle_btn:
@@ -255,15 +261,19 @@ func _show_hotbar() -> void:
 	_is_open = true
 	_apply_toggle_style()
 
-	if _panel_tween:
+	var vp_h = get_viewport().get_visible_rect().size.y
+	_panel_target_y = vp_h - hotbar_panel.size.y - 8
+
+	if _panel_tween and _panel_tween.is_running():
 		_panel_tween.kill()
 	_panel_tween = create_tween()
 	_panel_tween.set_ease(Tween.EASE_OUT)
 	_panel_tween.set_trans(Tween.TRANS_BACK)
 	# Slide panel up, push toggle button up above it
 	_panel_tween.tween_property(hotbar_panel, "position:y", _panel_target_y, 0.35)
-	_panel_tween.parallel().tween_property(_toggle_btn, "offset_top", toggle_offset_top - hotbar_panel.size.y - 4, 0.35)
-	_panel_tween.parallel().tween_property(_toggle_btn, "offset_bottom", 0 - hotbar_panel.size.y - 4, 0.35)
+	if _toggle_btn:
+		_panel_tween.parallel().tween_property(_toggle_btn, "offset_top", toggle_offset_top - hotbar_panel.size.y - 4, 0.35)
+		_panel_tween.parallel().tween_property(_toggle_btn, "offset_bottom", 0 - hotbar_panel.size.y - 4, 0.35)
 
 func _hide_hotbar() -> void:
 	if not _is_open:
@@ -271,16 +281,19 @@ func _hide_hotbar() -> void:
 	_is_open = false
 	_apply_toggle_style()
 
-	if _panel_tween:
+	var vp_h = get_viewport().get_visible_rect().size.y
+	var hidden_y = vp_h + 20
+
+	if _panel_tween and _panel_tween.is_running():
 		_panel_tween.kill()
 	_panel_tween = create_tween()
 	_panel_tween.set_ease(Tween.EASE_IN)
 	_panel_tween.set_trans(Tween.TRANS_CUBIC)
 	# Slide panel back down off screen, toggle button returns to bottom
-	var hidden_y = _panel_target_y + hotbar_panel.size.y + 20
 	_panel_tween.tween_property(hotbar_panel, "position:y", hidden_y, 0.25)
-	_panel_tween.parallel().tween_property(_toggle_btn, "offset_top", toggle_offset_top, 0.25)
-	_panel_tween.parallel().tween_property(_toggle_btn, "offset_bottom", 0, 0.25)
+	if _toggle_btn:
+		_panel_tween.parallel().tween_property(_toggle_btn, "offset_top", toggle_offset_top, 0.25)
+		_panel_tween.parallel().tween_property(_toggle_btn, "offset_bottom", 0, 0.25)
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Close the hotbar when clicking outside it

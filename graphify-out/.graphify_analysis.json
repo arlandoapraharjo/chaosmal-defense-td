@@ -68,87 +68,84 @@
       "tscn_ui_hotbar_turrethotbar"
     ],
     "10": [
-      "gdscript_scripts_buildercontroller",
-      "gdscript_scripts_turretplacementparticle",
-      "tscn_scenes_turret_placement_particle"
-    ],
-    "11": [
       "gdscript_scenes_animation_player"
     ],
-    "12": [
+    "11": [
       "gdscript_scripts_biomemanager"
     ],
-    "13": [
+    "12": [
       "gdscript_scripts_enemydetector"
     ],
-    "14": [
+    "13": [
       "gdscript_scripts_turrethighlighter"
     ],
-    "15": [
+    "14": [
       "gdscript_scripts_turretupgrademanager"
     ],
-    "16": [
+    "15": [
       "gdscript_ui_hotbar_hotbartheme"
     ],
-    "17": [
+    "16": [
       "tscn_addons_mesh_bush2glb3"
     ],
-    "18": [
+    "17": [
       "tscn_addons_mesh_snow_bush"
     ],
-    "19": [
+    "18": [
       "tscn_assets_models_glb_format_desert_desert_tile"
     ],
-    "20": [
+    "19": [
       "tscn_assets_models_glb_format_desert_desert_tile_corner"
     ],
-    "21": [
+    "20": [
       "tscn_assets_models_glb_format_desert_desert_tile_spawn"
     ],
-    "22": [
+    "21": [
       "tscn_assets_models_glb_format_desert_desert_tile_spawnend"
     ],
-    "23": [
+    "22": [
       "tscn_assets_models_glb_format_desert_desert_tile_straight"
     ],
-    "24": [
+    "23": [
       "tscn_assets_models_glb_format_grass_better_tile_grass"
     ],
-    "25": [
+    "24": [
       "tscn_scenes_bush"
     ],
-    "26": [
+    "25": [
       "tscn_scenes_foliage_snow_tree"
     ],
-    "27": [
+    "26": [
       "tscn_scenes_foliage_tree"
     ],
-    "28": [
+    "27": [
       "tscn_scenes_grass"
     ],
-    "29": [
+    "28": [
       "tscn_scenes_grass_single"
     ],
-    "30": [
+    "29": [
       "tscn_scenes_grass_single_snow"
     ],
-    "31": [
+    "30": [
       "tscn_scenes_snow_bush"
     ],
-    "32": [
+    "31": [
       "tscn_scenes_thin_tree"
     ],
-    "33": [
+    "32": [
       "tscn_scenes_thin_tree_snow"
     ],
-    "34": [
+    "33": [
       "tscn_shaders_pilarshockwave"
     ],
     "98": [
       "gdscript_scripts_boulderimpact",
+      "gdscript_scripts_buildercontroller",
       "gdscript_scripts_hitparticle",
       "gdscript_scripts_turret",
       "gdscript_scripts_turretdismantleparticle",
+      "gdscript_scripts_turretplacementparticle",
       "gdscript_scripts_upgradecelebrationparticle",
       "tscn_scenes_ballista_hit_particle",
       "tscn_scenes_boulder_impact",
@@ -157,6 +154,7 @@
       "tscn_scenes_hit_particle_ballista",
       "tscn_scenes_hit_particle_cannon",
       "tscn_scenes_turret_dismantle_particle",
+      "tscn_scenes_turret_placement_particle",
       "tscn_scenes_upgrade_celebration_particle"
     ],
     "99": [
@@ -170,6 +168,7 @@
       "gdscript_scripts_wavemanager",
       "gdscript_scripts_world",
       "gdscript_ui_currencyui",
+      "gdscript_ui_intro_introoverlay",
       "gdscript_ui_menus_mainmenu",
       "gdscript_ui_speedtoggle",
       "gdscript_ui_waveui",
@@ -179,6 +178,7 @@
       "tscn_scenes_map",
       "tscn_scenes_pauseoverlay",
       "tscn_ui_currencyui",
+      "tscn_ui_intro_introoverlay",
       "tscn_ui_menus_mainmenu",
       "tscn_ui_speedtoggle",
       "tscn_ui_waveui"
@@ -195,7 +195,7 @@
     "7": 1.0,
     "8": 0.25,
     "9": 0.5,
-    "10": 0.6666666666666666,
+    "10": 1.0,
     "11": 1.0,
     "12": 1.0,
     "13": 1.0,
@@ -219,15 +219,14 @@
     "31": 1.0,
     "32": 1.0,
     "33": 1.0,
-    "34": 1.0,
-    "98": 0.1794871794871795,
-    "99": 0.09523809523809523
+    "98": 0.14166666666666666,
+    "99": 0.08695652173913043
   },
   "gods": [
     {
       "id": "tscn_scenes_map",
       "label": "Map Scene",
-      "degree": 13
+      "degree": 14
     },
     {
       "id": "game_stats_game_scaling_stats_hard_mode_redesign_v2",
@@ -335,28 +334,28 @@
   "questions": [
     {
       "type": "bridge_node",
-      "question": "Why does `Map Scene` connect `Map Scene` to `TurretHotbar`, `BuilderController`?",
-      "why": "High betweenness centrality (0.146) - this node is a cross-community bridge."
+      "question": "Why does `Map Scene` connect `Map Scene` to `TurretHotbar`, `Turret`?",
+      "why": "High betweenness centrality (0.157) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `Turret` connect `Turret` to `BuilderController`?",
-      "why": "High betweenness centrality (0.071) - this node is a cross-community bridge."
-    },
-    {
-      "type": "bridge_node",
-      "question": "Why does `BuilderController` connect `BuilderController` to `Turret`, `Map Scene`?",
-      "why": "High betweenness centrality (0.070) - this node is a cross-community bridge."
+      "question": "Why does `BuilderController` connect `Turret` to `Map Scene`?",
+      "why": "High betweenness centrality (0.072) - this node is a cross-community bridge."
     },
     {
       "type": "isolated_nodes",
       "question": "What connects `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation` to the rest of the system?",
-      "why": "66 weakly-connected nodes found - possible documentation gaps or missing edges."
+      "why": "67 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Turret` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.14166666666666666 - nodes in this community are weakly interconnected."
     },
     {
       "type": "low_cohesion",
       "question": "Should `Map Scene` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected."
+      "why": "Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected."
     }
   ]
 }

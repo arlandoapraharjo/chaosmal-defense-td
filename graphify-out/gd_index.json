@@ -1,13 +1,22 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scripts": 32,
-    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
+    "total_scripts": 36,
+    "root": "C:\\igi-dev-code-circus"
   },
   "scripts": [
     {
       "file": "UI/CurrencyUI.gd",
       "class_name": null,
+      "extends": "CanvasLayer",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": []
+    },
+    {
+      "file": "UI/FoxHUD/FoxHUD.gd",
+      "class_name": "FoxHUD",
       "extends": "CanvasLayer",
       "signals": [],
       "functions": [],
@@ -316,6 +325,37 @@
           "type": "Color"
         }
       ]
+    },
+    {
+      "file": "UI/Intro/IntroOverlay.gd",
+      "class_name": null,
+      "extends": "CanvasLayer",
+      "signals": [
+        {
+          "name": "intro_finished"
+        },
+        {
+          "name": "step_changed",
+          "params": [
+            "step_idx: int"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "start_intro",
+          "params": []
+        }
+      ],
+      "loads": [
+        {
+          "line": 19,
+          "raw": "res://assets/characters/animal-fox.glb",
+          "path": "assets/characters/animal-fox.glb",
+          "call": "preload"
+        }
+      ],
+      "exports": []
     },
     {
       "file": "UI/Menus/MainMenu.gd",
@@ -686,7 +726,7 @@
           "call": "load"
         },
         {
-          "line": 357,
+          "line": 431,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
@@ -881,6 +921,96 @@
       "exports": []
     },
     {
+      "file": "scripts/FoxCompanion.gd",
+      "class_name": "FoxCompanion",
+      "extends": "CharacterBody3D",
+      "signals": [
+        {
+          "name": "selected_changed",
+          "params": [
+            "is_selected: bool"
+          ]
+        },
+        {
+          "name": "entered_turret",
+          "params": [
+            "turret: Node3D"
+          ]
+        },
+        {
+          "name": "left_turret",
+          "params": [
+            "turret: Node3D"
+          ]
+        }
+      ],
+      "functions": [
+        {
+          "name": "set_selected",
+          "params": [
+            "selected"
+          ]
+        },
+        {
+          "name": "play_deployment_drop",
+          "params": [
+            "start_height"
+          ]
+        },
+        {
+          "name": "command_move_to",
+          "params": [
+            "target_world_pos"
+          ]
+        },
+        {
+          "name": "command_enter_turret",
+          "params": [
+            "turret"
+          ]
+        }
+      ],
+      "loads": [
+        {
+          "line": 12,
+          "raw": "res://assets/characters/animal-fox.glb",
+          "path": "assets/characters/animal-fox.glb",
+          "call": "preload"
+        },
+        {
+          "line": 13,
+          "raw": "res://assets/Models/GLB format/selection-a.glb",
+          "path": "assets/Models/GLB format/selection-a.glb",
+          "call": "preload"
+        },
+        {
+          "line": 14,
+          "raw": "res://scenes/FoxPoofParticle.tscn",
+          "path": "scenes/FoxPoofParticle.tscn",
+          "call": "preload"
+        }
+      ],
+      "exports": [
+        {
+          "name": "move_speed",
+          "type": "float"
+        },
+        {
+          "name": "model_scale",
+          "type": "Vector3"
+        }
+      ]
+    },
+    {
+      "file": "scripts/FoxPoofParticle.gd",
+      "class_name": "FoxPoofParticle",
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [],
+      "loads": [],
+      "exports": []
+    },
+    {
       "file": "scripts/GameOverOverlay.gd",
       "class_name": "GameOverOverlay",
       "extends": "CanvasLayer",
@@ -951,31 +1081,31 @@
       ],
       "loads": [
         {
-          "line": 193,
+          "line": 196,
           "raw": "res://assets/Models/GLB format/tower-round-crystals.glb",
           "path": "assets/Models/GLB format/tower-round-crystals.glb",
           "call": "load"
         },
         {
-          "line": 245,
+          "line": 262,
           "raw": "res://scenes/pillar_ambient_particles.tscn",
           "path": "scenes/pillar_ambient_particles.tscn",
           "call": "load"
         },
         {
-          "line": 505,
+          "line": 522,
           "raw": "res://scenes/pillar_hit_particle.tscn",
           "path": "scenes/pillar_hit_particle.tscn",
           "call": "load"
         },
         {
-          "line": 516,
+          "line": 533,
           "raw": "res://scenes/pillar_destruction.tscn",
           "path": "scenes/pillar_destruction.tscn",
           "call": "load"
         },
         {
-          "line": 728,
+          "line": 766,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -1072,13 +1202,13 @@
           "call": "preload"
         },
         {
-          "line": 1011,
+          "line": 1020,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 1017,
+          "line": 1026,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
@@ -1270,6 +1400,12 @@
           ]
         },
         {
+          "name": "apply_fox_buff",
+          "params": [
+            "active"
+          ]
+        },
+        {
           "name": "set_selected",
           "params": [
             "selected"
@@ -1302,43 +1438,43 @@
       ],
       "loads": [
         {
-          "line": 88,
+          "line": 92,
           "raw": "res://scenes/upgrade_celebration_particle.tscn",
           "path": "scenes/upgrade_celebration_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 89,
+          "line": 93,
           "raw": "res://scenes/turret_dismantle_particle.tscn",
           "path": "scenes/turret_dismantle_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1053,
+          "line": 1118,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1054,
+          "line": 1119,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1055,
+          "line": 1120,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 1056,
+          "line": 1121,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 1057,
+          "line": 1122,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"
@@ -1378,6 +1514,23 @@
           ]
         },
         {
+          "name": "setup_static",
+          "params": [
+            "target_node",
+            "color",
+            "1.0",
+            "1.0",
+            "1.0"
+          ]
+        },
+        {
+          "name": "set_fox_buffed",
+          "params": [
+            "active",
+            "is_max_tier"
+          ]
+        },
+        {
           "name": "set_hovered",
           "params": [
             "hovered"
@@ -1410,19 +1563,19 @@
           "call": "preload"
         },
         {
-          "line": 101,
+          "line": 149,
           "raw": "res://shaders/outline_pixel_perfect.gdshader",
           "path": "shaders/outline_pixel_perfect.gdshader",
           "call": "load"
         },
         {
-          "line": 107,
+          "line": 155,
           "raw": "res://shaders/occluded_silhouette.gdshader",
           "path": "shaders/occluded_silhouette.gdshader",
           "call": "load"
         },
         {
-          "line": 120,
+          "line": 168,
           "raw": "res://shaders/outline_pixel_perfect.gdshader",
           "path": "shaders/outline_pixel_perfect.gdshader",
           "call": "load"
@@ -1661,7 +1814,14 @@
           "params": []
         }
       ],
-      "loads": [],
+      "loads": [
+        {
+          "line": 30,
+          "raw": "res://scenes/FoxCompanion.tscn",
+          "path": "scenes/FoxCompanion.tscn",
+          "call": "preload"
+        }
+      ],
       "exports": []
     }
   ]

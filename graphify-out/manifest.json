@@ -523,5 +523,25 @@
     "mtime": 1787987551.4771328,
     "ast_hash": "c2e92b781dd9f88ec6094c82fa9c0e9a",
     "semantic_hash": ""
+  },
+  "UI/Endgame Banner/endgame_banner.png": {
+    "mtime": 1788097730.6947963,
+    "ast_hash": "0ea2a96c2fccd9450140761b5c13746c",
+    "semantic_hash": ""
+  },
+  "UI/Endgame Banner/endgame_but1.png": {
+    "mtime": 1788097730.6959596,
+    "ast_hash": "dbc8849f3c7ec65d67761b868edb0939",
+    "semantic_hash": ""
+  },
+  "UI/Endgame Banner/endgame_but2.png": {
+    "mtime": 1788097730.697107,
+    "ast_hash": "34ba4130a91edfa8a1194f96728df5a3",
+    "semantic_hash": ""
+  },
+  "UI/Endgame Banner/new_endgame_banner.png": {
+    "mtime": 1788097730.6976254,
+    "ast_hash": "ad2897122441f0d2f746662b8665ff6f",
+    "semantic_hash": ""
   }
 }

@@ -1,8 +1,8 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scenes": 42,
-    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
+    "total_scenes": 46,
+    "root": "C:\\igi-dev-code-circus"
   },
   "scenes": [
     {
@@ -51,6 +51,40 @@
         {
           "name": "CoinsBanner",
           "type": "TextureRect"
+        }
+      ]
+    },
+    {
+      "file": "UI/FoxHUD/FoxHUD.tscn",
+      "scene_uid": "uid://dfoxhud001scene",
+      "ext_resources": [
+        {
+          "path": "UI/FoxHUD/FoxHUD.gd",
+          "raw_path": "res://UI/FoxHUD/FoxHUD.gd",
+          "type": "Script",
+          "id": "1_hud_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "FoxHUD",
+          "type": "CanvasLayer"
+        },
+        {
+          "name": "Control",
+          "type": "Control"
+        },
+        {
+          "name": "CommandBanner",
+          "type": "PanelContainer"
+        },
+        {
+          "name": "MarginContainer",
+          "type": "MarginContainer"
+        },
+        {
+          "name": "VBoxContainer",
+          "type": "VBoxContainer"
         }
       ]
     },
@@ -124,6 +158,40 @@
         {
           "name": "TitleLabel",
           "type": "Label"
+        },
+        {
+          "name": "MarginContainer",
+          "type": "MarginContainer"
+        }
+      ]
+    },
+    {
+      "file": "UI/Intro/IntroOverlay.tscn",
+      "scene_uid": "uid://dpe5vyw6hax4k",
+      "ext_resources": [
+        {
+          "path": "UI/Intro/IntroOverlay.gd",
+          "raw_path": "res://UI/Intro/IntroOverlay.gd",
+          "type": "Script",
+          "id": "1_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "IntroOverlay",
+          "type": "CanvasLayer"
+        },
+        {
+          "name": "Control",
+          "type": "Control"
+        },
+        {
+          "name": "Backdrop",
+          "type": "ColorRect"
+        },
+        {
+          "name": "DialogPanel",
+          "type": "PanelContainer"
         },
         {
           "name": "MarginContainer",
@@ -444,6 +512,50 @@
         {
           "name": "DirectionalLight3D",
           "type": "DirectionalLight3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/FoxCompanion.tscn",
+      "scene_uid": "uid://dcwtq3v7rkys2",
+      "ext_resources": [
+        {
+          "path": "scripts/FoxCompanion.gd",
+          "raw_path": "res://scripts/FoxCompanion.gd",
+          "type": "Script",
+          "id": "1_fox_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "FoxCompanion",
+          "type": "CharacterBody3D"
+        }
+      ]
+    },
+    {
+      "file": "scenes/FoxPoofParticle.tscn",
+      "scene_uid": "uid://dfoxpoof001",
+      "ext_resources": [
+        {
+          "path": "scripts/FoxPoofParticle.gd",
+          "raw_path": "res://scripts/FoxPoofParticle.gd",
+          "type": "Script",
+          "id": "1_poof_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "FoxPoofParticle",
+          "type": "Node3D"
+        },
+        {
+          "name": "SmokePuffs",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "Sparkles",
+          "type": "GPUParticles3D"
         }
       ]
     },
@@ -1123,6 +1235,20 @@
           "type": "Script",
           "uid": "uid://3ts65qp6w4w6",
           "id": "19_world"
+        },
+        {
+          "path": "UI/Intro/IntroOverlay.tscn",
+          "raw_path": "res://UI/Intro/IntroOverlay.tscn",
+          "type": "PackedScene",
+          "uid": "uid://dpe5vyw6hax4k",
+          "id": "20_intro"
+        },
+        {
+          "path": "UI/FoxHUD/FoxHUD.tscn",
+          "raw_path": "res://UI/FoxHUD/FoxHUD.tscn",
+          "type": "PackedScene",
+          "uid": "uid://dfoxhud001scene",
+          "id": "21_foxhud"
         }
       ],
       "nodes_preview": [
@@ -1505,6 +1631,9 @@
     "UI/Coins&Turret/turret_banner.png": [
       "UI/CurrencyUI.tscn"
     ],
+    "UI/FoxHUD/FoxHUD.gd": [
+      "UI/FoxHUD/FoxHUD.tscn"
+    ],
     "UI/Hotbar/HotbarSlot.gd": [
       "UI/Hotbar/HotbarSlot.tscn"
     ],
@@ -1513,6 +1642,9 @@
     ],
     "UI/Hotbar/TurretHotbar.gd": [
       "UI/Hotbar/TurretHotbar.tscn"
+    ],
+    "UI/Intro/IntroOverlay.gd": [
+      "UI/Intro/IntroOverlay.tscn"
     ],
     "UI/Menus/MainMenu.gd": [
       "UI/Menus/MainMenu.tscn"
@@ -1577,6 +1709,12 @@
     "scripts/CameraController.gd": [
       "assets/Models/GLB format/world.tscn",
       "scenes/map.tscn"
+    ],
+    "scripts/FoxCompanion.gd": [
+      "scenes/FoxCompanion.tscn"
+    ],
+    "scripts/FoxPoofParticle.gd": [
+      "scenes/FoxPoofParticle.tscn"
     ],
     "scripts/GameOverOverlay.gd": [
       "scenes/GameOverOverlay.tscn"
@@ -1707,6 +1845,12 @@
       "scenes/map.tscn"
     ],
     "scripts/World.gd": [
+      "scenes/map.tscn"
+    ],
+    "UI/Intro/IntroOverlay.tscn": [
+      "scenes/map.tscn"
+    ],
+    "UI/FoxHUD/FoxHUD.tscn": [
       "scenes/map.tscn"
     ],
     "scripts/PillarParticleSystem.gd": [
