@@ -1,0 +1,193 @@
+[gd_scene format=3 uid="uid://dqpae7mxkn6q3"]
+
+[ext_resource type="Script" uid="uid://ddy24u41mwnw7" path="res://scripts/PillarParticleSystem.gd" id="1_sys"]
+
+[sub_resource type="Curve" id="Curve_sparks_alpha"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.65, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_sparks_alpha"]
+curve = SubResource("Curve_sparks_alpha")
+
+[sub_resource type="Curve" id="Curve_sparks_scale"]
+_data = [Vector2(0, 0.4), 0.0, 0.0, 0, 0, Vector2(0.2, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.15), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_sparks_scale"]
+curve = SubResource("Curve_sparks_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sparks"]
+particle_flag_align_y = true
+emission_shape = 6
+emission_ring_radius = 0.5
+emission_ring_inner_radius = 0.05
+emission_ring_height = 2.6
+emission_ring_axis = Vector3(0, 1, 0)
+direction = Vector3(0, 0.25, 0)
+spread = 90.0
+initial_velocity_min = 1.2
+initial_velocity_max = 2.4
+radial_velocity_min = 2.0
+radial_velocity_max = 3.6
+gravity = Vector3(0, -1.8, 0)
+damping_min = 1.2
+damping_max = 2.2
+scale_min = 0.2
+scale_max = 0.45
+alpha_curve = SubResource("CurveTexture_sparks_alpha")
+scale_curve = SubResource("CurveTexture_sparks_scale")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sparks"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.92, 0.55, 1, 1)
+emission_enabled = true
+emission = Color(0.95, 0.5, 1, 1)
+emission_energy_multiplier = 4.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_sparks"]
+material = SubResource("StandardMaterial3D_sparks")
+top_radius = 0.065
+bottom_radius = 0.0
+height = 0.38
+radial_segments = 6
+rings = 1
+
+[sub_resource type="Curve" id="Curve_motes_alpha"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.15, 0.95), 0.0, 0.0, 0, 0, Vector2(0.7, 0.85), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_motes_alpha"]
+curve = SubResource("Curve_motes_alpha")
+
+[sub_resource type="Curve" id="Curve_motes_scale"]
+_data = [Vector2(0, 0.25), 0.0, 0.0, 0, 0, Vector2(0.25, 1), 0.0, 0.0, 0, 0, Vector2(0.75, 0.9), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_motes_scale"]
+curve = SubResource("Curve_motes_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_motes"]
+emission_shape = 6
+emission_ring_radius = 0.65
+emission_ring_inner_radius = 0.15
+emission_ring_height = 3.2
+emission_ring_axis = Vector3(0, 1, 0)
+direction = Vector3(0, 1, 0)
+spread = 30.0
+initial_velocity_min = 0.5
+initial_velocity_max = 0.9
+orbit_velocity_min = 0.18
+orbit_velocity_max = 0.38
+radial_velocity_min = -0.03
+radial_velocity_max = 0.06
+gravity = Vector3(0, 0.08, 0)
+damping_min = 0.1
+damping_max = 0.3
+scale_min = 0.2
+scale_max = 0.45
+alpha_curve = SubResource("CurveTexture_motes_alpha")
+scale_curve = SubResource("CurveTexture_motes_scale")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_motes"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.78, 0.35, 1, 0.95)
+emission_enabled = true
+emission = Color(0.85, 0.4, 1, 1)
+emission_energy_multiplier = 3.5
+
+[sub_resource type="SphereMesh" id="SphereMesh_motes"]
+material = SubResource("StandardMaterial3D_motes")
+radius = 0.075
+height = 0.15
+radial_segments = 8
+rings = 4
+
+[sub_resource type="Curve" id="Curve_base_alpha"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.2, 0.75), 0.0, 0.0, 0, 0, Vector2(0.7, 0.65), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_base_alpha"]
+curve = SubResource("Curve_base_alpha")
+
+[sub_resource type="Curve" id="Curve_base_scale"]
+_data = [Vector2(0, 0.3), 0.0, 0.0, 0, 0, Vector2(0.3, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.2), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_base_scale"]
+curve = SubResource("Curve_base_scale")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_base"]
+emission_shape = 6
+emission_ring_radius = 0.8
+emission_ring_inner_radius = 0.2
+emission_ring_height = 0.25
+emission_ring_axis = Vector3(0, 1, 0)
+direction = Vector3(0, 1, 0)
+spread = 45.0
+initial_velocity_min = 0.2
+initial_velocity_max = 0.5
+orbit_velocity_min = 0.06
+orbit_velocity_max = 0.18
+gravity = Vector3(0, 0.12, 0)
+damping_min = 0.1
+damping_max = 0.3
+scale_min = 0.12
+scale_max = 0.24
+alpha_curve = SubResource("CurveTexture_base_alpha")
+scale_curve = SubResource("CurveTexture_base_scale")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_base"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.92, 0.45, 1, 0.85)
+emission_enabled = true
+emission = Color(0.92, 0.45, 1, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="SphereMesh" id="SphereMesh_base"]
+material = SubResource("StandardMaterial3D_base")
+radius = 0.055
+height = 0.11
+radial_segments = 6
+rings = 3
+
+[node name="PillarAmbientParticles" type="Node3D"]
+script = ExtResource("1_sys")
+
+[node name="ElectricSparks" type="GPUParticles3D" parent="."]
+position = Vector3(0, 2.4, 0)
+amount = 24
+lifetime = 0.45
+preprocess = 0.1
+process_material = SubResource("ParticleProcessMaterial_sparks")
+draw_pass_1 = SubResource("CylinderMesh_sparks")
+
+[node name="ArcaneMotes" type="GPUParticles3D" parent="."]
+position = Vector3(0, 2.4, 0)
+amount = 14
+lifetime = 2.6
+preprocess = 0.5
+process_material = SubResource("ParticleProcessMaterial_motes")
+draw_pass_1 = SubResource("SphereMesh_motes")
+
+[node name="BaseEnergyAura" type="GPUParticles3D" parent="."]
+position = Vector3(0, 0.3, 0)
+amount = 6
+lifetime = 1.6
+preprocess = 0.3
+process_material = SubResource("ParticleProcessMaterial_base")
+draw_pass_1 = SubResource("SphereMesh_base")
+
+[node name="ArcaneGlowLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0)
+light_color = Color(0.72, 0.28, 1, 1)
+light_energy = 0.45
+omni_range = 4.0

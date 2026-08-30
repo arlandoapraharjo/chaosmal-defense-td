@@ -50,9 +50,71 @@ var level_textures: Array[Texture2D] = []
 var upgrade_banner_texture: Texture2D = null
 var upgrade_texture: Texture2D = null
 
-var particles: GPUParticles3D = null
+# Unified Signature Arcane Amethyst Purple
+const ARCANE_PURPLE: Color = Color(0.72, 0.35, 1.0, 1.0)
+
+# Power Progression Profiles (Broken L1 -> Patching L2 -> Bridging L3 -> Harmonic L4 -> Perfect Resonance L5)
+# Controls crystal facets, spinning velocity, and crystal breathing emissions
+const PILLAR_POWER_PROFILES: Dictionary = {
+	1: { # Broken / Short-Circuiting
+		"spin_speed": 0.20,
+		"emission_base": 0.20,
+		"flicker_intensity": 0.15,
+		"is_flickering": true,
+	},
+	2: { # Patching / Calming
+		"spin_speed": 0.65,
+		"emission_base": 0.35,
+		"flicker_intensity": 0.04,
+		"is_flickering": false,
+	},
+	3: { # Bridging / Stabilized Arcs
+		"spin_speed": 1.10,
+		"emission_base": 0.50,
+		"flicker_intensity": 0.0,
+		"is_flickering": false,
+	},
+	4: { # Harmonic Plasma Flow
+		"spin_speed": 1.50,
+		"emission_base": 0.68,
+		"flicker_intensity": 0.0,
+		"is_flickering": false,
+	},
+	5: { # Perfect Arcane Resonance (MAX)
+		"spin_speed": 2.00,
+		"emission_base": 0.85,
+		"flicker_intensity": 0.0,
+		"is_flickering": false,
+	}
+}
+
+static func get_scrolling_color(level: int, time_ms: float = 0.0) -> Color:
+	if level < 3:
+		return ARCANE_PURPLE
+
+	var time_sec: float = (time_ms if time_ms > 0.0 else float(Time.get_ticks_msec())) * 0.001
+	var speed: float = 0.6 + (level - 3) * 0.35
+
+	if level == 3:
+		# Subtle harmonic drift: Violet (0.74) <-> Amethyst Magenta (0.84)
+		var h: float = 0.79 + 0.07 * sin(time_sec * speed)
+		return Color.from_hsv(h, 0.75, 1.0)
+	elif level == 4:
+		# Vibrant dual-tone wave: Electric Indigo (0.66) <-> Radiant Fuchsia (0.88)
+		var h: float = 0.77 + 0.13 * sin(time_sec * speed)
+		return Color.from_hsv(h, 0.80, 1.0)
+	else: # Level 5 MAX
+		# Full Celestial Resonance: Mystic Cyan (0.52) <-> Arcane Violet (0.75) <-> Plasma Magenta (0.92)
+		var h: float = wrapf(0.75 + 0.24 * sin(time_sec * speed), 0.0, 1.0)
+		return Color.from_hsv(h, 0.85, 1.0)
+
+static func get_pillar_color(level: int = 1) -> Color:
+	return get_scrolling_color(level)
+
+var particle_system: PillarParticleSystem = null
 var glow_light: OmniLight3D = null
 var spinning_parts: Array[Node3D] = []
+var crystal_materials: Array[StandardMaterial3D] = []
 
 func _ready() -> void:
 	add_to_group("pillar")
@@ -103,9 +165,29 @@ func _load_textures() -> void:
 		upgrade_texture = _load_texture_file("res://UI/Level Up - Indicator/lvl_up.png")
 
 func _process(delta: float) -> void:
+	var prof: Dictionary = PILLAR_POWER_PROFILES.get(current_level, PILLAR_POWER_PROFILES[1])
+	var spin_spd: float = prof.spin_speed
+
 	for part in spinning_parts:
 		if is_instance_valid(part):
-			part.rotate_y(delta * 1.0) # Spin the crystals
+			part.rotate_y(delta * spin_spd)
+
+	# Tamed dynamic crystal emission:
+	# Level 1 has subtle erratic dying flicker; Levels 2-5 have gentle, clean breathing pulse
+	var em_mult: float = prof.emission_base
+	if prof.is_flickering:
+		var noise_flicker = sin(Time.get_ticks_msec() * 0.022) * cos(Time.get_ticks_msec() * 0.009)
+		em_mult = max(0.08, em_mult + noise_flicker * prof.flicker_intensity)
+	else:
+		var breath = 0.90 + 0.15 * sin(Time.get_ticks_msec() * (0.0018 + current_level * 0.0006))
+		em_mult *= breath
+
+	# Dynamic hue scrolling for crystals (Levels 3-5):
+	var current_color: Color = get_scrolling_color(current_level)
+	for c_mat in crystal_materials:
+		if is_instance_valid(c_mat):
+			c_mat.emission = current_color
+			c_mat.emission_energy_multiplier = em_mult
 
 func _setup_visual_model() -> void:
 	var model_scene = load("res://assets/Models/GLB format/tower-round-crystals.glb") as PackedScene
@@ -141,49 +223,34 @@ func _setup_visual_model() -> void:
 
 
 func _find_spinning_parts(node: Node) -> void:
-	if node is Node3D and node.name.to_lower().begins_with("crystal"):
+	var n_name = node.name.to_lower()
+	# The base is named "tower-round-crystals" or starts with "tower". Only identify nodes that are specifically crystals.
+	var is_crystal_node = n_name.begins_with("crystal") or (("crystal" in n_name or "gem" in n_name or "glass" in n_name) and not "tower" in n_name and not "round" in n_name)
+	if node is Node3D and is_crystal_node:
 		spinning_parts.append(node)
+	if node is MeshInstance3D and is_crystal_node:
+		var mat = node.get_active_material(0)
+		if mat is StandardMaterial3D:
+			var dup = mat.duplicate() as StandardMaterial3D
+			dup.emission_enabled = true
+			dup.emission = ARCANE_PURPLE
+			dup.emission_energy_multiplier = 0.4
+			node.set_surface_override_material(0, dup)
+			crystal_materials.append(dup)
 	for child in node.get_children():
 		_find_spinning_parts(child)
 
+
 func _setup_particles_and_light() -> void:
-	# Add Purple Particles
-	particles = GPUParticles3D.new()
-	particles.amount = 40
-	particles.lifetime = 1.5
-	particles.position = Vector3(0, 1.5, 0)
-	
-	var process_mat = ParticleProcessMaterial.new()
-	process_mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
-	process_mat.emission_sphere_radius = 1.5
-	process_mat.gravity = Vector3(0, 0.5, 0)
-	process_mat.direction = Vector3(0, 1, 0)
-	process_mat.spread = 180.0
-	process_mat.initial_velocity_min = 0.2
-	process_mat.initial_velocity_max = 0.8
-	process_mat.scale_min = 0.2
-	process_mat.scale_max = 0.6
-	particles.process_material = process_mat
-	
-	var pass_mesh = QuadMesh.new()
-	pass_mesh.size = Vector2(0.3, 0.3)
-	var spatial_mat = StandardMaterial3D.new()
-	spatial_mat.albedo_color = Color(0.7, 0.2, 1.0, 1.0) # Purple
-	spatial_mat.emission_enabled = true
-	spatial_mat.emission = Color(0.7, 0.2, 1.0, 1.0)
-	spatial_mat.emission_energy_multiplier = 0.3
-	spatial_mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
-	spatial_mat.billboard_keep_scale = true
-	spatial_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	pass_mesh.material = spatial_mat
-	particles.draw_pass_1 = pass_mesh
-	add_child(particles)
-	
-	# Add Glow Light
-	glow_light = OmniLight3D.new()
-	glow_light.light_color = Color(0.7, 0.2, 1.0, 1.0) # Purple
-	glow_light.position = Vector3(0, 2.0, 0)
-	add_child(glow_light)
+	var particle_scene = load("res://scenes/pillar_ambient_particles.tscn") as PackedScene
+	if particle_scene:
+		particle_system = particle_scene.instantiate() as PillarParticleSystem
+		add_child(particle_system)
+		if particle_system:
+			particle_system.set_level(current_level)
+			glow_light = particle_system.glow_light
+	else:
+		push_warning("Failed to load pillar_ambient_particles.tscn")
 
 func _setup_ui() -> void:
 	# 1. Level Indicator Sprite (Top on Right Side)
@@ -420,16 +487,9 @@ func _play_shambles_effect() -> void:
 		shake_tween.tween_property(visual_model, "position", base_pos, 0.06)
 		shake_tween.tween_property(visual_model, "rotation:z", 0.0, 0.06)
 
-	# 2. Emissive damage flash on light & crystals
-	if glow_light:
-		var orig_light_col = glow_light.light_color
-		var orig_energy = glow_light.light_energy
-		glow_light.light_color = Color(1.0, 0.15, 0.15)
-		glow_light.light_energy = orig_energy * 2.2
-		var light_tween = create_tween()
-		if light_tween:
-			light_tween.tween_property(glow_light, "light_color", orig_light_col, 0.25)
-			light_tween.tween_property(glow_light, "light_energy", orig_energy, 0.25)
+	# 2. Emissive damage flash on light & particles
+	if particle_system and is_instance_valid(particle_system):
+		particle_system.flash_damage(0.25)
 
 	# 3. Flash health bar sprite
 	if hp_sprite:
@@ -462,10 +522,8 @@ func _trigger_defeat() -> void:
 
 	if visual_model:
 		visual_model.visible = false
-	if particles:
-		particles.emitting = false
-	if glow_light:
-		glow_light.visible = false
+	if particle_system and is_instance_valid(particle_system):
+		particle_system.trigger_defeat()
 	if hp_pivot:
 		hp_pivot.visible = false
 	if level_pivot:
@@ -581,25 +639,13 @@ func _update_ui() -> void:
 			upgrade_cost_label.text = "🪙\n%d" % cost
 
 func _update_effects() -> void:
-	if glow_light and is_inside_tree():
-		var target_energy = 1.0 + (current_level * 1.5)
-		var target_range = 5.0 + (current_level * 2.0)
-		var tween = create_tween()
-		if tween:
-			tween.set_parallel(true)
-			tween.tween_property(glow_light, "light_energy", target_energy, 0.5)
-			tween.tween_property(glow_light, "omni_range", target_range, 0.5)
-		
-	if particles:
-		particles.amount = 30 + (current_level * 15)
-		if current_level >= max_level:
-			var pass_mesh = particles.draw_pass_1 as QuadMesh
-			if pass_mesh and pass_mesh.material:
-				var mat = pass_mesh.material as StandardMaterial3D
-				mat.albedo_color = Color(0.2, 0.5, 1.0, 1.0) # Blue
-				mat.emission = Color(0.2, 0.5, 1.0, 1.0)
-			if glow_light:
-				glow_light.light_color = Color(0.2, 0.5, 1.0, 1.0)
+	if particle_system and is_instance_valid(particle_system):
+		particle_system.set_level(current_level)
+
+	# Update Crystal Materials base color
+	for c_mat in crystal_materials:
+		if is_instance_valid(c_mat):
+			c_mat.emission = ARCANE_PURPLE
 
 func _on_upgrade_area_input_event(_camera: Node, event: InputEvent, _position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:

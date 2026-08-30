@@ -1,5 +1,7 @@
 [gd_scene format=4 uid="uid://o8pcj11agsac"]
-[ext_resource type="Material" uid="uid://snowgrassmat123" path="res://addons/Materials/grass_billboard_snow.tres" id="1_u470u"]
+
+[ext_resource type="Material" uid="uid://dvcbabfvhhfig" path="res://addons/Materials/grass_billboard_snow.tres" id="1_u470u"]
+
 [sub_resource type="ArrayMesh" id="ArrayMesh_8ukpj"]
 _surfaces = [{
 "aabb": AABB(-0.25, 0, -1.0927847e-08, 0.5, 0.5, 1e-05),
@@ -33,4 +35,5 @@ shadow_mesh = SubResource("ArrayMesh_8ukpj")
 [node name="Grass" type="Node3D" unique_id=1935062957]
 
 [node name="Grass" type="MeshInstance3D" parent="." unique_id=749354147]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
 mesh = SubResource("ArrayMesh_1qqop")

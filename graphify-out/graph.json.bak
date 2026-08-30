@@ -918,6 +918,30 @@
       "_gd_exports": []
     },
     {
+      "id": "gdscript_scripts_pillarparticlesystem",
+      "label": "PillarParticleSystem",
+      "file_type": "code",
+      "source_file": "scripts/PillarParticleSystem.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "GDScript Gameplay Logic",
+      "norm_label": "pillarparticlesystem",
+      "description": "extends Node3D | funcs: set_level, apply_level, set_active, flash_damage, trigger_defeat",
+      "_gd_extends": "Node3D",
+      "_gd_functions": [
+        "set_level",
+        "apply_level",
+        "set_active",
+        "flash_damage",
+        "trigger_defeat"
+      ],
+      "_gd_signals": [],
+      "_gd_exports": [
+        "level_configs"
+      ]
+    },
+    {
       "id": "gdscript_scripts_pillarshockwave",
       "label": "PillarShockwave",
       "file_type": "code",
@@ -1569,6 +1593,20 @@
       "description": "Scene with 19 ext_resource(s)",
       "_scene_uid": "uid://bpg8awe6kssxa",
       "_ext_resource_count": 19
+    },
+    {
+      "id": "tscn_scenes_pillar_ambient_particles",
+      "label": "Pillar Ambient Particles Scene",
+      "file_type": "code",
+      "source_file": "scenes/pillar_ambient_particles.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 98,
+      "community_name": "Godot Scenes",
+      "norm_label": "pillar ambient particles scene",
+      "description": "Scene with 1 ext_resource(s)",
+      "_scene_uid": "uid://dqpae7mxkn6q3",
+      "_ext_resource_count": 1
     },
     {
       "id": "tscn_scenes_pillar_destruction",
@@ -2588,6 +2626,29 @@
       "_origin": "ast",
       "source": "tscn_scenes_turret_dismantle_particle",
       "target": "gdscript_scripts_turretdismantleparticle",
+      "_resource_type": "Script"
+    },
+    {
+      "relation": "loads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/IncursionPillar.gd",
+      "source_location": "L221",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "gdscript_scripts_incursionpillar",
+      "target": "tscn_scenes_pillar_ambient_particles"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scenes/pillar_ambient_particles.tscn",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tscn_scenes_pillar_ambient_particles",
+      "target": "gdscript_scripts_pillarparticlesystem",
       "_resource_type": "Script"
     }
   ],
