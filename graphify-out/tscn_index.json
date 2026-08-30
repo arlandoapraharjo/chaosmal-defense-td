@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scenes": 41,
+    "total_scenes": 42,
     "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scenes": [
@@ -892,7 +892,7 @@
           "path": "addons/Materials/grass_billboard_snow.tres",
           "raw_path": "res://addons/Materials/grass_billboard_snow.tres",
           "type": "Material",
-          "uid": "uid://snowgrassmat123",
+          "uid": "uid://dvcbabfvhhfig",
           "id": "1_u470u"
         }
       ],
@@ -1151,6 +1151,41 @@
         {
           "name": "FogVolume",
           "type": "FogVolume"
+        }
+      ]
+    },
+    {
+      "file": "scenes/pillar_ambient_particles.tscn",
+      "scene_uid": "uid://dqpae7mxkn6q3",
+      "ext_resources": [
+        {
+          "path": "scripts/PillarParticleSystem.gd",
+          "raw_path": "res://scripts/PillarParticleSystem.gd",
+          "type": "Script",
+          "uid": "uid://ddy24u41mwnw7",
+          "id": "1_sys"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "PillarAmbientParticles",
+          "type": "Node3D"
+        },
+        {
+          "name": "ElectricSparks",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ArcaneMotes",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "BaseEnergyAura",
+          "type": "GPUParticles3D"
+        },
+        {
+          "name": "ArcaneGlowLight",
+          "type": "OmniLight3D"
         }
       ]
     },
@@ -1682,6 +1717,9 @@
     ],
     "scripts/World.gd": [
       "scenes/map.tscn"
+    ],
+    "scripts/PillarParticleSystem.gd": [
+      "scenes/pillar_ambient_particles.tscn"
     ],
     "scripts/PillarDestructionParticle.gd": [
       "scenes/pillar_destruction.tscn"

@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scripts": 31,
+    "total_scripts": 32,
     "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scripts": [
@@ -951,25 +951,31 @@
       ],
       "loads": [
         {
-          "line": 111,
+          "line": 193,
           "raw": "res://assets/Models/GLB format/tower-round-crystals.glb",
           "path": "assets/Models/GLB format/tower-round-crystals.glb",
           "call": "load"
         },
         {
-          "line": 445,
+          "line": 245,
+          "raw": "res://scenes/pillar_ambient_particles.tscn",
+          "path": "scenes/pillar_ambient_particles.tscn",
+          "call": "load"
+        },
+        {
+          "line": 505,
           "raw": "res://scenes/pillar_hit_particle.tscn",
           "path": "scenes/pillar_hit_particle.tscn",
           "call": "load"
         },
         {
-          "line": 456,
+          "line": 516,
           "raw": "res://scenes/pillar_destruction.tscn",
           "path": "scenes/pillar_destruction.tscn",
           "call": "load"
         },
         {
-          "line": 682,
+          "line": 728,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -1189,6 +1195,53 @@
       "exports": []
     },
     {
+      "file": "scripts/PillarParticleSystem.gd",
+      "class_name": "PillarParticleSystem",
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [
+        {
+          "name": "get_current_color",
+          "params": []
+        },
+        {
+          "name": "set_level",
+          "params": [
+            "level"
+          ]
+        },
+        {
+          "name": "apply_level",
+          "params": [
+            "level"
+          ]
+        },
+        {
+          "name": "set_active",
+          "params": [
+            "active"
+          ]
+        },
+        {
+          "name": "flash_damage",
+          "params": [
+            "duration"
+          ]
+        },
+        {
+          "name": "trigger_defeat",
+          "params": []
+        }
+      ],
+      "loads": [],
+      "exports": [
+        {
+          "name": "level_configs",
+          "type": "Dictionary"
+        }
+      ]
+    },
+    {
       "file": "scripts/PillarShockwave.gd",
       "class_name": "PillarShockwave",
       "extends": "CanvasLayer",
@@ -1351,19 +1404,25 @@
       ],
       "loads": [
         {
-          "line": 18,
+          "line": 61,
           "raw": "res://shaders/outline_material.tres",
           "path": "shaders/outline_material.tres",
           "call": "preload"
         },
         {
-          "line": 57,
+          "line": 101,
           "raw": "res://shaders/outline_pixel_perfect.gdshader",
           "path": "shaders/outline_pixel_perfect.gdshader",
           "call": "load"
         },
         {
-          "line": 67,
+          "line": 107,
+          "raw": "res://shaders/occluded_silhouette.gdshader",
+          "path": "shaders/occluded_silhouette.gdshader",
+          "call": "load"
+        },
+        {
+          "line": 120,
           "raw": "res://shaders/outline_pixel_perfect.gdshader",
           "path": "shaders/outline_pixel_perfect.gdshader",
           "call": "load"
