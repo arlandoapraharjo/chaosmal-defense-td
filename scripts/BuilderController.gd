@@ -173,18 +173,84 @@ func on_turret_sold(turret: Node3D) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not _is_building:
+		var fox = get_tree().get_first_node_in_group("fox_companion")
 		if event.is_action_pressed("ui_cancel") or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed):
+			if fox and fox.get("is_selected") == true:
+				fox.set_selected(false)
+				if is_inside_tree() and get_viewport():
+					get_viewport().set_input_as_handled()
+				return
 			if _selected_turret:
 				deselect_turret()
 				if is_inside_tree() and get_viewport():
 					get_viewport().set_input_as_handled()
+				return
 		elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			# If this click was consumed by a turret or upgrade button this frame, do not deselect
 			if _turret_interacted_frame == Engine.get_process_frames():
 				return
-			# Otherwise clicking empty terrain deselects the current turret
+			
+			# If Fox is selected, issue command (to turret or snapped map tile)
+			if fox and fox.get("is_selected") == true:
+				var camera = get_viewport().get_camera_3d()
+				if camera:
+					var mouse_pos = get_viewport().get_mouse_position()
+					var origin = camera.project_ray_origin(mouse_pos)
+					var normal = camera.project_ray_normal(mouse_pos)
+					
+					# 1. First check if player clicked on a placed Turret
+					var space_state = camera.get_world_3d().direct_space_state
+					var ray_query = PhysicsRayQueryParameters3D.create(origin, origin + normal * 100.0)
+					ray_query.collide_with_areas = true
+					ray_query.collide_with_bodies = true
+					var result = space_state.intersect_ray(ray_query)
+					
+					var clicked_turret: Node3D = null
+					if not result.is_empty():
+						var collider = result.collider
+						clicked_turret = _find_turret_ancestor(collider)
+					
+					if clicked_turret == null:
+						for t in _placed_turrets:
+							if is_instance_valid(t):
+								var t_screen = camera.unproject_position(t.global_position + Vector3(0, 0.5, 0))
+								if mouse_pos.distance_to(t_screen) <= 38.0:
+									clicked_turret = t
+									break
+					
+					if clicked_turret != null and is_instance_valid(clicked_turret):
+						fox.command_enter_turret(clicked_turret)
+						if is_inside_tree() and get_viewport():
+							get_viewport().set_input_as_handled()
+						return
+					
+					# 2. Player clicked ground: Snap to grid tile within map boundaries
+					var plane = Plane(Vector3.UP, 0.0)
+					var hit = plane.intersects_ray(origin, normal)
+					if hit != null:
+						var local_hit = map_generator.to_local(hit) if map_generator else hit
+						var grid_x = int(round(local_hit.x))
+						var grid_z = int(round(local_hit.z))
+						var grid_pos = Vector2i(grid_x, grid_z)
+						
+						# Maximum limit is the map itself (0 to 19). Coastal ring & void CANNOT be clicked!
+						if grid_pos.x >= 0 and grid_pos.x < 20 and grid_pos.y >= 0 and grid_pos.y < 20:
+							var snapped_world_pos = map_generator.to_global(Vector3(grid_pos.x, 0.0, grid_pos.y)) if map_generator else Vector3(grid_pos.x, 0.0, grid_pos.y)
+							fox.command_move_to(snapped_world_pos)
+							if is_inside_tree() and get_viewport():
+								get_viewport().set_input_as_handled()
+							return
+						else:
+							# Outside map or coastal ring: Blocked!
+							if is_inside_tree() and get_viewport():
+								get_viewport().set_input_as_handled()
+							return
+			
+			# Otherwise clicking empty terrain deselects the current turret & fox
 			if _selected_turret:
 				deselect_turret()
+			if fox and fox.get("is_selected") == true:
+				fox.set_selected(false)
 		return
 
 	if event.is_action_pressed("ui_cancel") or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed):
@@ -207,6 +273,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		if is_inside_tree() and get_viewport():
 			get_viewport().set_input_as_handled()
 		return
+
+func _find_turret_ancestor(node: Node) -> Node3D:
+	var curr = node
+	while curr != null:
+		if curr is Node3D and curr.has_method("apply_fox_buff"):
+			return curr as Node3D
+		curr = curr.get_parent()
+	return null
 
 func _is_footprint_buildable(grid_pos: Vector2i, footprint: Vector2i) -> bool:
 	if not map_generator.has_method("is_buildable"):

@@ -60,6 +60,10 @@ var _base_attack_damage: float = 35.0
 var _base_attack_range: float = 1.5
 var _base_aoe_radius: float = 2.0
 
+# Fox Companion Buff
+var has_fox_buff: bool = false
+var _fox_buff_sprite: Sprite3D = null
+
 # 3D Billboard UI & Selection Nodes
 var _ui_root: Node3D = null
 var _level_pivot: Node3D = null
@@ -237,7 +241,7 @@ func _process(delta: float) -> void:
 	else:
 		_trigger_single_target_attack(_current_target)
 
-	_cooldown_timer = cooldown
+	_cooldown_timer = cooldown * (0.65 if has_fox_buff else 1.0)
 
 # Smoothly rotate the turret (Y-axis only) to face the target.
 func _rotate_toward_target(target: Node3D, delta: float) -> void:
@@ -621,6 +625,22 @@ func _on_body_area_input_event(camera: Camera3D, event: InputEvent, _pos: Vector
 	if is_ghost:
 		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var fox = get_tree().get_first_node_in_group("fox_companion")
+		if fox:
+			if fox.get("is_selected") == true:
+				if fox.has_method("command_enter_turret"):
+					fox.command_enter_turret(self)
+				if is_inside_tree() and get_viewport():
+					get_viewport().set_input_as_handled()
+				return
+			elif has_fox_buff:
+				# Re-select the Fox if clicking the inhabited turret!
+				if fox.has_method("set_selected"):
+					fox.set_selected(true)
+				if is_inside_tree() and get_viewport():
+					get_viewport().set_input_as_handled()
+				return
+
 		var builder = get_tree().get_first_node_in_group("builder_controller")
 		if not builder:
 			builder = get_node_or_null("/root/World/BuilderController")
@@ -635,6 +655,49 @@ func _on_body_area_input_event(camera: Camera3D, event: InputEvent, _pos: Vector
 		set_selected(not is_selected)
 		if is_inside_tree() and get_viewport():
 			get_viewport().set_input_as_handled()
+
+func apply_fox_buff(active: bool) -> void:
+	has_fox_buff = active
+	if _highlighter:
+		_highlighter.set_fox_buffed(active, turret_level >= max_level)
+		if active:
+			_highlighter.play_upgrade_pulse(turret_level, 0.45)
+	_show_fox_buff_visual(active)
+
+func _show_fox_buff_visual(show: bool) -> void:
+	if show:
+		if not _fox_buff_sprite:
+			_fox_buff_sprite = Sprite3D.new()
+			_fox_buff_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+			_fox_buff_sprite.modulate = Color(1.0, 0.88, 0.25, 1.0)
+			_fox_buff_sprite.texture = _load_texture_file("res://UI/Coins&Turret/coins_icon.png") if ResourceLoader.exists("res://UI/Coins&Turret/coins_icon.png") else null
+			_fox_buff_sprite.pixel_size = 0.0035
+			_fox_buff_sprite.position = Vector3(0, 1.7, 0)
+			
+			# Add click area to select the Fox out of the turret
+			var badge_area = Area3D.new()
+			badge_area.name = "FoxBadgeArea"
+			var badge_col = CollisionShape3D.new()
+			var sphere = SphereShape3D.new()
+			sphere.radius = 0.45
+			badge_col.shape = sphere
+			badge_area.add_child(badge_col)
+			_fox_buff_sprite.add_child(badge_area)
+			badge_area.input_event.connect(_on_fox_badge_input_event)
+			
+			add_child(_fox_buff_sprite)
+		_fox_buff_sprite.visible = true
+	else:
+		if _fox_buff_sprite:
+			_fox_buff_sprite.visible = false
+
+func _on_fox_badge_input_event(_camera: Camera3D, event: InputEvent, _pos: Vector3, _normal: Vector3, _shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var fox = get_tree().get_first_node_in_group("fox_companion")
+		if fox and fox.has_method("set_selected"):
+			fox.set_selected(true)
+			if is_inside_tree() and get_viewport():
+				get_viewport().set_input_as_handled()
 
 func _update_3d_ui_positions(camera: Camera3D = null) -> void:
 	if not _ui_root or not is_instance_valid(_ui_root):
@@ -872,8 +935,10 @@ func upgrade() -> bool:
 	_recalculate_stats()
 	_update_3d_ui()
 	
-	# 1. Outline Rarity Flare Pulse
+	# 1. Outline Rarity Flare Pulse & Rainbow Refresh
 	if _highlighter and is_instance_valid(_highlighter):
+		if has_fox_buff:
+			_highlighter.set_fox_buffed(true, turret_level >= max_level)
 		_highlighter.play_upgrade_pulse(turret_level)
 		
 	# 2. 3D Sparkle Particle Burst tinted to rarity color
@@ -1101,8 +1166,8 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 
 
 	var current_weapon_type: String = weapon_type
-	var current_damage: float = attack_damage
-	var current_aoe_radius: float = aoe_radius
+	var current_damage: float = attack_damage * (1.35 if has_fox_buff else 1.0)
+	var current_aoe_radius: float = aoe_radius * (1.2 if has_fox_buff else 1.0)
 	var hit_scene: PackedScene = _hit_particle_scenes.get(current_weapon_type, _hit_particle_scenes.get("turret", null))
 	var parent_for_hit: Node = scene_root if scene_root else get_parent()
 

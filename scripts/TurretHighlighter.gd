@@ -74,6 +74,8 @@ var _is_hovered: bool = false
 var _is_selected: bool = false
 var _current_level: int = 1
 var _is_static: bool = false
+var _is_fox_buffed: bool = false
+var _is_rainbow_active: bool = false
 var _static_color: Color = Color.WHITE
 var _static_width: float = 3.2
 var _static_enable_xray: bool = false
@@ -187,7 +189,7 @@ func _refresh_mesh_cache() -> void:
 	if _target and is_instance_valid(_target):
 		_collect_meshes(_target, _mesh_cache)
 
-## Update display based on current level, hover, and selection state
+## Update display based on current level, hover, selection, and Fox buff state
 func _update_display() -> void:
 	if _is_static:
 		_apply_static_display()
@@ -196,10 +198,79 @@ func _update_display() -> void:
 	_init_material()
 	_refresh_mesh_cache()
 
+	# 1. Max Tier Fox Buff: Iridescent Rainbow Outline!
+	if _is_rainbow_active:
+		_material.set_shader_parameter("rainbow_enabled", true)
+		_material.set_shader_parameter("energized_enabled", false)
+		_material.set_shader_parameter("rainbow_speed", 3.0)
+		_material.set_shader_parameter("outline_width", 5.5)
+		_material.set_shader_parameter("squiggly_enabled", true)
+		_material.set_shader_parameter("squiggly_intensity", 0.6)
+		_material.set_shader_parameter("squiggly_frequency", 16.0)
+		_material.set_shader_parameter("squiggly_fps", UNIFIED_BOIL_FPS)
+		_material.set_shader_parameter("squiggly_jitter_amount", 1.4)
+		_material.set_shader_parameter("emission_boost", 0.55)
+
+		_occluded_material.set_shader_parameter("silhouette_color", Color(1.0, 0.85, 0.2, 1.0))
+		_occluded_material.set_shader_parameter("silhouette_alpha", 0.85)
+		_occluded_material.set_shader_parameter("silhouette_enabled", true)
+		_material.next_pass = _occluded_material
+
+		if _is_hovered:
+			_hover_material.set_shader_parameter("outline_color", Color.WHITE)
+			_hover_material.set_shader_parameter("outline_width", 5.5 + hover_extra_width)
+			_hover_material.set_shader_parameter("rainbow_enabled", false)
+			_hover_material.set_shader_parameter("energized_enabled", false)
+			_hover_material.set_shader_parameter("squiggly_enabled", false)
+			_hover_material.set_shader_parameter("emission_boost", 0.35)
+			_occluded_material.next_pass = _hover_material
+		else:
+			_occluded_material.next_pass = null
+
+		for mesh in _mesh_cache:
+			if is_instance_valid(mesh):
+				mesh.material_overlay = _material
+		return
+
+	# Reset rainbow parameter for non-rainbow states
+	_material.set_shader_parameter("rainbow_enabled", false)
+
 	if _current_level <= 1:
 		# Level 1 (Common):
-		# Clean, solid White outline if hovered or selected (no squiggly on hover/selection)
-		if _is_selected or _is_hovered:
+		if _is_fox_buffed:
+			# Non-maxed Fox buff on Level 1: Energized Cyan/White outline
+			_material.set_shader_parameter("energized_enabled", true)
+			_material.set_shader_parameter("energized_pulse_speed", 7.5)
+			_material.set_shader_parameter("outline_color", Color(0.35, 0.85, 1.0, 1.0))
+			_material.set_shader_parameter("outline_width", 4.5)
+			_material.set_shader_parameter("squiggly_enabled", true)
+			_material.set_shader_parameter("squiggly_intensity", 0.5)
+			_material.set_shader_parameter("squiggly_frequency", 14.0)
+			_material.set_shader_parameter("squiggly_fps", 12.0)
+			_material.set_shader_parameter("squiggly_jitter_amount", 1.0)
+			_material.set_shader_parameter("emission_boost", 0.45)
+
+			_occluded_material.set_shader_parameter("silhouette_color", Color(0.35, 0.85, 1.0, 1.0))
+			_occluded_material.set_shader_parameter("silhouette_alpha", 0.80)
+			_occluded_material.set_shader_parameter("silhouette_enabled", true)
+			_material.next_pass = _occluded_material
+
+			if _is_hovered:
+				_hover_material.set_shader_parameter("outline_color", Color.WHITE)
+				_hover_material.set_shader_parameter("outline_width", 4.5 + hover_extra_width)
+				_hover_material.set_shader_parameter("rainbow_enabled", false)
+				_hover_material.set_shader_parameter("energized_enabled", false)
+				_hover_material.set_shader_parameter("squiggly_enabled", false)
+				_hover_material.set_shader_parameter("emission_boost", 0.3)
+				_occluded_material.next_pass = _hover_material
+			else:
+				_occluded_material.next_pass = null
+
+			for mesh in _mesh_cache:
+				if is_instance_valid(mesh):
+					mesh.material_overlay = _material
+		elif _is_selected or _is_hovered:
+			_material.set_shader_parameter("energized_enabled", false)
 			var target_w = selected_width if _is_selected else idle_width
 			_material.set_shader_parameter("outline_color", Color(1.0, 1.0, 1.0, 1.0))
 			_material.set_shader_parameter("outline_width", target_w)
@@ -216,35 +287,41 @@ func _update_display() -> void:
 				if is_instance_valid(mesh):
 					mesh.material_overlay = _material
 		else:
+			_material.set_shader_parameter("energized_enabled", false)
 			clear_highlight()
 	else:
 		# Levels 2–5 (Upgraded):
-		# Base layer: Persistent rarity color outline with hand-drawn line boil
 		var profile: Dictionary = RARITY_BOIL_PROFILES.get(_current_level, RARITY_BOIL_PROFILES[2])
 		var rarity_col = get_rarity_color(_current_level)
-		var base_w: float = profile.selected_width if _is_selected else profile.width
-		var intensity: float = profile.intensity + (0.15 if _is_selected else 0.0)
-		var jitter: float = profile.jitter + (0.3 if _is_selected else 0.0)
+		var base_w: float = (profile.selected_width if _is_selected else profile.width) + (1.5 if _is_fox_buffed else 0.0)
+		var intensity: float = profile.intensity + (0.25 if _is_fox_buffed else (0.15 if _is_selected else 0.0))
+		var jitter: float = profile.jitter + (0.4 if _is_fox_buffed else (0.3 if _is_selected else 0.0))
+		var emission: float = profile.emission + (0.35 if _is_fox_buffed else 0.0)
 
+		_material.set_shader_parameter("energized_enabled", _is_fox_buffed)
+		if _is_fox_buffed:
+			_material.set_shader_parameter("energized_pulse_speed", 7.5)
 		_material.set_shader_parameter("outline_color", rarity_col)
 		_material.set_shader_parameter("outline_width", base_w)
 		_material.set_shader_parameter("squiggly_enabled", true)
 		_material.set_shader_parameter("squiggly_intensity", intensity)
-		_material.set_shader_parameter("squiggly_frequency", profile.frequency)
-		_material.set_shader_parameter("squiggly_fps", profile.fps)
+		_material.set_shader_parameter("squiggly_frequency", profile.frequency + (4.0 if _is_fox_buffed else 0.0))
+		_material.set_shader_parameter("squiggly_fps", (12.0 if _is_fox_buffed else profile.fps))
 		_material.set_shader_parameter("squiggly_jitter_amount", jitter)
-		_material.set_shader_parameter("emission_boost", profile.emission)
+		_material.set_shader_parameter("emission_boost", emission)
 
 		# Second layer: Occluded see-through silhouette behind obstacles (trees, rocks)
 		_occluded_material.set_shader_parameter("silhouette_color", rarity_col)
-		_occluded_material.set_shader_parameter("silhouette_alpha", 0.75)
+		_occluded_material.set_shader_parameter("silhouette_alpha", 0.80 if _is_fox_buffed else 0.75)
 		_occluded_material.set_shader_parameter("silhouette_enabled", true)
 		_material.next_pass = _occluded_material
 
-		# Third layer on hover: Outer White outline wrapping the rarity outline (clean solid, no squiggly)
+		# Third layer on hover: Outer White outline wrapping the rarity outline
 		if _is_hovered:
 			_hover_material.set_shader_parameter("outline_color", Color(1.0, 1.0, 1.0, 1.0))
 			_hover_material.set_shader_parameter("outline_width", base_w + hover_extra_width)
+			_hover_material.set_shader_parameter("rainbow_enabled", false)
+			_hover_material.set_shader_parameter("energized_enabled", false)
 			_hover_material.set_shader_parameter("squiggly_enabled", false)
 			_hover_material.set_shader_parameter("emission_boost", 0.25)
 			_occluded_material.next_pass = _hover_material
@@ -254,6 +331,11 @@ func _update_display() -> void:
 		for mesh in _mesh_cache:
 			if is_instance_valid(mesh):
 				mesh.material_overlay = _material
+
+func set_fox_buffed(active: bool, is_max_tier: bool = false) -> void:
+	_is_fox_buffed = active
+	_is_rainbow_active = active and is_max_tier
+	_update_display()
 
 ## Called when mouse enters/exits the turret hitbox
 func set_hovered(hovered: bool) -> void:

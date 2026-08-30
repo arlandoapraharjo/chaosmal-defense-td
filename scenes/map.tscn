@@ -19,6 +19,8 @@
 [ext_resource type="PackedScene" path="res://UI/SpeedToggle.tscn" id="17_speed"]
 [ext_resource type="PackedScene" uid="uid://cx8v4qm5pak21" path="res://scenes/GameOverOverlay.tscn" id="18_gameover"]
 [ext_resource type="Script" uid="uid://3ts65qp6w4w6" path="res://scripts/World.gd" id="19_world"]
+[ext_resource type="PackedScene" uid="uid://dpe5vyw6hax4k" path="res://UI/Intro/IntroOverlay.tscn" id="20_intro"]
+[ext_resource type="PackedScene" uid="uid://dfoxhud001scene" path="res://UI/FoxHUD/FoxHUD.tscn" id="21_foxhud"]
 
 [sub_resource type="Gradient" id="Gradient_ooc2g"]
 
@@ -132,6 +134,10 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PillarShockwave" unique_id=1045597209]
+
+[node name="IntroOverlay" parent="." unique_id=987654321 instance=ExtResource("20_intro")]
+
+[node name="FoxHUD" parent="." unique_id=554433221 instance=ExtResource("21_foxhud")]
 
 [connection signal="turret_selected" from="TurretHotbar" to="BuilderController" method="start_building"]
 [connection signal="building_stopped" from="BuilderController" to="TurretHotbar" method="_on_building_stopped"]

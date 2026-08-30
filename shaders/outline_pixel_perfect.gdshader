@@ -10,7 +10,21 @@ uniform float emission_boost : hint_range(0.0, 2.0, 0.05) = 0.25;
 uniform float max_radial_distance : hint_range(0.0, 10.0, 0.01) = 0.0; // 0.0 = disabled
 uniform float min_height_threshold : hint_range(-10.0, 10.0, 0.01) = -999.0; // -999 = disabled
 
+// Rainbow scrolling outline for Max-Tier Fox Buff
+uniform bool rainbow_enabled = false;
+uniform float rainbow_speed : hint_range(0.1, 10.0, 0.1) = 2.5;
+
+// Energized tier outline for Non-Max Fox Buff
+uniform bool energized_enabled = false;
+uniform float energized_pulse_speed : hint_range(0.5, 20.0, 0.5) = 7.0;
+
 varying float v_mask_discard;
+
+vec3 hsv2rgb(vec3 c) {
+	vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+	vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+	return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
 
 // Hand-Drawn "Line Boil" controls
 uniform bool squiggly_enabled = false;
@@ -93,6 +107,11 @@ void vertex() {
 		final_dir = normalize(final_dir + tangent_dir * tangent_wave + frame_jitter);
 	}
 	
+	if (energized_enabled) {
+		float energy_pulse = sin(TIME * energized_pulse_speed) * 0.5 + 0.5;
+		current_width = max(0.5, current_width * (1.15 + energy_pulse * 0.35));
+	}
+	
 	// Pixel-perfect screen-space offset
 	vec2 offset = final_dir / VIEWPORT_SIZE * clip_position.w * current_width * 2.0;
 	clip_position.xy += offset;
@@ -107,8 +126,18 @@ void fragment() {
 	if (v_mask_discard > 0.5) {
 		discard;
 	}
+	vec3 col = outline_color.rgb;
+	if (rainbow_enabled) {
+		float hue = fract(TIME * rainbow_speed * 0.25 + (VERTEX.x + VERTEX.y + VERTEX.z) * 0.6);
+		col = hsv2rgb(vec3(hue, 0.92, 1.0));
+	} else if (energized_enabled) {
+		float energy_pulse = sin(TIME * energized_pulse_speed) * 0.5 + 0.5;
+		col = mix(outline_color.rgb, vec3(1.0, 1.0, 1.0), energy_pulse * 0.35);
+	}
+	
+	float total_emission = emission_boost + (energized_enabled ? (0.45 + (sin(TIME * energized_pulse_speed) * 0.5 + 0.5) * 0.45) : 0.0);
 	// Clean comic ink with subtle emission for high contrast
-	ALBEDO = outline_color.rgb * (1.0 + emission_boost);
+	ALBEDO = col * (1.0 + total_emission);
 	if (outline_color.a < 1.0) {
 		ALPHA = outline_color.a;
 	}

@@ -208,11 +208,27 @@ func _setup_visual_model() -> void:
 		visual_model = cylinder
 		spinning_parts.append(cylinder)
 	
-	# Apply comical white outline with x-ray silhouette for the pillar
-	var pillar_hl = TurretHighlighter.new()
-	pillar_hl.name = "PillarHighlighter"
-	add_child(pillar_hl)
-	pillar_hl.setup_static(visual_model, Color(1.0, 1.0, 1.0, 1.0), 3.2, true)
+	# 1. Apply comical white outline ONLY to the bed (no x-ray silhouette)
+	for bed in bed_parts:
+		if is_instance_valid(bed):
+			var bed_hl = TurretHighlighter.new()
+			bed_hl.name = "BedHighlighter"
+			bed.add_child(bed_hl)
+			bed_hl.setup_static(bed, Color(1.0, 1.0, 1.0, 1.0), 3.2, false)
+
+	# 2. Apply comical white outline WITH x-ray silhouette strictly to the floating crystals
+	for part in spinning_parts:
+		if is_instance_valid(part):
+			var crystal_hl = TurretHighlighter.new()
+			crystal_hl.name = "CrystalHighlighter"
+			part.add_child(crystal_hl)
+			crystal_hl.setup_static(part, Color(1.0, 1.0, 1.0, 1.0), 3.2, true)
+			
+	if bed_parts.is_empty() and spinning_parts.is_empty():
+		var fallback_hl = TurretHighlighter.new()
+		fallback_hl.name = "FallbackHighlighter"
+		add_child(fallback_hl)
+		fallback_hl.setup_static(visual_model, Color(1.0, 1.0, 1.0, 1.0), 3.2, false)
 		
 	_setup_particles_and_light()
 
@@ -226,10 +242,9 @@ func _find_spinning_parts(node: Node) -> void:
 			spinning_parts.append(node)
 			_initial_crystal_positions[node] = node.position
 			_initial_crystal_scales[node] = node.scale
-	elif node is Node3D and node != visual_model and not is_crystal_node:
-		if node is MeshInstance3D or node.get_child_count() > 0:
-			if not bed_parts.has(node):
-				bed_parts.append(node)
+	elif node is MeshInstance3D and not is_crystal_node:
+		if not bed_parts.has(node):
+			bed_parts.append(node)
 	if node is MeshInstance3D and is_crystal_node:
 		var mat = node.get_active_material(0)
 		if mat is StandardMaterial3D:

@@ -504,6 +504,26 @@
       ]
     },
     {
+      "id": "gdscript_ui_intro_introoverlay",
+      "label": "IntroOverlay",
+      "file_type": "code",
+      "source_file": "UI/Intro/IntroOverlay.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "GDScript Gameplay Logic",
+      "norm_label": "introoverlay",
+      "description": "extends CanvasLayer | funcs: start_intro | signals: intro_finished",
+      "_gd_extends": "CanvasLayer",
+      "_gd_functions": [
+        "start_intro"
+      ],
+      "_gd_signals": [
+        "intro_finished"
+      ],
+      "_gd_exports": []
+    },
+    {
       "id": "gdscript_ui_menus_mainmenu",
       "label": "MainMenu",
       "file_type": "code",
@@ -1014,10 +1034,11 @@
       "community": 99,
       "community_name": "GDScript Gameplay Logic",
       "norm_label": "turrethighlighter",
-      "description": "extends Node | funcs: setup, set_hovered, set_selected, play_upgrade_pulse, clear_highlight",
+      "description": "extends Node | funcs: setup, setup_static, set_hovered, set_selected, play_upgrade_pulse, clear_highlight",
       "_gd_extends": "Node",
       "_gd_functions": [
         "setup",
+        "setup_static",
         "set_hovered",
         "set_selected",
         "play_upgrade_pulse",
@@ -1187,6 +1208,20 @@
       "norm_label": "turrethotbar scene",
       "description": "Scene with 1 ext_resource(s)",
       "_scene_uid": "uid://dc6dgdjoiagk6",
+      "_ext_resource_count": 1
+    },
+    {
+      "id": "tscn_ui_intro_introoverlay",
+      "label": "Introoverlay Scene",
+      "file_type": "code",
+      "source_file": "UI/Intro/IntroOverlay.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 98,
+      "community_name": "Godot Scenes",
+      "norm_label": "introoverlay scene",
+      "description": "Scene with 1 ext_resource(s)",
+      "_scene_uid": "uid://dpe5vyw6hax4k",
       "_ext_resource_count": 1
     },
     {
@@ -1367,9 +1402,9 @@
       "community": 98,
       "community_name": "Godot Scenes",
       "norm_label": "gameoveroverlay scene",
-      "description": "Scene with 5 ext_resource(s)",
+      "description": "Scene with 4 ext_resource(s)",
       "_scene_uid": "uid://cx8v4qm5pak21",
-      "_ext_resource_count": 5
+      "_ext_resource_count": 4
     },
     {
       "id": "tscn_scenes_pauseoverlay",
@@ -1591,9 +1626,9 @@
       "community": 98,
       "community_name": "Godot Scenes",
       "norm_label": "map scene",
-      "description": "Scene with 19 ext_resource(s)",
+      "description": "Scene with 20 ext_resource(s)",
       "_scene_uid": "uid://bpg8awe6kssxa",
-      "_ext_resource_count": 19
+      "_ext_resource_count": 20
     },
     {
       "id": "tscn_scenes_pillar_ambient_particles",
@@ -2651,6 +2686,30 @@
       "_origin": "ast",
       "source": "gdscript_ui_menus_mainmenu",
       "target": "tscn_scenes_map"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "UI/Intro/IntroOverlay.tscn",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tscn_ui_intro_introoverlay",
+      "target": "gdscript_ui_intro_introoverlay",
+      "_resource_type": "Script"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scenes/map.tscn",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tscn_scenes_map",
+      "target": "tscn_ui_intro_introoverlay",
+      "_resource_type": "PackedScene"
     }
   ],
   "hyperedges": [],

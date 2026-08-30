@@ -389,36 +389,6 @@
       "id": "agents_workflows_update_viz_workflow_update_viz"
     },
     {
-      "id": "gdscript_ui_foxhud_foxhud",
-      "label": "FoxHUD",
-      "file_type": "code",
-      "source_file": "UI/FoxHUD/FoxHUD.gd",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "GDScript Gameplay Logic",
-      "norm_label": "foxhud",
-      "description": "extends CanvasLayer",
-      "_gd_extends": "CanvasLayer",
-      "_gd_functions": [],
-      "_gd_signals": [],
-      "_gd_exports": []
-    },
-    {
-      "id": "tscn_ui_foxhud_foxhud",
-      "label": "Foxhud Scene",
-      "file_type": "code",
-      "source_file": "UI/FoxHUD/FoxHUD.tscn",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 98,
-      "community_name": "Godot Scenes",
-      "norm_label": "foxhud scene",
-      "description": "Scene with 1 ext_resource(s)",
-      "_scene_uid": "uid://dfoxhud001scene",
-      "_ext_resource_count": 1
-    },
-    {
       "id": "gdscript_ui_currencyui",
       "label": "CurrencyUI",
       "file_type": "code",
@@ -428,6 +398,22 @@
       "community": 99,
       "community_name": "GDScript Gameplay Logic",
       "norm_label": "currencyui",
+      "description": "extends CanvasLayer",
+      "_gd_extends": "CanvasLayer",
+      "_gd_functions": [],
+      "_gd_signals": [],
+      "_gd_exports": []
+    },
+    {
+      "id": "gdscript_ui_foxhud_foxhud",
+      "label": "FoxHUD",
+      "file_type": "code",
+      "source_file": "UI/FoxHUD/FoxHUD.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "GDScript Gameplay Logic",
+      "norm_label": "foxhud",
       "description": "extends CanvasLayer",
       "_gd_extends": "CanvasLayer",
       "_gd_functions": [],
@@ -1260,6 +1246,20 @@
       "_ext_resource_count": 3
     },
     {
+      "id": "tscn_ui_foxhud_foxhud",
+      "label": "Foxhud Scene",
+      "file_type": "code",
+      "source_file": "UI/FoxHUD/FoxHUD.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 98,
+      "community_name": "Godot Scenes",
+      "norm_label": "foxhud scene",
+      "description": "Scene with 1 ext_resource(s)",
+      "_scene_uid": "uid://dfoxhud001scene",
+      "_ext_resource_count": 1
+    },
+    {
       "id": "tscn_ui_hotbar_hotbarslot",
       "label": "Hotbarslot Scene",
       "file_type": "code",
@@ -1731,9 +1731,9 @@
       "community": 98,
       "community_name": "Godot Scenes",
       "norm_label": "map scene",
-      "description": "Scene with 20 ext_resource(s)",
+      "description": "Scene with 21 ext_resource(s)",
       "_scene_uid": "uid://bpg8awe6kssxa",
-      "_ext_resource_count": 20
+      "_ext_resource_count": 21
     },
     {
       "id": "tscn_scenes_pillar_ambient_particles",
