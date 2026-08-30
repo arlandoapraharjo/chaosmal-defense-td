@@ -458,28 +458,22 @@
           "id": "1_script"
         },
         {
-          "path": "UI/Endgame Banner/endgame_banner.png",
-          "raw_path": "res://UI/Endgame Banner/endgame_banner.png",
+          "path": "UI/Endgame Banner/new_endgame_banner.png",
+          "raw_path": "res://UI/Endgame Banner/new_endgame_banner.png",
           "type": "Texture2D",
           "id": "2_banner"
         },
         {
-          "path": "UI/Level Up - Indicator/upbutton_banner.png",
-          "raw_path": "res://UI/Level Up - Indicator/upbutton_banner.png",
+          "path": "UI/Endgame Banner/endgame_but1.png",
+          "raw_path": "res://UI/Endgame Banner/endgame_but1.png",
           "type": "Texture2D",
-          "id": "3_btn_bg"
+          "id": "3_but1"
         },
         {
-          "path": "UI/Level Up - Indicator/upgrade_buttonnew.png",
-          "raw_path": "res://UI/Level Up - Indicator/upgrade_buttonnew.png",
+          "path": "UI/Endgame Banner/endgame_but2.png",
+          "raw_path": "res://UI/Endgame Banner/endgame_but2.png",
           "type": "Texture2D",
-          "id": "4_up_icon"
-        },
-        {
-          "path": "UI/Level Up - Indicator/trash_button.png",
-          "raw_path": "res://UI/Level Up - Indicator/trash_button.png",
-          "type": "Texture2D",
-          "id": "5_trash_icon"
+          "id": "4_but2"
         }
       ],
       "nodes_preview": [
@@ -1587,16 +1581,13 @@
     "scripts/GameOverOverlay.gd": [
       "scenes/GameOverOverlay.tscn"
     ],
-    "UI/Endgame Banner/endgame_banner.png": [
+    "UI/Endgame Banner/new_endgame_banner.png": [
       "scenes/GameOverOverlay.tscn"
     ],
-    "UI/Level Up - Indicator/upbutton_banner.png": [
+    "UI/Endgame Banner/endgame_but1.png": [
       "scenes/GameOverOverlay.tscn"
     ],
-    "UI/Level Up - Indicator/upgrade_buttonnew.png": [
-      "scenes/GameOverOverlay.tscn"
-    ],
-    "UI/Level Up - Indicator/trash_button.png": [
+    "UI/Endgame Banner/endgame_but2.png": [
       "scenes/GameOverOverlay.tscn"
     ],
     "scripts/PauseOverlay.gd": [

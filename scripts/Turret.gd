@@ -713,19 +713,19 @@ func _set_ui_visible(show: bool) -> void:
 		# Level badge pops in first (delay 0.0s)
 		if _level_pivot and is_instance_valid(_level_pivot):
 			_level_pivot.visible = true
-			_level_pivot.scale = Vector3.ZERO
+			_level_pivot.scale = Vector3(0.001, 0.001, 0.001)
 			_ui_pop_tween.tween_property(_level_pivot, "scale", Vector3(1.12, 1.12, 1.12), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(0.0)
 		
 		# Upgrade button pops in second (delay 0.04s)
 		if _upgrade_pivot and is_instance_valid(_upgrade_pivot) and turret_level < max_level:
 			_upgrade_pivot.visible = true
-			_upgrade_pivot.scale = Vector3.ZERO
+			_upgrade_pivot.scale = Vector3(0.001, 0.001, 0.001)
 			_ui_pop_tween.tween_property(_upgrade_pivot, "scale", Vector3(1.12, 1.12, 1.12), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(0.04)
 		
 		# Sell button pops in third (delay 0.08s)
 		if _sell_pivot and is_instance_valid(_sell_pivot):
 			_sell_pivot.visible = true
-			_sell_pivot.scale = Vector3.ZERO
+			_sell_pivot.scale = Vector3(0.001, 0.001, 0.001)
 			_ui_pop_tween.tween_property(_sell_pivot, "scale", Vector3(1.12, 1.12, 1.12), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(0.08)
 		
 		# Settle all elements to exactly 1.0 after the overshoot
@@ -743,11 +743,11 @@ func _set_ui_visible(show: bool) -> void:
 		_ui_pop_tween.set_parallel(true)
 		
 		if _level_pivot and is_instance_valid(_level_pivot) and _level_pivot.visible:
-			_ui_pop_tween.tween_property(_level_pivot, "scale", Vector3.ZERO, 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+			_ui_pop_tween.tween_property(_level_pivot, "scale", Vector3(0.001, 0.001, 0.001), 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 		if _upgrade_pivot and is_instance_valid(_upgrade_pivot) and _upgrade_pivot.visible:
-			_ui_pop_tween.tween_property(_upgrade_pivot, "scale", Vector3.ZERO, 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN).set_delay(0.02)
+			_ui_pop_tween.tween_property(_upgrade_pivot, "scale", Vector3(0.001, 0.001, 0.001), 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN).set_delay(0.02)
 		if _sell_pivot and is_instance_valid(_sell_pivot) and _sell_pivot.visible:
-			_ui_pop_tween.tween_property(_sell_pivot, "scale", Vector3.ZERO, 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN).set_delay(0.04)
+			_ui_pop_tween.tween_property(_sell_pivot, "scale", Vector3(0.001, 0.001, 0.001), 0.08).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN).set_delay(0.04)
 		
 		# Hide after shrink completes
 		_ui_pop_tween.chain().tween_callback(func():

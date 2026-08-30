@@ -4,16 +4,13 @@ class_name GameOverOverlay
 @onready var backdrop: ColorRect = $Backdrop
 @onready var modal_container: VBoxContainer = $CenterContainer/ModalContainer
 @onready var banner_rect: TextureRect = $CenterContainer/ModalContainer/BannerRect
-@onready var title_label: Label = $CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/TitleLabel
+@onready var title_label: Label = $CenterContainer/ModalContainer/BannerRect/TitleLabel
+@onready var map_label: Label = $CenterContainer/ModalContainer/BannerRect/MapLabel
 
-@onready var wave_stat_label: Label = $CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid/WaveValLabel
-@onready var enemies_stat_label: Label = $CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid/EnemiesValLabel
-@onready var currency_stat_label: Label = $CenterContainer/ModalContainer/BannerRect/MarginContainer/VBoxContainer/StatsGrid/CurrencyValLabel
-
-@onready var retry_button: TextureButton = $CenterContainer/ModalContainer/ButtonContainer/RetryButton
-@onready var retry_label: Label = $CenterContainer/ModalContainer/ButtonContainer/RetryButton/HBox/RetryLabel
-@onready var menu_button: TextureButton = $CenterContainer/ModalContainer/ButtonContainer/MenuButton
-@onready var menu_label: Label = $CenterContainer/ModalContainer/ButtonContainer/MenuButton/HBox/MenuLabel
+@onready var retry_button: TextureButton = $CenterContainer/ModalContainer/ButtonMargin/ButtonContainer/RetryButton
+@onready var retry_label: Label = $CenterContainer/ModalContainer/ButtonMargin/ButtonContainer/RetryButton/RetryLabel
+@onready var menu_button: TextureButton = $CenterContainer/ModalContainer/ButtonMargin/ButtonContainer/MenuButton
+@onready var menu_label: Label = $CenterContainer/ModalContainer/ButtonMargin/ButtonContainer/MenuButton/MenuLabel
 
 var _is_victory: bool = false
 
@@ -30,7 +27,7 @@ func _ready() -> void:
 		_setup_button_effects(menu_button)
 
 func _setup_button_effects(btn: Control) -> void:
-	btn.pivot_offset = Vector2(55, 18)
+	btn.pivot_offset = btn.size * 0.5
 	btn.mouse_entered.connect(func():
 		if not is_inside_tree():
 			return
@@ -50,43 +47,51 @@ func _setup_button_effects(btn: Control) -> void:
 				tw.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	)
 
-func show_victory(stats: Dictionary = {}) -> void:
+func show_victory(_stats: Dictionary = {}) -> void:
 	_is_victory = true
 	visible = true
-	_populate_stats(stats)
 	
-	title_label.text = "🏆 VICTORY!"
-	title_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.2)) # Gold
+	if title_label:
+		title_label.text = "VICTORY"
+		title_label.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0)) # White
+	
+	_update_map_label()
 	
 	if retry_label:
 		retry_label.text = "Play Again"
 		
-	_animate_presentation(Color(1.0, 0.85, 0.2))
+	_animate_presentation(Color(1.0, 1.0, 1.0))
 
-func show_defeat(stats: Dictionary = {}) -> void:
+func show_defeat(_stats: Dictionary = {}) -> void:
 	_is_victory = false
 	visible = true
-	_populate_stats(stats)
 	
-	title_label.text = "💀 DEFEAT!"
-	title_label.add_theme_color_override("font_color", Color(1.0, 0.25, 0.25)) # Crimson
+	if title_label:
+		title_label.text = "DEFEAT"
+		title_label.add_theme_color_override("font_color", Color(1.0, 0.25, 0.25)) # Crimson
+	
+	_update_map_label()
 	
 	if retry_label:
 		retry_label.text = "Retry"
 		
 	_animate_presentation(Color(1.0, 0.25, 0.25))
 
-func _populate_stats(stats: Dictionary) -> void:
-	var waves = stats.get("waves_cleared", 0)
-	var enemies = stats.get("enemies_defeated", 0)
-	var cur = stats.get("currency", 0)
-	
-	if wave_stat_label:
-		wave_stat_label.text = "%d Waves" % waves
-	if enemies_stat_label:
-		enemies_stat_label.text = "%d Defeated" % enemies
-	if currency_stat_label:
-		currency_stat_label.text = "⚡ %d Essence" % cur
+func _update_map_label() -> void:
+	if not map_label:
+		return
+	map_label.text = _get_current_map_name()
+
+func _get_current_map_name() -> String:
+	if BiomeManager != null and BiomeManager.current_biome != null:
+		var path = BiomeManager.current_biome.resource_path.to_lower()
+		if path.find("snow") != -1 or path.find("ice") != -1:
+			return "SNOW"
+		elif path.find("desert") != -1:
+			return "DESERT"
+		elif path.find("grass") != -1:
+			return "GRASS"
+	return "UNKNOWN"
 
 func _animate_presentation(_accent_color: Color) -> void:
 	# Animate backdrop fade
@@ -96,7 +101,7 @@ func _animate_presentation(_accent_color: Color) -> void:
 		fade_tween.tween_property(backdrop, "modulate:a", 1.0, 0.35)
 		
 	if modal_container:
-		modal_container.pivot_offset = Vector2(200, 118)
+		modal_container.pivot_offset = modal_container.size * 0.5
 		modal_container.scale = Vector2(0.65, 0.65)
 		modal_container.modulate.a = 0.0
 		var pop_tween = create_tween()

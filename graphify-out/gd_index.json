@@ -889,13 +889,13 @@
         {
           "name": "show_victory",
           "params": [
-            "stats"
+            "_stats"
           ]
         },
         {
           "name": "show_defeat",
           "params": [
-            "stats"
+            "_stats"
           ]
         }
       ],

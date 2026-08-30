@@ -99,7 +99,7 @@ func reset(waypoints: Array[Vector3], new_speed: float) -> void:
 	EnemyDetector.register(self)
 	
 	# Pop-up animation
-	scale = Vector3.ZERO
+	scale = Vector3(0.001, 0.001, 0.001)
 	var tween = create_tween()
 	tween.tween_property(self, "scale", Vector3.ONE, 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	
