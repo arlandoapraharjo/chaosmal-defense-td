@@ -6,6 +6,12 @@ uniform float outline_width : hint_range(0.0, 20.0, 0.1) = 3.2;
 uniform float smooth_weld_weight : hint_range(0.0, 1.0, 0.05) = 0.65;
 uniform float emission_boost : hint_range(0.0, 2.0, 0.05) = 0.25;
 
+// Optional spatial mask (e.g. outline only hole structure on a combined tile)
+uniform float max_radial_distance : hint_range(0.0, 10.0, 0.01) = 0.0; // 0.0 = disabled
+uniform float min_height_threshold : hint_range(-10.0, 10.0, 0.01) = -999.0; // -999 = disabled
+
+varying float v_mask_discard;
+
 // Hand-Drawn "Line Boil" controls
 uniform bool squiggly_enabled = false;
 uniform float squiggly_intensity : hint_range(0.0, 2.0, 0.05) = 0.40;
@@ -49,6 +55,20 @@ void vertex() {
 	// 3. Hand-drawn Line Boil (Stop-motion stepped jitter + dynamic width + tangential wiggle)
 	float current_width = outline_width;
 	
+	v_mask_discard = 0.0;
+	if (max_radial_distance > 0.001) {
+		if (length(VERTEX.xz) > max_radial_distance) {
+			v_mask_discard = 1.0;
+			current_width = 0.0;
+		}
+	}
+	if (min_height_threshold > -990.0) {
+		if (VERTEX.y < min_height_threshold) {
+			v_mask_discard = 1.0;
+			current_width = 0.0;
+		}
+	}
+	
 	if (squiggly_enabled) {
 		float frame_id = (squiggly_fps > 0.0) ? floor(TIME * squiggly_fps) : (TIME * squiggly_speed);
 		
@@ -84,6 +104,9 @@ void vertex() {
 }
 
 void fragment() {
+	if (v_mask_discard > 0.5) {
+		discard;
+	}
 	// Clean comic ink with subtle emission for high contrast
 	ALBEDO = outline_color.rgb * (1.0 + emission_boost);
 	if (outline_color.a < 1.0) {

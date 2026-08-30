@@ -73,6 +73,12 @@ var _pulse_tween: Tween = null
 var _is_hovered: bool = false
 var _is_selected: bool = false
 var _current_level: int = 1
+var _is_static: bool = false
+var _static_color: Color = Color.WHITE
+var _static_width: float = 3.2
+var _static_enable_xray: bool = false
+var _static_max_radius: float = 0.0
+var _static_min_height: float = -999.0
 
 func _ready() -> void:
 	if _target == null and get_parent() is Node3D:
@@ -81,11 +87,51 @@ func _ready() -> void:
 
 func setup(target_node: Node3D, initial_level: int = 1) -> void:
 	_target = target_node
+	_is_static = false
 	_current_level = initial_level
 	_mesh_cache.clear()
 	_init_material()
 	_refresh_mesh_cache()
 	_update_display()
+
+## Sets up a static comical outline that is always visible on the target
+func setup_static(target_node: Node3D, color: Color = Color(1.0, 1.0, 1.0, 1.0), width: float = 3.2, enable_xray: bool = false) -> void:
+	_target = target_node
+	_is_static = true
+	_static_color = color
+	_static_width = width
+	_static_enable_xray = enable_xray
+	_mesh_cache.clear()
+	_init_material()
+	_refresh_mesh_cache()
+	_apply_static_display()
+
+func _apply_static_display() -> void:
+	_init_material()
+	_refresh_mesh_cache()
+	
+	_material.set_shader_parameter("outline_color", _static_color)
+	_material.set_shader_parameter("outline_width", _static_width)
+	_material.set_shader_parameter("max_radial_distance", 0.0)
+	_material.set_shader_parameter("min_height_threshold", -999.0)
+	_material.set_shader_parameter("squiggly_enabled", false)
+	_material.set_shader_parameter("emission_boost", 0.25)
+	
+	if _static_enable_xray:
+		_occluded_material.set_shader_parameter("silhouette_color", _static_color)
+		_occluded_material.set_shader_parameter("silhouette_alpha", 0.70)
+		_occluded_material.set_shader_parameter("silhouette_enabled", true)
+		_occluded_material.set_shader_parameter("obstacle_clearance_threshold", 2.2)
+		_occluded_material.set_shader_parameter("max_radial_distance", 0.0)
+		_occluded_material.set_shader_parameter("min_height_threshold", -999.0)
+		_occluded_material.next_pass = null
+		_material.next_pass = _occluded_material
+	else:
+		_material.next_pass = null
+	
+	for mesh in _mesh_cache:
+		if is_instance_valid(mesh):
+			mesh.material_overlay = _material
 
 static func get_rarity_color(level: int) -> Color:
 	var cl = clampi(level, 1, 5)
@@ -128,12 +174,12 @@ func _init_material() -> void:
 func _collect_meshes(node: Node, out_list: Array[MeshInstance3D]) -> void:
 	if not is_instance_valid(node):
 		return
-	# Skip UI root, RangeMarker, or particles if encountered
-	if node.name == "TurretUIRoot" or node.name == "RangeMarker" or node is GPUParticles3D:
+	# Skip UI root, RangeMarker, labels, sprites, or particles if encountered
+	if node.name == "TurretUIRoot" or node.name == "RangeMarker" or node.name == "LevelIndicatorPivot" or node.name == "UpgradePivot" or node.name == "HealthBarPivot" or node is GPUParticles3D or node is CPUParticles3D or node is Sprite3D or node is Label3D or node is SubViewport:
 		return
+	if node is MeshInstance3D:
+		out_list.append(node)
 	for child in node.get_children():
-		if child is MeshInstance3D:
-			out_list.append(child)
 		_collect_meshes(child, out_list)
 
 func _refresh_mesh_cache() -> void:
@@ -143,6 +189,10 @@ func _refresh_mesh_cache() -> void:
 
 ## Update display based on current level, hover, and selection state
 func _update_display() -> void:
+	if _is_static:
+		_apply_static_display()
+		return
+
 	_init_material()
 	_refresh_mesh_cache()
 

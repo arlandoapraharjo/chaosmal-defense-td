@@ -7,18 +7,34 @@ uniform float obstacle_clearance_threshold : hint_range(0.1, 5.0, 0.05) = 1.2;
 uniform float fresnel_power : hint_range(0.1, 8.0, 0.1) = 2.5;
 uniform bool silhouette_enabled = true;
 
+// Optional spatial mask
+uniform float max_radial_distance : hint_range(0.0, 10.0, 0.01) = 0.0; // 0.0 = disabled
+uniform float min_height_threshold : hint_range(-10.0, 10.0, 0.01) = -999.0; // -999 = disabled
+
 uniform sampler2D depth_texture : hint_depth_texture, filter_nearest;
 
 varying float v_mesh_center_depth;
+varying float v_mask_discard;
 
 void vertex() {
+	v_mask_discard = 0.0;
+	if (max_radial_distance > 0.001) {
+		if (length(VERTEX.xz) > max_radial_distance) {
+			v_mask_discard = 1.0;
+		}
+	}
+	if (min_height_threshold > -990.0) {
+		if (VERTEX.y < min_height_threshold) {
+			v_mask_discard = 1.0;
+		}
+	}
 	// Reconstruct view-space depth of this mesh's center origin
 	vec3 center_in_view = (VIEW_MATRIX * vec4(MODEL_MATRIX[3].xyz, 1.0)).xyz;
 	v_mesh_center_depth = -center_in_view.z;
 }
 
 void fragment() {
-	if (!silhouette_enabled) {
+	if (v_mask_discard > 0.5 || !silhouette_enabled) {
 		discard;
 	}
 	
