@@ -114,6 +114,9 @@ static func get_pillar_color(level: int = 1) -> Color:
 var particle_system: PillarParticleSystem = null
 var glow_light: OmniLight3D = null
 var spinning_parts: Array[Node3D] = []
+var bed_parts: Array[Node3D] = []
+var _initial_crystal_positions: Dictionary = {}
+var _initial_crystal_scales: Dictionary = {}
 var crystal_materials: Array[StandardMaterial3D] = []
 
 func _ready() -> void:
@@ -204,20 +207,12 @@ func _setup_visual_model() -> void:
 		add_child(cylinder)
 		visual_model = cylinder
 		spinning_parts.append(cylinder)
-		
-	# Add clickable Area3D covering the main pillar body so clicking the pillar triggers upgrade
-	var pillar_body_area = Area3D.new()
-	pillar_body_area.name = "PillarBodyArea"
-	var p_shape = CollisionShape3D.new()
-	var p_box = BoxShape3D.new()
-	p_box.size = Vector3(2.2, 6.5, 2.2)
-	p_shape.shape = p_box
-	p_shape.position = Vector3(0, 3.0, 0)
-	pillar_body_area.add_child(p_shape)
-	add_child(pillar_body_area)
-	pillar_body_area.input_event.connect(_on_upgrade_area_input_event)
-	pillar_body_area.mouse_entered.connect(_on_upgrade_area_mouse_entered)
-	pillar_body_area.mouse_exited.connect(_on_upgrade_area_mouse_exited)
+	
+	# Apply comical white outline with x-ray silhouette for the pillar
+	var pillar_hl = TurretHighlighter.new()
+	pillar_hl.name = "PillarHighlighter"
+	add_child(pillar_hl)
+	pillar_hl.setup_static(visual_model, Color(1.0, 1.0, 1.0, 1.0), 3.2, true)
 		
 	_setup_particles_and_light()
 
@@ -227,7 +222,14 @@ func _find_spinning_parts(node: Node) -> void:
 	# The base is named "tower-round-crystals" or starts with "tower". Only identify nodes that are specifically crystals.
 	var is_crystal_node = n_name.begins_with("crystal") or (("crystal" in n_name or "gem" in n_name or "glass" in n_name) and not "tower" in n_name and not "round" in n_name)
 	if node is Node3D and is_crystal_node:
-		spinning_parts.append(node)
+		if not spinning_parts.has(node):
+			spinning_parts.append(node)
+			_initial_crystal_positions[node] = node.position
+			_initial_crystal_scales[node] = node.scale
+	elif node is Node3D and node != visual_model and not is_crystal_node:
+		if node is MeshInstance3D or node.get_child_count() > 0:
+			if not bed_parts.has(node):
+				bed_parts.append(node)
 	if node is MeshInstance3D and is_crystal_node:
 		var mat = node.get_active_material(0)
 		if mat is StandardMaterial3D:
@@ -679,17 +681,38 @@ func _flash_insufficient_funds() -> void:
 
 func _on_upgraded() -> void:
 	_update_effects()
-	if visual_model and is_inside_tree():
-		var target_scale = Vector3(1.2, 3.2 + (current_level - 1) * 0.5, 1.2)
+	
+	# Bed gets slightly taller only up to level 2
+	var target_model_scale = Vector3(1.2, 3.2 + min(current_level - 1, 1) * 0.35, 1.2)
+	# Crystals grow slightly for levels 3 to 5 (tiny bit)
+	var crystal_extra: float = max(current_level - 2, 0) * 0.08
+
+	if is_inside_tree():
 		var tween = create_tween()
 		if tween:
-			var tw = tween.tween_property(visual_model, "scale", Vector3(1.2, (3.2 + (current_level - 1) * 0.5) * 1.2, 1.2), 0.2)
-			if tw:
-				tw.set_trans(Tween.TRANS_BACK)
-			tween.tween_property(visual_model, "scale", target_scale, 0.3)
+			tween.set_parallel(true)
+			if visual_model:
+				tween.tween_property(visual_model, "scale", target_model_scale, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			for part in spinning_parts:
+				if is_instance_valid(part):
+					var orig_pos = _initial_crystal_positions.get(part, part.position)
+					var orig_scale = _initial_crystal_scales.get(part, Vector3.ONE)
+					var target_scale = orig_scale * Vector3(1.0 + crystal_extra * 0.4, 1.0 + crystal_extra, 1.0 + crystal_extra * 0.4)
+					var target_pos_y = orig_pos.y + max(current_level - 2, 0) * 0.05
+					tween.tween_property(part, "scale", target_scale, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+					tween.tween_property(part, "position:y", target_pos_y, 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	else:
+		if visual_model:
+			visual_model.scale = target_model_scale
+		for part in spinning_parts:
+			if is_instance_valid(part):
+				var orig_pos = _initial_crystal_positions.get(part, part.position)
+				var orig_scale = _initial_crystal_scales.get(part, Vector3.ONE)
+				part.scale = orig_scale * Vector3(1.0 + crystal_extra * 0.4, 1.0 + crystal_extra, 1.0 + crystal_extra * 0.4)
+				part.position.y = orig_pos.y + max(current_level - 2, 0) * 0.05
 
 	if hp_pivot and is_inside_tree():
-		var target_hp_y = hp_bar_position.y + (current_level - 1) * 0.5
+		var target_hp_y = hp_bar_position.y + min(current_level - 1, 1) * 0.35 + max(current_level - 2, 0) * 0.20
 		var hp_tw = create_tween()
 		if hp_tw:
 			hp_tw.tween_property(hp_pivot, "position:y", target_hp_y, 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)

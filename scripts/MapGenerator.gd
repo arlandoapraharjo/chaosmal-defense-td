@@ -974,9 +974,16 @@ func _place_path_tile(pos: Vector2i) -> void:
 			tile_instance = tile_corner.instantiate()
 			rot_y = _get_corner_rotation(dir_in, dir_out)
 
-	_add_tile_to_scene(tile_instance, pos, rot_y)
+	var tile_pivot = _add_tile_to_scene(tile_instance, pos, rot_y)
 
-func _add_tile_to_scene(instance: Node3D, pos: Vector2i, rot_y: float) -> void:
+	if is_start:
+		# Apply comical white outline to the enemy spawner tile
+		var spawner_hl = TurretHighlighter.new()
+		spawner_hl.name = "SpawnerHighlighter"
+		tile_instance.add_child(spawner_hl)
+		spawner_hl.setup_static(tile_instance, Color(1.0, 1.0, 1.0, 1.0), 3.2)
+
+func _add_tile_to_scene(instance: Node3D, pos: Vector2i, rot_y: float) -> Node3D:
 	# Rotate around the tile's actual geometric center, not whatever origin
 	# point the imported model happens to have. If that origin is offset
 	# along the tile's "forward" axis (common for road-segment assets),
@@ -996,6 +1003,8 @@ func _add_tile_to_scene(instance: Node3D, pos: Vector2i, rot_y: float) -> void:
 		var aabb = mesh_instance.get_aabb()
 		var local_center = mesh_instance.transform * (aabb.position + aabb.size / 2.0)
 		instance.position -= Vector3(local_center.x, 0, local_center.z)
+
+	return pivot
 
 func _find_mesh_instance_recursive(node: Node) -> MeshInstance3D:
 	if node is MeshInstance3D:
