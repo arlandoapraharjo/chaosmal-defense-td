@@ -655,18 +655,18 @@ func _update_3d_ui_positions(camera: Camera3D = null) -> void:
 		
 	var base_top = global_position + Vector3(0, base_h, 0)
 	
-	# Upgrade button: Right Side (beside turret body)
+	# Standing level banner: Inner Right Side (beside turret body, fixed vertical position)
+	if _level_pivot and is_instance_valid(_level_pivot):
+		_level_pivot.global_position = base_top + cam_right * 0.70 - cam_up * 0.535 + cam_fwd * 0.10
+
+	# Upgrade button: Outer Right Side (to the right of level banner)
 	if _upgrade_pivot and is_instance_valid(_upgrade_pivot):
-		_upgrade_pivot.global_position = base_top + cam_right * 0.70 - cam_up * 0.35 + cam_fwd * 0.10
+		_upgrade_pivot.global_position = base_top + cam_right * 1.15 - cam_up * 0.35 + cam_fwd * 0.10
 		
-	# Sell button: Right Side (takes upper slot if max level, otherwise lower slot)
+	# Sell button: Outer Right Side (takes upper slot if max level, otherwise lower slot)
 	if _sell_pivot and is_instance_valid(_sell_pivot):
 		var sell_up_offset: float = -0.35 if turret_level >= max_level else -0.72
-		_sell_pivot.global_position = base_top + cam_right * 0.70 + cam_up * sell_up_offset + cam_fwd * 0.10
-
-	# Standing level banner: Right Side of Upgrade & Sell buttons (fixed vertical position)
-	if _level_pivot and is_instance_valid(_level_pivot):
-		_level_pivot.global_position = base_top + cam_right * 1.15 - cam_up * 0.535 + cam_fwd * 0.10
+		_sell_pivot.global_position = base_top + cam_right * 1.15 + cam_up * sell_up_offset + cam_fwd * 0.10
 
 func _update_3d_ui() -> void:
 	if is_ghost or not is_instance_valid(_level_pivot):

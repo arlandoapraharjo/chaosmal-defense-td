@@ -676,6 +676,11 @@ func _make_multimesh_node(node_name: String, scene: PackedScene, is_tree: bool =
 		# Only apply sway animation if it is a leaf sub-mesh and NOT a trunk / cylinder
 		var is_trunk = "cylinder" in node_name_lower or "trunk" in node_name_lower or "bark" in node_name_lower or "stem" in node_name_lower or "cylinder" in mesh_name_lower or "trunk" in mesh_name_lower
 		
+		# Disable shadow casting on tree leaf sub-meshes to prevent blocky/square
+		# shadow artifacts (leaf alpha not handled properly in shadow pass)
+		if is_tree and not is_trunk:
+			mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		
 		if is_tree and not is_trunk and active_biome != null and active_biome.tree_sway_speed > 0.0 and active_biome.tree_sway_strength > 0.0:
 			if info["material"] is BaseMaterial3D:
 				# Plain GLB imports — replace with sway shader, copying albedo
