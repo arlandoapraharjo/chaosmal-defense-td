@@ -13,39 +13,42 @@ signal step_changed(step_idx: int)
 @onready var dots_container: HBoxContainer = $Control/DialogPanel/RightContent/VBoxContainer/FooterHBox/DotsContainer
 @onready var typewriter_sfx: AudioStreamPlayer = $TypewriterSFX
 
-# Fox 3D Portrait in 2D Frame
+# Character 3D Portrait in 2D Frame
 @onready var fox_model_root: Node3D = $Control/DialogPanel/FoxFrame/FoxViewportContainer/SubViewport/FoxWorld/FoxAnchor/FoxModel
 
-const FOX_SCENE = preload("res://assets/characters/animal-fox.glb")
+const DEFAULT_FOX_SCENE = preload("res://assets/characters/animal-fox.glb")
+
+var _current_character_name: String = "Fox"
+var _current_character_emoji: String = "🦊"
 
 const DIALOGUE_STEPS: Array[Dictionary] = [
 	{
-		"speaker": "TACTICAL ADVISOR FOX",
+		"speaker": "TACTICAL ADVISOR",
 		"badge": "FIELD BRIEFING",
 		"text": "Greetings, Commander! I'm [b][color=#ffd166]Fox[/color][/b], deployed on the ground with you. Let's get briefed on our defensive grid before the incursion begins!"
 	},
 	{
-		"speaker": "TACTICAL ADVISOR FOX",
+		"speaker": "TACTICAL ADVISOR",
 		"badge": "CRITICAL ASSET",
 		"text": "The crystal monolith at the center is our [b][color=#5ce1e6]Incursion Pillar[/color][/b]. Alien UFOs will follow the pathway to attack it. If the pillar falls, the sector is lost!"
 	},
 	{
-		"speaker": "TACTICAL ADVISOR FOX",
+		"speaker": "TACTICAL ADVISOR",
 		"badge": "TURRET DEPLOYMENT",
 		"text": "Use the [b][color=#06d6a0]Turret Hotbar[/color][/b] at the bottom to select defenses. Deploy turrets along the path on valid tiles to intercept approaching invaders."
 	},
 	{
-		"speaker": "TACTICAL ADVISOR FOX",
+		"speaker": "TACTICAL ADVISOR",
 		"badge": "FIELD BUFFS & COINS",
 		"text": "[b][color=#ffd166]Click on me in the map[/color][/b] (or press [b][color=#ffd166][F][/color][/b]) to command my position! Send me into any turret to provide [b][color=#06d6a0]+35% Attack Speed & Firepower buffs[/color][/b]!"
 	},
 	{
-		"speaker": "TACTICAL ADVISOR FOX",
+		"speaker": "TACTICAL ADVISOR",
 		"badge": "RADAR & SPEED",
 		"text": "Pan and rotate your camera to survey the sector. You can also toggle [b][color=#38bdf8]Game Speed[/color][/b] (1x / 2x) or [b][color=#ef476f]Pause[/color][/b] anytime using the top controls."
 	},
 	{
-		"speaker": "TACTICAL ADVISOR FOX",
+		"speaker": "TACTICAL ADVISOR",
 		"badge": "COMBAT STATIONS",
 		"text": "Incoming enemy UFO waves detected on radar! Fortify the path and protect the Incursion Pillar at all costs. [b][color=#06d6a0]Good luck, Commander![/color][/b]"
 	}
@@ -53,10 +56,10 @@ const DIALOGUE_STEPS: Array[Dictionary] = [
 
 # Adaptive docking anchor positions per tutorial step (0.0 = top, 1.0 = bottom)
 const STEP_DOCK: Dictionary = {
-	0: "bottom", # Fox Companion Intro
+	0: "bottom", # Companion Intro
 	1: "bottom", # Incursion Pillar
 	2: "top",    # Turret Hotbar is Revealed at bottom
-	3: "top",    # Fox Command & Battlefield Buffs
+	3: "top",    # Companion Command & Battlefield Buffs
 	4: "bottom", # Speed & Pause Controls at top
 	5: "bottom"  # Combat Stations Overview
 }
@@ -123,15 +126,43 @@ func _on_card_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_on_next_pressed()
 
+func _get_active_biome() -> BiomeData:
+	if BiomeManager != null and BiomeManager.current_biome != null:
+		return BiomeManager.current_biome
+	var map = get_tree().get_first_node_in_group("map_generator")
+	if not map:
+		map = get_node_or_null("/root/World/MapGenerator")
+	if not map:
+		map = get_node_or_null("../Map")
+	if map and "active_biome" in map and map.active_biome != null:
+		return map.active_biome
+	return null
+
 func _setup_fox_model() -> void:
 	if not fox_model_root:
 		return
 	
+	var biome = _get_active_biome()
+	var char_scene: PackedScene = DEFAULT_FOX_SCENE
+	_current_character_name = "Fox"
+	_current_character_emoji = "🦊"
+	
+	if biome:
+		if biome.character_model:
+			char_scene = biome.character_model
+		if not biome.character_name.is_empty():
+			_current_character_name = biome.character_name
+		if not biome.character_emoji.is_empty():
+			_current_character_emoji = biome.character_emoji
+	
+	for child in fox_model_root.get_children():
+		child.queue_free()
+	
 	fox_model_root.scale = Vector3(0.35, 0.35, 0.35)
 	fox_model_root.rotation.y = deg_to_rad(35.0)
 	
-	if fox_model_root.get_child_count() == 0:
-		var fox_instance = FOX_SCENE.instantiate()
+	if char_scene:
+		var fox_instance = char_scene.instantiate()
 		fox_model_root.add_child(fox_instance)
 		
 		_fox_anim_player = _find_animation_player(fox_instance)
@@ -140,10 +171,6 @@ func _setup_fox_model() -> void:
 				_fox_anim_player.play("idle")
 			elif _fox_anim_player.has_animation("static"):
 				_fox_anim_player.play("static")
-	else:
-		_fox_anim_player = _find_animation_player(fox_model_root)
-		if _fox_anim_player and _fox_anim_player.has_animation("idle"):
-			_fox_anim_player.play("idle")
 
 func _find_animation_player(node: Node) -> AnimationPlayer:
 	if node is AnimationPlayer:
@@ -184,7 +211,7 @@ func _process(delta: float) -> void:
 	if not _is_active or _is_exiting:
 		return
 	
-	# Procedural Fox Breathing Animation in 2D Frame
+	# Procedural Character Breathing Animation in 2D Frame
 	_breath_time += delta * 2.8
 	if fox_model_root:
 		var bob = sin(_breath_time) * 0.015
@@ -211,6 +238,8 @@ func start_intro() -> void:
 	_is_exiting = false
 	_current_step = 0
 	visible = true
+	
+	_setup_fox_model()
 	
 	root_control.modulate.a = 0.0
 	
@@ -246,7 +275,8 @@ func _show_step(step_idx: int) -> void:
 	
 	var data = DIALOGUE_STEPS[_current_step]
 	if speaker_name_label:
-		speaker_name_label.text = "🦊 " + data["speaker"] + " • " + data["badge"]
+		var speaker = "TACTICAL ADVISOR " + _current_character_name.to_upper()
+		speaker_name_label.text = _current_character_emoji + " " + speaker + " • " + data["badge"]
 	
 	if next_button:
 		if _current_step == DIALOGUE_STEPS.size() - 1:
@@ -265,7 +295,8 @@ func _show_step(step_idx: int) -> void:
 			if _fox_anim_player.has_animation("idle") and _fox_anim_player.current_animation != "idle":
 				_fox_anim_player.play("idle")
 	
-	_animate_dialogue_text(data["text"])
+	var formatted_text = data["text"].replace("Fox", _current_character_name)
+	_animate_dialogue_text(formatted_text)
 
 func _glide_to_dock(dock: String) -> void:
 	if not dialog_panel:

@@ -13,6 +13,7 @@
 [ext_resource type="Resource" uid="uid://6b3llco02vor" path="res://UI/Hotbar/hotbar_theme_grass.tres" id="12_grass"]
 [ext_resource type="PackedScene" uid="uid://ctfviyu7eidr1" path="res://scenes/thin_tree.tscn" id="12_isq2d"]
 [ext_resource type="PackedScene" uid="uid://6703tir8bl2b" path="res://scenes/grass_single.tscn" id="13_grass_mdl"]
+[ext_resource type="PackedScene" uid="uid://c8ld466aoou5k" path="res://assets/characters/animal-fox.glb" id="14_fox"]
 
 [resource]
 script = ExtResource("1_36vdi")
@@ -28,4 +29,7 @@ bush_model = ExtResource("1_f2oft")
 grass_model = ExtResource("13_grass_mdl")
 environment = ExtResource("1_vqqub")
 hotbar_theme = ExtResource("12_grass")
+character_model = ExtResource("14_fox")
+character_name = "Fox"
+character_emoji = "🦊"
 metadata/_custom_type_script = "uid://dt3mmbm7kd8rn"

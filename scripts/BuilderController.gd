@@ -8,11 +8,11 @@ const PLACEMENT_PARTICLE_SCENE = preload("res://scenes/turret_placement_particle
 @export var turret_y_offset: float = 0.1
 
 @export_group("Deployment")
-@export var base_max_deployment: int = 10
-@export var deployment_increase_per_wave: int = 5
+@export var base_max_deployment: int = 8
+@export var deployment_increase_per_wave: int = 0
 
 var _current_deployment: int = 0
-var _max_deployment: int = 10
+var _max_deployment: int = 8
 var _turret_cost: int = 0
 
 var _is_building: bool = false
@@ -67,8 +67,13 @@ func _connect_to_spawner() -> void:
 			spawner.wave_completed.connect(_on_wave_completed)
 
 func _on_wave_completed(_wave_number: int) -> void:
-	_max_deployment += deployment_increase_per_wave
-	total_deployment_updated.emit(_current_deployment, _max_deployment)
+	# Turret slot capacity no longer increases per wave
+	pass
+
+func increase_max_deployment(amount: int) -> void:
+	if amount > 0:
+		_max_deployment += amount
+		total_deployment_updated.emit(_current_deployment, _max_deployment)
 
 func get_max_deployment() -> int:
 	return _max_deployment
@@ -190,33 +195,27 @@ func _unhandled_input(event: InputEvent) -> void:
 			if _turret_interacted_frame == Engine.get_process_frames():
 				return
 			
+			var camera = get_viewport().get_camera_3d()
+			var mouse_pos = get_viewport().get_mouse_position()
+			
+			# If companion is NOT selected, check if user clicked on/near the companion to select it
+			if fox and is_instance_valid(fox) and not fox.get("is_inside_turret") and fox.get("is_selected") != true:
+				if camera and not camera.is_position_behind(fox.global_position):
+					var fox_screen_pos = camera.unproject_position(fox.global_position + Vector3(0, 0.35, 0))
+					if mouse_pos.distance_to(fox_screen_pos) <= 45.0:
+						fox.set_selected(true)
+						if is_inside_tree() and get_viewport():
+							get_viewport().set_input_as_handled()
+						return
+			
 			# If Fox is selected, issue command (to turret or snapped map tile)
 			if fox and fox.get("is_selected") == true:
-				var camera = get_viewport().get_camera_3d()
 				if camera:
-					var mouse_pos = get_viewport().get_mouse_position()
 					var origin = camera.project_ray_origin(mouse_pos)
 					var normal = camera.project_ray_normal(mouse_pos)
 					
-					# 1. First check if player clicked on a placed Turret
-					var space_state = camera.get_world_3d().direct_space_state
-					var ray_query = PhysicsRayQueryParameters3D.create(origin, origin + normal * 100.0)
-					ray_query.collide_with_areas = true
-					ray_query.collide_with_bodies = true
-					var result = space_state.intersect_ray(ray_query)
-					
-					var clicked_turret: Node3D = null
-					if not result.is_empty():
-						var collider = result.collider
-						clicked_turret = _find_turret_ancestor(collider)
-					
-					if clicked_turret == null:
-						for t in _placed_turrets:
-							if is_instance_valid(t):
-								var t_screen = camera.unproject_position(t.global_position + Vector3(0, 0.5, 0))
-								if mouse_pos.distance_to(t_screen) <= 38.0:
-									clicked_turret = t
-									break
+					# 1. Find the precise turret targeted by the click
+					var clicked_turret: Node3D = _find_turret_at_screen_pos(mouse_pos, camera)
 					
 					if clicked_turret != null and is_instance_valid(clicked_turret):
 						fox.command_enter_turret(clicked_turret)
@@ -224,7 +223,16 @@ func _unhandled_input(event: InputEvent) -> void:
 							get_viewport().set_input_as_handled()
 						return
 					
-					# 2. Player clicked ground: Snap to grid tile within map boundaries
+					# 2. Check if clicked near companion itself: re-trigger hop
+					if not camera.is_position_behind(fox.global_position):
+						var fox_screen_pos = camera.unproject_position(fox.global_position + Vector3(0, 0.35, 0))
+						if mouse_pos.distance_to(fox_screen_pos) <= 32.0:
+							fox.set_selected(true)
+							if is_inside_tree() and get_viewport():
+								get_viewport().set_input_as_handled()
+							return
+					
+					# 3. Player clicked ground: Snap to grid tile within map boundaries
 					var plane = Plane(Vector3.UP, 0.0)
 					var hit = plane.intersects_ray(origin, normal)
 					if hit != null:
@@ -280,6 +288,81 @@ func _find_turret_ancestor(node: Node) -> Node3D:
 		if curr is Node3D and curr.has_method("apply_fox_buff"):
 			return curr as Node3D
 		curr = curr.get_parent()
+	return null
+
+## Robustly identifies the intended turret clicked by the player using:
+## 1. Direct 3D raycast against TurretBodyArea colliders (filtering out floating UI badges)
+## 2. Ground tile footprint intersection
+## 3. Screen-space proximity to visual center (finding the true closest turret, not first in array)
+func _find_turret_at_screen_pos(mouse_pos: Vector2, camera: Camera3D) -> Node3D:
+	if not camera:
+		return null
+	
+	var origin = camera.project_ray_origin(mouse_pos)
+	var normal = camera.project_ray_normal(mouse_pos)
+	
+	# 1. Direct 3D raycast specifically for TurretBodyArea colliders
+	var space_state = camera.get_world_3d().direct_space_state
+	var ray_query = PhysicsRayQueryParameters3D.create(origin, origin + normal * 100.0)
+	ray_query.collide_with_areas = true
+	ray_query.collide_with_bodies = false
+	var result = space_state.intersect_ray(ray_query)
+	
+	if not result.is_empty():
+		var collider = result.collider
+		if collider and collider.name == "TurretBodyArea":
+			var t = _find_turret_ancestor(collider)
+			if t and is_instance_valid(t):
+				return t
+	
+	# 2. Check if the mouse ray intersects the ground plane directly on a placed turret's tile footprint
+	var plane = Plane(Vector3.UP, 0.0)
+	var hit = plane.intersects_ray(origin, normal)
+	var ground_turret: Node3D = null
+	if hit != null:
+		var local_hit = map_generator.to_local(hit) if map_generator else hit
+		var grid_pos = Vector2i(int(round(local_hit.x)), int(round(local_hit.z)))
+		for t in _placed_turrets:
+			if not is_instance_valid(t):
+				continue
+			var t_grid: Vector2i = t.grid_pos
+			var t_fp: Vector2i = t.footprint_size if ("footprint_size" in t) else Vector2i(1, 1)
+			if t_fp == Vector2i(1, 1):
+				if t_grid == grid_pos:
+					ground_turret = t
+					break
+			else:
+				if grid_pos.x >= t_grid.x and grid_pos.x < t_grid.x + t_fp.x and \
+				   grid_pos.y >= t_grid.y and grid_pos.y < t_grid.y + t_fp.y:
+					ground_turret = t
+					break
+	
+	# 3. Find the closest placed turret in screen-space within a strict threshold
+	var closest_turret: Node3D = null
+	var min_screen_dist: float = 46.0
+	
+	for t in _placed_turrets:
+		if not is_instance_valid(t):
+			continue
+		var center_3d = t.global_position + Vector3(0, 0.6, 0)
+		var t_screen = camera.unproject_position(center_3d)
+		var d = mouse_pos.distance_to(t_screen)
+		if d < min_screen_dist:
+			min_screen_dist = d
+			closest_turret = t
+	
+	# If ground tile matches a turret and cursor is reasonably near it on screen, ground hit is the most accurate
+	if ground_turret != null:
+		var gt_screen = camera.unproject_position(ground_turret.global_position + Vector3(0, 0.6, 0))
+		if mouse_pos.distance_to(gt_screen) <= 58.0:
+			return ground_turret
+	
+	if closest_turret != null:
+		return closest_turret
+	
+	if ground_turret != null:
+		return ground_turret
+	
 	return null
 
 func _is_footprint_buildable(grid_pos: Vector2i, footprint: Vector2i) -> bool:

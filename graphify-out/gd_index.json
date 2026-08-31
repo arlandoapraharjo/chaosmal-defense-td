@@ -567,6 +567,18 @@
         {
           "name": "hotbar_theme",
           "type": "HotbarTheme"
+        },
+        {
+          "name": "character_model",
+          "type": "PackedScene"
+        },
+        {
+          "name": "character_name",
+          "type": "String"
+        },
+        {
+          "name": "character_emoji",
+          "type": "String"
         }
       ]
     },
@@ -657,6 +669,12 @@
       ],
       "functions": [
         {
+          "name": "increase_max_deployment",
+          "params": [
+            "amount"
+          ]
+        },
+        {
           "name": "get_max_deployment",
           "params": []
         },
@@ -720,13 +738,13 @@
           "call": "preload"
         },
         {
-          "line": 112,
+          "line": 117,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
         },
         {
-          "line": 431,
+          "line": 514,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
@@ -845,7 +863,8 @@
           "name": "setup_enemy_type",
           "params": [
             "type_index",
-            "wave_number"
+            "wave_number",
+            "is_boss_unit"
           ]
         },
         {
@@ -889,6 +908,12 @@
           "line": 7,
           "raw": "res://scenes/explosion.tscn",
           "path": "scenes/explosion.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 27,
+          "raw": "res://shaders/outline_pixel_perfect.gdshader",
+          "path": "shaders/outline_pixel_perfect.gdshader",
           "call": "preload"
         }
       ],
@@ -946,6 +971,12 @@
       ],
       "functions": [
         {
+          "name": "set_character_model",
+          "params": [
+            "model_scene"
+          ]
+        },
+        {
           "name": "set_selected",
           "params": [
             "selected"
@@ -998,6 +1029,10 @@
         {
           "name": "model_scale",
           "type": "Vector3"
+        },
+        {
+          "name": "character_model_scene",
+          "type": "PackedScene"
         }
       ]
     },
@@ -1105,7 +1140,7 @@
           "call": "load"
         },
         {
-          "line": 766,
+          "line": 783,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -1474,31 +1509,31 @@
           "call": "preload"
         },
         {
-          "line": 1116,
+          "line": 1122,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1117,
+          "line": 1123,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1118,
+          "line": 1124,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 1119,
+          "line": 1125,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 1120,
+          "line": 1126,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"

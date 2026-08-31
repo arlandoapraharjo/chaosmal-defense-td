@@ -23,7 +23,7 @@ var enemy_script = preload("res://scripts/Enemy.gd")
 
 # ─── Movement ───────────────────────────────────────────────────────────────────
 @export var enemy_speed: float = 1.5     # Tiles per second
-@export var pool_size: int = 30          # Pre-allocated enemy count
+@export var pool_size: int = 120         # Pre-allocated enemy count (expanded for 3x enemy multiplier)
 
 static var instance = null
 
@@ -34,14 +34,14 @@ var waves_cleared: int = 0
 var is_game_over: bool = false
 
 # ─── Wave Configuration ────────────────────────────────────────────────────────
-@export var base_enemy_count_min: int = 3
-@export var base_enemy_count_max: int = 5
-@export var enemies_increase_per_wave_min: int = 1
-@export var enemies_increase_per_wave_max: int = 2
+@export var base_enemy_count_min: int = 9
+@export var base_enemy_count_max: int = 15
+@export var enemies_increase_per_wave_min: int = 3
+@export var enemies_increase_per_wave_max: int = 6
 @export var wave_delay_min: float = 3.0
 @export var wave_delay_max: float = 8.0
-@export var spawn_delay_min: float = 0.5
-@export var spawn_delay_max: float = 3.0
+@export var spawn_delay_min: float = 0.2
+@export var spawn_delay_max: float = 1.5
 
 # ─── Signals ────────────────────────────────────────────────────────────────────
 signal wave_started(wave_number: int)
@@ -143,15 +143,19 @@ func _physics_process(delta: float) -> void:
 			if _wave_pause_timer <= 0.0:
 				_start_next_wave()
 
+var _boss_spawned_this_wave: bool = false
+
 func _start_next_wave() -> void:
 	current_wave += 1
 	_enemies_spawned = 0
+	_boss_spawned_this_wave = false
 
-	# Calculate enemy count: base + scaling + random variance, capped at 40
+	# Calculate enemy count (tripled x3 per wave): base + scaling + random variance, capped at 120
 	var base_count = randi_range(4, 6)
 	var wave_bonus = floor(current_wave * 1.5)
 	var variance = randi_range(0, max(1, int(current_wave / 3.0)))
-	_enemies_to_spawn = min(base_count + wave_bonus + variance, 40)
+	var base_enemies = base_count + wave_bonus + variance
+	_enemies_to_spawn = int(min(base_enemies * 3, 120))
 
 	_state = WaveState.SPAWNING
 	# First enemy spawns immediately (or with tiny delay)
@@ -159,7 +163,7 @@ func _start_next_wave() -> void:
 
 	# Pass enemy count in the signal if needed (WaveUI might not take it, but it's safe)
 	wave_started.emit(current_wave)
-	print("Wave %d started! Enemies: %d" % [current_wave, _enemies_to_spawn])
+	print("Wave %d started! Enemies: %d (3x Multiplier)" % [current_wave, _enemies_to_spawn])
 
 func _pick_enemy_type_for_wave() -> int:
 	var roll = randf()
@@ -211,7 +215,16 @@ func _on_enemy_defeated() -> void:
 
 func _spawn_enemy() -> void:
 	var enemy: Node3D = null
-	var chosen_type = _pick_enemy_type_for_wave()
+	var is_boss_wave = (current_wave > 0 and current_wave % 5 == 0)
+	var is_boss_enemy = false
+	var chosen_type = 0
+	
+	if is_boss_wave and not _boss_spawned_this_wave:
+		chosen_type = 3 # Force UFO-D as Boss
+		is_boss_enemy = true
+		_boss_spawned_this_wave = true
+	else:
+		chosen_type = _pick_enemy_type_for_wave()
 	
 	# Try to find an enemy of the chosen type in the pool
 	for i in range(_pool.size()):
@@ -222,15 +235,13 @@ func _spawn_enemy() -> void:
 
 	if enemy == null:
 		if not _pool.is_empty():
-			# Just grab any if the exact type isn't available to avoid allocations if possible
-			# But for true scaling, we might want to just allocate one. Let's just allocate
 			enemy = _create_enemy_node(chosen_type)
 		else:
 			push_warning("WaveManager: enemy pool exhausted, creating new instance. Consider increasing pool_size.")
 			enemy = _create_enemy_node(chosen_type)
 
-	# Re-apply enemy type stats with wave scaling
-	enemy.setup_enemy_type(enemy.enemy_type_index, current_wave)
+	# Re-apply enemy type stats with wave scaling and boss flag
+	enemy.setup_enemy_type(chosen_type, current_wave, is_boss_enemy)
 	
 	total_enemies_spawned += 1
 	var wave_speed = enemy_speed * (1.0 + current_wave * 0.03)

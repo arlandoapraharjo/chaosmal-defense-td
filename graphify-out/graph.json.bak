@@ -74,20 +74,6 @@
       "id": "tscn_scenes_pillar_destruction"
     },
     {
-      "label": "Waveui Scene",
-      "file_type": "code",
-      "source_file": "UI/WaveUI.tscn",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "Map Scene",
-      "norm_label": "waveui scene",
-      "description": "Scene with 1 ext_resource(s)",
-      "_scene_uid": "uid://beiea7nje0alg",
-      "_ext_resource_count": 1,
-      "id": "tscn_ui_waveui"
-    },
-    {
       "label": "Pilarshockwave Scene",
       "file_type": "code",
       "source_file": "shaders/pilarshockwave.tscn",
@@ -380,6 +366,20 @@
       "_scene_uid": "uid://b7e0ywe1g86fa",
       "_ext_resource_count": 2,
       "id": "tscn_addons_mesh_bush2glb3"
+    },
+    {
+      "label": "Waveui Scene",
+      "file_type": "code",
+      "source_file": "UI/WaveUI.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "Map Scene",
+      "norm_label": "waveui scene",
+      "description": "Scene with 2 ext_resource(s)",
+      "_scene_uid": "uid://beiea7nje0alg",
+      "_ext_resource_count": 2,
+      "id": "tscn_ui_waveui"
     },
     {
       "label": "World Scene",

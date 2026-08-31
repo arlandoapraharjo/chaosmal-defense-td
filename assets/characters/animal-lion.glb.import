@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://qeys2jpoyvdq"
-path="res://.godot/imported/animal-koala.glb-1e34d5645a37fa7197c0da37393a35a6.scn"
+uid="uid://dlionpacked01"
+path="res://.godot/imported/animal-lion.glb-379a0a1de776822000b23288944863ef.scn"
 
 [deps]
 
-source_file="res://assets/characters/animal-koala.glb"
-dest_files=["res://.godot/imported/animal-koala.glb-1e34d5645a37fa7197c0da37393a35a6.scn"]
+source_file="res://assets/characters/animal-lion.glb"
+dest_files=["res://.godot/imported/animal-lion.glb-379a0a1de776822000b23288944863ef.scn"]
 
 [params]
 

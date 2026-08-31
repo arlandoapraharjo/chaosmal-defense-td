@@ -109,30 +109,59 @@ func _deploy_fox_companion() -> void:
 		elif FOX_COMPANION_SCENE:
 			_fox_companion = FOX_COMPANION_SCENE.instantiate() as FoxCompanion
 			var map_gen = get_node_or_null("MapGenerator")
+			if not map_gen:
+				map_gen = get_node_or_null("Map")
 			if map_gen:
 				map_gen.add_child(_fox_companion)
 			else:
 				add_child(_fox_companion)
 	
 	if _fox_companion and is_instance_valid(_fox_companion):
-		var pillar = get_tree().get_first_node_in_group("pillar")
-		var pillar_pos = pillar.global_position if pillar else Vector3(10, 0, 10)
-		var spawn_pos = pillar_pos + Vector3(1.5, 0.05, 1.0)
+		var map_node = get_node_or_null("Map") if has_node("Map") else get_node_or_null("MapGenerator")
+		if map_node and "active_biome" in map_node and map_node.active_biome != null and map_node.active_biome.character_model != null:
+			_fox_companion.set_character_model(map_node.active_biome.character_model)
+		elif BiomeManager != null and BiomeManager.current_biome != null and BiomeManager.current_biome.character_model != null:
+			_fox_companion.set_character_model(BiomeManager.current_biome.character_model)
+		
+		var spawn_pos = _get_center_blank_spawn_pos(map_node)
 		_fox_companion.global_position = spawn_pos
 		_fox_companion.play_deployment_drop(5.5)
+
+func _get_center_blank_spawn_pos(map_node: Node3D) -> Vector3:
+	var center_x: int = 10
+	var center_z: int = 10
+	if map_node and "MAP_SIZE" in map_node:
+		center_x = int(map_node.MAP_SIZE / 2)
+		center_z = int(map_node.MAP_SIZE / 2)
+	
+	# Spiral outwards from map center (10, 10) to find the closest blank/buildable tile
+	for r in range(0, 10):
+		for dx in range(-r, r + 1):
+			for dz in range(-r, r + 1):
+				if abs(dx) != r and abs(dz) != r:
+					continue
+				var test_pos = Vector2i(center_x + dx, center_z + dz)
+				if map_node and map_node.has_method("is_buildable"):
+					if map_node.is_buildable(test_pos):
+						var local_pos = Vector3(float(test_pos.x), 0.05, float(test_pos.y))
+						return map_node.to_global(local_pos)
+	
+	var fallback_local = Vector3(float(center_x), 0.05, float(center_z))
+	return map_node.to_global(fallback_local) if map_node else fallback_local
 
 func _on_intro_step_changed(step_idx: int) -> void:
 	if not camera_3d:
 		return
 	
+	var map_node = get_node_or_null("Map") if has_node("Map") else get_node_or_null("MapGenerator")
 	var pillar = get_tree().get_first_node_in_group("pillar")
 	var pillar_pos = pillar.global_position if pillar else Vector3(10, 0, 10)
 	
 	match step_idx:
 		0:
-			# Step 1: Introduction - Camera zooms in tight on the deployed tiny Fox on the field!
-			var fox_pos = _fox_companion.global_position if (_fox_companion and is_instance_valid(_fox_companion)) else (pillar_pos + Vector3(1.5, 0, 1.0))
-			var target_cam_pos = _calc_camera_pos_for_target(fox_pos)
+			# Step 1: Introduction - Camera zooms in tight on the deployed companion in the map center!
+			var companion_pos = _fox_companion.global_position if (_fox_companion and is_instance_valid(_fox_companion)) else _get_center_blank_spawn_pos(map_node)
+			var target_cam_pos = _calc_camera_pos_for_target(companion_pos)
 			_focus_camera(target_cam_pos, 8.5, 0.9)
 		
 		1:

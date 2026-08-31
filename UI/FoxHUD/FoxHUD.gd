@@ -7,6 +7,10 @@ extends CanvasLayer
 @onready var status_label: Label = $Control/HeroWidget/MarginContainer/HBoxContainer/InfoVBox/StatusLabel
 @onready var action_button: Button = $Control/HeroWidget/MarginContainer/HBoxContainer/ActionButton
 @onready var command_banner: PanelContainer = $Control/CommandBanner
+@onready var hero_emoji_label: Label = get_node_or_null("Control/HeroWidget/MarginContainer/HBoxContainer/FoxEmoji")
+@onready var hero_name_label: Label = get_node_or_null("Control/HeroWidget/MarginContainer/HBoxContainer/InfoVBox/TitleRow/NameLabel")
+@onready var banner_title_label: Label = get_node_or_null("Control/CommandBanner/MarginContainer/VBoxContainer/HeaderRow/Title")
+@onready var banner_move_label: Label = get_node_or_null("Control/CommandBanner/MarginContainer/VBoxContainer/LineMove")
 
 var _fox: FoxCompanion = null
 var _banner_tween: Tween = null
@@ -20,7 +24,40 @@ func _ready() -> void:
 	if hero_widget:
 		hero_widget.gui_input.connect(_on_widget_gui_input)
 	
+	_connect_biome()
 	call_deferred("_bind_fox")
+
+func _connect_biome() -> void:
+	var map = get_tree().get_first_node_in_group("map_generator")
+	if not map:
+		map = get_node_or_null("/root/World/MapGenerator")
+	if not map:
+		map = get_node_or_null("../Map")
+	if not map:
+		map = get_node_or_null("Map")
+	
+	if map:
+		if map.has_signal("biome_changed") and not map.biome_changed.is_connected(_on_biome_changed):
+			map.biome_changed.connect(_on_biome_changed)
+		if "active_biome" in map and map.active_biome != null:
+			_on_biome_changed(map.active_biome)
+	elif BiomeManager != null and BiomeManager.current_biome != null:
+		_on_biome_changed(BiomeManager.current_biome)
+
+func _on_biome_changed(biome: BiomeData) -> void:
+	if not biome:
+		return
+	var char_name = biome.character_name if not biome.character_name.is_empty() else "Fox"
+	var char_emoji = biome.character_emoji if not biome.character_emoji.is_empty() else "🦊"
+	
+	if hero_emoji_label:
+		hero_emoji_label.text = char_emoji
+	if hero_name_label:
+		hero_name_label.text = "TACTICAL " + char_name.to_upper()
+	if banner_title_label:
+		banner_title_label.text = char_emoji + " " + char_name.to_upper() + " COMMAND MODE"
+	if banner_move_label:
+		banner_move_label.text = "• Left-Click Tile : Move " + char_name
 
 func _bind_fox() -> void:
 	_fox = get_tree().get_first_node_in_group("fox_companion") as FoxCompanion

@@ -44,3 +44,9 @@ class_name BiomeData
 @export_range(0.0, 1.0) var decoration_chance: float = 0.15
 ## Hotbar color theme for this biome. Assign a HotbarTheme .tres resource.
 @export var hotbar_theme: HotbarTheme
+
+@export_group("Character")
+## 3D companion/character model for this biome (e.g. animal-penguin.glb, animal-lion.glb, animal-fox.glb).
+@export var character_model: PackedScene
+@export var character_name: String = "Fox"
+@export var character_emoji: String = "🦊"
