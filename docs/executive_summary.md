@@ -14,23 +14,23 @@
 
 **Chaosmal Defense** is a fast-paced, stylized 3D procedural tower defense game that blends grid-based strategic placement with real-time tactical companion control. Players command the defense of the sector's **Incursion Pillar** against relentless waves of invading alien UFOs traversing procedurally generated zigzag pathways across dynamic planetary biomes. 
 
-Unlike traditional static tower defense titles, players deploy the **Tactical Advisor Fox** directly onto the battlefield — an active, movable ground companion that can be commanded in real-time to inhabit any turret on the frontlines, infusing it with **+35% Firepower and Attack Speed buffs**. Combining modular turret archetypes, procedural island terrain generation, adaptive enemy resistances, and intense boss waves, *Chaosmal Defense* delivers high-stakes tactical decision-making in every run.
+Unlike traditional static tower defense titles, players deploy the **Tactical Advisor Animal** directly onto the battlefield — an active, movable ground companion that can be commanded in real-time to inhabit any turret on the frontlines, infusing it with **+35% Firepower and Attack Speed buffs**. Combining modular turret archetypes, procedural island terrain generation, adaptive enemy resistances, and intense boss waves, *Chaosmal Defense* delivers high-stakes tactical decision-making in every run.
 
 ```mermaid
 graph TD
-    A[Start Game / Procedural Map Gen] --> B[Pick Biome: Grass / Snow / Desert]
-    B --> C[Generate Zigzag Path & Coastal Terrain]
-    C --> D[Pre-Wave Tactical Planning & Turret Placement]
-    D --> E[Incursion Wave Begins: UFO Swarms Attack]
-    E --> F{Real-Time Tactical Loop}
-    F -->|Position & Inhabit Turrets| G[Fox Companion +35% Buff]
-    F -->|Earn Coins & Upgrade Tiers| H[Turret Upgrades & Recycling]
-    F -->|Defend Nexus| I[Protect Incursion Pillar]
-    G --> J{Wave Outcome}
+    A["Start Game / Procedural Map Gen"] --> B["Pick Biome: Grass / Snow / Desert"]
+    B --> C["Generate Zigzag Path & Coastal Terrain"]
+    C --> D["Pre-Wave Tactical Planning & Turret Placement"]
+    D --> E["Incursion Wave Begins: UFO Swarms Attack"]
+    E --> F{"Real-Time Tactical Loop"}
+    F -->|Position & Inhabit Turrets| G["Animal Companion +35% Buff"]
+    F -->|Earn Coins & Upgrade Tiers| H["Turret Upgrades & Recycling"]
+    F -->|Defend Nexus| I["Protect Incursion Pillar"]
+    G --> J{"Wave Outcome"}
     H --> J
     I --> J
-    J -->|Pillar Destroyed| K[Game Over / Sector Lost]
-    J -->|Wave Cleared| L[Deployment Cap +5 & New Wave / Boss Wave]
+    J -->|Pillar Destroyed| K["Game Over / Sector Lost"]
+    J -->|Wave Cleared| L["Deployment Cap +5 & New Wave / Boss Wave"]
     L --> D
 ```
 
@@ -38,8 +38,8 @@ graph TD
 
 ## 2. Core Game Pillars
 
-1. **Active Tactical Leadership (The Fox Protocol):**  
-   Strategy isn't just about pre-wave build orders. The player has a tangible presence on the map through the *Fox Companion*, allowing on-the-fly tactical triage, dynamic lane reinforcement, and instant firepower amplification where enemies threaten to break through.
+1. **Active Tactical Leadership (The Animal Companion Protocol):**  
+   Strategy isn't just about pre-wave build orders. The player has a tangible presence on the map through the *Animal Companion*, allowing on-the-fly tactical triage, dynamic lane reinforcement, and instant firepower amplification where enemies threaten to break through.
 2. **Procedural Variety & Environmental Adaptation:**  
    No two battlefields are identical. Every match dynamically constructs a unique 20x20 island featuring guaranteed non-overlapping half-step zigzag enemy paths, procedural coastal cliff geometry, and one of three distinct biomes (Grassland, Alpine Snow, Arid Desert) complete with biome-specific wind and atmospheric shaders.
 3. **Deep Archetypal Arsenal with Economic Agility:**  
@@ -53,31 +53,31 @@ graph TD
 
 ```mermaid
 flowchart LR
-    subgraph Economy & Planning
-        P1[Examine Procedural Path] --> P2[Spend Coins from Hotbar]
-        P2 --> P3[Deploy 1x1 & 2x2 Turrets]
+    subgraph G1["1. Economy & Planning"]
+        P1["Examine Procedural Path"] --> P2["Spend Coins from Hotbar"]
+        P2 --> P3["Deploy 1x1 & 2x2 Turrets"]
     end
     
-    subgraph Combat & Tactical Action
-        C1[Wave Incursion Starts] --> C2[Turrets Auto-Engage Target]
-        C2 --> C3[Command Fox Companion into Chokepoint Turret]
-        C3 --> C4[Destroy Invaders & Collect Bounties]
+    subgraph G2["2. Combat & Tactical Action"]
+        C1["Wave Incursion Starts"] --> C2["Turrets Auto-Engage Target"]
+        C2 --> C3["Command Animal Companion into Chokepoint Turret"]
+        C3 --> C4["Destroy Invaders & Collect Bounties"]
     end
     
-    subgraph Progression & Escalation
-        U1[Upgrade Key Turrets Lvl 1-5] --> U2[Survive Boss Wave every 5 Waves]
-        U2 --> U3[Deployment Limit Increases +5]
+    subgraph G3["3. Progression & Escalation"]
+        U1["Upgrade Key Turrets Lvl 1-5"] --> U2["Survive Boss Wave Every 5 Waves"]
+        U2 --> U3["Deployment Limit Increases +5"]
     end
     
-    Economy & Planning --> Combat & Tactical Action
-    Combat & Tactical Action --> Progression & Escalation
-    Progression & Escalation --> Economy & Planning
+    P3 --> C1
+    C4 --> U1
+    U3 --> P1
 ```
 
 ### Minute-to-Minute Player Flow
 1. **Survey & Plan:** Survey the procedural route, examine choke points and corner positions, and place initial turrets from the intuitive bottom hotbar.
 2. **Engage & Adapt:** Alien UFO waves spawn from the spawner monolith and navigate toward the Incursion Pillar. Turrets fire automatically based on range and weapon-specific constraints (e.g. half-circle arcs, minimum deadzones).
-3. **Tactical Micro:** The player selects the Fox (hotkey `[F]` or click) and commands it into specific turrets to provide instant +35% combat buffs to counter unexpected enemy rushes or armored targets.
+3. **Tactical Micro:** The player selects the Animal Companion (hotkey `[F]` or click) and commands it into specific turrets to provide instant +35% combat buffs to counter unexpected enemy rushes or armored targets.
 4. **Economic Investment:** Earn bounty coins from eliminated invaders. Invest in single-turret upgrade branches or expand defensive footprint across newly unlocked deployment limits.
 5. **Boss Wave Defense:** Every 5th wave triggers a high-density Boss Incursion with scaled health pools and specialized escort units.
 
@@ -85,9 +85,9 @@ flowchart LR
 
 ## 4. Systems & Mechanics Breakdown
 
-### 4.1. Tactical Hero Companion (Fox Companion)
+### 4.1. Tactical Hero Companion (Animal Companion)
 - **Deployment:** Automatically drops into the combat zone via bouncy drop animation and poof particle effect at session start.
-- **Selection & Commands:** Can be toggled via hotkey `[F]`, left tactical HUD widget, or direct click. Right-clicking or issuing commands moves the Fox to snapped grid tiles or directly enters a targeted turret.
+- **Selection & Commands:** Can be toggled via hotkey `[F]`, left tactical HUD widget, or direct click. Right-clicking or issuing commands moves the Animal Companion to snapped grid tiles or directly enters a targeted turret.
 - **Turret Buffing:** While inhabiting a turret, grants **+35% Firepower & Attack Speed**, accompanied by an animated golden hero badge, particle flare, and enhanced projectile output.
 - **Dynamic Repositioning:** Can hop between turrets seamlessly or eject onto open ground during combat without penalties.
 
@@ -127,23 +127,23 @@ classDiagram
         +die()
     }
     class UFO_A {
-        +Scout Drone
+        +String role
     }
     class UFO_S {
-        +Shield Barrier
-        +first_hit_immune
+        +bool has_shield_barrier
+        +bool first_hit_immune
     }
     class UFO_Ar {
-        +Flat Armor DR
-        +punishes_low_damage
+        +float flat_armor_reduction
+        +bool punishes_low_damage
     }
     class UFO_Rn {
-        +Speed x2
-        +low_hp
+        +float speed_multiplier
+        +float low_hp
     }
     class Boss_UFO {
-        +1.35x HP Spike
-        +Heavy Bounties
+        +float hp_spike_mult
+        +int heavy_bounties
     }
     AlienInvader <|-- UFO_A
     AlienInvader <|-- UFO_S
@@ -214,9 +214,9 @@ classDiagram
 ### 7.1. UI Layout Breakdown
 - **Top Command Bar:** Currency Counter (🪙), Turret Deployment Cap Gauge (`current / max`), Game Speed Toggle (`1x`, `2x`), and Pause Menu trigger.
 - **Bottom Turret Hotbar:** High-contrast retro slots displaying turret icons, keybind shortcuts (`[1]`–`[5]`), cost indicators, and dynamic affordance tints.
-- **Left Tactical Hero HUD (`FoxHUD`):** Dedicated status display for Tactical Advisor Fox (`READY`, `COMMAND ACTIVE`, `BUFFING TURRET +35%`) with quick-select and eject triggers.
+- **Left Tactical Hero HUD (`HeroHUD` / `FoxHUD`):** Dedicated status display for Tactical Advisor Animal (`READY`, `COMMAND ACTIVE`, `BUFFING TURRET +35%`) with quick-select and eject triggers.
 - **Center World UI:** Smooth-popping 3D billboard radial buttons displaying upgrade costs, level indicators, and hold-to-recycle progress rings.
-- **Intro Briefing Overlay:** Visual novel style dialogue window featuring an interactive 3D animated Fox model viewport, typewriter sound effects, and adaptive docking.
+- **Intro Briefing Overlay:** Visual novel style dialogue window featuring an interactive 3D animated Animal model viewport, typewriter sound effects, and adaptive docking.
 
 ### 7.2. Input Mapping (PC / Windows)
 - **Camera Pan:** `[W]`, `[A]`, `[S]`, `[D]` or Arrow Keys.
@@ -224,7 +224,7 @@ classDiagram
 - **Turret Placement:** Left Click on valid green-highlighted grid tile.
 - **Turret Rotation:** `[Spacebar]` rotates the ghost turret by 90°.
 - **Cancel / Deselect:** `[Right Click]` or `[Escape]`.
-- **Select Fox Companion:** `[F]` or direct Left Click on Fox / Inhabited Turret Badge.
+- **Select Animal Companion:** `[F]` or direct Left Click on Animal / Inhabited Turret Badge.
 - **Game Speed Toggle:** `[1x] / [2x]` UI button or hotkeys.
 
 ---
@@ -241,32 +241,32 @@ classDiagram
 
 ```mermaid
 graph TD
-    World[Root: World] --> Map[Map: MapGenerator]
-    World --> Cam[Camera: CameraController]
-    World --> Builder[BuilderController]
-    World --> Fox[FoxCompanion]
-    World --> UI[CanvasLayer: UI Root]
+    World["Root: World"] --> Map["Map: MapGenerator"]
+    World --> Cam["Camera: CameraController"]
+    World --> Builder["BuilderController"]
+    World --> Animal["AnimalCompanion"]
+    World --> UI["CanvasLayer: UI Root"]
     
-    Map --> Spawner[Spawner: WaveManager]
-    Map --> Pillar[IncursionPillar]
-    Map --> MultiMeshes[MultiMeshInstance3D Clusters]
+    Map --> Spawner["Spawner: WaveManager"]
+    Map --> Pillar["IncursionPillar"]
+    Map --> MultiMeshes["MultiMeshInstance3D Clusters"]
     
-    Builder --> Turrets[Placed Turrets: Turret.gd]
-    Turrets --> TurretUI[3D Billboard Radial UI]
-    Turrets --> Highlighter[TurretHighlighter]
+    Builder --> Turrets["Placed Turrets: Turret.gd"]
+    Turrets --> TurretUI["3D Billboard Radial UI"]
+    Turrets --> Highlighter["TurretHighlighter"]
     
-    UI --> Hotbar[TurretHotbar]
-    UI --> FoxHUD[FoxHUD]
-    UI --> SpeedToggle[SpeedToggle]
-    UI --> CoinsTurret[Coins & Deployment Banner]
-    UI --> Intro[IntroOverlay]
+    UI --> Hotbar["TurretHotbar"]
+    UI --> HeroHUD["HeroHUD / FoxHUD"]
+    UI --> SpeedToggle["SpeedToggle"]
+    UI --> CoinsTurret["Coins & Deployment Banner"]
+    UI --> Intro["IntroOverlay"]
 ```
 
 ### 8.3. Core Architecture Classes
 - **[`MapGenerator.gd`](file:///c:/igi-dev-code-circus/scripts/MapGenerator.gd):** Procedural half-step maze generation, biome resource resolver, MultiMesh batcher, and coastal terrain builder.
 - **[`BuilderController.gd`](file:///c:/igi-dev-code-circus/scripts/BuilderController.gd):** Grid snapping, ghost hologram projection, buildability verification, precision multi-layer turret raycasting, and deployment tracking.
 - **[`Turret.gd`](file:///c:/igi-dev-code-circus/scripts/Turret.gd):** Modular weapon base class managing target locking, projectile ballistics, procedural recoil/swing tweens, 3D radial UI, and hold-to-recycle logic.
-- **[`FoxCompanion.gd`](file:///c:/igi-dev-code-circus/scripts/FoxCompanion.gd):** Tactical hero controller handling tile pathfinding, procedural breathing squash-and-stretch, poof transitions, and turret buffing.
+- **[`FoxCompanion.gd`](file:///c:/igi-dev-code-circus/scripts/FoxCompanion.gd) (Animal Companion Controller):** Tactical hero controller handling tile pathfinding, procedural breathing squash-and-stretch, poof transitions, and turret buffing.
 - **[`WaveManager.gd`](file:///c:/igi-dev-code-circus/scripts/WaveManager.gd):** Wave countdowns, enemy health/coin scaling formulas, boss wave spikes, and enemy spawn density management.
 - **[`IncursionPillar.gd`](file:///c:/igi-dev-code-circus/scripts/IncursionPillar.gd):** Central nexus health tracking, impact damage handling, and game over triggering.
 
@@ -278,21 +278,21 @@ graph TD
 gantt
     title Chaosmal Defense Production Roadmap
     dateFormat  YYYY-MM-DD
-    section Phase 1: Core Mechanics
-    Procedural 20x20 Map & Path Gen       :done, p1_1, 2026-06-01, 2026-06-20
-    5 Turret Archetypes & 3D Projectiles  :done, p1_2, 2026-06-21, 2026-07-15
-    Fox Companion Ground & Buff Logic     :done, p1_3, 2026-07-16, 2026-08-05
-    section Phase 2: Polish & Systems
-    3 Biomes + Custom Shaders (Grass/Snow/Desert) :done, p2_1, 2026-08-06, 2026-08-20
-    Radial In-World UI & Hold-to-Recycle :done, p2_2, 2026-08-21, 2026-08-31
-    Multi-Layer Precision Click Engine   :done, p2_3, 2026-08-31, 2026-08-31
-    section Phase 3: Content Expansion
-    Specialized Enemy Variants (Shield/Armored/Runner) :active, p3_1, 2026-09-01, 2026-09-20
-    Audio Overhaul (Dynamic Combat Music & Ambient SFX) :p3_2, 2026-09-21, 2026-10-10
-    Endless Mode & Meta-Progression Perks :p3_3, 2026-10-11, 2026-11-05
-    section Phase 4: Release & Distribution
-    Steam Integration & Achievements      :p4_1, 2026-11-06, 2026-11-25
-    Final Balancing & Windows PC Release  :p4_2, 2026-11-26, 2026-12-15
+    section Phase 1 Core Mechanics
+    Procedural 20x20 Map and Path Gen       :done, p1_1, 2026-06-01, 2026-06-20
+    5 Turret Archetypes and 3D Projectiles  :done, p1_2, 2026-06-21, 2026-07-15
+    Animal Companion Ground and Buff Logic  :done, p1_3, 2026-07-16, 2026-08-05
+    section Phase 2 Polish and Systems
+    3 Biomes and Shaders - Grass Snow Desert :done, p2_1, 2026-08-06, 2026-08-20
+    Radial In-World UI and Hold-to-Recycle  :done, p2_2, 2026-08-21, 2026-08-31
+    Multi-Layer Precision Click Engine       :done, p2_3, 2026-08-31, 2026-08-31
+    section Phase 3 Content Expansion
+    Specialized Enemy Variants              :active, p3_1, 2026-09-01, 2026-09-20
+    Audio Overhaul - Dynamic Music and SFX  :p3_2, 2026-09-21, 2026-10-10
+    Endless Mode and Meta-Progression Perks :p3_3, 2026-10-11, 2026-11-05
+    section Phase 4 Release and Distribution
+    Steam Integration and Achievements      :p4_1, 2026-11-06, 2026-11-25
+    Final Balancing and Windows PC Release  :p4_2, 2026-11-26, 2026-12-15
 ```
 
 ---
