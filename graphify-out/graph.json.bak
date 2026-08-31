@@ -833,9 +833,10 @@
       "community": 98,
       "community_name": "Turret",
       "norm_label": "buildercontroller",
-      "description": "extends Node | funcs: get_max_deployment, get_current_deployment, start_building, stop_building, notify_turret_interacted, select_turret ... | signals: building_stopped, turret_placed, total_deployment_updated",
+      "description": "extends Node | funcs: increase_max_deployment, get_max_deployment, get_current_deployment, start_building, stop_building, notify_turret_interacted ... | signals: building_stopped, turret_placed, total_deployment_updated",
       "_gd_extends": "Node",
       "_gd_functions": [
+        "increase_max_deployment",
         "get_max_deployment",
         "get_current_deployment",
         "start_building",
@@ -902,9 +903,10 @@
       "community": 9,
       "community_name": "FoxCompanion",
       "norm_label": "foxcompanion",
-      "description": "extends CharacterBody3D | funcs: set_selected, play_deployment_drop, command_move_to, command_enter_turret | signals: selected_changed, entered_turret, left_turret",
+      "description": "extends CharacterBody3D | funcs: set_character_model, set_selected, play_deployment_drop, command_move_to, command_enter_turret | signals: selected_changed, entered_turret, left_turret",
       "_gd_extends": "CharacterBody3D",
       "_gd_functions": [
+        "set_character_model",
         "set_selected",
         "play_deployment_drop",
         "command_move_to",
@@ -917,7 +919,8 @@
       ],
       "_gd_exports": [
         "move_speed",
-        "model_scale"
+        "model_scale",
+        "character_model_scene"
       ],
       "id": "gdscript_scripts_foxcompanion"
     },
@@ -1099,7 +1102,10 @@
         "environment",
         "disable_fog",
         "has_heat_distortion",
-        "hotbar_theme"
+        "hotbar_theme",
+        "character_model",
+        "character_name",
+        "character_emoji"
       ],
       "id": "gdscript_biomes_biomedata"
     },
