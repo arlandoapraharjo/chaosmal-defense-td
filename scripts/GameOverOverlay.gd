@@ -83,8 +83,9 @@ func _update_map_label() -> void:
 	map_label.text = _get_current_map_name()
 
 func _get_current_map_name() -> String:
-	if BiomeManager != null and BiomeManager.current_biome != null:
-		var path = BiomeManager.current_biome.resource_path.to_lower()
+	var bm = get_node_or_null("/root/BiomeManager")
+	if bm != null and bm.get("current_biome") != null:
+		var path = bm.current_biome.resource_path.to_lower()
 		if path.find("snow") != -1 or path.find("ice") != -1:
 			return "SNOW"
 		elif path.find("desert") != -1:

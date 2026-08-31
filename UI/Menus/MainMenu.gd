@@ -35,8 +35,9 @@ var _saved_light_color: Color = Color.WHITE
 
 func _ready() -> void:
 	# 1. Initialize BiomeManager
-	if BiomeManager != null:
-		BiomeManager.randomize_biome()
+	var bm = get_node_or_null("/root/BiomeManager")
+	if bm != null and bm.has_method("randomize_biome"):
+		bm.randomize_biome()
 
 	# 2. Instance map scene if SubViewport is empty or get existing child
 	_setup_world()
@@ -151,25 +152,24 @@ func _setup_showcase_and_focus() -> void:
 	if _pillar_ref and is_instance_valid(_pillar_ref):
 		pillar_pos = _pillar_ref.global_position
 
-	# Set fixed, static dramatic isometric camera pose (no rotation)
+	# Dramatic close-up showcase camera shot of the tower
 	var orbit_center = pillar_pos + Vector3(0.0, 1.4, 0.0)
-	var orbit_radius = 11.5
-	var orbit_height = 6.2
-	var fixed_angle = 0.785398 # 45 degrees
-	var screen_right_offset = -2.7
+	var orbit_radius = 9.5
+	var orbit_height = 5.2
+	var fixed_angle = deg_to_rad(42.0)
+	var screen_right_offset = -2.6
 
-	_camera.size = 11.8
+	_camera.size = 7.5
 
 	var cam_x = orbit_center.x + orbit_radius * cos(fixed_angle)
 	var cam_z = orbit_center.z + orbit_radius * sin(fixed_angle)
 	_camera.global_position = Vector3(cam_x, orbit_height, cam_z)
-	_camera.look_at(orbit_center + Vector3(0.0, 0.4, 0.0))
+	_camera.look_at(orbit_center + Vector3(0.0, 0.3, 0.0))
 
-	# Shift camera to the left along local X so the tower is framed on the right side of the screen
+	# Shift camera to frame the tower heroically on the right side of the screen
 	var right_vec = _camera.global_transform.basis.x
 	_camera.global_position += right_vec * screen_right_offset
 
-	# Build clean dual showcase turrets around the tower
 	_build_menu_showcase(pillar_pos)
 
 func _build_menu_showcase(pillar_pos: Vector3) -> void:
@@ -180,12 +180,12 @@ func _build_menu_showcase(pillar_pos: Vector3) -> void:
 	_showcase_root.name = "MenuShowcaseOutpost"
 	_world_node.add_child(_showcase_root)
 
-	# Warm Golden Beacon Light at the Tower (pure natural map generation, no turrets)
+	# Warm Golden Beacon Light at the Tower
 	var beacon_light := OmniLight3D.new()
 	beacon_light.name = "ShowcaseBeaconLight"
 	beacon_light.light_color = Color(1.0, 0.82, 0.45)
-	beacon_light.light_energy = 2.2
-	beacon_light.omni_range = 8.0
+	beacon_light.light_energy = 2.4
+	beacon_light.omni_range = 9.0
 	beacon_light.omni_attenuation = 1.2
 	beacon_light.position = pillar_pos + Vector3(0.0, 3.2, 0.0)
 	_showcase_root.add_child(beacon_light)
@@ -221,28 +221,35 @@ func _on_start_button_pressed() -> void:
 		load_tw.tween_property(loading_progress_bar, "value", 1.0, 0.9)\
 			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 
-	# 3. AFTER loading bar finishes: Fade out loading bar and glide camera to top-down gameplay view
+	# 3. AFTER loading bar finishes: Smoothly pan up / pull back to wide view of entire island in orthogonal
 	load_tw.chain().tween_callback(func():
 		if loading_container:
 			var load_out_tw := create_tween()
-			load_out_tw.tween_property(loading_container, "modulate:a", 0.0, 0.2)
+			load_out_tw.tween_property(loading_container, "modulate:a", 0.0, 0.15)
 
 		if _showcase_root and is_instance_valid(_showcase_root):
 			_showcase_root.queue_free()
 
-		var cam_glide_tw := create_tween().set_parallel(true)
-		if _camera:
-			cam_glide_tw.tween_property(_camera, "global_transform", _gameplay_cam_transform, 1.1)\
-				.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-			cam_glide_tw.tween_property(_camera, "size", _gameplay_cam_ortho_size, 1.1)\
-				.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		$CanvasLayer.visible = false
 
+		# Fade light to standard gameplay lighting
 		if _dir_light and is_instance_valid(_dir_light):
-			cam_glide_tw.tween_property(_dir_light, "light_color", _saved_light_color, 1.1)
-			cam_glide_tw.tween_property(_dir_light, "light_energy", _saved_light_energy, 1.1)
+			var light_tw := create_tween().set_parallel(true)
+			light_tw.tween_property(_dir_light, "light_color", _saved_light_color, 0.95)
+			light_tw.tween_property(_dir_light, "light_energy", _saved_light_energy, 0.95)
 
-		cam_glide_tw.chain().tween_callback(func():
-			$CanvasLayer.visible = false
+		# 1. Smoothly pull back from close-up menu angle to wide overview of entire island
+		var cam_pull_tw := create_tween().set_parallel(true)
+		if _camera:
+			cam_pull_tw.tween_property(_camera, "global_transform", _gameplay_cam_transform, 0.95)\
+				.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+			cam_pull_tw.tween_property(_camera, "size", _gameplay_cam_ortho_size, 0.95)\
+				.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+
+		# 2. Once wide island view is reached, hand over to World to zoom into center with rocket drop
+		cam_pull_tw.chain().tween_callback(func():
+			if _camera:
+				_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 			if _world_node and _world_node.has_method("set_menu_mode"):
 				_world_node.call("set_menu_mode", false)
 			_is_animating = false

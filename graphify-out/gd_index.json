@@ -2,7 +2,7 @@
   "_meta": {
     "generated_by": "godot_index.py",
     "total_scripts": 37,
-    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
+    "root": "D:\\Game\\IGI-Code-Circus"
   },
   "scripts": [
     {
@@ -404,7 +404,7 @@
       "functions": [],
       "loads": [
         {
-          "line": 115,
+          "line": 116,
           "raw": "res://scenes/map.tscn",
           "path": "scenes/map.tscn",
           "call": "load"
@@ -1022,6 +1022,13 @@
           ]
         },
         {
+          "name": "play_pop_out_jump",
+          "params": [
+            "from_pos",
+            "to_pos"
+          ]
+        },
+        {
           "name": "play_deployment_drop",
           "params": [
             "start_height"
@@ -1307,19 +1314,19 @@
           "call": "preload"
         },
         {
-          "line": 743,
+          "line": 739,
           "raw": "res://shaders/tree_sway.gdshader",
           "path": "shaders/tree_sway.gdshader",
           "call": "preload"
         },
         {
-          "line": 1149,
+          "line": 1145,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 1155,
+          "line": 1151,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
@@ -1499,6 +1506,49 @@
       "exports": []
     },
     {
+      "file": "scripts/RocketDropPod.gd",
+      "class_name": "RocketDropPod",
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [
+        {
+          "name": "set_thrusters_active",
+          "params": [
+            "active",
+            "power"
+          ]
+        },
+        {
+          "name": "execute_landing_sequence",
+          "params": [
+            "companion",
+            "landing_target",
+            "on_complete"
+          ]
+        }
+      ],
+      "loads": [
+        {
+          "line": 8,
+          "raw": "res://assets/characters/Rocket (wip).glb",
+          "path": "assets/characters/Rocket (wip).glb",
+          "call": "preload"
+        },
+        {
+          "line": 9,
+          "raw": "res://scenes/FoxPoofParticle.tscn",
+          "path": "scenes/FoxPoofParticle.tscn",
+          "call": "preload"
+        }
+      ],
+      "exports": [
+        {
+          "name": "base_scale",
+          "type": "Vector3"
+        }
+      ]
+    },
+    {
       "file": "scripts/Turret.gd",
       "class_name": null,
       "extends": "Node3D",
@@ -1567,31 +1617,31 @@
           "call": "load"
         },
         {
-          "line": 1149,
+          "line": 1142,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1150,
+          "line": 1143,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1151,
+          "line": 1144,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 1152,
+          "line": 1145,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 1153,
+          "line": 1146,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"
@@ -1607,62 +1657,6 @@
           "type": "bool"
         }
       ]
-    },
-    {
-      "file": "scripts/TurretAudio.gd",
-      "class_name": null,
-      "extends": null,
-      "signals": [],
-      "functions": [
-        {
-          "name": "play_fire",
-          "params": [
-            "w_type",
-            "_world_pos"
-          ]
-        },
-        {
-          "name": "play_placement",
-          "params": [
-            "_world_pos"
-          ]
-        },
-        {
-          "name": "play_ufo_hit",
-          "params": [
-            "_world_pos"
-          ]
-        },
-        {
-          "name": "play_ufo_explode",
-          "params": [
-            "_world_pos"
-          ]
-        },
-        {
-          "name": "play_animal_enter_turret",
-          "params": [
-            "_world_pos"
-          ]
-        },
-        {
-          "name": "play_hotbar_click",
-          "params": []
-        },
-        {
-          "name": "play_ui_click",
-          "params": []
-        },
-        {
-          "name": "play_impact",
-          "params": [
-            "w_type",
-            "_world_pos"
-          ]
-        }
-      ],
-      "loads": [],
-      "exports": []
     },
     {
       "file": "scripts/TurretDismantleParticle.gd",
@@ -1992,6 +1986,12 @@
           "line": 30,
           "raw": "res://scenes/FoxCompanion.tscn",
           "path": "scenes/FoxCompanion.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 31,
+          "raw": "res://scenes/RocketDropPod.tscn",
+          "path": "scenes/RocketDropPod.tscn",
           "call": "preload"
         }
       ],

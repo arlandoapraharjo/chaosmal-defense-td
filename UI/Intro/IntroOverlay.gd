@@ -134,8 +134,9 @@ func _on_card_gui_input(event: InputEvent) -> void:
 		_on_next_pressed()
 
 func _get_active_biome() -> BiomeData:
-	if BiomeManager != null and BiomeManager.current_biome != null:
-		return BiomeManager.current_biome
+	var bm = get_node_or_null("/root/BiomeManager")
+	if bm != null and bm.get("current_biome") != null:
+		return bm.current_biome
 	var map = get_tree().get_first_node_in_group("map_generator")
 	if not map:
 		map = get_node_or_null("/root/World/MapGenerator")

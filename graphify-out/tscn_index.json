@@ -1,8 +1,8 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scenes": 46,
-    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
+    "total_scenes": 47,
+    "root": "D:\\Game\\IGI-Code-Circus"
   },
   "scenes": [
     {
@@ -745,6 +745,24 @@
         {
           "name": "AnimationPlayer",
           "type": "AnimationPlayer"
+        }
+      ]
+    },
+    {
+      "file": "scenes/RocketDropPod.tscn",
+      "scene_uid": "uid://cd2inqhodgoxs",
+      "ext_resources": [
+        {
+          "path": "scripts/RocketDropPod.gd",
+          "raw_path": "res://scripts/RocketDropPod.gd",
+          "type": "Script",
+          "id": "1_rocket_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "RocketDropPod",
+          "type": "Node3D"
         }
       ]
     },
@@ -1825,6 +1843,9 @@
       "scenes/PillarShockwave.tscn",
       "scenes/map.tscn",
       "shaders/pilarshockwave.tscn"
+    ],
+    "scripts/RocketDropPod.gd": [
+      "scenes/RocketDropPod.tscn"
     ],
     "scripts/HitParticle.gd": [
       "scenes/ballista_hit_particle.tscn",

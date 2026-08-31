@@ -28,6 +28,7 @@ var _cam_default_size: float = 20.0
 var _cam_tween: Tween = null
 
 const FOX_COMPANION_SCENE = preload("res://scenes/FoxCompanion.tscn")
+const ROCKET_DROP_POD_SCENE = preload("res://scenes/RocketDropPod.tscn")
 var _fox_companion: FoxCompanion = null
 
 func _ready() -> void:
@@ -45,6 +46,10 @@ func _ready() -> void:
 	if intro_overlay:
 		intro_overlay.intro_finished.connect(_on_intro_finished)
 		intro_overlay.step_changed.connect(_on_intro_step_changed)
+	
+	# If running map.tscn directly in standalone mode (not through MainMenu)
+	if get_parent() == get_tree().root:
+		set_menu_mode(false)
 
 func set_menu_mode(menu_active: bool) -> void:
 	_is_menu_mode = menu_active
@@ -95,11 +100,6 @@ func set_menu_mode(menu_active: bool) -> void:
 			intro_overlay.visible = false
 	else:
 		_deploy_fox_companion()
-		# Start Fox character intro if available
-		if intro_overlay:
-			intro_overlay.start_intro()
-		else:
-			_start_gameplay()
 
 func _deploy_fox_companion() -> void:
 	if _fox_companion == null or not is_instance_valid(_fox_companion):
@@ -118,14 +118,39 @@ func _deploy_fox_companion() -> void:
 	
 	if _fox_companion and is_instance_valid(_fox_companion):
 		var map_node = get_node_or_null("Map") if has_node("Map") else get_node_or_null("MapGenerator")
+		var bm = get_node_or_null("/root/BiomeManager")
 		if map_node and "active_biome" in map_node and map_node.active_biome != null and map_node.active_biome.character_model != null:
 			_fox_companion.set_character_model(map_node.active_biome.character_model)
-		elif BiomeManager != null and BiomeManager.current_biome != null and BiomeManager.current_biome.character_model != null:
-			_fox_companion.set_character_model(BiomeManager.current_biome.character_model)
+		elif bm != null and bm.get("current_biome") != null and bm.current_biome.character_model != null:
+			_fox_companion.set_character_model(bm.current_biome.character_model)
 		
 		var spawn_pos = _get_center_blank_spawn_pos(map_node)
-		_fox_companion.global_position = spawn_pos
-		_fox_companion.play_deployment_drop(5.5)
+		
+		# Smoothly zoom camera from wide view down to the middle of the map landing zone
+		var target_cam_pos = _calc_camera_pos_for_target(spawn_pos)
+		_focus_camera(target_cam_pos, 8.5, 1.85)
+		
+		if ROCKET_DROP_POD_SCENE:
+			var rocket_pod = ROCKET_DROP_POD_SCENE.instantiate() as Node3D
+			if map_node:
+				map_node.add_child(rocket_pod)
+			else:
+				add_child(rocket_pod)
+			
+			rocket_pod.execute_landing_sequence(_fox_companion, spawn_pos, func():
+				# Start Fox character briefing after rocket drop finishes
+				if intro_overlay:
+					intro_overlay.start_intro()
+				else:
+					_start_gameplay()
+			)
+		else:
+			_fox_companion.global_position = spawn_pos
+			_fox_companion.play_deployment_drop(5.5)
+			if intro_overlay:
+				intro_overlay.start_intro()
+			else:
+				_start_gameplay()
 
 func _get_center_blank_spawn_pos(map_node: Node3D) -> Vector3:
 	var center_x: int = 10
@@ -134,8 +159,8 @@ func _get_center_blank_spawn_pos(map_node: Node3D) -> Vector3:
 		center_x = int(map_node.MAP_SIZE / 2)
 		center_z = int(map_node.MAP_SIZE / 2)
 	
-	# Spiral outwards from map center (10, 10) to find the closest blank/buildable tile
-	for r in range(0, 10):
+	# Spiral outwards from map center to find the closest truly blank/buildable tile (never overlapping props/pillar/path)
+	for r in range(1, 10):
 		for dx in range(-r, r + 1):
 			for dz in range(-r, r + 1):
 				if abs(dx) != r and abs(dz) != r:
@@ -146,7 +171,7 @@ func _get_center_blank_spawn_pos(map_node: Node3D) -> Vector3:
 						var local_pos = Vector3(float(test_pos.x), 0.05, float(test_pos.y))
 						return map_node.to_global(local_pos)
 	
-	var fallback_local = Vector3(float(center_x), 0.05, float(center_z))
+	var fallback_local = Vector3(float(center_x) + 2.0, 0.05, float(center_z) + 2.0)
 	return map_node.to_global(fallback_local) if map_node else fallback_local
 
 func _on_intro_step_changed(step_idx: int) -> void:
@@ -211,6 +236,7 @@ func _calc_camera_pos_for_target(world_target: Vector3) -> Vector3:
 func _focus_camera(target_pos: Vector3, target_size: float, duration: float = 0.8) -> void:
 	if not camera_3d:
 		return
+	camera_3d.projection = Camera3D.PROJECTION_ORTHOGONAL
 	if _cam_tween and _cam_tween.is_running():
 		_cam_tween.kill()
 	_cam_tween = create_tween()
