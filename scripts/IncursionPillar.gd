@@ -5,7 +5,7 @@ class_name IncursionPillar
 var current_level: int = 1
 
 # Upgrade costs for each level transition (L1->L2, L2->L3, L3->L4, L4->L5)
-var upgrade_costs: Array[int] = [10, 25, 50, 100]
+var upgrade_costs: Array[int] = [100, 250, 1000, 5000]
 
 # --- Health & Defense ---
 @export_group("Health & Defense")
