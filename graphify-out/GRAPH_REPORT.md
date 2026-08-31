@@ -4,7 +4,7 @@
 - cluster-only mode — file stats not available
 
 ## Summary
-- 117 nodes · 88 edges · 38 communities (10 shown, 28 thin omitted)
+- 118 nodes · 88 edges · 39 communities (10 shown, 29 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
@@ -28,6 +28,7 @@
 - animation_player
 - BiomeManager
 - EnemyDetector
+- TurretAudio
 - TurretHighlighter
 - TurretUpgradeManager
 - HotbarTheme
@@ -79,7 +80,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (38 total, 28 thin omitted)
+## Communities (39 total, 29 thin omitted)
 
 ### Community 1 - "Project Documentation & Recent Updates"
 Cohesion: 0.29
@@ -118,19 +119,19 @@ Cohesion: 0.10
 Nodes (22): BiomeData, CameraController, CurrencyManager, GameOverOverlay, MapGenerator, PauseOverlay, CurrencyUI, FoxHUD (+14 more)
 
 ## Knowledge Gaps
-- **68 isolated node(s):** `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation`, `Enemy Movement`, `Enemy Pathing & Coordinate Alignment` (+63 more)
+- **69 isolated node(s):** `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation`, `Enemy Movement`, `Enemy Pathing & Coordinate Alignment` (+64 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **28 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **29 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Map Scene` connect `Map Scene` to `FoxCompanion`, `Turret`, `TurretHotbar`?**
-  _High betweenness centrality (0.187) - this node is a cross-community bridge._
+  _High betweenness centrality (0.184) - this node is a cross-community bridge._
 - **Why does `BuilderController` connect `Turret` to `Map Scene`?**
-  _High betweenness centrality (0.078) - this node is a cross-community bridge._
+  _High betweenness centrality (0.077) - this node is a cross-community bridge._
 - **What connects `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation` to the rest of the system?**
-  _68 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _69 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Turret` be split into smaller, more focused modules?**
   _Cohesion score 0.14166666666666666 - nodes in this community are weakly interconnected._
 - **Should `Map Scene` be split into smaller, more focused modules?**

@@ -2,7 +2,7 @@
   "_meta": {
     "generated_by": "godot_index.py",
     "total_scenes": 46,
-    "root": "D:\\Game\\IGI-Code-Circus"
+    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scenes": [
     {
@@ -17,10 +17,9 @@
           "id": "1_currency_script"
         },
         {
-          "path": "UI/Coins&Turret/coins_banner.png",
-          "raw_path": "res://UI/Coins&Turret/coins_banner.png",
+          "path": "UI/Coins&Turret/new_coins_banner.png",
+          "raw_path": "res://UI/Coins&Turret/new_coins_banner.png",
           "type": "Texture2D",
-          "uid": "uid://0j2omnkoier5",
           "id": "2_coins_banner"
         },
         {
@@ -63,6 +62,18 @@
           "raw_path": "res://UI/FoxHUD/FoxHUD.gd",
           "type": "Script",
           "id": "1_hud_script"
+        },
+        {
+          "path": "UI/Menus/main menu button.png",
+          "raw_path": "res://UI/Menus/main menu button.png",
+          "type": "Texture2D",
+          "id": "2_capsule_tex"
+        },
+        {
+          "path": "UI/Dialogue Banner/SkipNext_Button.png",
+          "raw_path": "res://UI/Dialogue Banner/SkipNext_Button.png",
+          "type": "Texture2D",
+          "id": "3_action_tex"
         }
       ],
       "nodes_preview": [
@@ -181,6 +192,13 @@
           "type": "Texture2D",
           "uid": "uid://dkatpqoi65npg",
           "id": "2_banner_tex"
+        },
+        {
+          "path": "UI/Dialogue Banner/SkipNext_Button.png",
+          "raw_path": "res://UI/Dialogue Banner/SkipNext_Button.png",
+          "type": "Texture2D",
+          "uid": "uid://ba5j1ppbl4ov1",
+          "id": "3_btn_tex"
         }
       ],
       "nodes_preview": [
@@ -228,6 +246,12 @@
           "raw_path": "res://shaders/jewel_emblem.gdshader",
           "type": "Shader",
           "id": "3_jewel_shader"
+        },
+        {
+          "path": "UI/Menus/main menu button.png",
+          "raw_path": "res://UI/Menus/main menu button.png",
+          "type": "Texture2D",
+          "id": "4_btn_tex"
         }
       ],
       "nodes_preview": [
@@ -294,6 +318,12 @@
           "raw_path": "res://UI/WaveUI.gd",
           "type": "Script",
           "id": "1_wave_script"
+        },
+        {
+          "path": "UI/Menus/main menu button.png",
+          "raw_path": "res://UI/Menus/main menu button.png",
+          "type": "Texture2D",
+          "id": "2_btn_tex"
         }
       ],
       "nodes_preview": [
@@ -573,24 +603,28 @@
           "path": "scripts/GameOverOverlay.gd",
           "raw_path": "res://scripts/GameOverOverlay.gd",
           "type": "Script",
+          "uid": "uid://ba0tiucmw6mrf",
           "id": "1_script"
         },
         {
           "path": "UI/Endgame Banner/new_endgame_banner.png",
           "raw_path": "res://UI/Endgame Banner/new_endgame_banner.png",
           "type": "Texture2D",
+          "uid": "uid://y5do1kivckn7",
           "id": "2_banner"
         },
         {
           "path": "UI/Endgame Banner/endgame_but1.png",
           "raw_path": "res://UI/Endgame Banner/endgame_but1.png",
           "type": "Texture2D",
+          "uid": "uid://e21wemqesy0b",
           "id": "3_but1"
         },
         {
           "path": "UI/Endgame Banner/endgame_but2.png",
           "raw_path": "res://UI/Endgame Banner/endgame_but2.png",
           "type": "Texture2D",
+          "uid": "uid://b232wcajlweka",
           "id": "4_but2"
         }
       ],
@@ -634,11 +668,29 @@
           "id": "2_shader"
         },
         {
+          "path": "shaders/card_panel.gdshader",
+          "raw_path": "res://shaders/card_panel.gdshader",
+          "type": "Shader",
+          "id": "3_card_shader"
+        },
+        {
+          "path": "shaders/jewel_emblem.gdshader",
+          "raw_path": "res://shaders/jewel_emblem.gdshader",
+          "type": "Shader",
+          "id": "4_jewel_shader"
+        },
+        {
           "path": "UI/Pause&Play/esc_buttonV2.png",
           "raw_path": "res://UI/Pause&Play/esc_buttonV2.png",
           "type": "Texture2D",
           "uid": "uid://6txklmgditbp",
-          "id": "3_esc"
+          "id": "5_esc"
+        },
+        {
+          "path": "UI/Menus/main menu button.png",
+          "raw_path": "res://UI/Menus/main menu button.png",
+          "type": "Texture2D",
+          "id": "6_btn_tex"
         }
       ],
       "nodes_preview": [
@@ -653,6 +705,14 @@
         {
           "name": "PauseButton",
           "type": "TextureButton"
+        },
+        {
+          "name": "Control",
+          "type": "Control"
+        },
+        {
+          "name": "CardPanel",
+          "type": "Control"
         }
       ]
     },
@@ -1253,7 +1313,7 @@
           "path": "UI/FoxHUD/FoxHUD.tscn",
           "raw_path": "res://UI/FoxHUD/FoxHUD.tscn",
           "type": "PackedScene",
-          "uid": "uid://dfoxhud001scene",
+          "uid": "uid://kyfwoey28bjq",
           "id": "21_foxhud"
         }
       ],
@@ -1631,7 +1691,7 @@
     "UI/CurrencyUI.gd": [
       "UI/CurrencyUI.tscn"
     ],
-    "UI/Coins&Turret/coins_banner.png": [
+    "UI/Coins&Turret/new_coins_banner.png": [
       "UI/CurrencyUI.tscn"
     ],
     "UI/Coins&Turret/turret_banner.png": [
@@ -1639,6 +1699,16 @@
     ],
     "UI/FoxHUD/FoxHUD.gd": [
       "UI/FoxHUD/FoxHUD.tscn"
+    ],
+    "UI/Menus/main menu button.png": [
+      "UI/FoxHUD/FoxHUD.tscn",
+      "UI/Menus/MainMenu.tscn",
+      "UI/WaveUI.tscn",
+      "scenes/PauseOverlay.tscn"
+    ],
+    "UI/Dialogue Banner/SkipNext_Button.png": [
+      "UI/FoxHUD/FoxHUD.tscn",
+      "UI/Intro/IntroOverlay.tscn"
     ],
     "UI/Hotbar/HotbarSlot.gd": [
       "UI/Hotbar/HotbarSlot.tscn"
@@ -1659,10 +1729,12 @@
       "UI/Menus/MainMenu.tscn"
     ],
     "shaders/card_panel.gdshader": [
-      "UI/Menus/MainMenu.tscn"
+      "UI/Menus/MainMenu.tscn",
+      "scenes/PauseOverlay.tscn"
     ],
     "shaders/jewel_emblem.gdshader": [
-      "UI/Menus/MainMenu.tscn"
+      "UI/Menus/MainMenu.tscn",
+      "scenes/PauseOverlay.tscn"
     ],
     "UI/SpeedToggle.gd": [
       "UI/SpeedToggle.tscn"

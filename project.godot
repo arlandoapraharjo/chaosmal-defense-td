@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 BiomeManager="*res://scripts/BiomeManager.gd"
+TurretAudio="*res://scripts/TurretAudio.gd"
 
 [display]
 

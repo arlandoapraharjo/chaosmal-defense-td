@@ -902,6 +902,7 @@ func _input(event: InputEvent) -> void:
 					var tw = create_tween()
 					tw.tween_property(_upgrade_pivot, "scale", Vector3(0.85, 0.85, 0.85), 0.05)
 					tw.tween_property(_upgrade_pivot, "scale", Vector3(1.1, 1.1, 1.1), 0.12).set_trans(Tween.TRANS_BACK)
+				TurretAudio.play_ui_click()
 				var success = TurretUpgradeManager.instance.try_upgrade_turret(self) if TurretUpgradeManager.instance else upgrade()
 				if not success:
 					_flash_insufficient_funds()
@@ -934,6 +935,7 @@ func _input(event: InputEvent) -> void:
 						var tw = create_tween()
 						tw.tween_property(_sell_pivot, "scale", Vector3(0.85, 0.85, 0.85), 0.05)
 						tw.tween_property(_sell_pivot, "scale", Vector3(1.1, 1.1, 1.1), 0.12).set_trans(Tween.TRANS_BACK)
+					TurretAudio.play_ui_click()
 					sell()
 					return
 
@@ -1000,6 +1002,7 @@ func _play_upgrade_bounce() -> void:
 
 ## Subtle micro-thud when turret is placed down on the map
 func play_placement_landing_animation() -> void:
+	TurretAudio.play_placement()
 	if is_inside_tree():
 		if _bounce_tween and _bounce_tween.is_valid():
 			_bounce_tween.kill()
@@ -1127,6 +1130,8 @@ func _trigger_single_target_attack(target: Node3D) -> void:
 		# Recoil for non-catapult weapons (pushed backward away from target)
 		if weapon_type != "catapult":
 			_play_recoil(target.global_transform.origin)
+	# Fire SFX
+	TurretAudio.play_fire(weapon_type)
 	print("Turret (%s) fired at %s" % [weapon_type, target.name if is_instance_valid(target) else "target"])
 
 func _trigger_aoe_attack(targets: Array[Node3D]) -> void:
@@ -1136,6 +1141,8 @@ func _trigger_aoe_attack(targets: Array[Node3D]) -> void:
 		else:
 			_spawn_ammo_projectile(targets[0].global_transform.origin, null, targets)
 			_play_recoil(targets[0].global_transform.origin)
+		# Fire SFX
+		TurretAudio.play_fire(weapon_type)
 	print("Turret (%s AoE) fired, affecting %d enemies" % [weapon_type, targets.size()])
 
 var _hit_particle_scenes: Dictionary = {
@@ -1218,6 +1225,9 @@ func _spawn_ammo_projectile(target_pos: Vector3, target_enemy: Node3D = null, ao
 				hit_part.global_position = Vector3(target_pos.x, 0.0, target_pos.z)
 			else:
 				hit_part.global_position = target_pos + Vector3(0, 0.3, 0)
+
+		# Impact SFX
+		TurretAudio.play_impact(current_weapon_type)
 
 		if is_instance_valid(target_enemy) and target_enemy.has_method("take_damage"):
 			target_enemy.take_damage(current_damage)

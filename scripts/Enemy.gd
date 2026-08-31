@@ -350,6 +350,7 @@ func _physics_process(delta: float) -> void:
 		_hit_pillar_and_explode()
 
 func _spawn_explosion() -> void:
+	TurretAudio.play_ufo_explode()
 	var explosion = explosion_scene.instantiate()
 	var scene_root = get_tree().current_scene
 	if scene_root:
@@ -418,6 +419,7 @@ func take_damage(amount: float) -> void:
 		
 	current_hp -= amount
 	_update_health_bar()
+	TurretAudio.play_ufo_hit()
 	
 	# Speed boost trigger (5x speed for 0.8s under 40% HP)
 	var can_rage = (enemy_type_index == 0) or (is_boss and boss_ability_type == 0)

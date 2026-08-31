@@ -322,6 +322,7 @@ func _on_gui_input(event: InputEvent) -> void:
 			if event.pressed:
 				if _is_capped:
 					return  # Block click when at cap
+				TurretAudio.play_hotbar_click()
 				slot_clicked.emit(slot_index)
 			else:
 				if not get_global_rect().has_point(get_global_mouse_position()):

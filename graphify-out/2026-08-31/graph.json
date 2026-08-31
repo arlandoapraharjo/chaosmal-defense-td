@@ -948,12 +948,13 @@
       "community": 99,
       "community_name": "GDScript Gameplay Logic",
       "norm_label": "mapgenerator",
-      "description": "extends Node3D | funcs: is_buildable, occupy_cell, free_cell | signals: biome_changed",
+      "description": "extends Node3D | funcs: is_buildable, occupy_cell, free_cell, update_vegetation_level | signals: biome_changed",
       "_gd_extends": "Node3D",
       "_gd_functions": [
         "is_buildable",
         "occupy_cell",
-        "free_cell"
+        "free_cell",
+        "update_vegetation_level"
       ],
       "_gd_signals": [
         "biome_changed"
@@ -1083,6 +1084,31 @@
         "is_aoe",
         "is_half_circle"
       ]
+    },
+    {
+      "id": "gdscript_scripts_turretaudio",
+      "label": "TurretAudio",
+      "file_type": "code",
+      "source_file": "scripts/TurretAudio.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "GDScript Gameplay Logic",
+      "norm_label": "turretaudio",
+      "description": "funcs: play_fire, play_placement, play_ufo_hit, play_ufo_explode, play_animal_enter_turret, play_hotbar_click ...",
+      "_gd_extends": null,
+      "_gd_functions": [
+        "play_fire",
+        "play_placement",
+        "play_ufo_hit",
+        "play_ufo_explode",
+        "play_animal_enter_turret",
+        "play_hotbar_click",
+        "play_ui_click",
+        "play_impact"
+      ],
+      "_gd_signals": [],
+      "_gd_exports": []
     },
     {
       "id": "gdscript_scripts_turretdismantleparticle",

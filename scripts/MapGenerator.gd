@@ -214,6 +214,10 @@ func _apply_biome(biome: BiomeData) -> void:
 
 	biome_changed.emit(biome)
 
+	var fog_vol = get_node_or_null("FogVolume")
+	if fog_vol:
+		fog_vol.visible = not biome.disable_fog
+
 	var heat_distortion = get_node_or_null("../MeshInstance3D")
 	if heat_distortion:
 		heat_distortion.visible = biome.has_heat_distortion

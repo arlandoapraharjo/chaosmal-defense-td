@@ -398,6 +398,7 @@ func _physics_process(delta: float) -> void:
 			
 			if current_turret.has_method("apply_fox_buff"):
 				current_turret.apply_fox_buff(true)
+			TurretAudio.play_animal_enter_turret()
 			entered_turret.emit(current_turret)
 		else:
 			current_turret = null

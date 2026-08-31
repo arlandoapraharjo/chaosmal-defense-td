@@ -1,8 +1,8 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scripts": 36,
-    "root": "D:\\Game\\IGI-Code-Circus"
+    "total_scripts": 37,
+    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scripts": [
     {
@@ -20,8 +20,34 @@
       "extends": "CanvasLayer",
       "signals": [],
       "functions": [],
-      "loads": [],
-      "exports": []
+      "loads": [
+        {
+          "line": 14,
+          "raw": "res://assets/characters/animal-fox.glb",
+          "path": "assets/characters/animal-fox.glb",
+          "call": "preload"
+        },
+        {
+          "line": 15,
+          "raw": "res://UI/Menus/main menu button.png",
+          "path": "UI/Menus/main menu button.png",
+          "call": "preload"
+        }
+      ],
+      "exports": [
+        {
+          "name": "portrait_model_scale",
+          "type": "float"
+        },
+        {
+          "name": "portrait_model_rotation_deg",
+          "type": "float"
+        },
+        {
+          "name": "portrait_model_offset",
+          "type": "Vector3"
+        }
+      ]
     },
     {
       "file": "UI/Hotbar/HotbarSlot.gd",
@@ -355,7 +381,20 @@
           "call": "preload"
         }
       ],
-      "exports": []
+      "exports": [
+        {
+          "name": "bottom_offset",
+          "type": "float"
+        },
+        {
+          "name": "top_offset",
+          "type": "float"
+        },
+        {
+          "name": "enable_adaptive_dock",
+          "type": "bool"
+        }
+      ]
     },
     {
       "file": "UI/Menus/MainMenu.gd",
@@ -1116,31 +1155,37 @@
       ],
       "loads": [
         {
-          "line": 196,
+          "line": 56,
+          "raw": "res://addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf",
+          "path": "addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf",
+          "call": "load"
+        },
+        {
+          "line": 202,
           "raw": "res://assets/Models/GLB format/tower-round-crystals.glb",
           "path": "assets/Models/GLB format/tower-round-crystals.glb",
           "call": "load"
         },
         {
-          "line": 262,
+          "line": 268,
           "raw": "res://scenes/pillar_ambient_particles.tscn",
           "path": "scenes/pillar_ambient_particles.tscn",
           "call": "load"
         },
         {
-          "line": 522,
+          "line": 529,
           "raw": "res://scenes/pillar_hit_particle.tscn",
           "path": "scenes/pillar_hit_particle.tscn",
           "call": "load"
         },
         {
-          "line": 533,
+          "line": 540,
           "raw": "res://scenes/pillar_destruction.tscn",
           "path": "scenes/pillar_destruction.tscn",
           "call": "load"
         },
         {
-          "line": 788,
+          "line": 795,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -1262,19 +1307,19 @@
           "call": "preload"
         },
         {
-          "line": 739,
+          "line": 743,
           "raw": "res://shaders/tree_sway.gdshader",
           "path": "shaders/tree_sway.gdshader",
           "call": "preload"
         },
         {
-          "line": 1145,
+          "line": 1149,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 1151,
+          "line": 1155,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
@@ -1367,13 +1412,13 @@
       "functions": [],
       "loads": [
         {
-          "line": 7,
+          "line": 22,
           "raw": "res://UI/Pause&Play/esc_buttonV2.png",
           "path": "UI/Pause&Play/esc_buttonV2.png",
           "call": "preload"
         },
         {
-          "line": 8,
+          "line": 23,
           "raw": "res://UI/Pause&Play/play_buttonV2.png",
           "path": "UI/Pause&Play/play_buttonV2.png",
           "call": "preload"
@@ -1516,31 +1561,37 @@
           "call": "preload"
         },
         {
-          "line": 1124,
+          "line": 97,
+          "raw": "res://addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf",
+          "path": "addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf",
+          "call": "load"
+        },
+        {
+          "line": 1149,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1125,
+          "line": 1150,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1126,
+          "line": 1151,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 1127,
+          "line": 1152,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 1128,
+          "line": 1153,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"
@@ -1556,6 +1607,62 @@
           "type": "bool"
         }
       ]
+    },
+    {
+      "file": "scripts/TurretAudio.gd",
+      "class_name": null,
+      "extends": null,
+      "signals": [],
+      "functions": [
+        {
+          "name": "play_fire",
+          "params": [
+            "w_type",
+            "_world_pos"
+          ]
+        },
+        {
+          "name": "play_placement",
+          "params": [
+            "_world_pos"
+          ]
+        },
+        {
+          "name": "play_ufo_hit",
+          "params": [
+            "_world_pos"
+          ]
+        },
+        {
+          "name": "play_ufo_explode",
+          "params": [
+            "_world_pos"
+          ]
+        },
+        {
+          "name": "play_animal_enter_turret",
+          "params": [
+            "_world_pos"
+          ]
+        },
+        {
+          "name": "play_hotbar_click",
+          "params": []
+        },
+        {
+          "name": "play_ui_click",
+          "params": []
+        },
+        {
+          "name": "play_impact",
+          "params": [
+            "w_type",
+            "_world_pos"
+          ]
+        }
+      ],
+      "loads": [],
+      "exports": []
     },
     {
       "file": "scripts/TurretDismantleParticle.gd",
