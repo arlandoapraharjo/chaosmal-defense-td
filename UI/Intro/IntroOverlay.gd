@@ -110,7 +110,7 @@ func _setup_chirp_sound() -> void:
 	for i in range(num_samples):
 		var t = float(i) / float(sample_rate)
 		var env = exp(-t * 120.0)
-		var val = sin(t * TAU * 1400.0) * env * 0.25
+		var val = sin(t * TAU * 1100.0) * env * 0.06
 		var byte_val = int(clamp((val + 1.0) * 127.5, 0, 255))
 		byte_data[i] = byte_val
 	
@@ -122,7 +122,7 @@ func _setup_chirp_sound() -> void:
 	
 	if typewriter_sfx:
 		typewriter_sfx.stream = _chirp_sound
-		typewriter_sfx.volume_db = -14.0
+		typewriter_sfx.volume_db = -28.0
 
 func _play_typewriter_blip() -> void:
 	if typewriter_sfx and _chirp_sound:
@@ -343,7 +343,7 @@ func _animate_dialogue_text(full_bbcode: String) -> void:
 
 func _on_typewriter_step(char_count: int) -> void:
 	dialogue_text.visible_characters = char_count
-	if char_count > _last_played_char_count and (char_count % 2 == 0):
+	if char_count > _last_played_char_count and (char_count % 4 == 0):
 		_play_typewriter_blip()
 	_last_played_char_count = char_count
 

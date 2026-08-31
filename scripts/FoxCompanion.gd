@@ -365,6 +365,9 @@ func command_move_to(target_world_pos: Vector3) -> void:
 	if not is_selected:
 		return
 	
+	if TurretAudio:
+		TurretAudio.play_companion_move()
+	
 	if is_inside_turret:
 		_exit_current_turret()
 	else:
@@ -384,6 +387,9 @@ func command_move_to(target_world_pos: Vector3) -> void:
 func command_enter_turret(turret: Node3D) -> void:
 	if not is_selected or not is_instance_valid(turret):
 		return
+	
+	if TurretAudio:
+		TurretAudio.play_companion_move()
 	
 	if is_inside_turret:
 		if current_turret == turret:

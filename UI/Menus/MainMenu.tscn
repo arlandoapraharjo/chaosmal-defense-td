@@ -197,7 +197,7 @@ theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 3
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 30
-text = "CODE CIRCUS"
+text = "CHAOSMAL DEFENSE"
 horizontal_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/HeaderVBox" unique_id=748291040]

@@ -44,6 +44,8 @@ func try_upgrade_turret(turret: Node3D) -> bool:
 	if CurrencyManager.instance and CurrencyManager.instance.spend_currency(cost):
 		var success = turret.upgrade()
 		if success:
+			if TurretAudio:
+				TurretAudio.play_ui_click()
 			turret_upgraded.emit(turret, turret.turret_level)
 		return success
 	else:

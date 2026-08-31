@@ -29,7 +29,6 @@ tree_sway_strength = 0.0
 rock_model = ExtResource("3_oq5im")
 bush_model = ExtResource("1_ej4pw")
 environment = ExtResource("1_kqj8a")
-disable_fog = false
 has_heat_distortion = true
 hotbar_theme = ExtResource("11_theme")
 character_model = ExtResource("13_lion")

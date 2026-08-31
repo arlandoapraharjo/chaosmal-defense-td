@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="IGI-dev - code-circus"
+config/name="Chaosmal Defense"
 run/main_scene="res://UI/Menus/MainMenu.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"

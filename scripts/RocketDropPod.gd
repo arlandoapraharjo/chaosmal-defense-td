@@ -290,39 +290,43 @@ func execute_landing_sequence(companion: Node3D, landing_target: Vector3, on_com
 	
 	set_thrusters_active(true, 1.0)
 	
+	# 1. First 2.0 seconds: Audio plays during descent
+	if TurretAudio:
+		TurretAudio.play_rocket_thruster(2.0, 2.0)
+	
 	var seq = create_tween()
 	
-	# 1. Majestic Descent Tween (1.85s, perfectly synchronized with camera zoom)
-	var descent_duration: float = 1.85
+	# Majestic Descent Tween (2.0s)
+	var descent_duration: float = 2.0
 	seq.parallel().tween_property(self, "global_position:y", landing_target.y, descent_duration)\
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	seq.parallel().tween_property(self, "rotation_degrees", Vector3(0, 0, 0), descent_duration)\
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	
-	# 2. Touchdown Impact & Landing Cushion
+	# 2. Touchdown (Audio stops -> 1.5 seconds silence/pause starts)
 	seq.chain().tween_callback(func():
 		global_position.y = landing_target.y
-		set_thrusters_active(false, 0.15)
+		set_thrusters_active(false, 0.0)
 		
 		if _ground_dust:
 			_ground_dust.restart()
 			_ground_dust.emitting = true
 		
-		# Landing Squash & Stretch Cushion
+		# Landing Squash & Stretch Cushion (0.35s)
 		if _model_root:
 			var cushion_tw = create_tween()
 			cushion_tw.tween_property(_model_root, "scale", Vector3(base_scale.x * 1.22, base_scale.y * 0.75, base_scale.z * 1.22), 0.10)\
 				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-			cushion_tw.tween_property(_model_root, "scale", Vector3(base_scale.x * 0.94, base_scale.y * 1.10, base_scale.z * 0.94), 0.14)\
+			cushion_tw.tween_property(_model_root, "scale", Vector3(base_scale.x * 0.94, base_scale.y * 1.10, base_scale.z * 0.94), 0.12)\
 				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-			cushion_tw.tween_property(_model_root, "scale", base_scale, 0.14)\
+			cushion_tw.tween_property(_model_root, "scale", base_scale, 0.13)\
 				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	)
 	
-	# 3. Processing Pause (0.75s) — Let the player process the landed rocket on the ground
-	seq.chain().tween_interval(0.75)
+	# Pause on ground (0.6s)
+	seq.chain().tween_interval(0.60)
 	
-	# 4. Companion Pop-Out Ejection
+	# Companion Pop-Out Ejection
 	seq.chain().tween_callback(func():
 		if companion and is_instance_valid(companion):
 			companion.visible = true
@@ -336,32 +340,33 @@ func execute_landing_sequence(companion: Node3D, landing_target: Vector3, on_com
 				companion.call("play_deployment_drop", 1.2)
 	)
 	
-	# 5. Showcase Processing Window (0.9s) — Companion and Rocket stand together on the field
-	seq.chain().tween_interval(0.9)
+	# Showcase Processing Window (0.9s) -> Total ground pause = 0.6s + 0.9s = 1.5s
+	seq.chain().tween_interval(0.90)
 	
-	# 6. Rocket Re-ignition & Launch Prep
+	# 3. Rocket Re-ignition & Launch (Audio plays for 3.0 seconds)
 	seq.chain().tween_callback(func():
 		set_thrusters_active(true, 2.0)
+		if TurretAudio:
+			TurretAudio.play_rocket_thruster(3.0, 2.5)
 		
 		if _model_root:
 			# Quick anticipation squish before launch
 			var launch_prep_tw = create_tween()
 			launch_prep_tw.tween_property(_model_root, "scale", Vector3(base_scale.x * 1.15, base_scale.y * 0.85, base_scale.z * 1.15), 0.14)\
 				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-			launch_prep_tw.tween_property(_model_root, "scale", Vector3(base_scale.x * 0.85, base_scale.y * 1.25, base_scale.z * 0.85), 0.18)\
+			launch_prep_tw.tween_property(_model_root, "scale", Vector3(base_scale.x * 0.85, base_scale.y * 1.25, base_scale.z * 0.85), 0.16)\
 				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	)
 	
-	# 7. Blast-Off into Space (1.3s)
-	seq.chain().tween_interval(0.18)
-	var launch_duration: float = 1.3
-	seq.chain().parallel().tween_property(self, "global_position:y", landing_target.y + 45.0, launch_duration)\
+	# Blast-Off into Space (3.0s total launch window)
+	seq.chain().tween_interval(0.20)
+	var launch_duration: float = 2.80
+	seq.chain().parallel().tween_property(self, "global_position:y", landing_target.y + 60.0, launch_duration)\
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	seq.parallel().tween_property(self, "rotation_degrees:y", rotation_degrees.y + 720.0, launch_duration)\
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	
-	# 8. Complete and clean up
-	seq.chain().tween_interval(0.2)
+	# 4. Complete and clean up
 	seq.chain().tween_callback(func():
 		if on_complete.is_valid():
 			on_complete.call()

@@ -196,9 +196,6 @@ func _physics_process(delta):
 	size = lerpf(size, target_ortho_size, 10.0 * delta)
 
 func _unhandled_input(event):
-	if event is InputEventKey and event.pressed and event.keycode == KEY_R:
-		get_tree().reload_current_scene.call_deferred()
-		
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			# Zoom in — decrease orthographic size

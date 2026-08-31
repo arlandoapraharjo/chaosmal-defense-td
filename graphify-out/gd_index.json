@@ -1,8 +1,8 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scripts": 37,
-    "root": "D:\\Game\\IGI-Code-Circus"
+    "total_scripts": 38,
+    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
   },
   "scripts": [
     {
@@ -1180,19 +1180,19 @@
           "call": "load"
         },
         {
-          "line": 529,
+          "line": 531,
           "raw": "res://scenes/pillar_hit_particle.tscn",
           "path": "scenes/pillar_hit_particle.tscn",
           "call": "load"
         },
         {
-          "line": 540,
+          "line": 542,
           "raw": "res://scenes/pillar_destruction.tscn",
           "path": "scenes/pillar_destruction.tscn",
           "call": "load"
         },
         {
-          "line": 795,
+          "line": 799,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -1314,19 +1314,19 @@
           "call": "preload"
         },
         {
-          "line": 739,
+          "line": 743,
           "raw": "res://shaders/tree_sway.gdshader",
           "path": "shaders/tree_sway.gdshader",
           "call": "preload"
         },
         {
-          "line": 1145,
+          "line": 1149,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 1151,
+          "line": 1155,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
@@ -1617,31 +1617,31 @@
           "call": "load"
         },
         {
-          "line": 1142,
+          "line": 1149,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1143,
+          "line": 1150,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1144,
+          "line": 1151,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 1145,
+          "line": 1152,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 1146,
+          "line": 1153,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"
@@ -1657,6 +1657,79 @@
           "type": "bool"
         }
       ]
+    },
+    {
+      "file": "scripts/TurretAudio.gd",
+      "class_name": null,
+      "extends": "Node",
+      "signals": [],
+      "functions": [
+        {
+          "name": "play_fire",
+          "params": [
+            "w_type",
+            "_world_pos"
+          ]
+        },
+        {
+          "name": "play_placement",
+          "params": [
+            "_world_pos"
+          ]
+        },
+        {
+          "name": "play_ufo_hit",
+          "params": [
+            "_world_pos"
+          ]
+        },
+        {
+          "name": "play_ufo_explode",
+          "params": [
+            "_world_pos"
+          ]
+        },
+        {
+          "name": "play_animal_enter_turret",
+          "params": [
+            "_world_pos"
+          ]
+        },
+        {
+          "name": "play_hotbar_click",
+          "params": []
+        },
+        {
+          "name": "play_companion_move",
+          "params": []
+        },
+        {
+          "name": "play_rocket_thruster",
+          "params": [
+            "duration",
+            "vol_db"
+          ]
+        },
+        {
+          "name": "play_pillar_hit",
+          "params": [
+            "_world_pos"
+          ]
+        },
+        {
+          "name": "play_ui_click",
+          "params": []
+        },
+        {
+          "name": "play_impact",
+          "params": [
+            "w_type",
+            "_world_pos"
+          ]
+        }
+      ],
+      "loads": [],
+      "exports": []
     },
     {
       "file": "scripts/TurretDismantleParticle.gd",

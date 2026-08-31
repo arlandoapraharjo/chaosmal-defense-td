@@ -833,11 +833,12 @@
       "community": 99,
       "community_name": "GDScript Gameplay Logic",
       "norm_label": "foxcompanion",
-      "description": "extends CharacterBody3D | funcs: set_character_model, set_selected, play_deployment_drop, command_move_to, command_enter_turret | signals: selected_changed, entered_turret, left_turret",
+      "description": "extends CharacterBody3D | funcs: set_character_model, set_selected, play_pop_out_jump, play_deployment_drop, command_move_to, command_enter_turret | signals: selected_changed, entered_turret, left_turret",
       "_gd_extends": "CharacterBody3D",
       "_gd_functions": [
         "set_character_model",
         "set_selected",
+        "play_pop_out_jump",
         "play_deployment_drop",
         "command_move_to",
         "command_enter_turret"
@@ -1057,6 +1058,27 @@
       "_gd_exports": []
     },
     {
+      "id": "gdscript_scripts_rocketdroppod",
+      "label": "RocketDropPod",
+      "file_type": "code",
+      "source_file": "scripts/RocketDropPod.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "GDScript Gameplay Logic",
+      "norm_label": "rocketdroppod",
+      "description": "extends Node3D | funcs: set_thrusters_active, execute_landing_sequence",
+      "_gd_extends": "Node3D",
+      "_gd_functions": [
+        "set_thrusters_active",
+        "execute_landing_sequence"
+      ],
+      "_gd_signals": [],
+      "_gd_exports": [
+        "base_scale"
+      ]
+    },
+    {
       "id": "gdscript_scripts_turret",
       "label": "Turret",
       "file_type": "code",
@@ -1095,8 +1117,8 @@
       "community": 99,
       "community_name": "GDScript Gameplay Logic",
       "norm_label": "turretaudio",
-      "description": "funcs: play_fire, play_placement, play_ufo_hit, play_ufo_explode, play_animal_enter_turret, play_hotbar_click ...",
-      "_gd_extends": null,
+      "description": "extends Node | funcs: play_fire, play_placement, play_ufo_hit, play_ufo_explode, play_animal_enter_turret, play_hotbar_click ...",
+      "_gd_extends": "Node",
       "_gd_functions": [
         "play_fire",
         "play_placement",
@@ -1104,6 +1126,9 @@
         "play_ufo_explode",
         "play_animal_enter_turret",
         "play_hotbar_click",
+        "play_companion_move",
+        "play_rocket_thruster",
+        "play_pillar_hit",
         "play_ui_click",
         "play_impact"
       ],
@@ -1578,6 +1603,20 @@
       "description": "Scene with 2 ext_resource(s)",
       "_scene_uid": null,
       "_ext_resource_count": 2
+    },
+    {
+      "id": "tscn_scenes_rocketdroppod",
+      "label": "Rocketdroppod Scene",
+      "file_type": "code",
+      "source_file": "scenes/RocketDropPod.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 98,
+      "community_name": "Godot Scenes",
+      "norm_label": "rocketdroppod scene",
+      "description": "Scene with 1 ext_resource(s)",
+      "_scene_uid": "uid://cd2inqhodgoxs",
+      "_ext_resource_count": 1
     },
     {
       "id": "tscn_scenes_ballista_hit_particle",
@@ -2281,6 +2320,18 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
+      "source_file": "scenes/RocketDropPod.tscn",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "_resource_type": "Script",
+      "source": "tscn_scenes_rocketdroppod",
+      "target": "gdscript_scripts_rocketdroppod"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "scenes/turret_dismantle_particle.tscn",
       "source_location": "L1",
       "weight": 1.0,
@@ -2820,6 +2871,17 @@
       "relation": "loads",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
+      "source_file": "scripts/RocketDropPod.gd",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "gdscript_scripts_rocketdroppod",
+      "target": "tscn_scenes_foxpoofparticle"
+    },
+    {
+      "relation": "loads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
       "source_file": "scripts/Turret.gd",
       "source_location": "L200",
       "weight": 1.0,
@@ -2903,6 +2965,17 @@
       "_origin": "ast",
       "source": "gdscript_scripts_world",
       "target": "tscn_scenes_foxcompanion"
+    },
+    {
+      "relation": "loads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/World.gd",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "gdscript_scripts_world",
+      "target": "tscn_scenes_rocketdroppod"
     },
     {
       "relation": "loads",

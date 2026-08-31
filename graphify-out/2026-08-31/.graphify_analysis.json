@@ -64,20 +64,25 @@
     "9": [
       "gdscript_scripts_foxcompanion",
       "gdscript_scripts_foxpoofparticle",
+      "gdscript_scripts_rocketdroppod",
       "gdscript_scripts_world",
       "tscn_scenes_foxcompanion",
-      "tscn_scenes_foxpoofparticle"
+      "tscn_scenes_foxpoofparticle",
+      "tscn_scenes_rocketdroppod"
     ],
     "10": [
+      "gdscript_scripts_cameracontroller",
+      "gdscript_scripts_enemy",
+      "gdscript_scripts_mapgenerator",
+      "gdscript_scripts_wavemanager",
+      "tscn_assets_models_glb_format_world",
+      "tscn_scenes_explosion"
+    ],
+    "11": [
       "gdscript_ui_hotbar_hotbarslot",
       "gdscript_ui_hotbar_turrethotbar",
       "tscn_ui_hotbar_hotbarslot",
       "tscn_ui_hotbar_turrethotbar"
-    ],
-    "11": [
-      "gdscript_scripts_enemy",
-      "gdscript_scripts_wavemanager",
-      "tscn_scenes_explosion"
     ],
     "12": [
       "gdscript_scenes_animation_player"
@@ -174,10 +179,8 @@
     ],
     "99": [
       "gdscript_biomes_biomedata",
-      "gdscript_scripts_cameracontroller",
       "gdscript_scripts_currencymanager",
       "gdscript_scripts_gameoveroverlay",
-      "gdscript_scripts_mapgenerator",
       "gdscript_scripts_pauseoverlay",
       "gdscript_ui_currencyui",
       "gdscript_ui_foxhud_foxhud",
@@ -185,7 +188,6 @@
       "gdscript_ui_menus_mainmenu",
       "gdscript_ui_speedtoggle",
       "gdscript_ui_waveui",
-      "tscn_assets_models_glb_format_world",
       "tscn_scenes_gameoveroverlay",
       "tscn_scenes_map",
       "tscn_scenes_pauseoverlay",
@@ -207,9 +209,9 @@
     "6": 1.0,
     "7": 1.0,
     "8": 0.25,
-    "9": 0.4,
-    "10": 0.5,
-    "11": 0.6666666666666666,
+    "9": 0.3333333333333333,
+    "10": 0.3333333333333333,
+    "11": 0.5,
     "12": 1.0,
     "13": 1.0,
     "14": 1.0,
@@ -236,7 +238,7 @@
     "35": 1.0,
     "36": 1.0,
     "98": 0.14166666666666666,
-    "99": 0.09523809523809523
+    "99": 0.10526315789473684
   },
   "gods": [
     {
@@ -292,6 +294,17 @@
   ],
   "surprises": [
     {
+      "source": "Map Scene",
+      "target": "CameraController",
+      "source_files": [
+        "scenes/map.tscn",
+        "scripts/CameraController.gd"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories; bridges separate communities; peripheral node `CameraController` unexpectedly reaches hub `Map Scene`"
+    },
+    {
       "source": "Pillar Hit Particle Scene",
       "target": "HitParticle",
       "source_files": [
@@ -301,17 +314,6 @@
       "confidence": "EXTRACTED",
       "relation": "references",
       "why": "connects across different repos/directories; bridges separate communities; peripheral node `Pillar Hit Particle Scene` unexpectedly reaches hub `HitParticle`"
-    },
-    {
-      "source": "Map Scene",
-      "target": "World",
-      "source_files": [
-        "scenes/map.tscn",
-        "scripts/World.gd"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "references",
-      "why": "connects across different repos/directories; bridges separate communities; peripheral node `World` unexpectedly reaches hub `Map Scene`"
     },
     {
       "source": "Map Scene",
@@ -350,13 +352,13 @@
   "questions": [
     {
       "type": "bridge_node",
-      "question": "Why does `Map Scene` connect `Map Scene` to `FoxCompanion`, `Turret`, `TurretHotbar`?",
-      "why": "High betweenness centrality (0.184) - this node is a cross-community bridge."
+      "question": "Why does `Map Scene` connect `Map Scene` to `TurretHotbar`, `World`, `Turret`, `MapGenerator`?",
+      "why": "High betweenness centrality (0.193) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
       "question": "Why does `BuilderController` connect `Turret` to `Map Scene`?",
-      "why": "High betweenness centrality (0.077) - this node is a cross-community bridge."
+      "why": "High betweenness centrality (0.078) - this node is a cross-community bridge."
     },
     {
       "type": "isolated_nodes",
@@ -371,7 +373,7 @@
     {
       "type": "low_cohesion",
       "question": "Should `Map Scene` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected."
+      "why": "Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected."
     }
   ]
 }

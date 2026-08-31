@@ -492,6 +492,8 @@ func take_damage(amount: float) -> void:
 	pillar_damaged.emit(current_hp, max_hp)
 	_update_health_bar(true)
 	_play_shambles_effect()
+	if TurretAudio:
+		TurretAudio.play_pillar_hit(global_position)
 
 	if current_hp <= 0.0:
 		_trigger_defeat()
@@ -687,6 +689,8 @@ func try_upgrade() -> bool:
 	var cost = get_upgrade_cost()
 	if CurrencyManager.instance and CurrencyManager.instance.spend_currency(cost):
 		current_level += 1
+		if TurretAudio:
+			TurretAudio.play_ui_click()
 		_update_ui()
 		_on_upgraded()
 		return true
