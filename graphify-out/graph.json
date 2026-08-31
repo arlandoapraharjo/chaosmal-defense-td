@@ -74,20 +74,6 @@
       "id": "tscn_scenes_pillar_destruction"
     },
     {
-      "label": "Waveui Scene",
-      "file_type": "code",
-      "source_file": "UI/WaveUI.tscn",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "Map Scene",
-      "norm_label": "waveui scene",
-      "description": "Scene with 1 ext_resource(s)",
-      "_scene_uid": "uid://beiea7nje0alg",
-      "_ext_resource_count": 1,
-      "id": "tscn_ui_waveui"
-    },
-    {
       "label": "Pilarshockwave Scene",
       "file_type": "code",
       "source_file": "shaders/pilarshockwave.tscn",
@@ -226,20 +212,6 @@
       "_scene_uid": "uid://dfoxpoof001",
       "_ext_resource_count": 1,
       "id": "tscn_scenes_foxpoofparticle"
-    },
-    {
-      "label": "Introoverlay Scene",
-      "file_type": "code",
-      "source_file": "UI/Intro/IntroOverlay.tscn",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "Map Scene",
-      "norm_label": "introoverlay scene",
-      "description": "Scene with 1 ext_resource(s)",
-      "_scene_uid": "uid://dpe5vyw6hax4k",
-      "_ext_resource_count": 1,
-      "id": "tscn_ui_intro_introoverlay"
     },
     {
       "label": "Hit Particle Ballista Scene",
@@ -396,6 +368,20 @@
       "id": "tscn_addons_mesh_bush2glb3"
     },
     {
+      "label": "Waveui Scene",
+      "file_type": "code",
+      "source_file": "UI/WaveUI.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "Map Scene",
+      "norm_label": "waveui scene",
+      "description": "Scene with 2 ext_resource(s)",
+      "_scene_uid": "uid://beiea7nje0alg",
+      "_ext_resource_count": 2,
+      "id": "tscn_ui_waveui"
+    },
+    {
       "label": "World Scene",
       "file_type": "code",
       "source_file": "assets/Models/GLB format/world.tscn",
@@ -550,32 +536,18 @@
       "id": "tscn_ui_currencyui"
     },
     {
-      "label": "Mainmenu Scene",
+      "label": "Introoverlay Scene",
       "file_type": "code",
-      "source_file": "UI/Menus/MainMenu.tscn",
+      "source_file": "UI/Intro/IntroOverlay.tscn",
       "source_location": "L1",
       "_origin": "ast",
       "community": 99,
       "community_name": "Map Scene",
-      "norm_label": "mainmenu scene",
+      "norm_label": "introoverlay scene",
       "description": "Scene with 3 ext_resource(s)",
-      "_scene_uid": "uid://o1alob3g7ns8",
+      "_scene_uid": "uid://dpe5vyw6hax4k",
       "_ext_resource_count": 3,
-      "id": "tscn_ui_menus_mainmenu"
-    },
-    {
-      "label": "Pauseoverlay Scene",
-      "file_type": "code",
-      "source_file": "scenes/PauseOverlay.tscn",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "Map Scene",
-      "norm_label": "pauseoverlay scene",
-      "description": "Scene with 3 ext_resource(s)",
-      "_scene_uid": null,
-      "_ext_resource_count": 3,
-      "id": "tscn_scenes_pauseoverlay"
+      "id": "tscn_ui_intro_introoverlay"
     },
     {
       "label": "Gameoveroverlay Scene",
@@ -590,6 +562,20 @@
       "_scene_uid": "uid://cx8v4qm5pak21",
       "_ext_resource_count": 4,
       "id": "tscn_scenes_gameoveroverlay"
+    },
+    {
+      "label": "Mainmenu Scene",
+      "file_type": "code",
+      "source_file": "UI/Menus/MainMenu.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "Map Scene",
+      "norm_label": "mainmenu scene",
+      "description": "Scene with 4 ext_resource(s)",
+      "_scene_uid": "uid://o1alob3g7ns8",
+      "_ext_resource_count": 4,
+      "id": "tscn_ui_menus_mainmenu"
     },
     {
       "label": "Thin Tree Scene",
@@ -646,6 +632,20 @@
       "_scene_uid": "uid://bp33u85pccjqh",
       "_ext_resource_count": 6,
       "id": "tscn_scenes_foliage_snow_tree"
+    },
+    {
+      "label": "Pauseoverlay Scene",
+      "file_type": "code",
+      "source_file": "scenes/PauseOverlay.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "Map Scene",
+      "norm_label": "pauseoverlay scene",
+      "description": "Scene with 6 ext_resource(s)",
+      "_scene_uid": null,
+      "_ext_resource_count": 6,
+      "id": "tscn_scenes_pauseoverlay"
     },
     {
       "label": "MapGenerator",

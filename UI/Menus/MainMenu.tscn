@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dwe3nbiaij50j" path="res://UI/Menus/MainMenu.gd" id="1_script"]
 [ext_resource type="Shader" path="res://shaders/card_panel.gdshader" id="2_card_shader"]
 [ext_resource type="Shader" path="res://shaders/jewel_emblem.gdshader" id="3_jewel_shader"]
+[ext_resource type="Texture2D" path="res://UI/Menus/main menu button.png" id="4_btn_tex"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_card"]
 shader = ExtResource("2_card_shader")
@@ -21,55 +22,41 @@ shader_parameter/gem_color_bottom = Color(0.48, 0.18, 0.85, 1)
 shader_parameter/glow_accent = Color(1, 0.84, 0.42, 1)
 shader_parameter/pulse_speed = 2.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_norm"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_norm"]
 content_margin_left = 16.0
 content_margin_top = 10.0
 content_margin_right = 16.0
 content_margin_bottom = 10.0
-bg_color = Color(0.14, 0.12, 0.2, 0.65)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.35, 0.3, 0.48, 0.45)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+texture = ExtResource("4_btn_tex")
+texture_margin_left = 24.0
+texture_margin_top = 12.0
+texture_margin_right = 24.0
+texture_margin_bottom = 12.0
+modulate_color = Color(0.9, 0.9, 0.92, 0.95)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hov"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_hov"]
 content_margin_left = 16.0
 content_margin_top = 10.0
 content_margin_right = 16.0
 content_margin_bottom = 10.0
-bg_color = Color(0.28, 0.22, 0.38, 0.85)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.96, 0.78, 0.36, 0.95)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_color = Color(0.96, 0.78, 0.36, 0.22)
-shadow_size = 6
+texture = ExtResource("4_btn_tex")
+texture_margin_left = 24.0
+texture_margin_top = 12.0
+texture_margin_right = 24.0
+texture_margin_bottom = 12.0
+modulate_color = Color(1.35, 1.35, 1.4, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_press"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_press"]
 content_margin_left = 16.0
 content_margin_top = 10.0
 content_margin_right = 16.0
 content_margin_bottom = 10.0
-bg_color = Color(0.42, 0.32, 0.55, 0.95)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.88, 0.55, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+texture = ExtResource("4_btn_tex")
+texture_margin_left = 24.0
+texture_margin_top = 12.0
+texture_margin_right = 24.0
+texture_margin_bottom = 12.0
+modulate_color = Color(0.65, 0.65, 0.7, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
 
@@ -86,12 +73,12 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_loading_fill"]
-bg_color = Color(0.3, 0.75, 1, 0.95)
+bg_color = Color(0.294118, 0.411765, 0.184314, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
-shadow_color = Color(0.25, 0.7, 1, 0.45)
+shadow_color = Color(0.294118, 0.411765, 0.184314, 0.45)
 shadow_size = 4
 
 [node name="Main" type="Control" unique_id=914936948]
@@ -237,37 +224,37 @@ theme_override_constants/separation = 14
 [node name="ButtonStart" type="Button" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/ButtonVBox" unique_id=911141927]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(1, 0.92, 0.65, 1)
-theme_override_colors/font_color = Color(0.94, 0.94, 0.96, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hov")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_press")
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_norm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_norm")
 text = "Start Game"
 
 [node name="ButtonSettings" type="Button" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/ButtonVBox" unique_id=353551886]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(1, 0.92, 0.65, 1)
-theme_override_colors/font_color = Color(0.94, 0.94, 0.96, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hov")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_press")
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_norm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_norm")
 text = "Settings"
 
 [node name="ButtonQuit" type="Button" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/ButtonVBox" unique_id=881836931]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(1, 0.92, 0.65, 1)
-theme_override_colors/font_color = Color(0.94, 0.94, 0.96, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hov")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_press")
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_norm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_norm")
 text = "Exit"
 
 [node name="SpacerBottom" type="Control" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain" unique_id=881836932]
@@ -397,13 +384,13 @@ size_flags_vertical = 3
 [node name="ButtonBack" type="Button" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings" unique_id=865670970]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_override_colors/font_hover_color = Color(1, 0.92, 0.65, 1)
-theme_override_colors/font_color = Color(0.94, 0.94, 0.96, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hov")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_press")
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_norm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_norm")
 text = "Back"
 
 [connection signal="pressed" from="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/ButtonVBox/ButtonStart" to="." method="_on_start_button_pressed"]

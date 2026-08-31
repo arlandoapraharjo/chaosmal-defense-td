@@ -1,15 +1,71 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/PauseOverlay.gd" id="1_script"]
 [ext_resource type="Shader" path="res://shaders/grayscale.gdshader" id="2_shader"]
-
-[ext_resource type="Texture2D" uid="uid://6txklmgditbp" path="res://UI/Pause&Play/esc_buttonV2.png" id="3_esc"]
-
+[ext_resource type="Shader" path="res://shaders/card_panel.gdshader" id="3_card_shader"]
+[ext_resource type="Shader" path="res://shaders/jewel_emblem.gdshader" id="4_jewel_shader"]
+[ext_resource type="Texture2D" uid="uid://6txklmgditbp" path="res://UI/Pause&Play/esc_buttonV2.png" id="5_esc"]
+[ext_resource type="Texture2D" path="res://UI/Menus/main menu button.png" id="6_btn_tex"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_grayscale"]
 shader = ExtResource("2_shader")
 shader_parameter/desaturation = 0.85
 shader_parameter/tint_color = Color(0.3, 0.3, 0.35, 1.0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_card"]
+shader = ExtResource("3_card_shader")
+shader_parameter/bg_color_top = Color(0.12, 0.1, 0.17, 0.94)
+shader_parameter/bg_color_bottom = Color(0.07, 0.06, 0.1, 0.97)
+shader_parameter/border_color = Color(0.96, 0.78, 0.36, 0.9)
+shader_parameter/border_color_dim = Color(0.4, 0.32, 0.22, 0.5)
+shader_parameter/corner_radius = 0.038
+shader_parameter/border_width = 0.004
+shader_parameter/inner_glow = 0.25
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jewel"]
+shader = ExtResource("4_jewel_shader")
+shader_parameter/gem_color_top = Color(0.88, 0.6, 1, 1)
+shader_parameter/gem_color_bottom = Color(0.48, 0.18, 0.85, 1)
+shader_parameter/glow_accent = Color(1, 0.84, 0.42, 1)
+shader_parameter/pulse_speed = 2.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_norm"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+texture = ExtResource("6_btn_tex")
+texture_margin_left = 24.0
+texture_margin_top = 12.0
+texture_margin_right = 24.0
+texture_margin_bottom = 12.0
+modulate_color = Color(0.9, 0.9, 0.92, 0.95)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_hov"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+texture = ExtResource("6_btn_tex")
+texture_margin_left = 24.0
+texture_margin_top = 12.0
+texture_margin_right = 24.0
+texture_margin_bottom = 12.0
+modulate_color = Color(1.35, 1.35, 1.4, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_press"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+texture = ExtResource("6_btn_tex")
+texture_margin_left = 24.0
+texture_margin_top = 12.0
+texture_margin_right = 24.0
+texture_margin_bottom = 12.0
+modulate_color = Color(0.65, 0.65, 0.7, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
 
 [node name="PauseOverlay" type="CanvasLayer"]
 process_mode = 3
@@ -30,6 +86,274 @@ offset_left = 12.0
 offset_top = 12.0
 offset_right = 52.0
 offset_bottom = 52.0
-texture_normal = ExtResource("3_esc")
+texture_normal = ExtResource("5_esc")
 ignore_texture_size = true
 stretch_mode = 5
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CardPanel" type="Control" parent="Control"]
+layout_mode = 1
+anchor_left = 0.04
+anchor_top = 0.05
+anchor_right = 0.35
+anchor_bottom = 0.95
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CardBg" type="ColorRect" parent="Control/CardPanel"]
+material = SubResource("ShaderMaterial_card")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CardMargin" type="MarginContainer" parent="Control/CardPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxMain" type="VBoxContainer" parent="Control/CardPanel/CardMargin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="HeaderVBox" type="VBoxContainer" parent="Control/CardPanel/CardMargin/VBoxMain"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="JewelCenter" type="CenterContainer" parent="Control/CardPanel/CardMargin/VBoxMain/HeaderVBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+
+[node name="JewelEmblem" type="ColorRect" parent="Control/CardPanel/CardMargin/VBoxMain/HeaderVBox/JewelCenter"]
+material = SubResource("ShaderMaterial_jewel")
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Control/CardPanel/CardMargin/VBoxMain/HeaderVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.95, 0.92, 1)
+theme_override_colors/font_shadow_color = Color(0.05, 0.03, 0.08, 0.95)
+theme_override_colors/font_outline_color = Color(0.18, 0.12, 0.28, 0.9)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 28
+text = "GAME PAUSED"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="Control/CardPanel/CardMargin/VBoxMain/HeaderVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.78, 0.36, 0.85)
+theme_override_colors/font_shadow_color = Color(0.05, 0.03, 0.08, 0.7)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 11
+text = "◆ TACTICAL PAUSE ◆"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Control/CardPanel/CardMargin/VBoxMain"]
+layout_mode = 2
+
+[node name="SpacerTop" type="Control" parent="Control/CardPanel/CardMargin/VBoxMain"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="ButtonVBox" type="VBoxContainer" parent="Control/CardPanel/CardMargin/VBoxMain"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ButtonResume" type="Button" parent="Control/CardPanel/CardMargin/VBoxMain/ButtonVBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_norm")
+text = "Resume Game"
+
+[node name="ButtonSettings" type="Button" parent="Control/CardPanel/CardMargin/VBoxMain/ButtonVBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_norm")
+text = "Settings"
+
+[node name="ButtonMainMenu" type="Button" parent="Control/CardPanel/CardMargin/VBoxMain/ButtonVBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_norm")
+text = "Main Menu"
+
+[node name="ButtonQuit" type="Button" parent="Control/CardPanel/CardMargin/VBoxMain/ButtonVBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_norm")
+text = "Exit"
+
+[node name="SpacerBottom" type="Control" parent="Control/CardPanel/CardMargin/VBoxMain"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelSettings" type="VBoxContainer" parent="Control/CardPanel/CardMargin"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LabelSettings" type="Label" parent="Control/CardPanel/CardMargin/PanelSettings"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.82, 0.45, 1)
+theme_override_colors/font_shadow_color = Color(0.05, 0.03, 0.08, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 24
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="HSeparatorSettings" type="HSeparator" parent="Control/CardPanel/CardMargin/PanelSettings"]
+layout_mode = 2
+
+[node name="SpacerSettingsTop" type="Control" parent="Control/CardPanel/CardMargin/PanelSettings"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+
+[node name="OptionsVBox" type="VBoxContainer" parent="Control/CardPanel/CardMargin/PanelSettings"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="HBoxFullscreen" type="HBoxContainer" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LabelFullscreen" type="Label" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxFullscreen"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Fullscreen"
+vertical_alignment = 1
+
+[node name="CheckButtonFullscreen" type="CheckButton" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxFullscreen"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="HBoxMaster" type="HBoxContainer" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LabelMaster" type="Label" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxMaster"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Master"
+vertical_alignment = 1
+
+[node name="SliderMaster" type="HSlider" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxMaster"]
+custom_minimum_size = Vector2(130, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="HBoxMusic" type="HBoxContainer" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LabelMusic" type="Label" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxMusic"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Music"
+vertical_alignment = 1
+
+[node name="SliderMusic" type="HSlider" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxMusic"]
+custom_minimum_size = Vector2(130, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="HBoxSFX" type="HBoxContainer" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LabelSFX" type="Label" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxSFX"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "SFX"
+vertical_alignment = 1
+
+[node name="SliderSFX" type="HSlider" parent="Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxSFX"]
+custom_minimum_size = Vector2(130, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="SpacerSettingsBottom" type="Control" parent="Control/CardPanel/CardMargin/PanelSettings"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonBack" type="Button" parent="Control/CardPanel/CardMargin/PanelSettings"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/hover = SubResource("StyleBoxTexture_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxTexture_btn_norm")
+text = "Back"

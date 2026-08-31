@@ -245,23 +245,21 @@ func _process(delta: float) -> void:
 
 # Smoothly rotate the turret (Y-axis only) to face the target.
 func _rotate_toward_target(target: Node3D, delta: float) -> void:
+	if not is_instance_valid(target):
+		return
 	if scale.length_squared() < 0.001:
 		return
-	var target_pos: Vector3 = target.global_transform.origin
-	var my_pos: Vector3 = global_transform.origin
+	var target_pos: Vector3 = target.global_position
+	var my_pos: Vector3 = global_position
 	# Flatten to horizontal plane
 	var dir: Vector3 = Vector3(target_pos.x - my_pos.x, 0.0, target_pos.z - my_pos.z)
 	if dir.length_squared() < 0.0001:
 		return
-	var current_scale: Vector3 = scale
-	# Extract pure rotation (no scale) for a clean slerp
-	var current_rot: Basis = global_transform.basis.orthonormalized()
-	var target_rot: Basis = Basis.looking_at(dir.normalized(), Vector3.UP, true)
-	# Slerp at rotation_speed degrees per second
+	# Model forward faces +Z in Kenney assets; calculate horizontal facing angle
+	var target_angle: float = atan2(dir.x, dir.z)
 	var t: float = clampf(deg_to_rad(rotation_speed) * delta, 0.0, 1.0)
-	var new_rot: Basis = current_rot.slerp(target_rot, t)
-	# Reapply scale after rotation
-	global_transform.basis = new_rot.scaled(current_scale)
+	global_rotation.y = lerp_angle(global_rotation.y, target_angle, t)
+
 
 # ── 3D UI & Selection System ──────────────────────────────────────────────────
 

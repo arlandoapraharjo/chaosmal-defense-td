@@ -365,7 +365,7 @@
       "functions": [],
       "loads": [
         {
-          "line": 77,
+          "line": 115,
           "raw": "res://scenes/map.tscn",
           "path": "scenes/map.tscn",
           "call": "load"
@@ -972,19 +972,19 @@
       ],
       "loads": [
         {
-          "line": 12,
+          "line": 14,
           "raw": "res://assets/characters/animal-fox.glb",
           "path": "assets/characters/animal-fox.glb",
           "call": "preload"
         },
         {
-          "line": 13,
+          "line": 15,
           "raw": "res://assets/Models/GLB format/selection-a.glb",
           "path": "assets/Models/GLB format/selection-a.glb",
           "call": "preload"
         },
         {
-          "line": 14,
+          "line": 16,
           "raw": "res://scenes/FoxPoofParticle.tscn",
           "path": "scenes/FoxPoofParticle.tscn",
           "call": "preload"
@@ -1196,19 +1196,43 @@
           "call": "preload"
         },
         {
-          "line": 688,
+          "line": 104,
+          "raw": "res://assets/Models/GLB format/wood-structure.glb",
+          "path": "assets/Models/GLB format/wood-structure.glb",
+          "call": "preload"
+        },
+        {
+          "line": 105,
+          "raw": "res://assets/Models/GLB format/wood-structure-high.glb",
+          "path": "assets/Models/GLB format/wood-structure-high.glb",
+          "call": "preload"
+        },
+        {
+          "line": 106,
+          "raw": "res://assets/Models/GLB format/wood-structure-part.glb",
+          "path": "assets/Models/GLB format/wood-structure-part.glb",
+          "call": "preload"
+        },
+        {
+          "line": 107,
+          "raw": "res://assets/Models/GLB format/wood-structure-high-part.glb",
+          "path": "assets/Models/GLB format/wood-structure-high-part.glb",
+          "call": "preload"
+        },
+        {
+          "line": 729,
           "raw": "res://shaders/tree_sway.gdshader",
           "path": "shaders/tree_sway.gdshader",
           "call": "preload"
         },
         {
-          "line": 1025,
+          "line": 1066,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 1031,
+          "line": 1072,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
@@ -1301,13 +1325,13 @@
       "functions": [],
       "loads": [
         {
-          "line": 7,
+          "line": 22,
           "raw": "res://UI/Pause&Play/esc_buttonV2.png",
           "path": "UI/Pause&Play/esc_buttonV2.png",
           "call": "preload"
         },
         {
-          "line": 8,
+          "line": 23,
           "raw": "res://UI/Pause&Play/play_buttonV2.png",
           "path": "UI/Pause&Play/play_buttonV2.png",
           "call": "preload"
@@ -1450,31 +1474,31 @@
           "call": "preload"
         },
         {
+          "line": 1116,
+          "raw": "res://scenes/hit_particle.tscn",
+          "path": "scenes/hit_particle.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 1117,
+          "raw": "res://scenes/hit_particle.tscn",
+          "path": "scenes/hit_particle.tscn",
+          "call": "preload"
+        },
+        {
           "line": 1118,
-          "raw": "res://scenes/hit_particle.tscn",
-          "path": "scenes/hit_particle.tscn",
-          "call": "preload"
-        },
-        {
-          "line": 1119,
-          "raw": "res://scenes/hit_particle.tscn",
-          "path": "scenes/hit_particle.tscn",
-          "call": "preload"
-        },
-        {
-          "line": 1120,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 1121,
+          "line": 1119,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 1122,
+          "line": 1120,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"

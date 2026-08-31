@@ -92,7 +92,7 @@ func _setup_button_hover(btn: Button) -> void:
 
 	btn.mouse_entered.connect(func():
 		var tw = create_tween()
-		tw.tween_property(btn, "modulate", Color(1.15, 1.12, 1.05, 1.0), 0.15)
+		tw.tween_property(btn, "modulate", Color(1.08, 1.08, 1.1, 1.0), 0.15)
 	)
 	btn.mouse_exited.connect(func():
 		var tw = create_tween()
@@ -104,7 +104,7 @@ func _setup_button_hover(btn: Button) -> void:
 	)
 	btn.button_up.connect(func():
 		var tw = create_tween()
-		tw.tween_property(btn, "modulate", Color(1.15, 1.12, 1.05, 1.0) if btn.is_hovered() else Color.WHITE, 0.12)
+		tw.tween_property(btn, "modulate", Color(1.08, 1.08, 1.1, 1.0) if btn.is_hovered() else Color.WHITE, 0.12)
 	)
 
 func _setup_world() -> void:
