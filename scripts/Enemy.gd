@@ -1,6 +1,6 @@
 extends Node3D
 # Speed in tiles per second
-@export var speed: float = 0.65
+@export var speed: float = 0.35
 ## Rotations per second for the UFO spin animation
 @export var spin_speed: float = 0.25
 
@@ -14,6 +14,16 @@ var _visual_node: Node3D = null
 ## Base speed set at reset time — speed multiplier is applied on top of this
 var _base_speed: float = 0.65
 var _speed_multiplier: float = 1.0
+var _rage_multiplier: float = 1.0
+var _rage_timer: float = 0.0
+var _has_boosted_hp: bool = false
+
+# ─── Health Bar Components ──────────────────────────────────────────────────
+var _hp_viewport: SubViewport = null
+var _hp_bar: ProgressBar = null
+var _hp_sprite: Sprite3D = null
+var _hp_bar_fill_style: StyleBoxFlat = null
+
 ## How quickly the UFO turns to face the next waypoint (higher = snappier)
 @export var turn_smoothing: float = 8.0
 signal reached_end
@@ -83,7 +93,7 @@ func _cache_visual_node() -> void:
 ## Apply a global speed multiplier (1.0 = normal, 2.0 = double, 4.0 = quad).
 func set_speed_multiplier(multiplier: float) -> void:
 	_speed_multiplier = multiplier
-	speed = _base_speed * _speed_multiplier
+	speed = _base_speed * _speed_multiplier * _rage_multiplier
 
 ## Re-initialize this enemy for reuse from the pool.
 ## Places it at the first waypoint and makes it visible/active.
@@ -93,10 +103,14 @@ func reset(waypoints: Array[Vector3], new_speed: float) -> void:
 	_is_done = false
 	current_hp = max_hp
 	_base_speed = new_speed
-	speed = _base_speed * _speed_multiplier
+	_rage_multiplier = 1.0
+	_rage_timer = 0.0
+	_has_boosted_hp = false
+	speed = _base_speed * _speed_multiplier * _rage_multiplier
 	visible = true
 	set_physics_process(true)
 	EnemyDetector.register(self)
+	_update_health_bar()
 	
 	# Pop-up animation
 	scale = Vector3(0.001, 0.001, 0.001)
@@ -117,12 +131,104 @@ func reset(waypoints: Array[Vector3], new_speed: float) -> void:
 func deactivate() -> void:
 	_is_done = true
 	EnemyDetector.unregister(self)
+	if _hp_sprite:
+		_hp_sprite.visible = false
 	visible = false
 	set_physics_process(false)
+
+# ─── 3D Billboard Health Bar ──────────────────────────────────────────────────
+func _setup_health_bar() -> void:
+	if _hp_sprite != null:
+		return
+		
+	_hp_viewport = SubViewport.new()
+	_hp_viewport.transparent_bg = true
+	_hp_viewport.size = Vector2i(128, 20)
+	_hp_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(_hp_viewport)
+
+	var bg_panel = Panel.new()
+	bg_panel.custom_minimum_size = Vector2(128, 20)
+	var bg_style = StyleBoxFlat.new()
+	bg_style.bg_color = Color(0.08, 0.08, 0.12, 0.85)
+	bg_style.border_color = Color(0.3, 0.3, 0.45, 0.9)
+	bg_style.set_border_width_all(2)
+	bg_style.set_corner_radius_all(4)
+	bg_panel.add_theme_stylebox_override("panel", bg_style)
+	_hp_viewport.add_child(bg_panel)
+
+	_hp_bar = ProgressBar.new()
+	_hp_bar.custom_minimum_size = Vector2(120, 12)
+	_hp_bar.position = Vector2(4, 4)
+	_hp_bar.show_percentage = false
+	_hp_bar.max_value = max_hp
+	_hp_bar.value = current_hp
+
+	var bar_bg_style = StyleBoxFlat.new()
+	bar_bg_style.bg_color = Color(0.15, 0.05, 0.05, 0.8)
+	bar_bg_style.set_corner_radius_all(3)
+	_hp_bar.add_theme_stylebox_override("background", bar_bg_style)
+
+	_hp_bar_fill_style = StyleBoxFlat.new()
+	_hp_bar_fill_style.bg_color = Color(0.2, 0.85, 0.35, 1.0)
+	_hp_bar_fill_style.set_corner_radius_all(3)
+	_hp_bar.add_theme_stylebox_override("fill", _hp_bar_fill_style)
+	bg_panel.add_child(_hp_bar)
+
+	_hp_sprite = Sprite3D.new()
+	_hp_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	_hp_sprite.double_sided = true
+	_hp_sprite.no_depth_test = true
+	_hp_sprite.texture = _hp_viewport.get_texture()
+	_hp_sprite.pixel_size = 0.008
+	_hp_sprite.position = Vector3(0, 0.85, 0)
+	_hp_sprite.visible = false
+	add_child(_hp_sprite)
+
+func _update_health_bar() -> void:
+	if _hp_sprite == null:
+		_setup_health_bar()
+		
+	if _hp_bar != null:
+		_hp_bar.max_value = max_hp
+		_hp_bar.value = clamp(current_hp, 0.0, max_hp)
+		
+		var ratio = current_hp / max_hp if max_hp > 0.0 else 0.0
+		if ratio >= 0.999 or current_hp <= 0.0:
+			_hp_sprite.visible = false
+		else:
+			_hp_sprite.visible = true
+			if ratio > 0.5:
+				_hp_bar_fill_style.bg_color = Color(0.2, 0.85, 0.35, 1.0) # Vibrant Green
+			elif ratio > 0.25:
+				_hp_bar_fill_style.bg_color = Color(0.95, 0.75, 0.2, 1.0) # Yellow/Orange
+			else:
+				_hp_bar_fill_style.bg_color = Color(0.9, 0.2, 0.2, 1.0) # Danger Red
+
+# ─── UFO-A 5x Speed Boost (Rage Dash) ─────────────────────────────────────────
+func _trigger_ufo_a_speed_boost() -> void:
+	_rage_multiplier = 5.0
+	_rage_timer = 0.8
+	speed = _base_speed * _speed_multiplier * _rage_multiplier
+	
+	# Visual rage pulse & flash tint animation
+	if _visual_node:
+		var original_scale = Vector3.ONE
+		var tween = create_tween()
+		tween.tween_property(_visual_node, "scale", original_scale * 1.4, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.tween_property(_visual_node, "scale", original_scale, 0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 func _physics_process(delta: float) -> void:
 	if _is_done or path_waypoints.is_empty():
 		return
+
+	# Handle UFO-A speed boost duration (0.8s timer)
+	if _rage_timer > 0.0:
+		_rage_timer -= delta
+		if _rage_timer <= 0.0:
+			_rage_timer = 0.0
+			_rage_multiplier = 1.0
+			speed = _base_speed * _speed_multiplier * _rage_multiplier
 
 	# UFO spin animation — counter-rotate by parent heading so the spin
 	# stays fixed in world space regardless of the enemy's travel direction
@@ -225,6 +331,14 @@ func take_damage(amount: float) -> void:
 	if _is_done:
 		return
 	current_hp -= amount
+	_update_health_bar()
+	
+	# UFO-A speed boost trigger (5x speed for 0.8s under 40% HP)
+	if enemy_type_index == 0 and not _has_boosted_hp and current_hp > 0.0:
+		if (current_hp / max_hp) < 0.4:
+			_has_boosted_hp = true
+			_trigger_ufo_a_speed_boost()
+
 	if current_hp <= 0:
 		current_hp = 0
 		_is_done = true
