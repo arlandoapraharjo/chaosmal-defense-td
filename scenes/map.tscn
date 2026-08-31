@@ -138,6 +138,7 @@ mouse_filter = 2
 [node name="IntroOverlay" parent="." unique_id=987654321 instance=ExtResource("20_intro")]
 
 [node name="FoxHUD" parent="." unique_id=554433221 instance=ExtResource("21_foxhud")]
+portrait_model_offset = Vector3(0, 0.05, 0)
 
 [connection signal="turret_selected" from="TurretHotbar" to="BuilderController" method="start_building"]
 [connection signal="building_stopped" from="BuilderController" to="TurretHotbar" method="_on_building_stopped"]

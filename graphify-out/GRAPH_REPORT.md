@@ -1,10 +1,10 @@
-# Graph Report - IGI-Code-Circus  (2026-08-31)
+# Graph Report - C:\Users\user\repos\IGI-Code-Circus  (2026-08-31)
 
 ## Corpus Check
 - cluster-only mode — file stats not available
 
 ## Summary
-- 117 nodes · 88 edges · 38 communities (9 shown, 28 thin omitted)
+- 117 nodes · 88 edges · 38 communities (10 shown, 28 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
@@ -119,7 +119,7 @@ Nodes (22): BiomeData, CameraController, CurrencyManager, GameOverOverlay, MapGe
 
 ## Knowledge Gaps
 - **68 isolated node(s):** `Asset Imports & Fixing Missing Textures`, `Biome System & Map Generation`, `Biome Tree Rotation`, `Enemy Movement`, `Enemy Pathing & Coordinate Alignment` (+63 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 76 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components.
 - **28 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions

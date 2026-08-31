@@ -91,6 +91,11 @@ var _sell_texture: Texture2D = null
 
 const UPGRADE_CELEBRATION_SCENE := preload("res://scenes/upgrade_celebration_particle.tscn")
 const DISMANTLE_PARTICLE_SCENE := preload("res://scenes/turret_dismantle_particle.tscn")
+static var _vcr_font: Font = null
+static func _get_vcr_font() -> Font:
+	if _vcr_font == null and ResourceLoader.exists("res://addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf"):
+		_vcr_font = load("res://addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf") as Font
+	return _vcr_font
 
 # Hold-to-Recycle (Level 5 Protection)
 const RECYCLE_HOLD_DURATION: float = 0.5
@@ -143,9 +148,11 @@ func set_speed_multiplier(multiplier: float) -> void:
 	cooldown = level_cooldown / max(multiplier, 0.1)
 
 func _capture_initial_facing() -> void:
-	_initial_facing_dir = -global_transform.basis.z.normalized()
+	if not is_inside_tree():
+		return
+	_initial_facing_dir = -global_transform.basis.z
 	_initial_facing_dir.y = 0.0
-	if _initial_facing_dir.length_squared() > 0.001:
+	if is_finite(_initial_facing_dir.x) and is_finite(_initial_facing_dir.z) and _initial_facing_dir.length_squared() > 0.001:
 		_initial_facing_dir = _initial_facing_dir.normalized()
 	else:
 		_initial_facing_dir = Vector3.FORWARD
@@ -168,14 +175,19 @@ func _auto_detect_weapon_type() -> void:
 		weapon_type = "turret"
 
 func _get_valid_enemies() -> Array[Node3D]:
-	var enemies: Array[Node3D] = EnemyDetector.get_enemies_in_range(self, global_transform.origin, attack_range, min_attack_range)
+	if not is_inside_tree():
+		return []
+	var enemies: Array[Node3D] = EnemyDetector.get_enemies_in_range(self, global_position, attack_range, min_attack_range)
 	if is_half_circle:
 		var valid_enemies: Array[Node3D] = []
 		for enemy in enemies:
-			var dir: Vector3 = (enemy.global_transform.origin - global_transform.origin)
+			if not is_instance_valid(enemy) or not enemy.is_inside_tree():
+				continue
+			var dir: Vector3 = (enemy.global_position - global_position)
 			dir.y = 0.0
-			if dir.length_squared() > 0.0001 and dir.normalized().dot(_initial_facing_dir) >= -0.05:
-				valid_enemies.append(enemy)
+			if is_finite(dir.x) and is_finite(dir.z) and dir.length_squared() > 0.0001:
+				if dir.normalized().dot(_initial_facing_dir) >= -0.05:
+					valid_enemies.append(enemy)
 		enemies = valid_enemies
 	return enemies
 
@@ -246,23 +258,27 @@ func _process(delta: float) -> void:
 
 # Smoothly rotate the turret (Y-axis only) to face the target.
 func _rotate_toward_target(target: Node3D, delta: float) -> void:
-	if scale.length_squared() < 0.001:
+	if not is_inside_tree() or not is_instance_valid(target) or not target.is_inside_tree():
 		return
-	var target_pos: Vector3 = target.global_transform.origin
-	var my_pos: Vector3 = global_transform.origin
+	if not is_finite(scale.x) or scale.length_squared() < 0.001:
+		return
+	var target_pos: Vector3 = target.global_position
+	var my_pos: Vector3 = global_position
+	if not is_finite(target_pos.x) or not is_finite(target_pos.z) or not is_finite(my_pos.x) or not is_finite(my_pos.z):
+		return
 	# Flatten to horizontal plane
-	var dir: Vector3 = Vector3(target_pos.x - my_pos.x, 0.0, target_pos.z - my_pos.z)
-	if dir.length_squared() < 0.0001:
+	var dir_x: float = target_pos.x - my_pos.x
+	var dir_z: float = target_pos.z - my_pos.z
+	var dist_sq: float = dir_x * dir_x + dir_z * dir_z
+	if not is_finite(dist_sq) or dist_sq < 0.0001:
 		return
-	var current_scale: Vector3 = scale
-	# Extract pure rotation (no scale) for a clean slerp
-	var current_rot: Basis = global_transform.basis.orthonormalized()
-	var target_rot: Basis = Basis.looking_at(dir.normalized(), Vector3.UP, true)
-	# Slerp at rotation_speed degrees per second
+	# Model forward faces +Z in Kenney assets; calculate horizontal facing angle
+	var target_angle: float = atan2(dir_x, dir_z)
+	if not is_finite(target_angle):
+		return
 	var t: float = clampf(deg_to_rad(rotation_speed) * delta, 0.0, 1.0)
-	var new_rot: Basis = current_rot.slerp(target_rot, t)
-	# Reapply scale after rotation
-	global_transform.basis = new_rot.scaled(current_scale)
+	global_rotation.y = lerp_angle(global_rotation.y, target_angle, t)
+
 
 # ── 3D UI & Selection System ──────────────────────────────────────────────────
 
@@ -397,6 +413,7 @@ func _setup_3d_ui() -> void:
 	# Cost Label (Right slot of banner, vertically stacked: Coin on top, Cost number below)
 	_upgrade_cost_label = Label3D.new()
 	_upgrade_cost_label.name = "UpgradeCostLabel"
+	_upgrade_cost_label.font = _get_vcr_font()
 	_upgrade_cost_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	_upgrade_cost_label.no_depth_test = true
 	_upgrade_cost_label.render_priority = 11
@@ -537,6 +554,7 @@ void fragment() {
 	# Refund Label (Right slot of banner, vertically stacked: Coin on top, Refund number below)
 	_sell_label = Label3D.new()
 	_sell_label.name = "SellLabel"
+	_sell_label.font = _get_vcr_font()
 	_sell_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	_sell_label.no_depth_test = true
 	_sell_label.render_priority = 11

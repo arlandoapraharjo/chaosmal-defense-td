@@ -50,6 +50,12 @@ var level_textures: Array[Texture2D] = []
 var upgrade_banner_texture: Texture2D = null
 var upgrade_texture: Texture2D = null
 
+static var _vcr_font: Font = null
+static func _get_vcr_font() -> Font:
+	if _vcr_font == null and ResourceLoader.exists("res://addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf"):
+		_vcr_font = load("res://addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf") as Font
+	return _vcr_font
+
 # Unified Signature Arcane Amethyst Purple
 const ARCANE_PURPLE: Color = Color(0.72, 0.35, 1.0, 1.0)
 
@@ -359,6 +365,7 @@ func _setup_ui() -> void:
 	# Cost Label (Right slot of banner, vertically stacked: Coin on top, Cost number below)
 	upgrade_cost_label = Label3D.new()
 	upgrade_cost_label.name = "UpgradeCostLabel"
+	upgrade_cost_label.font = _get_vcr_font()
 	upgrade_cost_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	upgrade_cost_label.no_depth_test = true
 	upgrade_cost_label.render_priority = 11
