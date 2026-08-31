@@ -17,7 +17,7 @@
 
 Unlike traditional static tower defense titles, players deploy the **Tactical Advisor Animal** directly onto the battlefield — an active, movable ground companion that can be commanded in real-time to inhabit any turret on the frontlines, infusing it with **+35% Firepower and Attack Speed buffs**. Combining modular turret archetypes, procedural island terrain generation, adaptive enemy resistances, and intense boss waves, *Chaosmal Defense* delivers high-stakes tactical decision-making in every run.
 
-```mermaid
+```mermaid #center
 graph TD
     A["Start Game / Procedural Map Gen"] --> B["Pick Biome: Grass / Snow / Desert"]
     B --> C["Generate Zigzag Path & Coastal Terrain"]
@@ -46,7 +46,7 @@ graph TD
 3. **Deep Archetypal Arsenal with Economic Agility:**  
    Five distinct defensive weapon classes (Kinetic Turret, Heavy Turret, Explosive Cannon, High-Velocity Ballista, and Deadzone Catapult) each feature 5 upgrade tiers with distinct visual transformations. An integrated refund system and a high-tier hold-to-confirm recycling safeguard enable strategic layout adaptations during prolonged incursion sieges.
 4. **Escalating Threat Profiles & Strategic Counters:**  
-   Enemy swarms are not merely larger health sponges; distinct alien variants (Shielded, Armored, Runner, Regenerator, and Heavy Dreadnoughts) directly counter one-dimensional turret setups and demand diverse weapon synergies, peaking every 5 waves in punishing Boss encounters.
+   Enemy swarms are not merely larger health sponges; distinct alien classes (UFO-A Scouts, UFO-B Raiders, UFO-C Gunships, and UFO-D Dreadnoughts) possess tiered health pools, dynamic speed multipliers (+3%/wave), and devastating suicide impact damage (up to 25.0 HP), demanding diverse weapon synergies.
 
 ---
 
