@@ -227,7 +227,7 @@ func start_intro() -> void:
 	_show_step(_current_step)
 
 func _get_target_y_for_dock(dock: String) -> float:
-	var vp_h = get_viewport_rect().size.y
+	var vp_h: float = get_viewport().get_visible_rect().size.y if get_viewport() else 648.0
 	if dock == "top":
 		return 15.0
 	return maxf(0.0, vp_h - 165.0)
