@@ -1,26 +1,77 @@
 [gd_scene format=3 uid="uid://o1alob3g7ns8"]
 
 [ext_resource type="Script" uid="uid://dwe3nbiaij50j" path="res://UI/Menus/MainMenu.gd" id="1_script"]
-[ext_resource type="Shader" path="res://shaders/trapezoid_panel.gdshader" id="2_shader"]
-[ext_resource type="Texture2D" uid="uid://3faw8ljjbtj7" path="res://assets/menus/grid.png" id="3_grid"]
+[ext_resource type="Shader" path="res://shaders/card_panel.gdshader" id="2_card_shader"]
+[ext_resource type="Shader" path="res://shaders/jewel_emblem.gdshader" id="3_jewel_shader"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_trapezoid"]
-shader = ExtResource("2_shader")
-shader_parameter/bg_color = Color(0.06, 0.08, 0.13, 0.92)
-shader_parameter/bg_gradient_color = Color(0.1, 0.14, 0.22, 0.96)
-shader_parameter/border_color = Color(0.35, 0.65, 0.95, 0.9)
-shader_parameter/slant_amount = 0.16
-shader_parameter/border_width = 0.007
-shader_parameter/gloss_intensity = 0.15
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_card"]
+shader = ExtResource("2_card_shader")
+shader_parameter/bg_color_top = Color(0.12, 0.1, 0.17, 0.94)
+shader_parameter/bg_color_bottom = Color(0.07, 0.06, 0.1, 0.97)
+shader_parameter/border_color = Color(0.96, 0.78, 0.36, 0.9)
+shader_parameter/border_color_dim = Color(0.4, 0.32, 0.22, 0.5)
+shader_parameter/corner_radius = 0.038
+shader_parameter/border_width = 0.004
+shader_parameter/inner_glow = 0.25
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn"]
-texture = ExtResource("3_grid")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jewel"]
+shader = ExtResource("3_jewel_shader")
+shader_parameter/gem_color_top = Color(0.88, 0.6, 1, 1)
+shader_parameter/gem_color_bottom = Color(0.48, 0.18, 0.85, 1)
+shader_parameter/glow_accent = Color(1, 0.84, 0.42, 1)
+shader_parameter/pulse_speed = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_norm"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.14, 0.12, 0.2, 0.65)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.3, 0.48, 0.45)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hov"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.28, 0.22, 0.38, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.96, 0.78, 0.36, 0.95)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.96, 0.78, 0.36, 0.22)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_press"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.42, 0.32, 0.55, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.88, 0.55, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
 
 [node name="Main" type="Control" unique_id=914936948]
 layout_mode = 3
@@ -47,8 +98,6 @@ physics_object_picking = true
 size = Vector2i(1152, 648)
 render_target_update_mode = 4
 
-
-
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=578386236]
 
 [node name="Control" type="Control" parent="CanvasLayer" unique_id=1175489396]
@@ -59,15 +108,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="LeftPanel" type="Control" parent="CanvasLayer/Control" unique_id=326894317]
+[node name="CardPanel" type="Control" parent="CanvasLayer/Control" unique_id=326894317]
 layout_mode = 1
+anchor_left = 0.04
+anchor_top = 0.05
 anchor_right = 0.35
-anchor_bottom = 1.0
+anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SkewedBg" type="ColorRect" parent="CanvasLayer/Control/LeftPanel" unique_id=1193574546]
-material = SubResource("ShaderMaterial_trapezoid")
+[node name="CardBg" type="ColorRect" parent="CanvasLayer/Control/CardPanel" unique_id=1193574546]
+material = SubResource("ShaderMaterial_card")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -75,114 +126,175 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/LeftPanel" unique_id=1589070003]
+[node name="CardMargin" type="MarginContainer" parent="CanvasLayer/Control/CardPanel" unique_id=1589070003]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.1
-anchor_top = 0.15
-anchor_right = 0.8
-anchor_bottom = 0.85
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 24
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxMain" type="VBoxContainer" parent="CanvasLayer/Control/CardPanel/CardMargin" unique_id=1589070004]
+layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="CanvasLayer/Control/LeftPanel/VBoxContainer" unique_id=748291039]
+[node name="HeaderVBox" type="VBoxContainer" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain" unique_id=748291038]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.96, 1, 1)
-theme_override_colors/font_shadow_color = Color(0.1, 0.2, 0.4, 0.8)
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="JewelCenter" type="CenterContainer" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/HeaderVBox" unique_id=748291037]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+
+[node name="JewelEmblem" type="ColorRect" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/HeaderVBox/JewelCenter" unique_id=748291036]
+material = SubResource("ShaderMaterial_jewel")
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/HeaderVBox" unique_id=748291039]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.95, 0.92, 1)
+theme_override_colors/font_shadow_color = Color(0.05, 0.03, 0.08, 0.95)
+theme_override_colors/font_outline_color = Color(0.18, 0.12, 0.28, 0.9)
 theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 42
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 30
 text = "CODE CIRCUS"
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="CanvasLayer/Control/LeftPanel/VBoxContainer" unique_id=892374921]
+[node name="SubtitleLabel" type="Label" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/HeaderVBox" unique_id=748291040]
 layout_mode = 2
-
-[node name="ButtonStart" type="Button" parent="CanvasLayer/Control/LeftPanel/VBoxContainer" unique_id=911141927]
-custom_minimum_size = Vector2(200, 54)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBoxTexture_btn")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_btn")
-theme_override_styles/hover = SubResource("StyleBoxTexture_btn")
-text = "Start Game"
-
-[node name="ButtonSettings" type="Button" parent="CanvasLayer/Control/LeftPanel/VBoxContainer" unique_id=353551886]
-custom_minimum_size = Vector2(200, 54)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBoxTexture_btn")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_btn")
-theme_override_styles/hover = SubResource("StyleBoxTexture_btn")
-text = "Settings"
-
-[node name="ButtonQuit" type="Button" parent="CanvasLayer/Control/LeftPanel/VBoxContainer" unique_id=881836931]
-custom_minimum_size = Vector2(200, 54)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBoxTexture_btn")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_btn")
-theme_override_styles/hover = SubResource("StyleBoxTexture_btn")
-text = "Exit"
-
-[node name="PanelSettings" type="VBoxContainer" parent="CanvasLayer/Control/LeftPanel" unique_id=405710299]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.08
-anchor_top = 0.15
-anchor_right = 0.82
-anchor_bottom = 0.85
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 18
-
-[node name="LabelSettings" type="Label" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=1163577354]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 32
-text = "Settings"
+theme_override_colors/font_color = Color(0.96, 0.78, 0.36, 0.85)
+theme_override_colors/font_shadow_color = Color(0.05, 0.03, 0.08, 0.7)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 11
+text = "◆ TOWER DEFENSE ◆"
 horizontal_alignment = 1
 
-[node name="HBoxFullscreen" type="HBoxContainer" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=1335187635]
-custom_minimum_size = Vector2(0, 40)
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain" unique_id=892374921]
+layout_mode = 2
+
+[node name="SpacerTop" type="Control" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain" unique_id=892374922]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="ButtonVBox" type="VBoxContainer" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain" unique_id=892374923]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="ButtonStart" type="Button" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/ButtonVBox" unique_id=911141927]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.92, 0.65, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.96, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_norm")
+text = "Start Game"
+
+[node name="ButtonSettings" type="Button" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/ButtonVBox" unique_id=353551886]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.92, 0.65, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.96, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_norm")
+text = "Settings"
+
+[node name="ButtonQuit" type="Button" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/ButtonVBox" unique_id=881836931]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.92, 0.65, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.96, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_norm")
+text = "Exit"
+
+[node name="SpacerBottom" type="Control" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain" unique_id=881836932]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VersionLabel" type="Label" parent="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain" unique_id=881836933]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.64, 0.75, 0.5)
+theme_override_font_sizes/font_size = 11
+text = "v0.1.0-earlyAccess"
+horizontal_alignment = 1
+
+[node name="PanelSettings" type="VBoxContainer" parent="CanvasLayer/Control/CardPanel/CardMargin" unique_id=405710299]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LabelSettings" type="Label" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings" unique_id=1163577354]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.82, 0.45, 1)
+theme_override_colors/font_shadow_color = Color(0.05, 0.03, 0.08, 0.85)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 24
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="HSeparatorSettings" type="HSeparator" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings" unique_id=1163577355]
+layout_mode = 2
+
+[node name="SpacerSettingsTop" type="Control" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings" unique_id=1163577356]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+
+[node name="OptionsVBox" type="VBoxContainer" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings" unique_id=1163577357]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="HBoxFullscreen" type="HBoxContainer" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox" unique_id=1335187635]
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="LabelFullscreen" type="Label" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxFullscreen" unique_id=1908074135]
-custom_minimum_size = Vector2(100, 0)
+[node name="LabelFullscreen" type="Label" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxFullscreen" unique_id=1908074135]
+custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
+theme_override_font_sizes/font_size = 15
 text = "Fullscreen"
+vertical_alignment = 1
 
-[node name="CheckButtonFullscreen" type="CheckButton" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxFullscreen" unique_id=1291881582]
+[node name="CheckButtonFullscreen" type="CheckButton" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxFullscreen" unique_id=1291881582]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 18
+size_flags_horizontal = 10
 
-[node name="HBoxMaster" type="HBoxContainer" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=137051924]
-custom_minimum_size = Vector2(0, 40)
+[node name="HBoxMaster" type="HBoxContainer" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox" unique_id=137051924]
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="LabelMaster" type="Label" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMaster" unique_id=824274364]
-custom_minimum_size = Vector2(100, 0)
+[node name="LabelMaster" type="Label" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxMaster" unique_id=824274364]
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
+theme_override_font_sizes/font_size = 15
 text = "Master"
+vertical_alignment = 1
 
-[node name="SliderMaster" type="HSlider" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMaster" unique_id=23459299]
-custom_minimum_size = Vector2(120, 20)
+[node name="SliderMaster" type="HSlider" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxMaster" unique_id=23459299]
+custom_minimum_size = Vector2(130, 20)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -190,20 +302,21 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="HBoxMusic" type="HBoxContainer" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=927262267]
-custom_minimum_size = Vector2(0, 40)
+[node name="HBoxMusic" type="HBoxContainer" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox" unique_id=927262267]
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="LabelMusic" type="Label" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMusic" unique_id=919754218]
-custom_minimum_size = Vector2(100, 0)
+[node name="LabelMusic" type="Label" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxMusic" unique_id=919754218]
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
+theme_override_font_sizes/font_size = 15
 text = "Music"
+vertical_alignment = 1
 
-[node name="SliderMusic" type="HSlider" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMusic" unique_id=1070351990]
-custom_minimum_size = Vector2(120, 20)
+[node name="SliderMusic" type="HSlider" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxMusic" unique_id=1070351990]
+custom_minimum_size = Vector2(130, 20)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -211,20 +324,21 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="HBoxSFX" type="HBoxContainer" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=1217698442]
-custom_minimum_size = Vector2(0, 40)
+[node name="HBoxSFX" type="HBoxContainer" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox" unique_id=1217698442]
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="LabelSFX" type="Label" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxSFX" unique_id=1701587883]
-custom_minimum_size = Vector2(100, 0)
+[node name="LabelSFX" type="Label" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxSFX" unique_id=1701587883]
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
+theme_override_font_sizes/font_size = 15
 text = "SFX"
+vertical_alignment = 1
 
-[node name="SliderSFX" type="HSlider" parent="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxSFX" unique_id=217595506]
-custom_minimum_size = Vector2(120, 20)
+[node name="SliderSFX" type="HSlider" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxSFX" unique_id=217595506]
+custom_minimum_size = Vector2(130, 20)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -232,22 +346,27 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="ButtonBack" type="Button" parent="CanvasLayer/Control/LeftPanel/PanelSettings" unique_id=865670970]
-custom_minimum_size = Vector2(200, 54)
+[node name="SpacerSettingsBottom" type="Control" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings" unique_id=217595507]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBoxTexture_btn")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_btn")
-theme_override_styles/hover = SubResource("StyleBoxTexture_btn")
+size_flags_vertical = 3
+
+[node name="ButtonBack" type="Button" parent="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings" unique_id=865670970]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.92, 0.65, 1)
+theme_override_colors/font_color = Color(0.94, 0.94, 0.96, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_focus")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hov")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_press")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_norm")
 text = "Back"
 
-[connection signal="pressed" from="CanvasLayer/Control/LeftPanel/VBoxContainer/ButtonStart" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Control/LeftPanel/VBoxContainer/ButtonSettings" to="." method="_on_settings_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/Control/LeftPanel/VBoxContainer/ButtonQuit" to="." method="_on_quit_button_pressed"]
-[connection signal="toggled" from="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxFullscreen/CheckButtonFullscreen" to="." method="_on_fullscreen_toggled"]
-[connection signal="value_changed" from="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMaster/SliderMaster" to="." method="_on_master_volume_changed"]
-[connection signal="value_changed" from="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxMusic/SliderMusic" to="." method="_on_music_volume_changed"]
-[connection signal="value_changed" from="CanvasLayer/Control/LeftPanel/PanelSettings/HBoxSFX/SliderSFX" to="." method="_on_sfx_volume_changed"]
-[connection signal="pressed" from="CanvasLayer/Control/LeftPanel/PanelSettings/ButtonBack" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/ButtonVBox/ButtonStart" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/ButtonVBox/ButtonSettings" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/CardPanel/CardMargin/VBoxMain/ButtonVBox/ButtonQuit" to="." method="_on_quit_button_pressed"]
+[connection signal="toggled" from="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxFullscreen/CheckButtonFullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="value_changed" from="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxMaster/SliderMaster" to="." method="_on_master_volume_changed"]
+[connection signal="value_changed" from="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxMusic/SliderMusic" to="." method="_on_music_volume_changed"]
+[connection signal="value_changed" from="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxSFX/SliderSFX" to="." method="_on_sfx_volume_changed"]
+[connection signal="pressed" from="CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/ButtonBack" to="." method="_on_back_button_pressed"]

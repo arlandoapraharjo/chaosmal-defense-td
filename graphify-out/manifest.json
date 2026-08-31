@@ -543,5 +543,20 @@
     "mtime": 1788097730.6976254,
     "ast_hash": "ad2897122441f0d2f746662b8665ff6f",
     "semantic_hash": ""
+  },
+  "assets/characters/Textures/colormap.png": {
+    "mtime": 1788099853.3173628,
+    "ast_hash": "f9a72b72fb1ffe0ddee2df9f7c0a26cb",
+    "semantic_hash": ""
+  },
+  "assets/menus/icon_discord.svg": {
+    "mtime": 1788132470.1327856,
+    "ast_hash": "802986bdc4ab2946a7d6cb0dd5be1ea5",
+    "semantic_hash": ""
+  },
+  "assets/menus/icon_web.svg": {
+    "mtime": 1788132476.9937036,
+    "ast_hash": "f6034cfcdfad721576858a5f5cf101ba",
+    "semantic_hash": ""
   }
 }

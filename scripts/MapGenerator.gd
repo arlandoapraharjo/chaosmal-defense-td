@@ -101,11 +101,20 @@ var _cached_border_wall_color: Color = Color(0, 0, 0, 0)
 var spawner_script = preload("res://scripts/WaveManager.gd")
 var pillar_script = preload("res://scripts/IncursionPillar.gd")
 
+var wood_structure_model = preload("res://assets/Models/GLB format/wood-structure.glb")
+var wood_structure_high_model = preload("res://assets/Models/GLB format/wood-structure-high.glb")
+var wood_structure_part_model = preload("res://assets/Models/GLB format/wood-structure-part.glb")
+var wood_structure_high_part_model = preload("res://assets/Models/GLB format/wood-structure-high-part.glb")
+
 # Batching containers for repeated static meshes
 var mm_base: Node3D
 var mm_tree: Node3D
 var mm_tree_large: Node3D
 var mm_rock: Node3D
+var mm_wood_structure: Node3D
+var mm_wood_structure_high: Node3D
+var mm_wood_structure_part: Node3D
+var mm_wood_structure_high_part: Node3D
 # Bushes get several MultiMeshInstance3Ds, each with its own randomized wind
 # preset, so not every bush sways in perfect unison.
 var mm_bushes: Array[Node3D] = []
@@ -400,6 +409,10 @@ func _build_map() -> void:
 	mm_tree_large = _make_multimesh_node("TreesLarge", tree_large_model, true)
 	mm_rock = _make_multimesh_node("Rocks", rock_model)
 	mm_bushes = _make_bush_variant_nodes(bush_model, BUSH_VARIANT_COUNT)
+	mm_wood_structure = _make_multimesh_node("WoodStructures", wood_structure_model)
+	mm_wood_structure_high = _make_multimesh_node("WoodStructuresHigh", wood_structure_high_model)
+	mm_wood_structure_part = _make_multimesh_node("WoodStructuresPart", wood_structure_part_model)
+	mm_wood_structure_high_part = _make_multimesh_node("WoodStructuresHighPart", wood_structure_high_part_model)
 	
 	if grass_model != null:
 		mm_grass = _make_multimesh_node("GrassGen", grass_model)
@@ -413,6 +426,10 @@ func _build_map() -> void:
 	var tree_transforms: Array[Transform3D] = []
 	var tree_large_transforms: Array[Transform3D] = []
 	var rock_transforms: Array[Transform3D] = []
+	var wood_transforms: Array[Transform3D] = []
+	var wood_high_transforms: Array[Transform3D] = []
+	var wood_part_transforms: Array[Transform3D] = []
+	var wood_high_part_transforms: Array[Transform3D] = []
 	var bush_transforms: Array = [] # array of Array[Transform3D], one per variant
 	for i in range(BUSH_VARIANT_COUNT):
 		var variant_list: Array[Transform3D] = []
@@ -451,21 +468,38 @@ func _build_map() -> void:
 						if is_adjacent_to_path:
 							break
 
-					if r > 0.75:
+					# Snap wood structure rotation to 90-degree steps for clean alignment with tiles
+					var wood_rot_y = (randi() % 4) * (PI / 2.0)
+					var wood_basis = Basis(Vector3.UP, wood_rot_y)
+					var wood_xform = Transform3D(wood_basis, origin)
+
+					if r > 0.70:
 						var t_scale = active_biome.tree_scale if active_biome else 1.0
 						var t_basis = deco_basis.scaled(Vector3(t_scale, t_scale, t_scale))
 						var t_origin = origin
 						t_origin.y += tree_y_offset
 						var t_xform = Transform3D(t_basis, t_origin)
 						tree_transforms.append(t_xform)
-					elif r > 0.4:
+					elif r > 0.45:
 						var tl_scale = active_biome.tree_large_scale if active_biome else 1.0
 						var tl_basis = deco_basis.scaled(Vector3(tl_scale, tl_scale, tl_scale))
 						var tl_origin = origin
 						tl_origin.y += tree_large_y_offset
 						var tl_xform = Transform3D(tl_basis, tl_origin)
 						tree_large_transforms.append(tl_xform)
-					elif r > 0.4:
+					elif r > 0.25 or (is_adjacent_to_path and r > 0.15):
+						# Distribute among the 4 wood structure types
+						var wood_type = randi() % 4
+						match wood_type:
+							0:
+								wood_transforms.append(wood_xform)
+							1:
+								wood_high_transforms.append(wood_xform)
+							2:
+								wood_part_transforms.append(wood_xform)
+							3:
+								wood_high_part_transforms.append(wood_xform)
+					elif r > 0.10:
 						rock_transforms.append(deco_xform)
 					else:
 						var variant_idx = randi() % BUSH_VARIANT_COUNT
@@ -481,6 +515,10 @@ func _build_map() -> void:
 	_build_coastal_border(grass_transforms)
 	_apply_multimesh(mm_tree, tree_transforms)
 	_apply_multimesh(mm_tree_large, tree_large_transforms)
+	_apply_multimesh(mm_wood_structure, wood_transforms)
+	_apply_multimesh(mm_wood_structure_high, wood_high_transforms)
+	_apply_multimesh(mm_wood_structure_part, wood_part_transforms)
+	_apply_multimesh(mm_wood_structure_high_part, wood_high_part_transforms)
 	_apply_multimesh(mm_rock, rock_transforms)
 	for i in range(BUSH_VARIANT_COUNT):
 		_apply_multimesh(mm_bushes[i], bush_transforms[i])

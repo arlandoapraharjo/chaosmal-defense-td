@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dfoxpoof001"]
+[gd_scene format=3 uid="uid://dfoxpoof001"]
 
 [ext_resource type="Script" path="res://scripts/FoxPoofParticle.gd" id="1_poof_script"]
 
