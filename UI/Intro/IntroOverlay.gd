@@ -18,8 +18,15 @@ signal step_changed(step_idx: int)
 
 const DEFAULT_FOX_SCENE = preload("res://assets/characters/animal-fox.glb")
 
+@export_group("Dialogue Box Position")
+## Distance from bottom of the screen (in pixels)
+@export var bottom_offset: float = 180.0
+## Distance from top of the screen (in pixels)
+@export var top_offset: float = 50.0
+## If false, keeps dialogue box fixed at the bottom instead of gliding between top/bottom
+@export var enable_adaptive_dock: bool = true
+
 var _current_character_name: String = "Fox"
-var _current_character_emoji: String = "🦊"
 
 const DIALOGUE_STEPS: Array[Dictionary] = [
 	{
@@ -145,15 +152,12 @@ func _setup_fox_model() -> void:
 	var biome = _get_active_biome()
 	var char_scene: PackedScene = DEFAULT_FOX_SCENE
 	_current_character_name = "Fox"
-	_current_character_emoji = "🦊"
 	
 	if biome:
 		if biome.character_model:
 			char_scene = biome.character_model
 		if not biome.character_name.is_empty():
 			_current_character_name = biome.character_name
-		if not biome.character_emoji.is_empty():
-			_current_character_emoji = biome.character_emoji
 	
 	for child in fox_model_root.get_children():
 		child.queue_free()
@@ -257,9 +261,9 @@ func start_intro() -> void:
 
 func _get_target_y_for_dock(dock: String) -> float:
 	var vp_h: float = get_viewport().get_visible_rect().size.y if get_viewport() else 648.0
-	if dock == "top":
-		return 15.0
-	return maxf(0.0, vp_h - 165.0)
+	if dock == "top" and enable_adaptive_dock:
+		return top_offset
+	return maxf(0.0, vp_h - bottom_offset)
 
 func _show_step(step_idx: int) -> void:
 	if step_idx < 0 or step_idx >= DIALOGUE_STEPS.size():
@@ -276,7 +280,7 @@ func _show_step(step_idx: int) -> void:
 	var data = DIALOGUE_STEPS[_current_step]
 	if speaker_name_label:
 		var speaker = "TACTICAL ADVISOR " + _current_character_name.to_upper()
-		speaker_name_label.text = _current_character_emoji + " " + speaker + " • " + data["badge"]
+		speaker_name_label.text = speaker + " • " + data["badge"]
 	
 	if next_button:
 		if _current_step == DIALOGUE_STEPS.size() - 1:

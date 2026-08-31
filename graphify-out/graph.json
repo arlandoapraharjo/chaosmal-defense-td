@@ -186,20 +186,6 @@
       "id": "tscn_scenes_foxcompanion"
     },
     {
-      "label": "Foxhud Scene",
-      "file_type": "code",
-      "source_file": "UI/FoxHUD/FoxHUD.tscn",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "Map Scene",
-      "norm_label": "foxhud scene",
-      "description": "Scene with 1 ext_resource(s)",
-      "_scene_uid": "uid://dfoxhud001scene",
-      "_ext_resource_count": 1,
-      "id": "tscn_ui_foxhud_foxhud"
-    },
-    {
       "label": "Foxpoofparticle Scene",
       "file_type": "code",
       "source_file": "scenes/FoxPoofParticle.tscn",
@@ -536,6 +522,20 @@
       "id": "tscn_ui_currencyui"
     },
     {
+      "label": "Foxhud Scene",
+      "file_type": "code",
+      "source_file": "UI/FoxHUD/FoxHUD.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "Map Scene",
+      "norm_label": "foxhud scene",
+      "description": "Scene with 3 ext_resource(s)",
+      "_scene_uid": "uid://dfoxhud001scene",
+      "_ext_resource_count": 3,
+      "id": "tscn_ui_foxhud_foxhud"
+    },
+    {
       "label": "Introoverlay Scene",
       "file_type": "code",
       "source_file": "UI/Intro/IntroOverlay.tscn",
@@ -688,6 +688,31 @@
         "tree_y_offset"
       ],
       "id": "gdscript_scripts_mapgenerator"
+    },
+    {
+      "label": "IntroOverlay",
+      "file_type": "code",
+      "source_file": "UI/Intro/IntroOverlay.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "Map Scene",
+      "norm_label": "introoverlay",
+      "description": "extends CanvasLayer | funcs: start_intro | signals: intro_finished, step_changed",
+      "_gd_extends": "CanvasLayer",
+      "_gd_functions": [
+        "start_intro"
+      ],
+      "_gd_signals": [
+        "intro_finished",
+        "step_changed"
+      ],
+      "_gd_exports": [
+        "bottom_offset",
+        "top_offset",
+        "enable_adaptive_dock"
+      ],
+      "id": "gdscript_ui_intro_introoverlay"
     },
     {
       "label": "CurrencyManager",
@@ -1006,6 +1031,26 @@
       "id": "gdscript_ui_hotbar_hotbartheme"
     },
     {
+      "label": "FoxHUD",
+      "file_type": "code",
+      "source_file": "UI/FoxHUD/FoxHUD.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "Map Scene",
+      "norm_label": "foxhud",
+      "description": "extends CanvasLayer",
+      "_gd_extends": "CanvasLayer",
+      "_gd_functions": [],
+      "_gd_signals": [],
+      "_gd_exports": [
+        "portrait_model_scale",
+        "portrait_model_rotation_deg",
+        "portrait_model_offset"
+      ],
+      "id": "gdscript_ui_foxhud_foxhud"
+    },
+    {
       "label": "HotbarSlot",
       "file_type": "code",
       "source_file": "UI/Hotbar/HotbarSlot.gd",
@@ -1219,27 +1264,6 @@
       "id": "gdscript_scripts_gameoveroverlay"
     },
     {
-      "label": "IntroOverlay",
-      "file_type": "code",
-      "source_file": "UI/Intro/IntroOverlay.gd",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "Map Scene",
-      "norm_label": "introoverlay",
-      "description": "extends CanvasLayer | funcs: start_intro | signals: intro_finished, step_changed",
-      "_gd_extends": "CanvasLayer",
-      "_gd_functions": [
-        "start_intro"
-      ],
-      "_gd_signals": [
-        "intro_finished",
-        "step_changed"
-      ],
-      "_gd_exports": [],
-      "id": "gdscript_ui_intro_introoverlay"
-    },
-    {
       "label": "WaveUI",
       "file_type": "code",
       "source_file": "UI/WaveUI.gd",
@@ -1289,22 +1313,6 @@
       "_gd_signals": [],
       "_gd_exports": [],
       "id": "gdscript_ui_currencyui"
-    },
-    {
-      "label": "FoxHUD",
-      "file_type": "code",
-      "source_file": "UI/FoxHUD/FoxHUD.gd",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "Map Scene",
-      "norm_label": "foxhud",
-      "description": "extends CanvasLayer",
-      "_gd_extends": "CanvasLayer",
-      "_gd_functions": [],
-      "_gd_signals": [],
-      "_gd_exports": [],
-      "id": "gdscript_ui_foxhud_foxhud"
     },
     {
       "label": "MainMenu",

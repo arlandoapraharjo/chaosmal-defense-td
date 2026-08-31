@@ -1,23 +1,57 @@
 class_name FoxHUD
 extends CanvasLayer
 
-## FoxHUD — Left-side tactical action widget and command helper for the Fox Companion.
+## FoxHUD — Tactical companion action widget with 3D headshot portrait and command controls.
 
-@onready var hero_widget: PanelContainer = $Control/HeroWidget
-@onready var status_label: Label = $Control/HeroWidget/MarginContainer/HBoxContainer/InfoVBox/StatusLabel
-@onready var action_button: Button = $Control/HeroWidget/MarginContainer/HBoxContainer/ActionButton
-@onready var command_banner: PanelContainer = $Control/CommandBanner
-@onready var hero_emoji_label: Label = get_node_or_null("Control/HeroWidget/MarginContainer/HBoxContainer/FoxEmoji")
+@export_group("3D Portrait Settings")
+## Uniform scale of the 3D animal model in the portrait slot
+@export var portrait_model_scale: float = 0.16
+## Rotation angle in degrees (0 = front view, 28 = isometric 3/4 view)
+@export var portrait_model_rotation_deg: float = 0.0
+## Position offset for fine-tuning the 3D model center (X, Y, Z)
+@export var portrait_model_offset: Vector3 = Vector3.ZERO
+
+const DEFAULT_FOX_SCENE = preload("res://assets/characters/animal-fox.glb")
+const CAPSULE_TEX = preload("res://UI/Menus/main menu button.png")
+
+@onready var hero_widget: PanelContainer = get_node_or_null("Control/HeroWidget")
+@onready var status_label: Label = get_node_or_null("Control/HeroWidget/MarginContainer/HBoxContainer/InfoVBox/StatusLabel")
+@onready var action_button: Button = get_node_or_null("Control/HeroWidget/MarginContainer/HBoxContainer/ActionButton")
+@onready var command_banner: PanelContainer = get_node_or_null("Control/CommandBanner")
 @onready var hero_name_label: Label = get_node_or_null("Control/HeroWidget/MarginContainer/HBoxContainer/InfoVBox/TitleRow/NameLabel")
 @onready var banner_title_label: Label = get_node_or_null("Control/CommandBanner/MarginContainer/VBoxContainer/HeaderRow/Title")
 @onready var banner_move_label: Label = get_node_or_null("Control/CommandBanner/MarginContainer/VBoxContainer/LineMove")
+@onready var portrait_model_root: Node3D = get_node_or_null("Control/HeroWidget/MarginContainer/HBoxContainer/PortraitFrame/SubViewportContainer/SubViewport/World3D/ModelAnchor/ModelRoot")
+
+var _style_normal: StyleBoxTexture
+var _style_selected: StyleBoxTexture
+var _style_buffing: StyleBoxTexture
 
 var _fox: FoxCompanion = null
 var _banner_tween: Tween = null
+var _anim_player: AnimationPlayer = null
+
+static func _create_capsule_style(mod_color: Color) -> StyleBoxTexture:
+	var sb = StyleBoxTexture.new()
+	sb.texture = CAPSULE_TEX
+	sb.texture_margin_left = 24.0
+	sb.texture_margin_top = 12.0
+	sb.texture_margin_right = 24.0
+	sb.texture_margin_bottom = 12.0
+	sb.content_margin_left = 6.0
+	sb.content_margin_top = 2.0
+	sb.content_margin_right = 10.0
+	sb.content_margin_bottom = 2.0
+	sb.modulate_color = mod_color
+	return sb
 
 func _ready() -> void:
 	layer = 20
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	
+	_style_normal = _create_capsule_style(Color(0.9, 0.9, 0.95, 0.95))
+	_style_selected = _create_capsule_style(Color(1.25, 1.15, 0.65, 1.0))
+	_style_buffing = _create_capsule_style(Color(0.65, 1.25, 1.2, 1.0))
 	
 	if action_button:
 		action_button.pressed.connect(_on_action_pressed)
@@ -43,21 +77,56 @@ func _connect_biome() -> void:
 			_on_biome_changed(map.active_biome)
 	elif BiomeManager != null and BiomeManager.current_biome != null:
 		_on_biome_changed(BiomeManager.current_biome)
+	else:
+		_setup_portrait_model(DEFAULT_FOX_SCENE)
 
 func _on_biome_changed(biome: BiomeData) -> void:
 	if not biome:
 		return
 	var char_name = biome.character_name if not biome.character_name.is_empty() else "Fox"
-	var char_emoji = biome.character_emoji if not biome.character_emoji.is_empty() else "🦊"
+	var char_scene = biome.character_model if biome.character_model != null else DEFAULT_FOX_SCENE
 	
-	if hero_emoji_label:
-		hero_emoji_label.text = char_emoji
 	if hero_name_label:
 		hero_name_label.text = "TACTICAL " + char_name.to_upper()
 	if banner_title_label:
-		banner_title_label.text = char_emoji + " " + char_name.to_upper() + " COMMAND MODE"
+		banner_title_label.text = char_name.to_upper() + " COMMAND MODE"
 	if banner_move_label:
 		banner_move_label.text = "• Left-Click Tile : Move " + char_name
+	
+	_setup_portrait_model(char_scene)
+
+func _setup_portrait_model(scene: PackedScene) -> void:
+	if not portrait_model_root:
+		return
+	
+	for child in portrait_model_root.get_children():
+		child.queue_free()
+	
+	if scene == null:
+		scene = DEFAULT_FOX_SCENE
+	
+	portrait_model_root.scale = Vector3(portrait_model_scale, portrait_model_scale, portrait_model_scale)
+	portrait_model_root.rotation.y = deg_to_rad(portrait_model_rotation_deg)
+	portrait_model_root.position = portrait_model_offset
+	
+	var instance = scene.instantiate()
+	portrait_model_root.add_child(instance)
+	
+	_anim_player = _find_animation_player(instance)
+	if _anim_player:
+		if _anim_player.has_animation("idle"):
+			_anim_player.play("idle")
+		elif _anim_player.has_animation("static"):
+			_anim_player.play("static")
+
+func _find_animation_player(node: Node) -> AnimationPlayer:
+	if node is AnimationPlayer:
+		return node
+	for child in node.get_children():
+		var found = _find_animation_player(child)
+		if found:
+			return found
+	return null
 
 func _bind_fox() -> void:
 	_fox = get_tree().get_first_node_in_group("fox_companion") as FoxCompanion
@@ -95,7 +164,6 @@ func _toggle_fox_selection() -> void:
 	
 	if _fox and is_instance_valid(_fox):
 		if _fox.is_inside_turret:
-			# If inside a turret, selecting also brings it out/prepares command
 			_fox.set_selected(true)
 		else:
 			_fox.set_selected(not _fox.is_selected)
@@ -121,14 +189,20 @@ func _update_ui_state() -> void:
 		status_label.text = "COMMAND ACTIVE"
 		status_label.set("theme_override_colors/font_color", Color(1.0, 0.85, 0.25, 1.0))
 		action_button.text = "Cancel"
+		if _style_selected:
+			hero_widget.add_theme_stylebox_override("panel", _style_selected)
 	elif _fox.is_inside_turret:
 		status_label.text = "BUFFING TURRET (+35%)"
 		status_label.set("theme_override_colors/font_color", Color(0.2, 0.9, 0.8, 1.0))
 		action_button.text = "Eject"
+		if _style_buffing:
+			hero_widget.add_theme_stylebox_override("panel", _style_buffing)
 	else:
 		status_label.text = "READY ON FIELD"
 		status_label.set("theme_override_colors/font_color", Color(0.2, 0.85, 0.55, 1.0))
 		action_button.text = "Select"
+		if _style_normal:
+			hero_widget.add_theme_stylebox_override("panel", _style_normal)
 
 func _show_command_banner(show: bool) -> void:
 	if not command_banner:

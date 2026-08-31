@@ -24,6 +24,10 @@ BiomeManager="*res://scripts/BiomeManager.gd"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[gui]
+
+theme/custom_font="res://addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf"
+
 [physics]
 
 common/physics_interpolation=true

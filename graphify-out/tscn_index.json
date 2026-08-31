@@ -17,10 +17,9 @@
           "id": "1_currency_script"
         },
         {
-          "path": "UI/Coins&Turret/coins_banner.png",
-          "raw_path": "res://UI/Coins&Turret/coins_banner.png",
+          "path": "UI/Coins&Turret/new_coins_banner.png",
+          "raw_path": "res://UI/Coins&Turret/new_coins_banner.png",
           "type": "Texture2D",
-          "uid": "uid://0j2omnkoier5",
           "id": "2_coins_banner"
         },
         {
@@ -63,6 +62,18 @@
           "raw_path": "res://UI/FoxHUD/FoxHUD.gd",
           "type": "Script",
           "id": "1_hud_script"
+        },
+        {
+          "path": "UI/Menus/main menu button.png",
+          "raw_path": "res://UI/Menus/main menu button.png",
+          "type": "Texture2D",
+          "id": "2_capsule_tex"
+        },
+        {
+          "path": "UI/Dialogue Banner/SkipNext_Button.png",
+          "raw_path": "res://UI/Dialogue Banner/SkipNext_Button.png",
+          "type": "Texture2D",
+          "id": "3_action_tex"
         }
       ],
       "nodes_preview": [
@@ -1680,7 +1691,7 @@
     "UI/CurrencyUI.gd": [
       "UI/CurrencyUI.tscn"
     ],
-    "UI/Coins&Turret/coins_banner.png": [
+    "UI/Coins&Turret/new_coins_banner.png": [
       "UI/CurrencyUI.tscn"
     ],
     "UI/Coins&Turret/turret_banner.png": [
@@ -1688,6 +1699,16 @@
     ],
     "UI/FoxHUD/FoxHUD.gd": [
       "UI/FoxHUD/FoxHUD.tscn"
+    ],
+    "UI/Menus/main menu button.png": [
+      "UI/FoxHUD/FoxHUD.tscn",
+      "UI/Menus/MainMenu.tscn",
+      "UI/WaveUI.tscn",
+      "scenes/PauseOverlay.tscn"
+    ],
+    "UI/Dialogue Banner/SkipNext_Button.png": [
+      "UI/FoxHUD/FoxHUD.tscn",
+      "UI/Intro/IntroOverlay.tscn"
     ],
     "UI/Hotbar/HotbarSlot.gd": [
       "UI/Hotbar/HotbarSlot.tscn"
@@ -1704,9 +1725,6 @@
     "UI/Dialogue Banner/Dialogue Banner.png": [
       "UI/Intro/IntroOverlay.tscn"
     ],
-    "UI/Dialogue Banner/SkipNext_Button.png": [
-      "UI/Intro/IntroOverlay.tscn"
-    ],
     "UI/Menus/MainMenu.gd": [
       "UI/Menus/MainMenu.tscn"
     ],
@@ -1716,11 +1734,6 @@
     ],
     "shaders/jewel_emblem.gdshader": [
       "UI/Menus/MainMenu.tscn",
-      "scenes/PauseOverlay.tscn"
-    ],
-    "UI/Menus/main menu button.png": [
-      "UI/Menus/MainMenu.tscn",
-      "UI/WaveUI.tscn",
       "scenes/PauseOverlay.tscn"
     ],
     "UI/SpeedToggle.gd": [

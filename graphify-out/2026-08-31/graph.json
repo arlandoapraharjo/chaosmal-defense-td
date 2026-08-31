@@ -418,7 +418,11 @@
       "_gd_extends": "CanvasLayer",
       "_gd_functions": [],
       "_gd_signals": [],
-      "_gd_exports": []
+      "_gd_exports": [
+        "portrait_model_scale",
+        "portrait_model_rotation_deg",
+        "portrait_model_offset"
+      ]
     },
     {
       "id": "gdscript_ui_hotbar_hotbarslot",
@@ -538,7 +542,11 @@
         "intro_finished",
         "step_changed"
       ],
-      "_gd_exports": []
+      "_gd_exports": [
+        "bottom_offset",
+        "top_offset",
+        "enable_adaptive_dock"
+      ]
     },
     {
       "id": "gdscript_ui_menus_mainmenu",
@@ -1261,9 +1269,9 @@
       "community": 98,
       "community_name": "Godot Scenes",
       "norm_label": "foxhud scene",
-      "description": "Scene with 1 ext_resource(s)",
+      "description": "Scene with 3 ext_resource(s)",
       "_scene_uid": "uid://dfoxhud001scene",
-      "_ext_resource_count": 1
+      "_ext_resource_count": 3
     },
     {
       "id": "tscn_ui_hotbar_hotbarslot",

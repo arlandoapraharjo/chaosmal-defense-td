@@ -31,20 +31,27 @@ static func get_enemies_in_range(_caller: Node, origin: Vector3, max_range: floa
 	var max_range_sq: float = max_range * max_range
 	var min_range_sq: float = min_range * min_range
 	for enemy in _active_enemies:
-		if not is_instance_valid(enemy):
+		if not is_instance_valid(enemy) or not enemy.is_inside_tree():
 			continue
 		# Skip dead/deactivated enemies (invisible or _is_done)
 		if not enemy.visible:
 			continue
 		if enemy.get("_is_done") == true:
 			continue
-		var distance_sq = origin.distance_squared_to(enemy.global_transform.origin)
+		var enemy_pos: Vector3 = enemy.global_position
+		if not is_finite(enemy_pos.x) or not is_finite(enemy_pos.z):
+			continue
+		var distance_sq = origin.distance_squared_to(enemy_pos)
 		if distance_sq <= max_range_sq and distance_sq >= min_range_sq:
 			result.append(enemy as Node3D)
 	
 	if result.size() > 1:
 		result.sort_custom(func(a: Node3D, b: Node3D) -> bool:
-			return origin.distance_squared_to(a.global_transform.origin) < origin.distance_squared_to(b.global_transform.origin)
+			if not is_instance_valid(a) or not a.is_inside_tree():
+				return false
+			if not is_instance_valid(b) or not b.is_inside_tree():
+				return true
+			return origin.distance_squared_to(a.global_position) < origin.distance_squared_to(b.global_position)
 		)
 	return result
 
