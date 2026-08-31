@@ -195,15 +195,26 @@ func _unhandled_input(event: InputEvent) -> void:
 			if _turret_interacted_frame == Engine.get_process_frames():
 				return
 			
+			var camera = get_viewport().get_camera_3d()
+			var mouse_pos = get_viewport().get_mouse_position()
+			
+			# If companion is NOT selected, check if user clicked on/near the companion to select it
+			if fox and is_instance_valid(fox) and not fox.get("is_inside_turret") and fox.get("is_selected") != true:
+				if camera and not camera.is_position_behind(fox.global_position):
+					var fox_screen_pos = camera.unproject_position(fox.global_position + Vector3(0, 0.35, 0))
+					if mouse_pos.distance_to(fox_screen_pos) <= 45.0:
+						fox.set_selected(true)
+						if is_inside_tree() and get_viewport():
+							get_viewport().set_input_as_handled()
+						return
+			
 			# If Fox is selected, issue command (to turret or snapped map tile)
 			if fox and fox.get("is_selected") == true:
-				var camera = get_viewport().get_camera_3d()
 				if camera:
-					var mouse_pos = get_viewport().get_mouse_position()
 					var origin = camera.project_ray_origin(mouse_pos)
 					var normal = camera.project_ray_normal(mouse_pos)
 					
-					# Find the precise turret targeted by the click
+					# 1. Find the precise turret targeted by the click
 					var clicked_turret: Node3D = _find_turret_at_screen_pos(mouse_pos, camera)
 					
 					if clicked_turret != null and is_instance_valid(clicked_turret):
@@ -212,7 +223,16 @@ func _unhandled_input(event: InputEvent) -> void:
 							get_viewport().set_input_as_handled()
 						return
 					
-					# 2. Player clicked ground: Snap to grid tile within map boundaries
+					# 2. Check if clicked near companion itself: re-trigger hop
+					if not camera.is_position_behind(fox.global_position):
+						var fox_screen_pos = camera.unproject_position(fox.global_position + Vector3(0, 0.35, 0))
+						if mouse_pos.distance_to(fox_screen_pos) <= 32.0:
+							fox.set_selected(true)
+							if is_inside_tree() and get_viewport():
+								get_viewport().set_input_as_handled()
+							return
+					
+					# 3. Player clicked ground: Snap to grid tile within map boundaries
 					var plane = Plane(Vector3.UP, 0.0)
 					var hit = plane.intersects_ray(origin, normal)
 					if hit != null:

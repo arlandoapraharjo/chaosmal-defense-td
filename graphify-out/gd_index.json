@@ -2,7 +2,7 @@
   "_meta": {
     "generated_by": "godot_index.py",
     "total_scripts": 36,
-    "root": "D:\\Game\\IGI-Code-Circus"
+    "root": "C:\\igi-dev-code-circus"
   },
   "scripts": [
     {
@@ -567,6 +567,18 @@
         {
           "name": "hotbar_theme",
           "type": "HotbarTheme"
+        },
+        {
+          "name": "character_model",
+          "type": "PackedScene"
+        },
+        {
+          "name": "character_name",
+          "type": "String"
+        },
+        {
+          "name": "character_emoji",
+          "type": "String"
         }
       ]
     },
@@ -732,7 +744,7 @@
           "call": "load"
         },
         {
-          "line": 494,
+          "line": 514,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
@@ -959,6 +971,12 @@
       ],
       "functions": [
         {
+          "name": "set_character_model",
+          "params": [
+            "model_scene"
+          ]
+        },
+        {
           "name": "set_selected",
           "params": [
             "selected"
@@ -1011,6 +1029,10 @@
         {
           "name": "model_scale",
           "type": "Vector3"
+        },
+        {
+          "name": "character_model_scene",
+          "type": "PackedScene"
         }
       ]
     },

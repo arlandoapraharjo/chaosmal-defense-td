@@ -435,7 +435,7 @@ func _setup_health_bar() -> void:
 	hp_label.custom_minimum_size = Vector2(200, 36)
 	hp_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hp_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	hp_label.text = "❤️ 100 / 100"
+	hp_label.text = "100 / 100"
 	hp_label.add_theme_font_size_override("font_size", 16)
 	hp_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	hp_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))

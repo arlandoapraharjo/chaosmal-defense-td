@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://banuit5p3xvtp" path="res://assets/Models/GLB format/desert/Palm Treeeeeeeeeeeee.glb" id="11_ej4pw"]
 [ext_resource type="Resource" uid="uid://b1rex4wqywsql" path="res://UI/Hotbar/hotbar_theme_desert.tres" id="11_theme"]
 [ext_resource type="PackedScene" uid="uid://cg2ja2ktl2v7k" path="res://assets/Models/GLB format/desert/Cactuz.glb" id="12_ej4pw"]
+[ext_resource type="PackedScene" uid="uid://dlionpacked01" path="res://assets/characters/animal-lion.glb" id="13_lion"]
 
 [resource]
 script = ExtResource("1_725qa")
@@ -31,4 +32,7 @@ environment = ExtResource("1_kqj8a")
 disable_fog = true
 has_heat_distortion = true
 hotbar_theme = ExtResource("11_theme")
+character_model = ExtResource("13_lion")
+character_name = "Lion"
+character_emoji = "🦁"
 metadata/_custom_type_script = "uid://dt3mmbm7kd8rn"

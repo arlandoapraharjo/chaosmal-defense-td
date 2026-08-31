@@ -13,6 +13,7 @@
 [ext_resource type="Resource" uid="uid://boh0iknqrt5rd" path="res://UI/Hotbar/hotbar_theme_snow.tres" id="12_snow"]
 [ext_resource type="PackedScene" uid="uid://bp33u85pccjqh" path="res://scenes/foliage_snow_tree.tscn" id="12_wh0ca"]
 [ext_resource type="PackedScene" uid="uid://o8pcj11agsac" path="res://scenes/grass_single_snow.tscn" id="13_snow_grass"]
+[ext_resource type="PackedScene" uid="uid://5wrigo4yglbc" path="res://assets/characters/animal-penguin.glb" id="14_penguin"]
 
 [resource]
 script = ExtResource("1_87pvo")
@@ -28,4 +29,7 @@ bush_model = ExtResource("1_wh0ca")
 grass_model = ExtResource("13_snow_grass")
 environment = ExtResource("1_tbtkb")
 hotbar_theme = ExtResource("12_snow")
+character_model = ExtResource("14_penguin")
+character_name = "Penguin"
+character_emoji = "🐧"
 metadata/_custom_type_script = "uid://dt3mmbm7kd8rn"

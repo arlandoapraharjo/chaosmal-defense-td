@@ -624,7 +624,10 @@
         "environment",
         "disable_fog",
         "has_heat_distortion",
-        "hotbar_theme"
+        "hotbar_theme",
+        "character_model",
+        "character_name",
+        "character_emoji"
       ]
     },
     {
@@ -822,9 +825,10 @@
       "community": 99,
       "community_name": "GDScript Gameplay Logic",
       "norm_label": "foxcompanion",
-      "description": "extends CharacterBody3D | funcs: set_selected, play_deployment_drop, command_move_to, command_enter_turret | signals: selected_changed, entered_turret, left_turret",
+      "description": "extends CharacterBody3D | funcs: set_character_model, set_selected, play_deployment_drop, command_move_to, command_enter_turret | signals: selected_changed, entered_turret, left_turret",
       "_gd_extends": "CharacterBody3D",
       "_gd_functions": [
+        "set_character_model",
         "set_selected",
         "play_deployment_drop",
         "command_move_to",
@@ -837,7 +841,8 @@
       ],
       "_gd_exports": [
         "move_speed",
-        "model_scale"
+        "model_scale",
+        "character_model_scene"
       ]
     },
     {
