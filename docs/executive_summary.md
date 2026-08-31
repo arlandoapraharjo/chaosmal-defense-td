@@ -4,6 +4,7 @@
 > **Game Title:** Chaosmal Defense  
 > **Engine & Version:** Godot Engine 4.x (Forward+ Rendering, Physics Interpolation)  
 > **Target Platform:** PC (Windows)  
+> **Project Budget:** Rp 0 (Zero-Budget / Open-Source & CC0 Community Assets)  
 > **Genre:** 3D Procedural Tower Defense / Real-Time Tactical Strategy  
 > **Target Audience:** Strategy & Tower Defense enthusiasts, mid-core PC gamers, fans of tactical positioning and procedural progression (e.g., *Kingdom Rush*, *Bad North*, *Bloons TD 6*, *Defense Grid*).  
 > **Document Status:** Active Reference & Production Baseline  
@@ -297,6 +298,22 @@ gantt
 
 ---
 
-## 10. Summary & Sign-Off
+## 10. Project Budget & Asset Licensing
 
-*Chaosmal Defense* establishes a distinctive niche within the tower defense genre on PC by combining satisfying procedural level variety with an active, hands-on tactical companion system. With its modular code architecture, high-performance batched visuals, and fine-tuned economy curves, the project is actively advancing through its **Endless Mode** milestone toward final polishing and standalone publication.
+### 10.1. Budget Breakdown
+- **Total Development Budget:** **Rp 0** (Zero-Budget Indie Development)
+- **Engine & Core Tools:** Godot Engine 4.x (Free, Open-Source under MIT License), Blender (FOSS), VS Code / Antigravity IDE.
+- **Development Strategy:** 100% self-contained codebase leveraging custom procedural map generation algorithms, custom vertex/fragment shaders, and freely licensed public domain 3D asset packs.
+
+### 10.2. 3D Asset License & Attribution Matrix
+
+| Asset Category | Asset Pack Name | Creator / Distributor | License Type | License Reference Path | Usage Terms |
+|:---|:---|:---|:---|:---|:---|
+| **Character & Animal Models** | Cube Pets (2.0) | Kenney (www.kenney.nl) | Creative Commons Zero (CC0 1.0 Universal) | [`assets/characters/License.txt`](file:///c:/igi-dev-code-circus/assets/characters/License.txt) | Free for personal, educational, and commercial use. No royalties, credit optional. |
+| **Tiles, Environment & Turrets** | Tower Defense Kit (2.1) | Kenney (www.kenney.nl) | Creative Commons Zero (CC0 1.0 Universal) | [`assets/License.txt`](file:///c:/igi-dev-code-circus/assets/License.txt) | Free for personal, educational, and commercial use. No royalties, credit optional. |
+
+---
+
+## 11. Summary & Sign-Off
+
+*Chaosmal Defense* establishes a distinctive niche within the tower defense genre on PC by combining satisfying procedural level variety with an active, hands-on tactical companion system. With its modular code architecture, zero-cost production pipeline, high-performance batched visuals, and fine-tuned economy curves, the project is actively advancing through its **Endless Mode** milestone toward final polishing and standalone publication.
