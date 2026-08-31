@@ -2,7 +2,7 @@
   "_meta": {
     "generated_by": "godot_index.py",
     "total_scripts": 36,
-    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
+    "root": "D:\\Game\\IGI-Code-Circus"
   },
   "scripts": [
     {
@@ -20,34 +20,8 @@
       "extends": "CanvasLayer",
       "signals": [],
       "functions": [],
-      "loads": [
-        {
-          "line": 14,
-          "raw": "res://assets/characters/animal-fox.glb",
-          "path": "assets/characters/animal-fox.glb",
-          "call": "preload"
-        },
-        {
-          "line": 15,
-          "raw": "res://UI/Menus/main menu button.png",
-          "path": "UI/Menus/main menu button.png",
-          "call": "preload"
-        }
-      ],
-      "exports": [
-        {
-          "name": "portrait_model_scale",
-          "type": "float"
-        },
-        {
-          "name": "portrait_model_rotation_deg",
-          "type": "float"
-        },
-        {
-          "name": "portrait_model_offset",
-          "type": "Vector3"
-        }
-      ]
+      "loads": [],
+      "exports": []
     },
     {
       "file": "UI/Hotbar/HotbarSlot.gd",
@@ -381,20 +355,7 @@
           "call": "preload"
         }
       ],
-      "exports": [
-        {
-          "name": "bottom_offset",
-          "type": "float"
-        },
-        {
-          "name": "top_offset",
-          "type": "float"
-        },
-        {
-          "name": "enable_adaptive_dock",
-          "type": "bool"
-        }
-      ]
+      "exports": []
     },
     {
       "file": "UI/Menus/MainMenu.gd",
@@ -1155,37 +1116,31 @@
       ],
       "loads": [
         {
-          "line": 56,
-          "raw": "res://addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf",
-          "path": "addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf",
-          "call": "load"
-        },
-        {
-          "line": 202,
+          "line": 196,
           "raw": "res://assets/Models/GLB format/tower-round-crystals.glb",
           "path": "assets/Models/GLB format/tower-round-crystals.glb",
           "call": "load"
         },
         {
-          "line": 268,
+          "line": 262,
           "raw": "res://scenes/pillar_ambient_particles.tscn",
           "path": "scenes/pillar_ambient_particles.tscn",
           "call": "load"
         },
         {
-          "line": 529,
+          "line": 522,
           "raw": "res://scenes/pillar_hit_particle.tscn",
           "path": "scenes/pillar_hit_particle.tscn",
           "call": "load"
         },
         {
-          "line": 540,
+          "line": 533,
           "raw": "res://scenes/pillar_destruction.tscn",
           "path": "scenes/pillar_destruction.tscn",
           "call": "load"
         },
         {
-          "line": 790,
+          "line": 788,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -1260,59 +1215,66 @@
           "params": [
             "grid_pos"
           ]
+        },
+        {
+          "name": "update_vegetation_level",
+          "params": [
+            "target_level",
+            "animate"
+          ]
         }
       ],
       "loads": [
         {
-          "line": 101,
+          "line": 104,
           "raw": "res://scripts/WaveManager.gd",
           "path": "scripts/WaveManager.gd",
           "call": "preload"
         },
         {
-          "line": 102,
+          "line": 105,
           "raw": "res://scripts/IncursionPillar.gd",
           "path": "scripts/IncursionPillar.gd",
           "call": "preload"
         },
         {
-          "line": 104,
+          "line": 107,
           "raw": "res://assets/Models/GLB format/wood-structure.glb",
           "path": "assets/Models/GLB format/wood-structure.glb",
           "call": "preload"
         },
         {
-          "line": 105,
+          "line": 108,
           "raw": "res://assets/Models/GLB format/wood-structure-high.glb",
           "path": "assets/Models/GLB format/wood-structure-high.glb",
           "call": "preload"
         },
         {
-          "line": 106,
+          "line": 109,
           "raw": "res://assets/Models/GLB format/wood-structure-part.glb",
           "path": "assets/Models/GLB format/wood-structure-part.glb",
           "call": "preload"
         },
         {
-          "line": 107,
+          "line": 110,
           "raw": "res://assets/Models/GLB format/wood-structure-high-part.glb",
           "path": "assets/Models/GLB format/wood-structure-high-part.glb",
           "call": "preload"
         },
         {
-          "line": 729,
+          "line": 739,
           "raw": "res://shaders/tree_sway.gdshader",
           "path": "shaders/tree_sway.gdshader",
           "call": "preload"
         },
         {
-          "line": 1066,
+          "line": 1145,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 1072,
+          "line": 1151,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
@@ -1405,13 +1367,13 @@
       "functions": [],
       "loads": [
         {
-          "line": 22,
+          "line": 7,
           "raw": "res://UI/Pause&Play/esc_buttonV2.png",
           "path": "UI/Pause&Play/esc_buttonV2.png",
           "call": "preload"
         },
         {
-          "line": 23,
+          "line": 8,
           "raw": "res://UI/Pause&Play/play_buttonV2.png",
           "path": "UI/Pause&Play/play_buttonV2.png",
           "call": "preload"
@@ -1554,37 +1516,31 @@
           "call": "preload"
         },
         {
-          "line": 97,
-          "raw": "res://addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf",
-          "path": "addons/Font/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf",
-          "call": "load"
-        },
-        {
-          "line": 1142,
+          "line": 1124,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1143,
+          "line": 1125,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
           "call": "preload"
         },
         {
-          "line": 1144,
+          "line": 1126,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 1145,
+          "line": 1127,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 1146,
+          "line": 1128,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"
