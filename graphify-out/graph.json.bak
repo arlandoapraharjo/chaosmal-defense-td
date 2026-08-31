@@ -825,11 +825,12 @@
       "community": 99,
       "community_name": "GDScript Gameplay Logic",
       "norm_label": "foxcompanion",
-      "description": "extends CharacterBody3D | funcs: set_character_model, set_selected, play_deployment_drop, command_move_to, command_enter_turret | signals: selected_changed, entered_turret, left_turret",
+      "description": "extends CharacterBody3D | funcs: set_character_model, set_selected, play_pop_out_jump, play_deployment_drop, command_move_to, command_enter_turret | signals: selected_changed, entered_turret, left_turret",
       "_gd_extends": "CharacterBody3D",
       "_gd_functions": [
         "set_character_model",
         "set_selected",
+        "play_pop_out_jump",
         "play_deployment_drop",
         "command_move_to",
         "command_enter_turret"
@@ -1046,6 +1047,27 @@
       ],
       "_gd_signals": [],
       "_gd_exports": []
+    },
+    {
+      "id": "gdscript_scripts_rocketdroppod",
+      "label": "RocketDropPod",
+      "file_type": "code",
+      "source_file": "scripts/RocketDropPod.gd",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 99,
+      "community_name": "GDScript Gameplay Logic",
+      "norm_label": "rocketdroppod",
+      "description": "extends Node3D | funcs: set_thrusters_active, execute_landing_sequence",
+      "_gd_extends": "Node3D",
+      "_gd_functions": [
+        "set_thrusters_active",
+        "execute_landing_sequence"
+      ],
+      "_gd_signals": [],
+      "_gd_exports": [
+        "base_scale"
+      ]
     },
     {
       "id": "gdscript_scripts_turret",
@@ -1544,6 +1566,20 @@
       "description": "Scene with 2 ext_resource(s)",
       "_scene_uid": null,
       "_ext_resource_count": 2
+    },
+    {
+      "id": "tscn_scenes_rocketdroppod",
+      "label": "Rocketdroppod Scene",
+      "file_type": "code",
+      "source_file": "scenes/RocketDropPod.tscn",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 98,
+      "community_name": "Godot Scenes",
+      "norm_label": "rocketdroppod scene",
+      "description": "Scene with 1 ext_resource(s)",
+      "_scene_uid": "uid://cd2inqhodgoxs",
+      "_ext_resource_count": 1
     },
     {
       "id": "tscn_scenes_ballista_hit_particle",
@@ -2891,6 +2927,40 @@
       "source_file": "UI/Menus/MainMenu.gd",
       "source_location": "L61",
       "weight": 1.0
+    },
+    {
+      "relation": "loads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/RocketDropPod.gd",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "gdscript_scripts_rocketdroppod",
+      "target": "tscn_scenes_foxpoofparticle"
+    },
+    {
+      "relation": "loads",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/World.gd",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "gdscript_scripts_world",
+      "target": "tscn_scenes_rocketdroppod"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scenes/RocketDropPod.tscn",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tscn_scenes_rocketdroppod",
+      "target": "gdscript_scripts_rocketdroppod",
+      "_resource_type": "Script"
     }
   ],
   "hyperedges": [],

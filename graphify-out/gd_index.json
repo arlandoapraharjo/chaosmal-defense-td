@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scripts": 36,
+    "total_scripts": 37,
     "root": "C:\\igi-dev-code-circus"
   },
   "scripts": [
@@ -365,7 +365,7 @@
       "functions": [],
       "loads": [
         {
-          "line": 115,
+          "line": 116,
           "raw": "res://scenes/map.tscn",
           "path": "scenes/map.tscn",
           "call": "load"
@@ -983,6 +983,13 @@
           ]
         },
         {
+          "name": "play_pop_out_jump",
+          "params": [
+            "from_pos",
+            "to_pos"
+          ]
+        },
+        {
           "name": "play_deployment_drop",
           "params": [
             "start_height"
@@ -1447,6 +1454,49 @@
       "exports": []
     },
     {
+      "file": "scripts/RocketDropPod.gd",
+      "class_name": "RocketDropPod",
+      "extends": "Node3D",
+      "signals": [],
+      "functions": [
+        {
+          "name": "set_thrusters_active",
+          "params": [
+            "active",
+            "power"
+          ]
+        },
+        {
+          "name": "execute_landing_sequence",
+          "params": [
+            "companion",
+            "landing_target",
+            "on_complete"
+          ]
+        }
+      ],
+      "loads": [
+        {
+          "line": 8,
+          "raw": "res://assets/characters/Rocket (wip).glb",
+          "path": "assets/characters/Rocket (wip).glb",
+          "call": "preload"
+        },
+        {
+          "line": 9,
+          "raw": "res://scenes/FoxPoofParticle.tscn",
+          "path": "scenes/FoxPoofParticle.tscn",
+          "call": "preload"
+        }
+      ],
+      "exports": [
+        {
+          "name": "base_scale",
+          "type": "Vector3"
+        }
+      ]
+    },
+    {
       "file": "scripts/Turret.gd",
       "class_name": null,
       "extends": "Node3D",
@@ -1878,6 +1928,12 @@
           "line": 30,
           "raw": "res://scenes/FoxCompanion.tscn",
           "path": "scenes/FoxCompanion.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 31,
+          "raw": "res://scenes/RocketDropPod.tscn",
+          "path": "scenes/RocketDropPod.tscn",
           "call": "preload"
         }
       ],

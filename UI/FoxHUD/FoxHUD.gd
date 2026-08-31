@@ -36,13 +36,14 @@ func _connect_biome() -> void:
 	if not map:
 		map = get_node_or_null("Map")
 	
+	var bm = get_node_or_null("/root/BiomeManager")
 	if map:
 		if map.has_signal("biome_changed") and not map.biome_changed.is_connected(_on_biome_changed):
 			map.biome_changed.connect(_on_biome_changed)
 		if "active_biome" in map and map.active_biome != null:
 			_on_biome_changed(map.active_biome)
-	elif BiomeManager != null and BiomeManager.current_biome != null:
-		_on_biome_changed(BiomeManager.current_biome)
+	elif bm != null and bm.get("current_biome") != null:
+		_on_biome_changed(bm.current_biome)
 
 func _on_biome_changed(biome: BiomeData) -> void:
 	if not biome:

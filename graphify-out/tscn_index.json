@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generated_by": "godot_index.py",
-    "total_scenes": 46,
+    "total_scenes": 47,
     "root": "C:\\igi-dev-code-circus"
   },
   "scenes": [
@@ -689,6 +689,24 @@
       ]
     },
     {
+      "file": "scenes/RocketDropPod.tscn",
+      "scene_uid": "uid://cd2inqhodgoxs",
+      "ext_resources": [
+        {
+          "path": "scripts/RocketDropPod.gd",
+          "raw_path": "res://scripts/RocketDropPod.gd",
+          "type": "Script",
+          "id": "1_rocket_script"
+        }
+      ],
+      "nodes_preview": [
+        {
+          "name": "RocketDropPod",
+          "type": "Node3D"
+        }
+      ]
+    },
+    {
       "file": "scenes/ballista_hit_particle.tscn",
       "scene_uid": "uid://ct5vtompixl3d",
       "ext_resources": [
@@ -1253,7 +1271,7 @@
           "path": "UI/FoxHUD/FoxHUD.tscn",
           "raw_path": "res://UI/FoxHUD/FoxHUD.tscn",
           "type": "PackedScene",
-          "uid": "uid://dfoxhud001scene",
+          "uid": "uid://kyfwoey28bjq",
           "id": "21_foxhud"
         }
       ],
@@ -1753,6 +1771,9 @@
       "scenes/PillarShockwave.tscn",
       "scenes/map.tscn",
       "shaders/pilarshockwave.tscn"
+    ],
+    "scripts/RocketDropPod.gd": [
+      "scenes/RocketDropPod.tscn"
     ],
     "scripts/HitParticle.gd": [
       "scenes/ballista_hit_particle.tscn",

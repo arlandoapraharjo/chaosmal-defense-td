@@ -20,7 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://cx8v4qm5pak21" path="res://scenes/GameOverOverlay.tscn" id="18_gameover"]
 [ext_resource type="Script" uid="uid://3ts65qp6w4w6" path="res://scripts/World.gd" id="19_world"]
 [ext_resource type="PackedScene" uid="uid://dpe5vyw6hax4k" path="res://UI/Intro/IntroOverlay.tscn" id="20_intro"]
-[ext_resource type="PackedScene" uid="uid://dfoxhud001scene" path="res://UI/FoxHUD/FoxHUD.tscn" id="21_foxhud"]
+[ext_resource type="PackedScene" uid="uid://kyfwoey28bjq" path="res://UI/FoxHUD/FoxHUD.tscn" id="21_foxhud"]
 
 [sub_resource type="Gradient" id="Gradient_ooc2g"]
 

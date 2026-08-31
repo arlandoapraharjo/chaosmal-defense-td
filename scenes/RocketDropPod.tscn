@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cd2inqhodgoxs"]
+
+[ext_resource type="Script" path="res://scripts/RocketDropPod.gd" id="1_rocket_script"]
+
+[node name="RocketDropPod" type="Node3D"]
+script = ExtResource("1_rocket_script")

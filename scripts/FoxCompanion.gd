@@ -56,13 +56,14 @@ func _connect_biome() -> void:
 	if not map:
 		map = get_node_or_null("Map")
 	
+	var bm = get_node_or_null("/root/BiomeManager")
 	if map:
 		if map.has_signal("biome_changed") and not map.biome_changed.is_connected(_on_biome_changed):
 			map.biome_changed.connect(_on_biome_changed)
 		if "active_biome" in map and map.active_biome != null:
 			_on_biome_changed(map.active_biome)
-	elif BiomeManager != null and BiomeManager.current_biome != null:
-		_on_biome_changed(BiomeManager.current_biome)
+	elif bm != null and bm.get("current_biome") != null:
+		_on_biome_changed(bm.current_biome)
 
 func _on_biome_changed(biome: BiomeData) -> void:
 	if biome and biome.character_model:
@@ -243,6 +244,75 @@ func set_selected(selected: bool) -> void:
 		_spawn_move_marker(global_position, Color(0.2, 0.85, 1.0, 0.9))
 	
 	selected_changed.emit(is_selected)
+
+## Play explosive pop-out jump when exiting the Rocket Drop Pod
+func play_pop_out_jump(from_pos: Vector3, to_pos: Vector3) -> void:
+	visible = true
+	global_position = from_pos
+	_target_pos = to_pos
+	_is_dropping = true
+	
+	if _fox_instance:
+		_fox_instance.visible = true
+		_fox_instance.position.y = 0.0
+		_fox_instance.scale = model_scale
+	
+	_spawn_poof(from_pos)
+	
+	if _anim_player and _anim_player.has_animation("jump"):
+		_anim_player.play("jump")
+	elif _anim_player and _anim_player.has_animation("fall"):
+		_anim_player.play("fall")
+	
+	var jump_duration: float = 0.46
+	var apex_y: float = max(from_pos.y, to_pos.y) + 0.85
+	
+	var tween = create_tween()
+	# XZ translation towards landing target
+	tween.parallel().tween_property(self, "global_position:x", to_pos.x, jump_duration)\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(self, "global_position:z", to_pos.z, jump_duration)\
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	
+	# Y Parabolic Arc: Rise to apex then fall to landing ground
+	var half_dur = jump_duration * 0.45
+	var fall_dur = jump_duration * 0.55
+	var y_tw = create_tween()
+	y_tw.tween_property(self, "global_position:y", apex_y, half_dur)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	y_tw.tween_property(self, "global_position:y", to_pos.y, fall_dur)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	
+	# Playful somersault flip during jump
+	if _fox_instance:
+		var rot_tw = create_tween()
+		rot_tw.tween_property(_fox_instance, "rotation:x", deg_to_rad(360.0), jump_duration)\
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	
+	# Touchdown impact
+	y_tw.chain().tween_callback(func():
+		global_position = to_pos
+		_target_pos = to_pos
+		_spawn_poof(to_pos)
+		
+		if _fox_instance:
+			_fox_instance.rotation.x = 0.0
+			var squash_tween = create_tween()
+			squash_tween.tween_property(_fox_instance, "scale", Vector3(model_scale.x * 1.35, model_scale.y * 0.65, model_scale.z * 1.35), 0.09)\
+				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			squash_tween.tween_property(_fox_instance, "scale", Vector3(model_scale.x * 0.9, model_scale.y * 1.15, model_scale.z * 0.9), 0.12)\
+				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			squash_tween.tween_property(_fox_instance, "scale", model_scale, 0.12)\
+				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		
+		if _anim_player and _anim_player.has_animation("gesture-positive"):
+			_anim_player.play("gesture-positive")
+			_anim_player.queue("idle")
+		elif _anim_player and _anim_player.has_animation("idle"):
+			_anim_player.play("idle")
+		
+		_is_dropping = false
+	)
 
 ## Play landing drop animation when deployed
 func play_deployment_drop(start_height: float = 5.5) -> void:
