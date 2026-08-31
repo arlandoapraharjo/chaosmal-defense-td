@@ -15,6 +15,9 @@ extends Control
 @onready var slider_music: HSlider = $CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxMusic/SliderMusic
 @onready var slider_sfx: HSlider = $CanvasLayer/Control/CardPanel/CardMargin/PanelSettings/OptionsVBox/HBoxSFX/SliderSFX
 
+@onready var loading_container: Control = $CanvasLayer/Control/LoadingContainer
+@onready var loading_progress_bar: ProgressBar = $CanvasLayer/Control/LoadingContainer/LoadingProgressBar
+
 var _world_node: Node3D = null
 var _camera: Camera3D = null
 var _gameplay_cam_transform: Transform3D
@@ -65,11 +68,14 @@ func _ready() -> void:
 	if sfx_idx >= 0 and slider_sfx:
 		slider_sfx.value = db_to_linear(AudioServer.get_bus_volume_db(sfx_idx))
 
-	# Hide settings panel before intro animation
+	# Hide settings and loading panel before intro animation
 	panel_settings.visible = false
 	panel_settings.modulate.a = 0.0
 	vbox_main.visible = true
 	vbox_main.modulate.a = 1.0
+	if loading_container:
+		loading_container.visible = false
+		loading_container.modulate.a = 0.0
 
 	# Intro animation: Card slides and bounces in from the left
 	card_panel.position.x = _home_card_pos.x - 320.0
@@ -124,7 +130,6 @@ func _setup_world() -> void:
 		if _dir_light:
 			_saved_light_energy = _dir_light.light_energy
 			_saved_light_color = _dir_light.light_color
-			# Warm golden late-afternoon sunlight matching Tower Factory reference
 			_dir_light.light_color = Color(1.0, 0.95, 0.86)
 			_dir_light.light_energy = 1.35
 			_dir_light.shadow_enabled = true
@@ -164,7 +169,7 @@ func _setup_showcase_and_focus() -> void:
 	var right_vec = _camera.global_transform.basis.x
 	_camera.global_position += right_vec * screen_right_offset
 
-	# Build showcase defense outpost around the tower
+	# Build clean dual showcase turrets around the tower
 	_build_menu_showcase(pillar_pos)
 
 func _build_menu_showcase(pillar_pos: Vector3) -> void:
@@ -175,7 +180,7 @@ func _build_menu_showcase(pillar_pos: Vector3) -> void:
 	_showcase_root.name = "MenuShowcaseOutpost"
 	_world_node.add_child(_showcase_root)
 
-	# 1. Warm Golden Beacon Light at the Tower
+	# Warm Golden Beacon Light at the Tower (pure natural map generation, no turrets)
 	var beacon_light := OmniLight3D.new()
 	beacon_light.name = "ShowcaseBeaconLight"
 	beacon_light.light_color = Color(1.0, 0.82, 0.45)
@@ -184,50 +189,6 @@ func _build_menu_showcase(pillar_pos: Vector3) -> void:
 	beacon_light.omni_attenuation = 1.2
 	beacon_light.position = pillar_pos + Vector3(0.0, 3.2, 0.0)
 	_showcase_root.add_child(beacon_light)
-
-	# 2. Spawn showcase turrets flanking the tower
-	var models_to_spawn := [
-		{
-			"path": "res://assets/Models/GLB format/weapon-ballista.glb",
-			"offset": Vector3(-2.0, 0.1, 0.8),
-			"rotation_y": deg_to_rad(35.0),
-			"scale": Vector3(1.1, 1.1, 1.1)
-		},
-		{
-			"path": "res://assets/Models/GLB format/weapon-cannon.glb",
-			"offset": Vector3(2.2, 0.1, -1.2),
-			"rotation_y": deg_to_rad(-120.0),
-			"scale": Vector3(1.1, 1.1, 1.1)
-		},
-		{
-			"path": "res://assets/Models/GLB format/weapon-turret.glb",
-			"offset": Vector3(1.8, 0.1, 2.0),
-			"rotation_y": deg_to_rad(75.0),
-			"scale": Vector3(1.0, 1.0, 1.0)
-		},
-		{
-			"path": "res://assets/Models/GLB format/wood-structure.glb",
-			"offset": Vector3(-1.8, 0.05, -1.8),
-			"rotation_y": deg_to_rad(45.0),
-			"scale": Vector3(1.0, 1.0, 1.0)
-		},
-		{
-			"path": "res://assets/Models/GLB format/wood-structure-high.glb",
-			"offset": Vector3(-2.2, 0.05, 0.8),
-			"rotation_y": deg_to_rad(0.0),
-			"scale": Vector3(0.9, 0.9, 0.9)
-		}
-	]
-
-	for item in models_to_spawn:
-		if ResourceLoader.exists(item.path):
-			var scn: PackedScene = load(item.path)
-			if scn:
-				var inst := scn.instantiate() as Node3D
-				inst.position = pillar_pos + item.offset
-				inst.rotation.y = item.rotation_y
-				inst.scale = item.scale
-				_showcase_root.add_child(inst)
 
 func _process(_delta: float) -> void:
 	# Camera stays static as requested (no rotation in main menu)
@@ -239,36 +200,53 @@ func _on_start_button_pressed() -> void:
 	_is_animating = true
 	_is_game_started = true
 
-	# Restore directional light settings if altered
-	if _dir_light and is_instance_valid(_dir_light):
-		var light_tw := create_tween().set_parallel(true)
-		light_tw.tween_property(_dir_light, "light_color", _saved_light_color, 1.2)
-		light_tw.tween_property(_dir_light, "light_energy", _saved_light_energy, 1.2)
-
-	# Clean up showcase preview nodes
-	if _showcase_root and is_instance_valid(_showcase_root):
-		_showcase_root.queue_free()
-
-	# Parallel tween: camera moves to top-down view + card fades & slides out smoothly
-	var tween := create_tween().set_parallel(true)
-
-	if _camera:
-		tween.tween_property(_camera, "global_transform", _gameplay_cam_transform, 1.4) \
-			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-		tween.tween_property(_camera, "size", _gameplay_cam_ortho_size, 1.4) \
-			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-
+	# 1. Slide and fade out the menu card panel
 	if card_panel:
-		tween.tween_property(card_panel, "modulate:a", 0.0, 0.7) \
-			.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-		tween.tween_property(card_panel, "position:x", _home_card_pos.x - 300.0, 0.8) \
+		var card_tw := create_tween().set_parallel(true)
+		card_tw.tween_property(card_panel, "modulate:a", 0.0, 0.35)\
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+		card_tw.tween_property(card_panel, "position:x", _home_card_pos.x - 300.0, 0.4)\
 			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 
-	tween.chain().tween_callback(func():
-		$CanvasLayer.visible = false
-		if _world_node and _world_node.has_method("set_menu_mode"):
-			_world_node.call("set_menu_mode", false)
-		_is_animating = false
+	# 2. Fade in bottom loading strip and fill it while camera stays close-up
+	if loading_container and loading_progress_bar:
+		loading_container.visible = true
+		loading_container.modulate.a = 0.0
+		loading_progress_bar.value = 0.0
+		var load_in_tw := create_tween()
+		load_in_tw.tween_property(loading_container, "modulate:a", 1.0, 0.15)
+
+	var load_tw := create_tween()
+	if loading_progress_bar:
+		load_tw.tween_property(loading_progress_bar, "value", 1.0, 0.9)\
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
+	# 3. AFTER loading bar finishes: Fade out loading bar and glide camera to top-down gameplay view
+	load_tw.chain().tween_callback(func():
+		if loading_container:
+			var load_out_tw := create_tween()
+			load_out_tw.tween_property(loading_container, "modulate:a", 0.0, 0.2)
+
+		if _showcase_root and is_instance_valid(_showcase_root):
+			_showcase_root.queue_free()
+
+		var cam_glide_tw := create_tween().set_parallel(true)
+		if _camera:
+			cam_glide_tw.tween_property(_camera, "global_transform", _gameplay_cam_transform, 1.1)\
+				.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+			cam_glide_tw.tween_property(_camera, "size", _gameplay_cam_ortho_size, 1.1)\
+				.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+
+		if _dir_light and is_instance_valid(_dir_light):
+			cam_glide_tw.tween_property(_dir_light, "light_color", _saved_light_color, 1.1)
+			cam_glide_tw.tween_property(_dir_light, "light_energy", _saved_light_energy, 1.1)
+
+		cam_glide_tw.chain().tween_callback(func():
+			$CanvasLayer.visible = false
+			if _world_node and _world_node.has_method("set_menu_mode"):
+				_world_node.call("set_menu_mode", false)
+			_is_animating = false
+		)
 	)
 
 func _on_settings_button_pressed() -> void:

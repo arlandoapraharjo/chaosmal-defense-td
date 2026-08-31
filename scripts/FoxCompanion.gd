@@ -2,8 +2,10 @@ class_name FoxCompanion
 extends CharacterBody3D
 
 ## FoxCompanion — Player's tactical companion deployed in the 3D map.
-## Scaled to turret size, with hover & selection outlines, tile-based movement,
-## poof particle transitions, and turret buffing.
+## Scaled to match the 1x1 turret size, with tile-based movement,
+## procedural idle breathing squash & stretch, poof particle transitions,
+## ground selection ring, and turret buffing.
+## Clean visuals without artificial outline lighting.
 
 signal selected_changed(is_selected: bool)
 signal entered_turret(turret: Node3D)
@@ -14,7 +16,7 @@ const SELECTION_SCENE = preload("res://assets/Models/GLB format/selection-a.glb"
 const POOF_SCENE = preload("res://scenes/FoxPoofParticle.tscn")
 
 @export var move_speed: float = 4.8
-@export var model_scale: Vector3 = Vector3(0.32, 0.32, 0.32)
+@export var model_scale: Vector3 = Vector3(0.35, 0.35, 0.35)
 
 var is_selected: bool = false
 var is_inside_turret: bool = false
@@ -25,8 +27,8 @@ var _is_moving: bool = false
 var _fox_instance: Node3D = null
 var _anim_player: AnimationPlayer = null
 var _selection_ring: Node3D = null
-var _highlighter: TurretHighlighter = null
 var _click_area: Area3D = null
+var _idle_breath_time: float = 0.0
 
 var _move_marker_instance: Node3D = null
 
@@ -37,7 +39,6 @@ func _ready() -> void:
 	_setup_visuals()
 	_setup_selection_ring()
 	_setup_collision()
-	_setup_highlighter()
 	
 	set_selected(false)
 
@@ -65,8 +66,8 @@ func _setup_selection_ring() -> void:
 	if _selection_ring == null and SELECTION_SCENE:
 		_selection_ring = SELECTION_SCENE.instantiate()
 		_selection_ring.name = "SelectionRing"
-		_selection_ring.scale = Vector3(0.55, 0.55, 0.55)
-		_selection_ring.position = Vector3(0, 0.22, 0)
+		_selection_ring.scale = Vector3(0.52, 0.52, 0.52)
+		_selection_ring.position = Vector3(0, 0.15, 0)
 		add_child(_selection_ring)
 		_selection_ring.visible = false
 
@@ -77,7 +78,7 @@ func _setup_collision() -> void:
 		
 		var col_shape = CollisionShape3D.new()
 		var box = BoxShape3D.new()
-		box.size = Vector3(0.85, 0.85, 0.85)
+		box.size = Vector3(0.8, 0.8, 0.8)
 		col_shape.shape = box
 		col_shape.position = Vector3(0, 0.35, 0)
 		
@@ -85,25 +86,6 @@ func _setup_collision() -> void:
 		add_child(_click_area)
 		
 		_click_area.input_event.connect(_on_click_area_input_event)
-		_click_area.mouse_entered.connect(_on_mouse_entered)
-		_click_area.mouse_exited.connect(_on_mouse_exited)
-
-func _setup_highlighter() -> void:
-	if _highlighter == null:
-		_highlighter = TurretHighlighter.new()
-		_highlighter.name = "FoxHighlighter"
-		add_child(_highlighter)
-		_highlighter.setup(self, 1)
-
-func _on_mouse_entered() -> void:
-	if is_inside_turret:
-		return
-	if _highlighter:
-		_highlighter.set_hovered(true)
-
-func _on_mouse_exited() -> void:
-	if _highlighter:
-		_highlighter.set_hovered(false)
 
 func _on_click_area_input_event(_camera: Camera3D, event: InputEvent, _pos: Vector3, _normal: Vector3, _shape_idx: int) -> void:
 	if is_inside_turret:
@@ -121,9 +103,6 @@ func set_selected(selected: bool) -> void:
 	is_selected = selected
 	if _selection_ring:
 		_selection_ring.visible = is_selected and not is_inside_turret
-	
-	if _highlighter:
-		_highlighter.set_selected(is_selected, 1)
 	
 	if is_selected and not is_inside_turret:
 		# Hop / gesture animation on selection
@@ -199,8 +178,26 @@ func _exit_current_turret() -> void:
 	current_turret = null
 	if _fox_instance:
 		_fox_instance.visible = true
+		_fox_instance.position.y = 0.0
+		_fox_instance.scale = model_scale
 	if _selection_ring:
 		_selection_ring.visible = is_selected
+
+func _process(delta: float) -> void:
+	if is_inside_turret or not _fox_instance or not _fox_instance.visible:
+		return
+	
+	if not _is_moving:
+		# Procedural cute idle breathing squash & stretch
+		_idle_breath_time += delta * 2.8
+		var bob = sin(_idle_breath_time) * 0.012
+		_fox_instance.position.y = bob
+		_fox_instance.scale.y = model_scale.y * (1.0 + sin(_idle_breath_time) * 0.025)
+		_fox_instance.scale.x = model_scale.x * (1.0 - sin(_idle_breath_time) * 0.012)
+		_fox_instance.scale.z = model_scale.z * (1.0 - sin(_idle_breath_time) * 0.012)
+	else:
+		_fox_instance.position.y = 0.0
+		_fox_instance.scale = model_scale
 
 func _physics_process(delta: float) -> void:
 	if _selection_ring and _selection_ring.visible:
@@ -228,8 +225,6 @@ func _physics_process(delta: float) -> void:
 				_fox_instance.visible = false
 			if _selection_ring:
 				_selection_ring.visible = false
-			if _highlighter:
-				_highlighter.clear_highlight()
 			
 			if current_turret.has_method("apply_fox_buff"):
 				current_turret.apply_fox_buff(true)

@@ -51,14 +51,24 @@ const DIALOGUE_STEPS: Array[Dictionary] = [
 	}
 ]
 
+# Adaptive docking anchor positions per tutorial step (0.0 = top, 1.0 = bottom)
+const STEP_DOCK: Dictionary = {
+	0: "bottom", # Fox Companion Intro
+	1: "bottom", # Incursion Pillar
+	2: "top",    # Turret Hotbar is Revealed at bottom
+	3: "top",    # Fox Command & Battlefield Buffs
+	4: "bottom", # Speed & Pause Controls at top
+	5: "bottom"  # Combat Stations Overview
+}
+
 var _current_step: int = 0
 var _is_typing: bool = false
 var _typewriter_tween: Tween = null
+var _glide_tween: Tween = null
 var _is_active: bool = false
 var _is_exiting: bool = false
 var _breath_time: float = 0.0
 var _last_played_char_count: int = 0
-var _target_dialog_y: float = -1.0
 
 var _fox_anim_player: AnimationPlayer = null
 var _dot_nodes: Array[ColorRect] = []
@@ -204,42 +214,48 @@ func start_intro() -> void:
 	
 	root_control.modulate.a = 0.0
 	
-	if _target_dialog_y < 0 and dialog_panel:
-		_target_dialog_y = dialog_panel.position.y
-	
+	var target_y = _get_target_y_for_dock("bottom")
 	if dialog_panel:
-		dialog_panel.position.y = _target_dialog_y + 70.0
+		dialog_panel.position.y = target_y + 70.0
 	
 	var enter_tween = create_tween()
 	enter_tween.set_parallel(true)
 	enter_tween.tween_property(root_control, "modulate:a", 1.0, 0.35).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	if dialog_panel:
-		enter_tween.tween_property(dialog_panel, "position:y", _target_dialog_y, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		enter_tween.tween_property(dialog_panel, "position:y", target_y, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	
-	enter_tween.chain().tween_callback(func():
-		_display_step(_current_step)
-	)
+	_show_step(_current_step)
 
-func _display_step(step_idx: int) -> void:
+func _get_target_y_for_dock(dock: String) -> float:
+	var vp_h = get_viewport_rect().size.y
+	if dock == "top":
+		return 15.0
+	return maxf(0.0, vp_h - 165.0)
+
+func _show_step(step_idx: int) -> void:
 	if step_idx < 0 or step_idx >= DIALOGUE_STEPS.size():
 		_finish_intro()
 		return
 	
-	step_changed.emit(step_idx)
+	_current_step = step_idx
+	step_changed.emit(_current_step)
+	_update_dots()
 	
-	var data = DIALOGUE_STEPS[step_idx]
+	var dock = STEP_DOCK.get(_current_step, "bottom")
+	_glide_to_dock(dock)
+	
+	var data = DIALOGUE_STEPS[_current_step]
 	if speaker_name_label:
 		speaker_name_label.text = "🦊 " + data["speaker"] + " • " + data["badge"]
 	
-	if step_idx == DIALOGUE_STEPS.size() - 1:
-		next_button.text = "Start Defense ⚔"
-	else:
-		next_button.text = "Next ▸"
-	
-	_update_dots()
+	if next_button:
+		if _current_step == DIALOGUE_STEPS.size() - 1:
+			next_button.text = "Start Defense ⚔"
+		else:
+			next_button.text = "Next ▸"
 	
 	if _fox_anim_player:
-		if step_idx == 0 or step_idx == DIALOGUE_STEPS.size() - 1:
+		if _current_step == 0 or _current_step == DIALOGUE_STEPS.size() - 1:
 			if _fox_anim_player.has_animation("gesture-positive"):
 				_fox_anim_player.play("gesture-positive")
 				_fox_anim_player.queue("idle")
@@ -249,19 +265,39 @@ func _display_step(step_idx: int) -> void:
 			if _fox_anim_player.has_animation("idle") and _fox_anim_player.current_animation != "idle":
 				_fox_anim_player.play("idle")
 	
-	# Typewriter effect
-	dialogue_text.bbcode_enabled = true
-	dialogue_text.text = data["text"]
-	dialogue_text.visible_characters = 0
+	_animate_dialogue_text(data["text"])
+
+func _glide_to_dock(dock: String) -> void:
+	if not dialog_panel:
+		return
 	
-	var total_chars = dialogue_text.get_total_character_count()
-	var duration = clamp(total_chars * 0.022, 0.35, 1.8)
+	var target_y = _get_target_y_for_dock(dock)
+	if is_equal_approx(dialog_panel.position.y, target_y):
+		return
+	
+	if _glide_tween and _glide_tween.is_running():
+		_glide_tween.kill()
+	
+	_glide_tween = create_tween()
+	_glide_tween.tween_property(dialog_panel, "position:y", target_y, 0.42)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+func _animate_dialogue_text(full_bbcode: String) -> void:
+	if not dialogue_text:
+		return
 	
 	if _typewriter_tween and _typewriter_tween.is_running():
 		_typewriter_tween.kill()
 	
+	dialogue_text.bbcode_enabled = true
+	dialogue_text.text = full_bbcode
+	dialogue_text.visible_characters = 0
 	_is_typing = true
 	_last_played_char_count = 0
+	
+	var total_chars = dialogue_text.get_total_character_count()
+	var duration = clampf(total_chars * 0.020, 0.35, 1.8)
+	
 	_typewriter_tween = create_tween()
 	_typewriter_tween.tween_method(_on_typewriter_step, 0, total_chars, duration)
 	_typewriter_tween.tween_callback(func():
@@ -276,24 +312,23 @@ func _on_typewriter_step(char_count: int) -> void:
 	_last_played_char_count = char_count
 
 func _on_next_pressed() -> void:
-	if _is_exiting:
+	if not _is_active or _is_exiting:
 		return
 	
 	if _is_typing:
 		if _typewriter_tween and _typewriter_tween.is_running():
 			_typewriter_tween.kill()
-		_is_typing = false
 		dialogue_text.visible_characters = -1
+		_is_typing = false
 		return
 	
-	_current_step += 1
-	if _current_step < DIALOGUE_STEPS.size():
-		_display_step(_current_step)
+	if _current_step < DIALOGUE_STEPS.size() - 1:
+		_show_step(_current_step + 1)
 	else:
 		_finish_intro()
 
 func _on_skip_pressed() -> void:
-	if _is_exiting:
+	if not _is_active or _is_exiting:
 		return
 	_finish_intro()
 
@@ -305,12 +340,16 @@ func _finish_intro() -> void:
 	
 	if _typewriter_tween and _typewriter_tween.is_running():
 		_typewriter_tween.kill()
+	if _glide_tween and _glide_tween.is_running():
+		_glide_tween.kill()
 	
 	var exit_tween = create_tween()
 	exit_tween.set_parallel(true)
-	exit_tween.tween_property(root_control, "modulate:a", 0.0, 0.28).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	exit_tween.tween_property(root_control, "modulate:a", 0.0, 0.28)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	if dialog_panel:
-		exit_tween.tween_property(dialog_panel, "position:y", dialog_panel.position.y + 70.0, 0.28).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		exit_tween.tween_property(dialog_panel, "position:y", dialog_panel.position.y + 70.0, 0.28)\
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	
 	exit_tween.chain().tween_callback(func():
 		visible = false
