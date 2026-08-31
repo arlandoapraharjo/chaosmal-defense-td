@@ -197,6 +197,17 @@ func _reveal_hotbar_ui() -> void:
 		turret_hotbar.visible = true
 		if turret_hotbar.has_method("_show_hotbar"):
 			turret_hotbar._show_hotbar()
+		
+		# Gentle pop bounce & glow pulse to highlight the revealed hotbar
+		var hotbar_ctrl = turret_hotbar.get_node_or_null("Control/MarginContainer")
+		if hotbar_ctrl:
+			hotbar_ctrl.pivot_offset = hotbar_ctrl.size * 0.5
+			hotbar_ctrl.scale = Vector2(0.85, 0.85)
+			var tw = create_tween().set_parallel(true)
+			tw.tween_property(hotbar_ctrl, "scale", Vector2.ONE, 0.45)\
+				.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			tw.tween_property(hotbar_ctrl, "modulate", Color(1.25, 1.2, 1.0, 1.0), 0.2)
+			tw.chain().tween_property(hotbar_ctrl, "modulate", Color.WHITE, 0.35)
 
 func _reveal_currency_ui() -> void:
 	if currency_ui and not _revealed_currency:

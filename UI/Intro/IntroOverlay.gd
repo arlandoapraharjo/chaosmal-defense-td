@@ -6,15 +6,15 @@ signal step_changed(step_idx: int)
 @onready var root_control: Control = $Control
 @onready var backdrop: ColorRect = $Control/Backdrop
 @onready var dialog_panel: PanelContainer = $Control/DialogPanel
-@onready var speaker_name_label: Label = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/HeaderHBox/SpeakerName
-@onready var badge_label: Label = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/HeaderHBox/BadgePill/BadgeText
-@onready var dialogue_text: RichTextLabel = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/DialogueText
-@onready var next_button: Button = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/FooterHBox/NextButton
-@onready var skip_button: Button = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/HeaderHBox/SkipButton
-@onready var dots_container: HBoxContainer = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/FooterHBox/DotsContainer
+@onready var speaker_name_label: Label = $Control/DialogPanel/MarginContainer/MainHBox/ContentVBox/HeaderHBox/SpeakerName
+@onready var badge_label: Label = $Control/DialogPanel/MarginContainer/MainHBox/ContentVBox/HeaderHBox/BadgePill/BadgeText
+@onready var dialogue_text: RichTextLabel = $Control/DialogPanel/MarginContainer/MainHBox/ContentVBox/DialogueText
+@onready var next_button: Button = $Control/DialogPanel/MarginContainer/MainHBox/ContentVBox/FooterHBox/NextButton
+@onready var skip_button: Button = $Control/DialogPanel/MarginContainer/MainHBox/ContentVBox/HeaderHBox/SkipButton
+@onready var dots_container: HBoxContainer = $Control/DialogPanel/MarginContainer/MainHBox/ContentVBox/FooterHBox/DotsContainer
 
-# Fox 3D Portrait in 2D Frame
-@onready var fox_model_root: Node3D = $Control/DialogPanel/MarginContainer/HBoxContainer/FoxFrame/FoxViewportContainer/SubViewport/FoxWorld/FoxAnchor/FoxModel
+# Fox 3D Portrait Frame in Dialogue Box
+@onready var fox_model_root: Node3D = $Control/DialogPanel/MarginContainer/MainHBox/FoxFrame/FoxViewportContainer/SubViewport/FoxWorld/FoxAnchor/FoxModel
 
 const FOX_SCENE = preload("res://assets/characters/animal-fox.glb")
 
@@ -51,9 +51,20 @@ const DIALOGUE_STEPS: Array[Dictionary] = [
 	}
 ]
 
+# Adaptive docking anchor positions per tutorial step
+const STEP_ANCHORS: Dictionary = {
+	0: {"top": 0.73, "bottom": 0.95}, # Bottom-Center (Fox Companion Intro)
+	1: {"top": 0.73, "bottom": 0.95}, # Bottom-Center (Incursion Pillar)
+	2: {"top": 0.05, "bottom": 0.27}, # Top-Center (Turret Hotbar is Revealed at bottom!)
+	3: {"top": 0.05, "bottom": 0.27}, # Top-Center (Fox Command & Battlefield Buffs)
+	4: {"top": 0.73, "bottom": 0.95}, # Bottom-Center (Speed & Pause Controls at top!)
+	5: {"top": 0.73, "bottom": 0.95}  # Bottom-Center (Combat Stations Overview)
+}
+
 var _current_step: int = 0
 var _is_typing: bool = false
 var _typewriter_tween: Tween = null
+var _glide_tween: Tween = null
 var _is_active: bool = false
 var _is_exiting: bool = false
 var _breath_time: float = 0.0
@@ -85,8 +96,9 @@ func _setup_fox_model() -> void:
 	if not fox_model_root:
 		return
 	
-	fox_model_root.scale = Vector3(0.72, 0.72, 0.72)
-	fox_model_root.rotation.y = deg_to_rad(36.0)
+	fox_model_root.scale = Vector3(0.35, 0.35, 0.35)
+	fox_model_root.rotation.y = deg_to_rad(35.0)
+	fox_model_root.rotation.x = deg_to_rad(-4.0)
 	
 	if fox_model_root.get_child_count() == 0:
 		var fox_instance = FOX_SCENE.instantiate()
@@ -121,37 +133,38 @@ func _setup_dots() -> void:
 	
 	for i in range(DIALOGUE_STEPS.size()):
 		var dot = ColorRect.new()
-		dot.custom_minimum_size = Vector2(8, 6)
-		dot.color = Color(0.3, 0.4, 0.55, 0.6)
+		dot.custom_minimum_size = Vector2(8, 5)
+		dot.color = Color(0.3, 0.38, 0.48, 0.6)
 		dots_container.add_child(dot)
 		_dot_nodes.append(dot)
 
 func _update_dots() -> void:
 	for i in range(_dot_nodes.size()):
 		if i == _current_step:
-			_dot_nodes[i].custom_minimum_size = Vector2(20, 6)
-			_dot_nodes[i].color = Color(0.24, 0.72, 1.0, 1.0)
+			_dot_nodes[i].custom_minimum_size = Vector2(18, 5)
+			_dot_nodes[i].color = Color(0.3, 0.65, 0.95, 1.0)
 		elif i < _current_step:
-			_dot_nodes[i].custom_minimum_size = Vector2(8, 6)
-			_dot_nodes[i].color = Color(0.18, 0.85, 0.55, 0.8)
+			_dot_nodes[i].custom_minimum_size = Vector2(8, 5)
+			_dot_nodes[i].color = Color(0.2, 0.75, 0.5, 0.8)
 		else:
-			_dot_nodes[i].custom_minimum_size = Vector2(8, 6)
-			_dot_nodes[i].color = Color(0.3, 0.4, 0.55, 0.6)
+			_dot_nodes[i].custom_minimum_size = Vector2(8, 5)
+			_dot_nodes[i].color = Color(0.3, 0.38, 0.48, 0.6)
 
 func _process(delta: float) -> void:
 	if not _is_active or _is_exiting:
 		return
 	
-	# Procedural Fox Breathing Animation in 2D Frame
+	# Procedural Fox Breathing in Frame
 	_breath_time += delta * 2.8
 	if fox_model_root:
-		var bob = sin(_breath_time) * 0.035
-		var base_scale: float = 0.72
+		var bob = sin(_breath_time) * 0.01
+		var base_scale: float = 0.35
 		fox_model_root.position.y = bob
-		fox_model_root.scale.y = base_scale * (1.0 + sin(_breath_time) * 0.025)
-		fox_model_root.scale.x = base_scale * (1.0 - sin(_breath_time) * 0.012)
-		fox_model_root.scale.z = base_scale * (1.0 - sin(_breath_time) * 0.012)
-		fox_model_root.rotation.y = deg_to_rad(36.0) + sin(_breath_time * 0.5) * 0.04
+		fox_model_root.scale.y = base_scale * (1.0 + sin(_breath_time) * 0.02)
+		fox_model_root.scale.x = base_scale * (1.0 - sin(_breath_time) * 0.01)
+		fox_model_root.scale.z = base_scale * (1.0 - sin(_breath_time) * 0.01)
+		fox_model_root.rotation.y = deg_to_rad(35.0) + sin(_breath_time * 0.5) * 0.02
+		fox_model_root.rotation.x = deg_to_rad(-4.0) + sin(_breath_time * 0.8) * 0.01
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not _is_active or _is_exiting:
@@ -173,85 +186,97 @@ func start_intro() -> void:
 	root_control.modulate.a = 0.0
 	
 	if dialog_panel:
-		dialog_panel.position.y += 60.0
+		dialog_panel.anchor_top = 0.73
+		dialog_panel.anchor_bottom = 0.95
+		dialog_panel.position.y += 40.0
 	
 	var enter_tween = create_tween()
 	enter_tween.set_parallel(true)
 	enter_tween.tween_property(root_control, "modulate:a", 1.0, 0.35).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	if dialog_panel:
-		enter_tween.tween_property(dialog_panel, "position:y", dialog_panel.position.y - 60.0, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		enter_tween.tween_property(dialog_panel, "position:y", dialog_panel.position.y - 40.0, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	
-	enter_tween.chain().tween_callback(func():
-		_display_step(_current_step)
-	)
+	_show_step(_current_step)
 
-func _display_step(step_idx: int) -> void:
+func _show_step(step_idx: int) -> void:
 	if step_idx < 0 or step_idx >= DIALOGUE_STEPS.size():
 		_finish_intro()
 		return
 	
-	step_changed.emit(step_idx)
-	
-	var data = DIALOGUE_STEPS[step_idx]
-	speaker_name_label.text = data["speaker"]
-	badge_label.text = data["badge"]
-	
-	if step_idx == DIALOGUE_STEPS.size() - 1:
-		next_button.text = "Start Defense ⚔"
-	else:
-		next_button.text = "Next ▸"
-	
+	_current_step = step_idx
+	step_changed.emit(_current_step)
 	_update_dots()
+	_glide_to_step_layout(_current_step)
 	
-	if _fox_anim_player:
-		if step_idx == 0 or step_idx == DIALOGUE_STEPS.size() - 1:
-			if _fox_anim_player.has_animation("gesture-positive"):
-				_fox_anim_player.play("gesture-positive")
-				_fox_anim_player.queue("idle")
-			elif _fox_anim_player.has_animation("idle"):
-				_fox_anim_player.play("idle")
+	var data = DIALOGUE_STEPS[_current_step]
+	if speaker_name_label:
+		speaker_name_label.text = data.speaker
+	if badge_label:
+		badge_label.text = data.badge
+	
+	if next_button:
+		if _current_step == DIALOGUE_STEPS.size() - 1:
+			next_button.text = "Start Battle ⚔"
 		else:
-			if _fox_anim_player.has_animation("idle") and _fox_anim_player.current_animation != "idle":
-				_fox_anim_player.play("idle")
+			next_button.text = "Next ▸"
 	
-	# Typewriter effect
-	dialogue_text.bbcode_enabled = true
-	dialogue_text.text = data["text"]
-	dialogue_text.visible_characters = 0
+	_animate_dialogue_text(data.text)
+
+func _glide_to_step_layout(step_idx: int) -> void:
+	if not dialog_panel:
+		return
 	
-	var total_chars = dialogue_text.get_total_character_count()
-	var duration = clamp(total_chars * 0.02, 0.35, 1.8)
+	var target = STEP_ANCHORS.get(step_idx, {"top": 0.68, "bottom": 0.95})
+	
+	if _glide_tween and _glide_tween.is_running():
+		_glide_tween.kill()
+	
+	_glide_tween = create_tween()
+	_glide_tween.set_parallel(true)
+	_glide_tween.tween_property(dialog_panel, "anchor_top", target["top"], 0.42)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_glide_tween.tween_property(dialog_panel, "anchor_bottom", target["bottom"], 0.42)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+func _animate_dialogue_text(full_bbcode: String) -> void:
+	if not dialogue_text:
+		return
 	
 	if _typewriter_tween and _typewriter_tween.is_running():
 		_typewriter_tween.kill()
 	
+	dialogue_text.text = full_bbcode
+	dialogue_text.visible_ratio = 0.0
 	_is_typing = true
+	
+	var plain_length = dialogue_text.get_parsed_text().length()
+	var duration = clampf(plain_length * 0.016, 0.4, 1.4)
+	
 	_typewriter_tween = create_tween()
-	_typewriter_tween.tween_property(dialogue_text, "visible_characters", total_chars, duration)
+	_typewriter_tween.tween_property(dialogue_text, "visible_ratio", 1.0, duration)\
+		.set_trans(Tween.TRANS_LINEAR)
 	_typewriter_tween.tween_callback(func():
 		_is_typing = false
-		dialogue_text.visible_characters = -1
 	)
 
 func _on_next_pressed() -> void:
-	if _is_exiting:
+	if not _is_active or _is_exiting:
 		return
 	
 	if _is_typing:
 		if _typewriter_tween and _typewriter_tween.is_running():
 			_typewriter_tween.kill()
+		dialogue_text.visible_ratio = 1.0
 		_is_typing = false
-		dialogue_text.visible_characters = -1
 		return
 	
-	_current_step += 1
-	if _current_step < DIALOGUE_STEPS.size():
-		_display_step(_current_step)
+	if _current_step < DIALOGUE_STEPS.size() - 1:
+		_show_step(_current_step + 1)
 	else:
 		_finish_intro()
 
 func _on_skip_pressed() -> void:
-	if _is_exiting:
+	if not _is_active or _is_exiting:
 		return
 	_finish_intro()
 
@@ -263,12 +288,16 @@ func _finish_intro() -> void:
 	
 	if _typewriter_tween and _typewriter_tween.is_running():
 		_typewriter_tween.kill()
+	if _glide_tween and _glide_tween.is_running():
+		_glide_tween.kill()
 	
 	var exit_tween = create_tween()
 	exit_tween.set_parallel(true)
-	exit_tween.tween_property(root_control, "modulate:a", 0.0, 0.28).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	exit_tween.tween_property(root_control, "modulate:a", 0.0, 0.35)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	if dialog_panel:
-		exit_tween.tween_property(dialog_panel, "position:y", dialog_panel.position.y + 60.0, 0.28).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		exit_tween.tween_property(dialog_panel, "position:y", dialog_panel.position.y + 40.0, 0.35)\
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	
 	exit_tween.chain().tween_callback(func():
 		visible = false

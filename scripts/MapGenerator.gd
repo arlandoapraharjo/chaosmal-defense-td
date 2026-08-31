@@ -448,7 +448,10 @@ func _build_map() -> void:
 				base_transforms.append(Transform3D(Basis(), origin))
 				_spawn_grass_tuft(grass_transforms, origin, grass_density_base)
 
-				if randf() < decoration_chance:
+				var end_grid = enemy_path[-1] if not enemy_path.is_empty() else Vector2i(-999, -999)
+				var is_near_pillar = (pos - end_grid).length_squared() <= 4
+
+				if not is_near_pillar and randf() < decoration_chance:
 					occupied_cells[pos] = true
 					var r = randf()
 					var rot_y = 0.0
