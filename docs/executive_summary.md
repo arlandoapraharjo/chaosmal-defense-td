@@ -286,17 +286,17 @@ gantt
     3 Biomes and Shaders - Grass Snow Desert :done, p2_1, 2026-08-06, 2026-08-20
     Radial In-World UI and Hold-to-Recycle  :done, p2_2, 2026-08-21, 2026-08-31
     Multi-Layer Precision Click Engine       :done, p2_3, 2026-08-31, 2026-08-31
-    section Phase 3 Content Expansion
-    Specialized Enemy Variants              :active, p3_1, 2026-09-01, 2026-09-20
-    Audio Overhaul - Dynamic Music and SFX  :p3_2, 2026-09-21, 2026-10-10
-    Endless Mode and Meta-Progression Perks :p3_3, 2026-10-11, 2026-11-05
-    section Phase 4 Release and Distribution
-    Steam Integration and Achievements      :p4_1, 2026-11-06, 2026-11-25
-    Final Balancing and Windows PC Release  :p4_2, 2026-11-26, 2026-12-15
+    section Phase 3 Endless Mode & Gameplay
+    Endless Wave Scaling and High Score System :active, p3_1, 2026-09-01, 2026-09-25
+    Specialized Enemy Variants and Boss Spikes :p3_2, 2026-09-26, 2026-10-15
+    Audio Overhaul - Dynamic Music and SFX   :p3_3, 2026-10-16, 2026-11-05
+    section Phase 4 Polishing & Publication
+    Performance Optimization and Quality of Life :p4_1, 2026-11-06, 2026-11-25
+    Final Balancing and Standalone Publication   :p4_2, 2026-11-26, 2026-12-15
 ```
 
 ---
 
 ## 10. Summary & Sign-Off
 
-*Chaosmal Defense* establishes a distinctive niche within the tower defense genre on PC by combining satisfying procedural level variety with an active, hands-on tactical companion system. With its modular code architecture, high-performance batched visuals, and fine-tuned economy curves, the project is poised for continued content expansion, enemy variant rollouts, and commercial delivery on Windows PC.
+*Chaosmal Defense* establishes a distinctive niche within the tower defense genre on PC by combining satisfying procedural level variety with an active, hands-on tactical companion system. With its modular code architecture, high-performance batched visuals, and fine-tuned economy curves, the project is actively advancing through its **Endless Mode** milestone toward final polishing and standalone publication.
