@@ -697,6 +697,23 @@ func _flash_insufficient_funds() -> void:
 func _on_upgraded() -> void:
 	_update_effects()
 	
+	# Increase turret deployment capacity on BuilderController (+2 at L2, +4 at L3, +8 at L4)
+	var bonus_slots: int = 0
+	match current_level:
+		2: bonus_slots = 2
+		3: bonus_slots = 4
+		4: bonus_slots = 8
+		_: bonus_slots = 0
+		
+	if bonus_slots > 0:
+		var builder = get_tree().get_first_node_in_group("builder_controller")
+		if not builder:
+			var scene_root = get_tree().current_scene
+			if scene_root:
+				builder = scene_root.find_child("BuilderController", true, false)
+		if builder and builder.has_method("increase_max_deployment"):
+			builder.increase_max_deployment(bonus_slots)
+	
 	# Bed gets slightly taller only up to level 2
 	var target_model_scale = Vector3(1.2, 3.2 + min(current_level - 1, 1) * 0.35, 1.2)
 	# Crystals grow slightly for levels 3 to 5 (tiny bit)

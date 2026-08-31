@@ -657,6 +657,12 @@
       ],
       "functions": [
         {
+          "name": "increase_max_deployment",
+          "params": [
+            "amount"
+          ]
+        },
+        {
           "name": "get_max_deployment",
           "params": []
         },
@@ -720,13 +726,13 @@
           "call": "preload"
         },
         {
-          "line": 112,
+          "line": 117,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
         },
         {
-          "line": 489,
+          "line": 494,
           "raw": "res://scripts/Turret.gd",
           "path": "scripts/Turret.gd",
           "call": "load"
@@ -845,7 +851,8 @@
           "name": "setup_enemy_type",
           "params": [
             "type_index",
-            "wave_number"
+            "wave_number",
+            "is_boss_unit"
           ]
         },
         {
@@ -889,6 +896,12 @@
           "line": 7,
           "raw": "res://scenes/explosion.tscn",
           "path": "scenes/explosion.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 27,
+          "raw": "res://shaders/outline_pixel_perfect.gdshader",
+          "path": "shaders/outline_pixel_perfect.gdshader",
           "call": "preload"
         }
       ],
@@ -1105,7 +1118,7 @@
           "call": "load"
         },
         {
-          "line": 766,
+          "line": 783,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -1474,12 +1487,6 @@
           "call": "preload"
         },
         {
-          "line": 1123,
-          "raw": "res://scenes/hit_particle.tscn",
-          "path": "scenes/hit_particle.tscn",
-          "call": "preload"
-        },
-        {
           "line": 1124,
           "raw": "res://scenes/hit_particle.tscn",
           "path": "scenes/hit_particle.tscn",
@@ -1487,18 +1494,24 @@
         },
         {
           "line": 1125,
+          "raw": "res://scenes/hit_particle.tscn",
+          "path": "scenes/hit_particle.tscn",
+          "call": "preload"
+        },
+        {
+          "line": 1126,
           "raw": "res://scenes/hit_particle_cannon.tscn",
           "path": "scenes/hit_particle_cannon.tscn",
           "call": "preload"
         },
         {
-          "line": 1126,
+          "line": 1127,
           "raw": "res://scenes/hit_particle_ballista.tscn",
           "path": "scenes/hit_particle_ballista.tscn",
           "call": "preload"
         },
         {
-          "line": 1127,
+          "line": 1128,
           "raw": "res://scenes/boulder_impact.tscn",
           "path": "scenes/boulder_impact.tscn",
           "call": "preload"

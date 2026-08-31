@@ -4,7 +4,7 @@ extends Node3D
 
 # Exported configurable properties
 @export_range(0.0, 20.0, 0.1) var attack_range: float = 1.5
-@export_range(0.0, 20.0, 0.1) var min_attack_range: float = 0.0
+@export_range(0.0, 20.0, 0.1) var min_attack_range: float = 10.0
 @export var is_aoe: bool = false
 @export var is_half_circle: bool = false
 @export_range(0.1, 10.0, 0.1) var cooldown: float = 1.0
@@ -55,8 +55,8 @@ var _base_scale: Vector3 = Vector3.ONE
 var _bounce_tween: Tween = null
 var _ui_pop_tween: Tween = null
 
-var attack_damage: float = 35.0
-var _base_attack_damage: float = 35.0
+var attack_damage: float = 15.0
+var _base_attack_damage: float = 15.0
 var _base_attack_range: float = 1.5
 var _base_aoe_radius: float = 2.0
 
@@ -161,8 +161,9 @@ func _auto_detect_weapon_type() -> void:
 	elif path_or_name.find("catapult") != -1:
 		weapon_type = "catapult"
 		is_aoe = true
-		if min_attack_range <= 0.0:
-			min_attack_range = 3.0
+		min_attack_range = 5.0
+		if attack_range < 15.0:
+			attack_range = 15.0
 	elif path_or_name.find("turret") != -1:
 		weapon_type = "turret"
 

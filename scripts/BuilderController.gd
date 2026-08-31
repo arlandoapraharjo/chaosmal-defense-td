@@ -8,11 +8,11 @@ const PLACEMENT_PARTICLE_SCENE = preload("res://scenes/turret_placement_particle
 @export var turret_y_offset: float = 0.1
 
 @export_group("Deployment")
-@export var base_max_deployment: int = 10
-@export var deployment_increase_per_wave: int = 5
+@export var base_max_deployment: int = 8
+@export var deployment_increase_per_wave: int = 0
 
 var _current_deployment: int = 0
-var _max_deployment: int = 10
+var _max_deployment: int = 8
 var _turret_cost: int = 0
 
 var _is_building: bool = false
@@ -67,8 +67,13 @@ func _connect_to_spawner() -> void:
 			spawner.wave_completed.connect(_on_wave_completed)
 
 func _on_wave_completed(_wave_number: int) -> void:
-	_max_deployment += deployment_increase_per_wave
-	total_deployment_updated.emit(_current_deployment, _max_deployment)
+	# Turret slot capacity no longer increases per wave
+	pass
+
+func increase_max_deployment(amount: int) -> void:
+	if amount > 0:
+		_max_deployment += amount
+		total_deployment_updated.emit(_current_deployment, _max_deployment)
 
 func get_max_deployment() -> int:
 	return _max_deployment
