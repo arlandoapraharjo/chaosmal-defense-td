@@ -5,16 +5,16 @@ signal step_changed(step_idx: int)
 
 @onready var root_control: Control = $Control
 @onready var backdrop: ColorRect = $Control/Backdrop
-@onready var dialog_panel: PanelContainer = $Control/DialogPanel
-@onready var speaker_name_label: Label = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/HeaderHBox/SpeakerName
-@onready var badge_label: Label = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/HeaderHBox/BadgePill/BadgeText
-@onready var dialogue_text: RichTextLabel = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/DialogueText
-@onready var next_button: Button = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/FooterHBox/NextButton
-@onready var skip_button: Button = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/HeaderHBox/SkipButton
-@onready var dots_container: HBoxContainer = $Control/DialogPanel/MarginContainer/HBoxContainer/ContentVBox/FooterHBox/DotsContainer
+@onready var dialog_panel: TextureRect = $Control/DialogPanel
+@onready var speaker_name_label: Label = $Control/DialogPanel/TopTab/SpeakerName
+@onready var dialogue_text: RichTextLabel = $Control/DialogPanel/RightContent/VBoxContainer/DialogueText
+@onready var next_button: Button = $Control/DialogPanel/RightContent/VBoxContainer/FooterHBox/NextButton
+@onready var skip_button: Button = $Control/DialogPanel/RightContent/VBoxContainer/FooterHBox/SkipButton
+@onready var dots_container: HBoxContainer = $Control/DialogPanel/RightContent/VBoxContainer/FooterHBox/DotsContainer
+@onready var typewriter_sfx: AudioStreamPlayer = $TypewriterSFX
 
 # Fox 3D Portrait in 2D Frame
-@onready var fox_model_root: Node3D = $Control/DialogPanel/MarginContainer/HBoxContainer/FoxFrame/FoxViewportContainer/SubViewport/FoxWorld/FoxAnchor/FoxModel
+@onready var fox_model_root: Node3D = $Control/DialogPanel/FoxFrame/FoxViewportContainer/SubViewport/FoxWorld/FoxAnchor/FoxModel
 
 const FOX_SCENE = preload("res://assets/characters/animal-fox.glb")
 
@@ -57,9 +57,12 @@ var _typewriter_tween: Tween = null
 var _is_active: bool = false
 var _is_exiting: bool = false
 var _breath_time: float = 0.0
+var _last_played_char_count: int = 0
+var _target_dialog_y: float = -1.0
 
 var _fox_anim_player: AnimationPlayer = null
 var _dot_nodes: Array[ColorRect] = []
+var _chirp_sound: AudioStreamWAV = null
 
 func _ready() -> void:
 	visible = false
@@ -67,6 +70,7 @@ func _ready() -> void:
 	
 	_setup_fox_model()
 	_setup_dots()
+	_setup_chirp_sound()
 	
 	if next_button:
 		next_button.pressed.connect(_on_next_pressed)
@@ -76,6 +80,34 @@ func _ready() -> void:
 		dialog_panel.gui_input.connect(_on_card_gui_input)
 	if backdrop:
 		backdrop.gui_input.connect(_on_card_gui_input)
+
+func _setup_chirp_sound() -> void:
+	var sample_rate: int = 22050
+	var duration: float = 0.020
+	var num_samples: int = int(sample_rate * duration)
+	var byte_data = PackedByteArray()
+	byte_data.resize(num_samples)
+	for i in range(num_samples):
+		var t = float(i) / float(sample_rate)
+		var env = exp(-t * 120.0)
+		var val = sin(t * TAU * 1400.0) * env * 0.25
+		var byte_val = int(clamp((val + 1.0) * 127.5, 0, 255))
+		byte_data[i] = byte_val
+	
+	_chirp_sound = AudioStreamWAV.new()
+	_chirp_sound.format = AudioStreamWAV.FORMAT_8_BITS
+	_chirp_sound.mix_rate = sample_rate
+	_chirp_sound.stereo = false
+	_chirp_sound.data = byte_data
+	
+	if typewriter_sfx:
+		typewriter_sfx.stream = _chirp_sound
+		typewriter_sfx.volume_db = -14.0
+
+func _play_typewriter_blip() -> void:
+	if typewriter_sfx and _chirp_sound:
+		typewriter_sfx.pitch_scale = randf_range(0.92, 1.12)
+		typewriter_sfx.play()
 
 func _on_card_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
@@ -172,14 +204,17 @@ func start_intro() -> void:
 	
 	root_control.modulate.a = 0.0
 	
+	if _target_dialog_y < 0 and dialog_panel:
+		_target_dialog_y = dialog_panel.position.y
+	
 	if dialog_panel:
-		dialog_panel.position.y += 60.0
+		dialog_panel.position.y = _target_dialog_y + 70.0
 	
 	var enter_tween = create_tween()
 	enter_tween.set_parallel(true)
 	enter_tween.tween_property(root_control, "modulate:a", 1.0, 0.35).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	if dialog_panel:
-		enter_tween.tween_property(dialog_panel, "position:y", dialog_panel.position.y - 60.0, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		enter_tween.tween_property(dialog_panel, "position:y", _target_dialog_y, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	
 	enter_tween.chain().tween_callback(func():
 		_display_step(_current_step)
@@ -193,8 +228,8 @@ func _display_step(step_idx: int) -> void:
 	step_changed.emit(step_idx)
 	
 	var data = DIALOGUE_STEPS[step_idx]
-	speaker_name_label.text = data["speaker"]
-	badge_label.text = data["badge"]
+	if speaker_name_label:
+		speaker_name_label.text = "🦊 " + data["speaker"] + " • " + data["badge"]
 	
 	if step_idx == DIALOGUE_STEPS.size() - 1:
 		next_button.text = "Start Defense ⚔"
@@ -220,18 +255,25 @@ func _display_step(step_idx: int) -> void:
 	dialogue_text.visible_characters = 0
 	
 	var total_chars = dialogue_text.get_total_character_count()
-	var duration = clamp(total_chars * 0.02, 0.35, 1.8)
+	var duration = clamp(total_chars * 0.022, 0.35, 1.8)
 	
 	if _typewriter_tween and _typewriter_tween.is_running():
 		_typewriter_tween.kill()
 	
 	_is_typing = true
+	_last_played_char_count = 0
 	_typewriter_tween = create_tween()
-	_typewriter_tween.tween_property(dialogue_text, "visible_characters", total_chars, duration)
+	_typewriter_tween.tween_method(_on_typewriter_step, 0, total_chars, duration)
 	_typewriter_tween.tween_callback(func():
 		_is_typing = false
 		dialogue_text.visible_characters = -1
 	)
+
+func _on_typewriter_step(char_count: int) -> void:
+	dialogue_text.visible_characters = char_count
+	if char_count > _last_played_char_count and (char_count % 2 == 0):
+		_play_typewriter_blip()
+	_last_played_char_count = char_count
 
 func _on_next_pressed() -> void:
 	if _is_exiting:
@@ -268,7 +310,7 @@ func _finish_intro() -> void:
 	exit_tween.set_parallel(true)
 	exit_tween.tween_property(root_control, "modulate:a", 0.0, 0.28).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	if dialog_panel:
-		exit_tween.tween_property(dialog_panel, "position:y", dialog_panel.position.y + 60.0, 0.28).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		exit_tween.tween_property(dialog_panel, "position:y", dialog_panel.position.y + 70.0, 0.28).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	
 	exit_tween.chain().tween_callback(func():
 		visible = false
