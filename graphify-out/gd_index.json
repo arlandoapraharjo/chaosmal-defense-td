@@ -2,7 +2,7 @@
   "_meta": {
     "generated_by": "godot_index.py",
     "total_scripts": 36,
-    "root": "C:\\igi-dev-code-circus"
+    "root": "D:\\Game\\IGI-Code-Circus"
   },
   "scripts": [
     {
@@ -1140,7 +1140,7 @@
           "call": "load"
         },
         {
-          "line": 783,
+          "line": 788,
           "raw": "res://scenes/PillarShockwave.tscn",
           "path": "scenes/PillarShockwave.tscn",
           "call": "load"
@@ -1215,59 +1215,66 @@
           "params": [
             "grid_pos"
           ]
+        },
+        {
+          "name": "update_vegetation_level",
+          "params": [
+            "target_level",
+            "animate"
+          ]
         }
       ],
       "loads": [
         {
-          "line": 101,
+          "line": 104,
           "raw": "res://scripts/WaveManager.gd",
           "path": "scripts/WaveManager.gd",
           "call": "preload"
         },
         {
-          "line": 102,
+          "line": 105,
           "raw": "res://scripts/IncursionPillar.gd",
           "path": "scripts/IncursionPillar.gd",
           "call": "preload"
         },
         {
-          "line": 104,
+          "line": 107,
           "raw": "res://assets/Models/GLB format/wood-structure.glb",
           "path": "assets/Models/GLB format/wood-structure.glb",
           "call": "preload"
         },
         {
-          "line": 105,
+          "line": 108,
           "raw": "res://assets/Models/GLB format/wood-structure-high.glb",
           "path": "assets/Models/GLB format/wood-structure-high.glb",
           "call": "preload"
         },
         {
-          "line": 106,
+          "line": 109,
           "raw": "res://assets/Models/GLB format/wood-structure-part.glb",
           "path": "assets/Models/GLB format/wood-structure-part.glb",
           "call": "preload"
         },
         {
-          "line": 107,
+          "line": 110,
           "raw": "res://assets/Models/GLB format/wood-structure-high-part.glb",
           "path": "assets/Models/GLB format/wood-structure-high-part.glb",
           "call": "preload"
         },
         {
-          "line": 729,
+          "line": 739,
           "raw": "res://shaders/tree_sway.gdshader",
           "path": "shaders/tree_sway.gdshader",
           "call": "preload"
         },
         {
-          "line": 1066,
+          "line": 1145,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"
         },
         {
-          "line": 1072,
+          "line": 1151,
           "raw": "res://addons/Shader/ground_shader.gdshader",
           "path": "addons/Shader/ground_shader.gdshader",
           "call": "preload"

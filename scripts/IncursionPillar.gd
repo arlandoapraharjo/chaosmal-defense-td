@@ -714,6 +714,11 @@ func _on_upgraded() -> void:
 		if builder and builder.has_method("increase_max_deployment"):
 			builder.increase_max_deployment(bonus_slots)
 	
+	# Progressive vegetation growth — reveal next tier (20% per level)
+	var map_gen = get_tree().get_first_node_in_group("map_generator")
+	if map_gen and map_gen.has_method("update_vegetation_level"):
+		map_gen.update_vegetation_level(current_level, true)
+	
 	# Bed gets slightly taller only up to level 2
 	var target_model_scale = Vector3(1.2, 3.2 + min(current_level - 1, 1) * 0.35, 1.2)
 	# Crystals grow slightly for levels 3 to 5 (tiny bit)

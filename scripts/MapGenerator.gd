@@ -5,8 +5,7 @@ const TILE_SIZE = 1.0 # Standard size of kenney tiles
 const HALF_STEP = 2 # path lives on a half-resolution grid -> spacing is automatic
 const MAX_ROUTE_RETRIES = 10 # how many times to re-roll the zigzag if a leg gets boxed in
 const BUSH_VARIANT_COUNT = 4 # how many randomized wind/wiggle presets to spread bushes across
-const BUSH_SCALE_MIN = 0.2 # smallest random bush size (1.0 = original mesh size)
-const BUSH_SCALE_MAX = 0.25 # largest random bush size
+const BUSH_BASE_SCALE = 0.25 # standard uniform base size for bushes
 const BUSH_Y_OFFSET_GRASS_SNOW = 0.25 # lifts bushes above the tile base in grass/snow biomes to avoid clipping
 const BUSH_CAST_SHADOWS = true # alpha-blended wind-animated shadows are expensive for how little bushes contribute visually
 const BUSH_VISIBILITY_END = 35.0 # bushes fully disappear past this distance
@@ -81,8 +80,12 @@ var is_desert_biome: bool = false
 var mm_border: Node3D
 var mm_border_wall: MultiMeshInstance3D
 var mm_border_wall_outer: MultiMeshInstance3D
-var border_noise := FastNoiseLite.new()
-var border_noise_detail := FastNoiseLite.new()
+# ─── Progressive Vegetation Tracking ─────────────────────────────────────────
+var _current_vegetation_level: int = 1
+var _vegetation_items: Array[Dictionary] = []
+
+var border_noise: FastNoiseLite
+var border_noise_detail: FastNoiseLite
 ##
 # Path definition: list of Vector2i grid coordinates
 var enemy_path: Array[Vector2i] = []
@@ -121,7 +124,10 @@ var mm_bushes: Array[Node3D] = []
 var mm_grass: Node3D
 
 func _ready() -> void:
+	add_to_group("map_generator")
 	randomize() # only need to seed the RNG once, not every generation
+	border_noise = FastNoiseLite.new()
+	border_noise_detail = FastNoiseLite.new()
 	border_noise.seed = randi()
 	border_noise.frequency = border_noise_frequency
 	border_noise.noise_type = border_noise_type
@@ -477,14 +483,16 @@ func _build_map() -> void:
 					var wood_xform = Transform3D(wood_basis, origin)
 
 					if r > 0.70:
-						var t_scale = active_biome.tree_scale if active_biome else 1.0
+						var t_base = active_biome.tree_scale if active_biome else 1.0
+						var t_scale = t_base * randf_range(1.0, 1.2)
 						var t_basis = deco_basis.scaled(Vector3(t_scale, t_scale, t_scale))
 						var t_origin = origin
 						t_origin.y += tree_y_offset
 						var t_xform = Transform3D(t_basis, t_origin)
 						tree_transforms.append(t_xform)
 					elif r > 0.45:
-						var tl_scale = active_biome.tree_large_scale if active_biome else 1.0
+						var tl_base = active_biome.tree_large_scale if active_biome else 1.0
+						var tl_scale = tl_base * randf_range(1.0, 1.2)
 						var tl_basis = deco_basis.scaled(Vector3(tl_scale, tl_scale, tl_scale))
 						var tl_origin = origin
 						tl_origin.y += tree_large_y_offset
@@ -503,10 +511,12 @@ func _build_map() -> void:
 							3:
 								wood_high_part_transforms.append(wood_xform)
 					elif r > 0.10:
-						rock_transforms.append(deco_xform)
+						var rock_scale = randf_range(1.0, 1.15)
+						var rock_basis = deco_basis.scaled(Vector3(rock_scale, rock_scale, rock_scale))
+						rock_transforms.append(Transform3D(rock_basis, origin))
 					else:
 						var variant_idx = randi() % BUSH_VARIANT_COUNT
-						var bush_scale = randf_range(BUSH_SCALE_MIN, BUSH_SCALE_MAX)
+						var bush_scale = BUSH_BASE_SCALE * randf_range(1.0, 1.15)
 						var bush_basis = deco_basis.scaled(Vector3(bush_scale, bush_scale, bush_scale))
 						var bush_origin = origin
 						if is_grass_biome or is_snow_biome:
@@ -516,17 +526,17 @@ func _build_map() -> void:
 
 	_apply_multimesh(mm_base, base_transforms)
 	_build_coastal_border(grass_transforms)
-	_apply_multimesh(mm_tree, tree_transforms)
-	_apply_multimesh(mm_tree_large, tree_large_transforms)
+	_apply_multimesh(mm_tree, tree_transforms, true)
+	_apply_multimesh(mm_tree_large, tree_large_transforms, true)
 	_apply_multimesh(mm_wood_structure, wood_transforms)
 	_apply_multimesh(mm_wood_structure_high, wood_high_transforms)
 	_apply_multimesh(mm_wood_structure_part, wood_part_transforms)
 	_apply_multimesh(mm_wood_structure_high_part, wood_high_part_transforms)
-	_apply_multimesh(mm_rock, rock_transforms)
+	_apply_multimesh(mm_rock, rock_transforms, true)
 	for i in range(BUSH_VARIANT_COUNT):
-		_apply_multimesh(mm_bushes[i], bush_transforms[i])
+		_apply_multimesh(mm_bushes[i], bush_transforms[i], true)
 	if is_grass_biome or is_snow_biome:
-		_apply_multimesh(mm_grass, grass_transforms)
+		_apply_multimesh(mm_grass, grass_transforms, true)
 
 # --- MultiMesh helpers -------------------------------------------------
 
@@ -541,8 +551,8 @@ func _spawn_grass_tuft(grass_transforms: Array[Transform3D], origin: Vector3, de
 		var rot_y = randf() * TAU
 		var rot_x = randf_range(-grass_tilt_randomness, grass_tilt_randomness)
 		var rot_z = randf_range(-grass_tilt_randomness, grass_tilt_randomness)
-		var s_y = randf_range(grass_scale_y_min, grass_scale_y_max)
 		var s_xz = randf_range(grass_scale_xz_min, grass_scale_xz_max)
+		var s_y = s_xz * randf_range(1.0, 1.25)
 		
 		var basis1 = Basis(Vector3.RIGHT, rot_x) * Basis(Vector3.FORWARD, rot_z) * Basis(Vector3.UP, rot_y)
 		basis1 = basis1.scaled(Vector3(s_xz, s_y, s_xz))
@@ -970,13 +980,28 @@ func _randomize_bush_wind(mat: ShaderMaterial) -> void:
 	mat.set_shader_parameter("WiggleStrength", randf_range(0.06, 0.14))
 	mat.set_shader_parameter("WiggleFrequency", randf_range(2.0, 4.0))
 
-func _apply_multimesh(group: Node3D, transforms: Array[Transform3D]) -> void:
+func _apply_multimesh(group: Node3D, transforms: Array[Transform3D], is_vegetation: bool = false) -> void:
+	if not group:
+		return
 	if group is MultiMeshInstance3D:
-		var mmi = group
-		var mm: MultiMesh = mmi.multimesh
+		var mm: MultiMesh = group.multimesh
 		mm.instance_count = transforms.size()
 		for i in range(transforms.size()):
-			mm.set_instance_transform(i, transforms[i])
+			var xform = transforms[i]
+			if is_vegetation:
+				var tier = (i % 5) + 1
+				_vegetation_items.append({
+					"child": group,
+					"index": i,
+					"original_transform": xform,
+					"tier": tier
+				})
+				if tier > 1:
+					mm.set_instance_transform(i, Transform3D(xform.basis * 0.0001, xform.origin))
+				else:
+					mm.set_instance_transform(i, xform)
+			else:
+				mm.set_instance_transform(i, xform)
 	else:
 		for child in group.get_children():
 			if child is MultiMeshInstance3D:
@@ -984,7 +1009,61 @@ func _apply_multimesh(group: Node3D, transforms: Array[Transform3D]) -> void:
 				var mm: MultiMesh = child.multimesh
 				mm.instance_count = transforms.size()
 				for i in range(transforms.size()):
-					mm.set_instance_transform(i, transforms[i] * local_transform)
+					var xform = transforms[i] * local_transform
+					if is_vegetation:
+						var tier = (i % 5) + 1
+						_vegetation_items.append({
+							"child": child,
+							"index": i,
+							"original_transform": xform,
+							"tier": tier
+						})
+						if tier > 1:
+							mm.set_instance_transform(i, Transform3D(xform.basis * 0.0001, xform.origin))
+						else:
+							mm.set_instance_transform(i, xform)
+					else:
+						mm.set_instance_transform(i, xform)
+
+# ─── Progressive Vegetation API (Deterministic Growth) ─────────────────────────
+# All vegetation positions are pre-calculated at map build time and assigned to 5 tiers.
+# Level 1 shows Tier 1 (20%). Each Pillar upgrade unlocks the next Tier at its fixed position,
+# with uniform base footprint and slight natural height variation.
+
+func update_vegetation_level(target_level: int, animate: bool = true) -> void:
+	target_level = clampi(target_level, 1, 5)
+	if target_level <= _current_vegetation_level:
+		return
+
+	var items_to_unlock: Array[Dictionary] = []
+	for item in _vegetation_items:
+		if item["tier"] > _current_vegetation_level and item["tier"] <= target_level:
+			items_to_unlock.append(item)
+
+	_current_vegetation_level = target_level
+
+	if items_to_unlock.is_empty():
+		return
+
+	if animate and is_inside_tree():
+		var cap_items := items_to_unlock
+		var tw := create_tween()
+		tw.set_trans(Tween.TRANS_BACK)
+		tw.set_ease(Tween.EASE_OUT)
+		var animate_step = func(progress: float) -> void:
+			var s := maxf(progress, 0.001)
+			for it in cap_items:
+				var child: MultiMeshInstance3D = it["child"]
+				if is_instance_valid(child) and child.multimesh:
+					var orig: Transform3D = it["original_transform"]
+					child.multimesh.set_instance_transform(it["index"], Transform3D(orig.basis * s, orig.origin))
+		tw.tween_method(animate_step, 0.001, 1.0, 0.8)
+	else:
+		for it in items_to_unlock:
+			var child: MultiMeshInstance3D = it["child"]
+			if is_instance_valid(child) and child.multimesh:
+				child.multimesh.set_instance_transform(it["index"], it["original_transform"])
+
 
 # --- Path tiles (kept as individual instances — few of them, and each needs
 # its own type + rotation, so this is not worth batching) ---------------
