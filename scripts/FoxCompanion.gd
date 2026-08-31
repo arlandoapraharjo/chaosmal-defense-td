@@ -136,6 +136,8 @@ func command_move_to(target_world_pos: Vector3) -> void:
 	
 	if is_inside_turret:
 		_exit_current_turret()
+	else:
+		current_turret = null
 	
 	_target_pos = Vector3(target_world_pos.x, global_position.y, target_world_pos.z)
 	_is_moving = true
@@ -163,13 +165,15 @@ func command_enter_turret(turret: Node3D) -> void:
 	
 	if _anim_player and _anim_player.has_animation("run"):
 		_anim_player.play("run")
+	elif _anim_player and _anim_player.has_animation("walk"):
+		_anim_player.play("walk")
 	
 	_spawn_move_marker(_target_pos, Color(1.0, 0.85, 0.2, 0.95))
 
 func _exit_current_turret() -> void:
 	if current_turret and is_instance_valid(current_turret):
 		_spawn_poof(current_turret.global_position)
-		global_position = current_turret.global_position + Vector3(0.5, 0.0, 0.5)
+		global_position = current_turret.global_position + Vector3(0.25, 0.0, 0.25)
 		if current_turret.has_method("apply_fox_buff"):
 			current_turret.apply_fox_buff(false)
 		left_turret.emit(current_turret)
@@ -211,7 +215,7 @@ func _physics_process(delta: float) -> void:
 	var dist = current_flat.distance_to(target_flat)
 	
 	# Forgiving arrival distance when targeting turrets
-	var arrival_dist = 0.65 if (current_turret != null and is_instance_valid(current_turret)) else 0.15
+	var arrival_dist = 0.45 if (current_turret != null and is_instance_valid(current_turret)) else 0.15
 	if dist <= arrival_dist:
 		_is_moving = false
 		global_position.x = _target_pos.x
@@ -230,6 +234,7 @@ func _physics_process(delta: float) -> void:
 				current_turret.apply_fox_buff(true)
 			entered_turret.emit(current_turret)
 		else:
+			current_turret = null
 			if _anim_player and _anim_player.has_animation("idle"):
 				_anim_player.play("idle")
 		return

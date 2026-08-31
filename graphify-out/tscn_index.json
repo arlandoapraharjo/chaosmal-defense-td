@@ -2,7 +2,7 @@
   "_meta": {
     "generated_by": "godot_index.py",
     "total_scenes": 46,
-    "root": "C:\\Users\\user\\repos\\IGI-Code-Circus"
+    "root": "C:\\igi-dev-code-circus"
   },
   "scenes": [
     {
@@ -174,6 +174,13 @@
           "raw_path": "res://UI/Intro/IntroOverlay.gd",
           "type": "Script",
           "id": "1_script"
+        },
+        {
+          "path": "UI/Dialogue Banner/Dialogue Banner.png",
+          "raw_path": "res://UI/Dialogue Banner/Dialogue Banner.png",
+          "type": "Texture2D",
+          "uid": "uid://dkatpqoi65npg",
+          "id": "2_banner_tex"
         }
       ],
       "nodes_preview": [
@@ -191,11 +198,11 @@
         },
         {
           "name": "DialogPanel",
-          "type": "PanelContainer"
+          "type": "TextureRect"
         },
         {
-          "name": "MarginContainer",
-          "type": "MarginContainer"
+          "name": "TopTab",
+          "type": "Control"
         }
       ]
     },
@@ -211,17 +218,16 @@
           "id": "1_script"
         },
         {
-          "path": "shaders/trapezoid_panel.gdshader",
-          "raw_path": "res://shaders/trapezoid_panel.gdshader",
+          "path": "shaders/card_panel.gdshader",
+          "raw_path": "res://shaders/card_panel.gdshader",
           "type": "Shader",
-          "id": "2_shader"
+          "id": "2_card_shader"
         },
         {
-          "path": "assets/menus/grid.png",
-          "raw_path": "res://assets/menus/grid.png",
-          "type": "Texture2D",
-          "uid": "uid://3faw8ljjbtj7",
-          "id": "3_grid"
+          "path": "shaders/jewel_emblem.gdshader",
+          "raw_path": "res://shaders/jewel_emblem.gdshader",
+          "type": "Shader",
+          "id": "3_jewel_shader"
         }
       ],
       "nodes_preview": [
@@ -242,7 +248,7 @@
           "type": "Control"
         },
         {
-          "name": "LeftPanel",
+          "name": "LoadingContainer",
           "type": "Control"
         }
       ]
@@ -1646,13 +1652,16 @@
     "UI/Intro/IntroOverlay.gd": [
       "UI/Intro/IntroOverlay.tscn"
     ],
+    "UI/Dialogue Banner/Dialogue Banner.png": [
+      "UI/Intro/IntroOverlay.tscn"
+    ],
     "UI/Menus/MainMenu.gd": [
       "UI/Menus/MainMenu.tscn"
     ],
-    "shaders/trapezoid_panel.gdshader": [
+    "shaders/card_panel.gdshader": [
       "UI/Menus/MainMenu.tscn"
     ],
-    "assets/menus/grid.png": [
+    "shaders/jewel_emblem.gdshader": [
       "UI/Menus/MainMenu.tscn"
     ],
     "UI/SpeedToggle.gd": [

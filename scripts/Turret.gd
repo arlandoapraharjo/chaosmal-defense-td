@@ -1019,6 +1019,11 @@ func get_sell_refund() -> int:
 	return TurretUpgradeManager.calculate_sell_refund(total_invested_cost)
 
 func sell() -> void:
+	if has_fox_buff:
+		var fox = get_tree().get_first_node_in_group("fox_companion")
+		if fox and fox.has_method("_exit_current_turret") and fox.get("current_turret") == self:
+			fox._exit_current_turret()
+	
 	var refund = get_sell_refund()
 	if CurrencyManager.instance:
 		CurrencyManager.instance.add_currency(refund)
