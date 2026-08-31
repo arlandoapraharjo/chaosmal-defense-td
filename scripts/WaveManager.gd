@@ -143,9 +143,12 @@ func _physics_process(delta: float) -> void:
 			if _wave_pause_timer <= 0.0:
 				_start_next_wave()
 
+var _boss_spawned_this_wave: bool = false
+
 func _start_next_wave() -> void:
 	current_wave += 1
 	_enemies_spawned = 0
+	_boss_spawned_this_wave = false
 
 	# Calculate enemy count (tripled x3 per wave): base + scaling + random variance, capped at 120
 	var base_count = randi_range(4, 6)
@@ -212,7 +215,16 @@ func _on_enemy_defeated() -> void:
 
 func _spawn_enemy() -> void:
 	var enemy: Node3D = null
-	var chosen_type = _pick_enemy_type_for_wave()
+	var is_boss_wave = (current_wave > 0 and current_wave % 5 == 0)
+	var is_boss_enemy = false
+	var chosen_type = 0
+	
+	if is_boss_wave and not _boss_spawned_this_wave:
+		chosen_type = 3 # Force UFO-D as Boss
+		is_boss_enemy = true
+		_boss_spawned_this_wave = true
+	else:
+		chosen_type = _pick_enemy_type_for_wave()
 	
 	# Try to find an enemy of the chosen type in the pool
 	for i in range(_pool.size()):
@@ -223,15 +235,13 @@ func _spawn_enemy() -> void:
 
 	if enemy == null:
 		if not _pool.is_empty():
-			# Just grab any if the exact type isn't available to avoid allocations if possible
-			# But for true scaling, we might want to just allocate one. Let's just allocate
 			enemy = _create_enemy_node(chosen_type)
 		else:
 			push_warning("WaveManager: enemy pool exhausted, creating new instance. Consider increasing pool_size.")
 			enemy = _create_enemy_node(chosen_type)
 
-	# Re-apply enemy type stats with wave scaling
-	enemy.setup_enemy_type(enemy.enemy_type_index, current_wave)
+	# Re-apply enemy type stats with wave scaling and boss flag
+	enemy.setup_enemy_type(chosen_type, current_wave, is_boss_enemy)
 	
 	total_enemies_spawned += 1
 	var wave_speed = enemy_speed * (1.0 + current_wave * 0.03)

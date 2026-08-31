@@ -18,6 +18,16 @@ var _rage_multiplier: float = 1.0
 var _rage_timer: float = 0.0
 var _has_boosted_hp: bool = false
 
+# ─── Ability & Shield Properties ─────────────────────────────────────────────
+var has_shield: bool = false
+var is_boss: bool = false
+var boss_ability_type: int = 0 # 0 = Speed Boost (Rage), 1 = 1-Hit Shield
+
+# ─── Shader Overlay Components ───────────────────────────────────────────────
+var _outline_shader: Shader = preload("res://shaders/outline_pixel_perfect.gdshader")
+var _outline_material: ShaderMaterial = null
+var _mesh_nodes: Array[MeshInstance3D] = []
+
 # ─── Health Bar Components ──────────────────────────────────────────────────
 var _hp_viewport: SubViewport = null
 var _hp_bar: ProgressBar = null
@@ -53,9 +63,10 @@ func get_contact_damage() -> float:
 		return ENEMY_TYPE_DAMAGE[enemy_type_index]
 	return 10.0
 
-## Assign coin_value and max_hp based on the UFO model type index and wave number.
-func setup_enemy_type(type_index: int, wave_number: int = 1) -> void:
+## Assign coin_value and max_hp based on the UFO model type index, wave number, and boss flag.
+func setup_enemy_type(type_index: int, wave_number: int = 1, is_boss_unit: bool = false) -> void:
 	enemy_type_index = type_index
+	is_boss = is_boss_unit
 	
 	var base_coins = 1
 	var base_hp = 100.0
@@ -65,12 +76,19 @@ func setup_enemy_type(type_index: int, wave_number: int = 1) -> void:
 		base_hp = ENEMY_TYPE_STATS[type_index][1]
 		
 	# Apply wave scaling
-	# HP scales +15% per wave
-	max_hp = base_hp * (1.0 + (wave_number - 1) * 0.15)
+	var scaled_hp = base_hp * (1.0 + (wave_number - 1) * 0.15)
 	
-	# Coins scale slower: base + 1 coin every 3 waves
-	coin_value = base_coins + int(wave_number / 3.0)
-	
+	if is_boss:
+		max_hp = scaled_hp * 3.5 # 3.5x HP for Boss
+		coin_value = (base_coins + int(wave_number / 3.0)) * 3
+		boss_ability_type = randi() % 2 # 0 = Speed Boost (Rage), 1 = 1-Hit Shield
+		has_shield = (boss_ability_type == 1)
+	else:
+		max_hp = scaled_hp
+		coin_value = base_coins + int(wave_number / 3.0)
+		boss_ability_type = 0
+		has_shield = (type_index == 2) # UFO-C has 1-Hit Shield
+		
 	current_hp = max_hp
 
 func setup(waypoints: Array[Vector3]) -> void:
@@ -89,6 +107,37 @@ func _cache_visual_node() -> void:
 		if child is Node3D:
 			_visual_node = child
 			break
+
+# ─── Shader & Outline Overlay Helper Methods ─────────────────────────────────
+func _collect_mesh_nodes(node: Node) -> void:
+	if not is_instance_valid(node):
+		return
+	if node is MeshInstance3D:
+		if node not in _mesh_nodes:
+			_mesh_nodes.append(node)
+	for child in node.get_children():
+		_collect_mesh_nodes(child)
+
+func _apply_ability_outline(color: Color, width: float = 4.0) -> void:
+	if _outline_material == null:
+		_outline_material = ShaderMaterial.new()
+		_outline_material.shader = _outline_shader
+		
+	_outline_material.set_shader_parameter("outline_color", color)
+	_outline_material.set_shader_parameter("outline_width", width)
+	_outline_material.set_shader_parameter("emission_boost", 0.4)
+	
+	if _mesh_nodes.is_empty():
+		_collect_mesh_nodes(self)
+		
+	for mesh in _mesh_nodes:
+		if is_instance_valid(mesh):
+			mesh.material_overlay = _outline_material
+
+func _remove_ability_outline() -> void:
+	for mesh in _mesh_nodes:
+		if is_instance_valid(mesh):
+			mesh.material_overlay = null
 
 ## Apply a global speed multiplier (1.0 = normal, 2.0 = double, 4.0 = quad).
 func set_speed_multiplier(multiplier: float) -> void:
@@ -110,12 +159,26 @@ func reset(waypoints: Array[Vector3], new_speed: float) -> void:
 	visible = true
 	set_physics_process(true)
 	EnemyDetector.register(self)
+	
+	_cache_visual_node()
+	_mesh_nodes.clear()
+	_collect_mesh_nodes(self)
+	_remove_ability_outline()
+	
+	# Apply shield outline on spawn if shield is active
+	if has_shield:
+		if is_boss:
+			_apply_ability_outline(Color(1.0, 0.85, 0.2), 5.0) # Gold Shield Outline for Boss
+		else:
+			_apply_ability_outline(Color(0.2, 0.85, 1.0), 4.5) # Cyan Shield Outline for UFO-C
+			
 	_update_health_bar()
 	
-	# Pop-up animation
+	# Pop-up animation & Boss scale
+	var target_scale = Vector3(1.35, 1.35, 1.35) if is_boss else Vector3.ONE
 	scale = Vector3(0.001, 0.001, 0.001)
 	var tween = create_tween()
-	tween.tween_property(self, "scale", Vector3.ONE, 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "scale", target_scale, 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	
 	if not waypoints.is_empty():
 		position = waypoints[0]
@@ -124,13 +187,13 @@ func reset(waypoints: Array[Vector3], new_speed: float) -> void:
 			var look_dir = Vector3(dir.x, 0, dir.z)
 			if look_dir.length() > 0.001:
 				rotation.y = atan2(look_dir.x, look_dir.z)
-	_cache_visual_node()
 	_spin_angle = 0.0
 
 ## Hide and stop processing — the Spawner will reclaim this node.
 func deactivate() -> void:
 	_is_done = true
 	EnemyDetector.unregister(self)
+	_remove_ability_outline()
 	if _hp_sprite:
 		_hp_sprite.visible = false
 	visible = false
@@ -205,30 +268,37 @@ func _update_health_bar() -> void:
 			else:
 				_hp_bar_fill_style.bg_color = Color(0.9, 0.2, 0.2, 1.0) # Danger Red
 
-# ─── UFO-A 5x Speed Boost (Rage Dash) ─────────────────────────────────────────
-func _trigger_ufo_a_speed_boost() -> void:
+# ─── Speed Boost (Rage Dash) ──────────────────────────────────────────────────
+func _trigger_speed_boost() -> void:
 	_rage_multiplier = 5.0
 	_rage_timer = 0.8
 	speed = _base_speed * _speed_multiplier * _rage_multiplier
 	
-	# Visual rage pulse & flash tint animation
+	# Apply Outline Shader: Gold for Boss, Red/Orange for UFO-A
+	if is_boss:
+		_apply_ability_outline(Color(1.0, 0.85, 0.2), 5.5)
+	else:
+		_apply_ability_outline(Color(1.0, 0.35, 0.1), 4.5)
+	
+	# Visual rage pulse animation
 	if _visual_node:
-		var original_scale = Vector3.ONE
+		var target_s = Vector3(1.35, 1.35, 1.35) if is_boss else Vector3.ONE
 		var tween = create_tween()
-		tween.tween_property(_visual_node, "scale", original_scale * 1.4, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		tween.tween_property(_visual_node, "scale", original_scale, 0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property(_visual_node, "scale", target_s * 1.4, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tween.tween_property(_visual_node, "scale", target_s, 0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 func _physics_process(delta: float) -> void:
 	if _is_done or path_waypoints.is_empty():
 		return
 
-	# Handle UFO-A speed boost duration (0.8s timer)
+	# Handle speed boost duration (0.8s timer)
 	if _rage_timer > 0.0:
 		_rage_timer -= delta
 		if _rage_timer <= 0.0:
 			_rage_timer = 0.0
 			_rage_multiplier = 1.0
 			speed = _base_speed * _speed_multiplier * _rage_multiplier
+			_remove_ability_outline()
 
 	# UFO spin animation — counter-rotate by parent heading so the spin
 	# stays fixed in world space regardless of the enemy's travel direction
@@ -296,6 +366,7 @@ func _hit_pillar_and_explode() -> void:
 	if _is_done:
 		return
 	_is_done = true
+	_remove_ability_outline()
 	_spawn_explosion()
 	
 	# Find pillar in scene and apply suicide attack damage
@@ -322,6 +393,7 @@ func _on_shockwave_explode() -> void:
 	if _is_done or not is_inside_tree() or not visible:
 		return
 	_is_done = true
+	_remove_ability_outline()
 	_spawn_explosion()
 	enemy_defeated.emit()
 	reached_end.emit()
@@ -330,18 +402,34 @@ func _on_shockwave_explode() -> void:
 func take_damage(amount: float) -> void:
 	if _is_done:
 		return
+		
+	# 1-Hit Shield Check (UFO-C or Shield Boss)
+	if has_shield:
+		has_shield = false
+		_remove_ability_outline()
+		
+		# Shield block pulse effect
+		if _visual_node:
+			var s = Vector3(1.35, 1.35, 1.35) if is_boss else Vector3.ONE
+			var tw = create_tween()
+			tw.tween_property(_visual_node, "scale", s * 1.25, 0.1).set_trans(Tween.TRANS_BACK)
+			tw.tween_property(_visual_node, "scale", s, 0.2).set_trans(Tween.TRANS_SINE)
+		return # Damage is 100% blocked!
+		
 	current_hp -= amount
 	_update_health_bar()
 	
-	# UFO-A speed boost trigger (5x speed for 0.8s under 40% HP)
-	if enemy_type_index == 0 and not _has_boosted_hp and current_hp > 0.0:
+	# Speed boost trigger (5x speed for 0.8s under 40% HP)
+	var can_rage = (enemy_type_index == 0) or (is_boss and boss_ability_type == 0)
+	if can_rage and not _has_boosted_hp and current_hp > 0.0:
 		if (current_hp / max_hp) < 0.4:
 			_has_boosted_hp = true
-			_trigger_ufo_a_speed_boost()
+			_trigger_speed_boost()
 
 	if current_hp <= 0:
 		current_hp = 0
 		_is_done = true
+		_remove_ability_outline()
 		_spawn_explosion()
 		
 		enemy_defeated.emit()
