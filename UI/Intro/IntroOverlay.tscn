@@ -171,28 +171,29 @@ light_energy = 1.4
 [node name="FoxAnchor" type="Node3D" parent="Control/DialogPanel/FoxFrame/FoxViewportContainer/SubViewport/FoxWorld"]
 
 [node name="FoxModel" type="Node3D" parent="Control/DialogPanel/FoxFrame/FoxViewportContainer/SubViewport/FoxWorld/FoxAnchor"]
-transform = Transform3D(0.72, 0, 0, 0, 0.72, 0, 0, 0, 0.72, 0, 0, 0)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 
 [node name="RightContent" type="MarginContainer" parent="Control/DialogPanel"]
 layout_mode = 1
 anchors_preset = 0
-offset_left = 254.0
-offset_top = 22.0
-offset_right = 818.0
-offset_bottom = 144.0
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 4
+offset_left = 260.0
+offset_top = 26.0
+offset_right = 810.0
+offset_bottom = 142.0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control/DialogPanel/RightContent"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 
 [node name="DialogueText" type="RichTextLabel" parent="Control/DialogPanel/RightContent/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.95, 0.98, 1, 1)
+theme_override_constants/line_separation = 3
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
 text = "Briefing message goes here..."
