@@ -127,8 +127,8 @@ func _setup_fox_model() -> void:
 	if not fox_model_root:
 		return
 	
-	fox_model_root.scale = Vector3(0.5, 0.5, 0.5)
-	fox_model_root.rotation.y = deg_to_rad(36.0)
+	fox_model_root.scale = Vector3(0.35, 0.35, 0.35)
+	fox_model_root.rotation.y = deg_to_rad(35.0)
 	
 	if fox_model_root.get_child_count() == 0:
 		var fox_instance = FOX_SCENE.instantiate()
@@ -187,13 +187,13 @@ func _process(delta: float) -> void:
 	# Procedural Fox Breathing Animation in 2D Frame
 	_breath_time += delta * 2.8
 	if fox_model_root:
-		var bob = sin(_breath_time) * 0.025
-		var base_scale: float = 0.5
+		var bob = sin(_breath_time) * 0.015
+		var base_scale: float = 0.35
 		fox_model_root.position.y = bob
-		fox_model_root.scale.y = base_scale * (1.0 + sin(_breath_time) * 0.025)
-		fox_model_root.scale.x = base_scale * (1.0 - sin(_breath_time) * 0.012)
-		fox_model_root.scale.z = base_scale * (1.0 - sin(_breath_time) * 0.012)
-		fox_model_root.rotation.y = deg_to_rad(36.0) + sin(_breath_time * 0.5) * 0.04
+		fox_model_root.scale.y = base_scale * (1.0 + sin(_breath_time) * 0.02)
+		fox_model_root.scale.x = base_scale * (1.0 - sin(_breath_time) * 0.01)
+		fox_model_root.scale.z = base_scale * (1.0 - sin(_breath_time) * 0.01)
+		fox_model_root.rotation.y = deg_to_rad(35.0) + sin(_breath_time * 0.5) * 0.03
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not _is_active or _is_exiting:

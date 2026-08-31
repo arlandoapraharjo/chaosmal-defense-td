@@ -154,7 +154,7 @@ render_target_update_mode = 4
 environment = SubResource("Environment_viewport")
 
 [node name="Camera3D" type="Camera3D" parent="Control/DialogPanel/FoxFrame/FoxViewportContainer/SubViewport/FoxWorld"]
-transform = Transform3D(0.970143, 0.036995, -0.239697, 0, 0.988298, 0.152535, 0.242536, -0.14798, 0.95879, -0.55, 1.05, 2.2)
+transform = Transform3D(0.965926, 0.038823, -0.255882, 0, 0.988696, 0.149932, 0.258819, -0.144823, 0.955008, -0.32, 0.55, 1.75)
 current = true
 fov = 34.0
 
@@ -171,7 +171,7 @@ light_energy = 1.4
 [node name="FoxAnchor" type="Node3D" parent="Control/DialogPanel/FoxFrame/FoxViewportContainer/SubViewport/FoxWorld"]
 
 [node name="FoxModel" type="Node3D" parent="Control/DialogPanel/FoxFrame/FoxViewportContainer/SubViewport/FoxWorld/FoxAnchor"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+transform = Transform3D(0.35, 0, 0, 0, 0.35, 0, 0, 0, 0.35, 0, 0, 0)
 
 [node name="RightContent" type="MarginContainer" parent="Control/DialogPanel"]
 layout_mode = 1
